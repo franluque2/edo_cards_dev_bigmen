@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 
 function s.efilter(e,re)
-	return re:GetOwner():IsCode(511000720)
+	return re:GetOwner():IsCode(100000323)
 end
 
 
