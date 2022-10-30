@@ -4,7 +4,7 @@ function s.initial_effect(c)
 
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAIN_SOLVED)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCondition(s.spcon)
@@ -30,12 +30,13 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 
 		if #g>0 then
 			local tc=Duel.SelectMatchingCard(tp, aux.FaceupFilter(Card.IsAttribute, ATTRIBUTE_DARK), tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
-			if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+			if tc then
+				local val=(#g)*500
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_UPDATE_ATTACK)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-				e1:SetValue(#g*500)
+				e1:SetValue(val)
 				tc:RegisterEffect(e1)
 			end
 		end
