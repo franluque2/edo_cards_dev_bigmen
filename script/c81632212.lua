@@ -17,7 +17,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_GRAVE)
 end
 function s.cosmicfilter(c)
-	return c:IsFaceup() and c:IsCode(160401002)
+	return c:IsFaceup() and (c:IsCode(160401002) or c:IsCode(160202042))
 end
 function s.fieldfilter(c)
 	return c:IsType(TYPE_FIELD) and c:IsAbleToHand()
@@ -35,7 +35,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,tc)
 			end
-			
+
 		end
 	end
 end
