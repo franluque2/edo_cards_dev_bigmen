@@ -85,9 +85,14 @@ function s.ctlop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.otherfilter2(c)
+	return (not c:IsControler(c:GetOwner()))
+end
+
+
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_EQUIP)
-	local tc=Duel.SelectMatchingCard(tp, s.otherfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp, s.otherfilter2, tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
 	local c=e:GetHandler()
 	if tc then
 
