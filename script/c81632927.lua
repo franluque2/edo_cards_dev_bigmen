@@ -172,7 +172,7 @@ end
 
 function s.filter(c,e,tp,lv)
 	return c:IsFaceup() and c:GetLevel()>0
-		and Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv+c:GetOriginalLevel())
+		and Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv+c:GetLevel())
 end
 function s.scfilter(c,e,tp,lv)
 	return c:IsSetCard(0x2) and c:IsLevel(lv) and c:IsType(TYPE_SYNCHRO)
