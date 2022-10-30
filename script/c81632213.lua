@@ -21,10 +21,17 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
 
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_CHANGE_CODE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetValue(160202046)
+	c:RegisterEffect(e3)
 end
 
 function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter, tp, LOCATION_ONFIELD, 0, 1, nil, Card.IsCode, 160202046)
+	return Duel.GetMatchingGroupCountRush(aux.FaceupFilter(Card.IsCode, 160202046),e:GetHandlerPlayer(),LOCATION_SZONE,0,nil)>0
 end
 
 function s.target(_,c)

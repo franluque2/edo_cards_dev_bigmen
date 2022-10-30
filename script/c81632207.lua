@@ -19,9 +19,9 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and chkc:IsRace(RACE_MACHINE) end
-	if chk==0 then return Duel.IsExistingTarget(aux.FaceupFilter,tp,LOCATION_MZONE,0,1,nil,Card.IsRace,RACE_MACHINE) end
+	if chk==0 then return Duel.IsExistingTarget(aux.FaceupFilter(Card.IsRace,RACE_MACHINE),tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,aux.FaceupFilter,tp,LOCATION_MZONE,0,1,1,nil,Card.IsRace,RACE_MACHINE)
+	Duel.SelectTarget(tp,aux.FaceupFilter(Card.IsRace,RACE_MACHINE),tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

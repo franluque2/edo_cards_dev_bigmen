@@ -19,7 +19,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp, 3)
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter, tp, LOCATION_MZONE, 0, 1,nil , Card.IsAttribute, ATTRIBUTE_DARK) end
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsAttribute, ATTRIBUTE_DARK), tp, LOCATION_MZONE, 0, 1,nil) end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp, 3)
@@ -29,7 +29,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		g=g:Filter(Card.IsLocation, nil, LOCATION_GRAVE)
 
 		if #g>0 then
-			local tc=Duel.SelectMatchingCard(tp, aux.FaceupFilter, tp, LOCATION_MZONE, 0, 1,1,false,nil,Card.IsAttribute, ATTRIBUTE_DARK):GetFirst()
+			local tc=Duel.SelectMatchingCard(tp, aux.FaceupFilter(Card.IsAttribute, ATTRIBUTE_DARK), tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
 			if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
