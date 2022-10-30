@@ -104,12 +104,12 @@ function s.eqfilter(c)
 end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.eqfilter,tp,0,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsInfinity),tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter,tp,LOCATION_MZONE,0,1,nil,Card.IsInfinity)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 end
 function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-	local eqc=Duel.SelectMatchingCard(tp,aux.FaceupFilter(Card.IsInfinity),tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local eqc=Duel.SelectMatchingCard(tp,aux.FaceupFilter,tp,LOCATION_MZONE,0,1,1,nil,Card.IsInfinity):GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local eqtg=Duel.SelectMatchingCard(tp,s.eqfilter,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
 	if not eqg or not eqtgc then return end
