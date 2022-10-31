@@ -118,7 +118,7 @@ function s.sumfilter(c,e,tp,code)
 end
 
 function s.sendfilter(c,code)
-	return c:IsCode(code) and c:IsAbleToGrave()
+	return c:IsCode(code) and c:IsAbleToGrave() and c:IsFaceup()
 end
 
 function s.motordiscardfilter(c)
