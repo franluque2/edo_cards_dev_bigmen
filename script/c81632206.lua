@@ -25,6 +25,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g==0 then return end
 	Duel.SendtoGrave(g,REASON_EFFECT)
 	if g:GetFirst():IsLocation(LOCATION_GRAVE) then
-		Duel.Draw(tp,1,REASON_EFFECT)
+		if  g:GetFirst():IsCode(160001033) then
+		Duel.Draw(tp,2,REASON_EFFECT)
+		else
+			Duel.Draw(tp,1,REASON_EFFECT)
+		end
 	end
 end

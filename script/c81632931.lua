@@ -61,6 +61,32 @@ end
 -- end
 
 
+local MakeCheck=function(setcodes,archtable,extrafuncs)
+	return function(c,sc,sumtype,playerid)
+		sumtype=sumtype or 0
+		playerid=playerid or PLAYER_NONE
+		if extrafuncs then
+			for _,func in pairs(extrafuncs) do
+				if Card[func](c,sc,sumtype,playerid) then return true end
+			end
+		end
+		if setcodes then
+			for _,setcode in pairs(setcodes) do
+				if c:IsSetCard(setcode,sc,sumtype,playerid) then return true end
+			end
+		end
+		if archtable then
+			if c:IsSummonCode(sc,sumtype,playerid,table.unpack(archtable)) then return true end
+		end
+		return false
+	end
+end
+
+
+
+local set_cards={12312}
+Card.hasbeenset=MakeCheck(nil,set_cards)
+
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
 end
@@ -86,7 +112,7 @@ end
 
 function s.tgfilter(c)
 	return (Card.ListsCode(c,511004336) or c:IsCode(511004337) or c:IsCode(511004339) or c:IsCode(511004327) or c:IsCode(511004336) or c:IsCode(511004328)) and
-	c:IsType(TYPE_SPELL) and c:IsSSetable()
+	c:IsType(TYPE_SPELL) and c:IsSSetable() and not c:hasbeenset()
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -141,6 +167,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp, s.tgfilter, tp, LOCATION_DECK, 0, 1, 1,false,nil)
 	if g then
 		Duel.SSet(tp, g)
+		table.insert(set_cards,g:GetFirst():GetCode())
 	end
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
