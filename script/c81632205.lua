@@ -41,7 +41,7 @@ local g=Duel.SelectMatchingCard(tp, s.spfilter, tp, LOCATION_GRAVE, 0, 1, 2,fals
 		Duel.BreakEffect()
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) and Duel.IsExistingMatchingCard(s.lmremodelfilter, tp, LOCATION_GRAVE, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(tp, 0)) then
 			Duel.BreakEffect()
-			local tc=Duel.SelectMatchingcard(tp,s.lmremodelfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
+			local tc=Duel.SelectMatchingCard(tp,s.lmremodelfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
 			Duel.SendtoHand(tc, tp, REASON_EFFECT)
 		end
 	end
