@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 
-	c:SetUniqueOnField(1,0,c:Alias())
+	c:SetUniqueOnField(1,0,id)
 
 	--selfdes
 	local e1=Effect.CreateEffect(c)
@@ -17,9 +17,10 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
 	e2:SetCondition(s.ctlcon)
 	e2:SetTarget(s.ctltg)
 	e2:SetOperation(s.ctlop)
@@ -58,7 +59,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	g:DeleteGroup()
 end
 
-
 function s.sdcon(e)
 	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x3013),0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
@@ -68,7 +68,7 @@ function s.otherfilter(c)
 end
 
 function s.ctlcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.otherfilter, tp, LOCATION_SZONE, 0, 1,nil)
+	return Duel.IsExistingMatchingCard(s.otherfilter, tp, LOCATION_SZONE, 0, 1,nil) and Duel.GetTurnPlayer()==tp
 end
 
 function s.notinfinity(c)
@@ -87,7 +87,7 @@ function s.ctlop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-	local tar=Duel.SelectMatchingCard(tp, s.notinfinity, tp, LOCATION_SZONE, 0, 1,1,false,nil):GetFirst()
+	local tar=Duel.SelectMatchingCard(tp, s.otherfilter, tp, LOCATION_SZONE, 0, 1,1,false,nil):GetFirst()
 
 	if tar then
 		local sc=g:GetFirst()

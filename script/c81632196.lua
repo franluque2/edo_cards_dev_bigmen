@@ -59,6 +59,18 @@ function s.ctlop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.ChangeAttackTarget(tc)
 			end
 
+			--Cannot target other monsters for attacks
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_FIELD)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+			e2:SetRange(LOCATION_MZONE)
+			e2:SetTargetRange(0,LOCATION_MZONE)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e2:SetValue(s.tgtg)
+			tc:RegisterEffect(e2)
+
+
 
 		local e3=Effect.CreateEffect(c)
 		e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_EQUIP)
@@ -74,6 +86,10 @@ function s.ctlop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.tgtg(e,c)
+	return c~=e:GetHandler()
+end
+
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_EQUIP)
 	local tc=Duel.SelectMatchingCard(tp, s.otherfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
@@ -83,7 +99,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(c,nil,-2,REASON_EFFECT)
 
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-		local eqc=Duel.SelectMatchingCard(tp,aux.FaceupFilter,tp,LOCATION_MZONE,0,1,1,nil,Card.IsInfinity):GetFirst()
+		local eqc=Duel.SelectMatchingCard(tp,aux.FaceupFilter(Card.IsSetCard,0x3013),tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 		if Duel.Equip(tp,tc,eqc,true) then
 			--add equip limit
 			local e1=Effect.CreateEffect(e:GetHandler())
