@@ -173,7 +173,8 @@ end
 
 
 function s.listsarcanaforcefilter(c)
-	return (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and Card.ListsArchetype(c,0x5) and c:IsAbleToHand()
+	return (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and (Card.ListsArchetype(c,0x5) or
+		c:IsCode(100000115,511000601,511000602,100000109,100000114,511001476,100000107,100000108)) and c:IsAbleToHand()
 end
 
 function s.arcanaforcefilter(c)
