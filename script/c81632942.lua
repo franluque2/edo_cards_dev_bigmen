@@ -160,8 +160,8 @@ local b2=Duel.GetFlagEffect(tp, id+6)==0
 			local sg=g:Select(tp,1,1,nil)
 			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
-			--opt register
-			Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+			--opd register
+			Duel.RegisterFlagEffect(tp,id+2,0,0,0)
 	elseif op==1 then
 		local tc=Duel.SelectMatchingCard(tp, s.arcanaforcegravefilter, tp, LOCATION_GRAVE, 0, 1, 1, nil,e,tp):GetFirst()
 			if tc then
