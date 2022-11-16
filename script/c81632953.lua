@@ -60,7 +60,7 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 
 
-	local tc=Duel.CreateToken(tp, 816322253)
+	local tc=Duel.CreateToken(tp, 81632253)
 
 	 local tpe=tc:GetType()
 	 local te=tc:GetActivateEffect()
