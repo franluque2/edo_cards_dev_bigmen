@@ -69,6 +69,12 @@ CustomArchetype.Beast_borg_medal={
 
 Card.IsBeastBorgMedal=MakeCheck(nil,CustomArchetype.Beast_borg_medal)
 
+CustomArchetype.ruler_backrow={
+  40703393, 54693926, 160006042, 160009046, 6850209, 41925941, 91781589, 160006060, 160305030, 160428084, 511000896, 511001132, 511002734, 513000131
+}
+
+Card.IsRulerBackrow=MakeCheck(nil,CustomArchetype.ruler_backrow)
+
 end
 
 
