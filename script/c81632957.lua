@@ -1,4 +1,4 @@
---Pack of Nightmares - NO CODE
+--Pack of Nightmares
 
 --Skill Template
 Duel.LoadScript("big_aux.lua")

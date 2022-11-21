@@ -62,6 +62,13 @@ Card.IsTreasure=MakeCheck(nil,CustomArchetype.kdr_treasure)
 
 Card.IsJester=MakeCheck({0x152c},CustomArchetype.Jester)
 
+
+CustomArchetype.Beast_borg_medal={
+  511001546, 511001547, 511001559, 511002705, 513000077
+  }
+
+Card.IsBeastBorgMedal=MakeCheck(nil,CustomArchetype.Beast_borg_medal)
+
 end
 
 

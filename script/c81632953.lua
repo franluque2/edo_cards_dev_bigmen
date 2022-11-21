@@ -1,5 +1,4 @@
---Scarred Fusion Veteran - NO CODE
---Skill Template
+--Scarred Fusion Veteran
 Duel.LoadScript("big_aux.lua")
 
 
@@ -31,6 +30,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--uncomment (remove the --) the line below to make it a rush skill
 		--bRush.addrules()(e,tp,eg,ep,ev,re,r,rp)
+
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetCountLimit(1)
+		e3:SetCode(EVENT_PHASE+PHASE_END)
+		e3:SetCondition(s.setcon)
+		e3:SetOperation(s.setop)
+		Duel.RegisterEffect(e3,tp)
 
 
 	end
@@ -113,7 +120,7 @@ end
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	if Duel.GetFlagEffect(tp,id+1)>0 then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
@@ -154,9 +161,62 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
+function s.isbbfusionfilter(c)
+	return c:IsSetCard(0x50b) and c:IsType(TYPE_FUSION)
+end
 
-function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+function s.setcon(e,tp,eg,ep,ev,re,r,rp)
+	if (Duel.GetFlagEffect(tp,id+2)>0) then return false end
+	local g=Duel.IsExistingMatchingCard(s.isbbfusionfilter, tp, LOCATION_ONFIELD, 0, 1,nil)
+	return Duel.GetTurnPlayer()==tp and g and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+end
 
+local MakeCheck=function(setcodes,archtable,extrafuncs)
+	return function(c,sc,sumtype,playerid)
+		sumtype=sumtype or 0
+		playerid=playerid or PLAYER_NONE
+		if extrafuncs then
+			for _,func in pairs(extrafuncs) do
+				if Card[func](c,sc,sumtype,playerid) then return true end
+			end
+		end
+		if setcodes then
+			for _,setcode in pairs(setcodes) do
+				if c:IsSetCard(setcode,sc,sumtype,playerid) then return true end
+			end
+		end
+		if archtable then
+			if c:IsSummonCode(sc,sumtype,playerid,table.unpack(archtable)) then return true end
+		end
+		return false
+	end
+end
+
+
+
+local set_traps={81632953}
+Card.hasbeenset=MakeCheck(nil,set_traps)
+
+function s.conttrapfiler(c)
+	return c:IsType(TYPE_TRAP) and c:IsType(TYPE_CONTINUOUS) and c:IsSSetable() and c:IsBeastBorgMedal() and not c:hasbeenset()
+end
+
+function s.setop(e,tp,eg,ep,ev,re,r,rp)
+
+	local tc=Duel.GetMatchingGroup(s.conttrapfiler, tp, LOCATION_DECK, 0,nil)
+	if #tc>0 then
+		Duel.Hint(HINT_CARD, tp, id)
+		local cardnumber=math.random( #tc )
+		local g=tc:GetFirst()
+		while g do
+			if cardnumber==1 then
+				table.insert(set_traps,g:GetCode())
+				Duel.SSet(tp, g)
+			end
+			cardnumber=cardnumber-1
+			g=tc:GetNext()
+		end
+	end
 	--sets the opd
 	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
