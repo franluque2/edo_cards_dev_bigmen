@@ -54,32 +54,31 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--other passive duel effects go here
 
-
-    local e3=Effect.CreateEffect(e:GetHandler())
-    e3:SetType(EFFECT_TYPE_FIELD)
-    e3:SetCode(EFFECT_ADD_SETCODE)
-    e3:SetTargetRange(LOCATIONS,0)
-    e3:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
-    e3:SetValue(ARCHETYPE)
-    Duel.RegisterEffect(e3,tp)
-
-    --just copyin' and pastin'
-    local e4=Effect.CreateEffect(e:GetHandler())
-    e4:SetType(EFFECT_TYPE_FIELD)
-    e4:SetCode(EFFECT_ADD_SETCODE)
-    e4:SetTargetRange(LOCATIONS2,0)
-    e4:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
-    e4:SetValue(ARCHETYPE2)
-    Duel.RegisterEffect(e4,tp)
-
+        local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATIONS,0)
+        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetValue(ARCHETYPE)
+        Duel.RegisterEffect(e5,tp)
+    
+        --just copyin' and pastin'
+        local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_SETCODE)
+        e6:SetTargetRange(LOCATIONS2,0)
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e6:SetValue(ARCHETYPE2)
+        Duel.RegisterEffect(e6,tp)
 
 	end
 	e:SetLabel(1)
 end
 
 
-
-
+function s.markedfilter(c,e)
+    return #c:IsHasEffect(e)>0
+end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -89,7 +88,37 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
+    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g2=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+    if #g2>0 then
+		local tc=g2:GetFirst()
+		while tc do
+			
+			local e4=Effect.CreateEffect(e:GetHandler())
+			e4:SetType(EFFECT_TYPE_SINGLE)
+			e4:SetCode(id+1)
+			tc:RegisterEffect(e4)
+
+
+			tc=g2:GetNext()
+		end
+	end
 
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end

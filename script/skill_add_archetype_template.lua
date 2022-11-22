@@ -23,13 +23,12 @@ end
 local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
 --add archetype setcode here
-local ARCHETYPE=0x10cd
+local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
-  return true
+  return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DINOSAUR)
 end
-
 
 
 
@@ -46,23 +45,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--other passive duel effects go here
 
-
-    local e3=Effect.CreateEffect(e:GetHandler())
-    e3:SetType(EFFECT_TYPE_FIELD)
-    e3:SetCode(EFFECT_ADD_SETCODE)
-    e3:SetTargetRange(LOCATIONS,0)
-    e3:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
-    e3:SetValue(ARCHETYPE)
-    Duel.RegisterEffect(e3,tp)
-
+        local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATIONS,0)
+        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetValue(ARCHETYPE)
+        Duel.RegisterEffect(e5,tp)
+    
 
 	end
 	e:SetLabel(1)
 end
 
 
-
-
+function s.markedfilter(c,e)
+    return #c:IsHasEffect(e)>0
+end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -72,7 +71,21 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
+    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
 
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end
