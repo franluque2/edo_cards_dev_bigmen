@@ -1,4 +1,3 @@
---Future Conscription of the Law
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
 
@@ -24,15 +23,23 @@ end
 local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
 --add archetype setcode here
-local ARCHETYPE=0x15a
+local ARCHETYPE=0x573
 
---All "Jutte" and "Goyo" monsters in your possession are also treated as "S-Force" monsters.
+--All Level 5 monsters in your possession are treated as "Helixx" monsters.
 function s.archetypefilter(c)
-  return c:IsSetCard(0x523, 0x52d)
+  return c:IsLevel(5)
 end
 
+--change this to change the locations where this acts
+local LOCATIONS2=LOCATION_ALL-LOCATION_OVERLAY
 
+--add archetype setcode here
+local ARCHETYPE2=0x112
 
+--All "Helixx" Link Monsters in your possession are also treated as "Knightmare" monsters.
+function s.archetypefilter2(c)
+  return c:IsType(TYPE_LINK) and c:IsSetCard(0x573)
+end
 
 
 
@@ -54,6 +61,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
+    
+        --just copyin' and pastin'
+        local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_SETCODE)
+        e6:SetTargetRange(LOCATIONS2,0)
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e6:SetValue(ARCHETYPE2)
+        Duel.RegisterEffect(e6,tp)
 
 	end
 	e:SetLabel(1)
@@ -73,6 +89,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
     local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g2=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
 
     if #g>0 then
@@ -89,6 +106,19 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    if #g2>0 then
+		local tc=g2:GetFirst()
+		while tc do
+			
+			local e4=Effect.CreateEffect(e:GetHandler())
+			e4:SetType(EFFECT_TYPE_SINGLE)
+			e4:SetCode(id+1)
+			tc:RegisterEffect(e4)
+
+
+			tc=g2:GetNext()
+		end
+	end
+
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end
-
