@@ -111,7 +111,7 @@ function s.setpyramid(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.sumfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) and (c:IsCode(15013468) or c:IsCode(51402177))
+	return c:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEUP) and (c:IsCode(15013468) or c:IsCode(51402177))
 end
 
 function s.fucodefilter(c,code)
@@ -176,7 +176,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp, s.sumfilter, tp, LOCATION_GRAVE+LOCATION_REMOVED, 0, 1,1,false,nil,e,tp)
 
 	if #g>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end
 
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
@@ -189,7 +189,7 @@ function s.filter(c)
 end
 
 function s.target(e,c)
-	return (c:IsCode(15013468) or c:IsCode(51402177)) and c:IsFaceup()
+	return c:IsSetCard(0x5c) and c:IsFaceup()
 end
 -- Switch all monsters your opponent controls to DEF Position (if any), and until the end of this turn,
 --when a "Sphinx" monster you control attacks a Defense Position monster your opponent controls, inflict piercing battle damage to your opponent.
@@ -207,7 +207,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 
 
-	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
 end
 
 function s.efilter(e,re)
@@ -234,5 +234,5 @@ function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
-	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
+	Duel.RegisterFlagEffect(tp,id+3,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
