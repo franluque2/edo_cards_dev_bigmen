@@ -128,8 +128,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	g:AddCard(option3)
 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local tc=g:Select(tp, 1, 1,nil):GetFirst()
-	local  card=tc:GetFirst()
+	local card=g:Select(tp, 1, 1,nil):GetFirst()
 
 	Xyz.AddProcedure(card,nil,4,2)
 	
