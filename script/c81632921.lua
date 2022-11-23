@@ -202,7 +202,7 @@ end
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(s.dscorpion_addfilter,tp,LOCATION_DECK,0,nil)
 		if #g>0 then
-			local cardnumber=math.random( #g )
+			local cardnumber=Duel.GetRandomNumber(1, #g )
 			local tc=g:GetFirst()
 			while tc do
 				if cardnumber==1 then

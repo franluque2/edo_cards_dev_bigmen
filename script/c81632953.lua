@@ -206,7 +206,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetMatchingGroup(s.conttrapfiler, tp, LOCATION_DECK, 0,nil)
 	if #tc>0 then
 		Duel.Hint(HINT_CARD, tp, id)
-		local cardnumber=math.random( #tc )
+		local cardnumber=Duel.GetRandomNumber(1, #tc )
 		local g=tc:GetFirst()
 		while g do
 			if cardnumber==1 then

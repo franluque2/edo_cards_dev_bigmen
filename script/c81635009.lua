@@ -69,14 +69,14 @@ end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.Hint(HINT_CARD,tp,id)
-	local num1=math.random( #CustomArchetype.kdr_ct_number )
-	local num2=math.random( #CustomArchetype.kdr_ct_number )
+	local num1=Duel.GetRandomNumber(1, #CustomArchetype.kdr_ct_number )
+	local num2=Duel.GetRandomNumber(1, #CustomArchetype.kdr_ct_number )
 	while num2==num1 do
-		num2=math.random( #CustomArchetype.kdr_ct_number )
+		num2=Duel.GetRandomNumber(1, #CustomArchetype.kdr_ct_number )
 	end
-	local num3=math.random( #CustomArchetype.kdr_ct_number )
+	local num3=Duel.GetRandomNumber(1, #CustomArchetype.kdr_ct_number )
 	while num3==num2 or num3==num1 do
-		num3=math.random( #CustomArchetype.kdr_ct_number )
+		num3=Duel.GetRandomNumber(1, #CustomArchetype.kdr_ct_number )
 	end
 
 	local option1=Duel.CreateToken(tp, CustomArchetype.kdr_ct_number[num1])

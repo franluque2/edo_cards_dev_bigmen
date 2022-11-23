@@ -193,7 +193,7 @@ function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 
 		if #cg>=3 then
 
-			local cardnumber=math.random( 3 )
+			local cardnumber=Duel.GetRandomNumber(1, 3 )
 			local tc=cg:GetFirst()
 			while tc do
 				if cardnumber==1 then

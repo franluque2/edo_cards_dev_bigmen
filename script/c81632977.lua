@@ -108,14 +108,14 @@ end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.Hint(HINT_CARD,tp,id)
-	local num1=math.random( #numbers )
-	local num2=math.random( #numbers )
+	local num1=Duel.GetRandomNumber(1, #numbers )
+	local num2=Duel.GetRandomNumber(1, #numbers )
 	while num2==num1 do
-		num2=math.random( #numbers )
+		num2=Duel.GetRandomNumber(1, #numbers )
 	end
-	local num3=math.random( #numbers )
+	local num3=Duel.GetRandomNumber(1, #numbers )
 	while num3==num2 or num3==num1 do
-		num3=math.random( #numbers )
+		num3=Duel.GetRandomNumber(1, #numbers )
 	end
 
 	local option1=Duel.CreateToken(tp, numbers[num1])

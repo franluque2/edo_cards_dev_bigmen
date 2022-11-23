@@ -58,7 +58,7 @@ end
 local tableHydra_l1={511009711,511009713,511009714,511600223,511027009}
 
 function s.getcard()
-return tableHydra_l1[ math.random( #tableHydra_l1 ) ]
+return tableHydra_l1[ Duel.GetRandomNumber(1, #tableHydra_l1 ) ]
 end
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)

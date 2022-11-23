@@ -72,18 +72,18 @@ local tableHydra_l3={511106013,81632167, 81632168}
 local tableHydra_l4={81632169}
 
 function s.getcard1()
-return tableHydra_l1[ math.random( #tableHydra_l1 ) ]
+return tableHydra_l1[ Duel.GetRandomNumber(1, #tableHydra_l1 ) ]
 end
 function s.getcard2()
-return tableHydra_l2[ math.random( #tableHydra_l2 ) ]
+return tableHydra_l2[ Duel.GetRandomNumber(1, #tableHydra_l2 ) ]
 end
 
 function s.getcard3()
-return tableHydra_l3[ math.random( #tableHydra_l3 ) ]
+return tableHydra_l3[ Duel.GetRandomNumber(1, #tableHydra_l3 ) ]
 end
 
 function s.getcard4()
-return tableHydra_l4[ math.random( #tableHydra_l4 ) ]
+return tableHydra_l4[ Duel.GetRandomNumber(1, #tableHydra_l4 ) ]
 end
 
 

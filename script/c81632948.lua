@@ -312,7 +312,7 @@ end
 
 local table_dsynchro={100000151,100000152,100000154,100000155,100000156}
 function s.getcard()
-return table_dsynchro[ math.random( #table_dsynchro ) ]
+return table_dsynchro[ Duel.GetRandomNumber(1, #table_dsynchro ) ]
 end
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
