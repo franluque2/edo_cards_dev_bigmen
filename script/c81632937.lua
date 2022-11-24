@@ -256,7 +256,7 @@ function s.operation_for_res5(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(mkanikle, tp, SEQ_DECKBOTTOM, REASON_EFFECT)
 	Duel.SSet(tp, mcreation)
 
-	e2=Effect.CreateEffect(e:GetHandler())
+	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)

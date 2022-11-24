@@ -31,6 +31,17 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
+--change this to change the locations where this acts
+local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
+
+--add archetype setcode here
+local ARCHETYPE=0x505
+
+--"All "Numbers Evail" in your possession are treated as "Astral" cards"
+function s.archetypefilter(c)
+  return c:IsCode(20994205)
+end
+
 
 
 
@@ -60,6 +71,14 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	e6:SetTargetRange(1,0)
 	e6:SetTarget(s.splimit)
 	Duel.RegisterEffect(e6,tp)
+
+	local e5=Effect.CreateEffect(e:GetHandler())
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_ADD_SETCODE)
+	e5:SetTargetRange(LOCATIONS,0)
+	e5:SetTarget(function(_,c)  return s.archetypefilter(c) end)
+	e5:SetValue(ARCHETYPE)
+	Duel.RegisterEffect(e5,tp)
 
 
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
