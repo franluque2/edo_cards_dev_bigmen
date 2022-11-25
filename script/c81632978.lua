@@ -138,7 +138,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id+2)==0 and Duel.GetTurnCount()~=1
+	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id+2)==0 and Duel.GetTurnCount()~=1 and Duel.GetTurnPlayer()==tp
 end
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
     if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
