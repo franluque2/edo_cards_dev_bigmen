@@ -80,12 +80,12 @@ function s.cfilter(c,tp)
 	return c:IsType(TYPE_XYZ) and c:IsPreviousControler(tp) and c:IsControler(tp) and c:GetFlagEffect(id)~=0
 end
 
-function s.spfilter(c,e,tp,rank)
+function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsSetCard(0x48) and c:GetRank()<rank and not c:IsSetCard(0x107f)
+		and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsSetCard(0x48) and not c:IsSetCard(0x107f)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp,e:GetLabelObject():GetRank())
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if #g>0 then
 		Duel.Hint(HINT_CARD,0,id)
 		local at=eg:Filter(s.cfilter,nil,tp)
