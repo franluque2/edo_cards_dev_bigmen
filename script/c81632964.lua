@@ -48,9 +48,80 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetTarget(aux.TargetBoolFunction(s.celestialwarriorfilter))
 		e3:SetValue(RACE_WARRIOR)
 		Duel.RegisterEffect(e3,tp)
+
+		--name changing time
+
+		local e4=Effect.CreateEffect(e:GetHandler())
+		e4:SetType(EFFECT_TYPE_FIELD)
+		e4:SetCode(EFFECT_CHANGE_CODE)
+		e4:SetTargetRange(LOCATION_GRAVE,0)
+		e4:SetTarget(aux.TargetBoolFunction(Card.IsCode,160007036))
+		e4:SetValue(160001029)
+		Duel.RegisterEffect(e4,tp)
+
+		local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_FIELD)
+		e5:SetCode(EFFECT_CHANGE_CODE)
+		e5:SetTargetRange(LOCATION_GRAVE,0)
+		e5:SetTarget(aux.TargetBoolFunction(Card.IsCode,160008036))
+		e5:SetValue(160004020)
+		Duel.RegisterEffect(e5,tp)
+
+		local e6=Effect.CreateEffect(e:GetHandler())
+		e6:SetType(EFFECT_TYPE_FIELD)
+		e6:SetCode(EFFECT_CHANGE_CODE)
+		e6:SetTargetRange(LOCATION_GRAVE,0)
+		e6:SetTarget(aux.TargetBoolFunction(Card.IsCode,160421011))
+		e6:SetValue(160007017)
+		Duel.RegisterEffect(e6,tp)
+
+		--change atk
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+		e7:SetType(EFFECT_TYPE_FIELD)
+		e7:SetCode(EFFECT_SET_ATTACK)
+		e7:SetTargetRange(LOCATION_GRAVE,0)
+		e7:SetTarget(aux.TargetBoolFunction(Card.IsMonster))
+		e7:SetValue(0)
+		Duel.RegisterEffect(e7,tp)
+
+
+		--summon with 1 tribute
+		local e8=Effect.CreateEffect(e:GetHandler())
+		e8:SetDescription(aux.Stringid(id, 1))
+		e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e8:SetType(EFFECT_TYPE_SINGLE)
+		e8:SetCode(EFFECT_SUMMON_PROC)
+		e8:SetCondition(s.otcon)
+		e8:SetOperation(s.otop)
+		e8:SetValue(SUMMON_TYPE_TRIBUTE)
+		c:RegisterEffect(e8)
+
+		local e9=Effect.CreateEffect(e:GetHandler())
+		e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+		e9:SetTargetRange(LOCATION_HAND,0)
+		e9:SetTarget(s.eftg2)
+		e9:SetLabelObject(e8)
+		Duel.RegisterEffect(e9,tp)
+
 	end
 	e:SetLabel(1)
 end
+
+function s.otcon(e,c,minc)
+	if c==nil then return true end
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1)
+end
+function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
+	local sg=Duel.SelectTribute(tp,c,1,1)
+	c:SetMaterial(sg)
+	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
+end
+
+function s.eftg2(_,c)
+	return c:IsRace(RACE_WARRIOR) and c:IsLevel(8)
+end
+
 
 function s.celestialwarriorfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_CELESTIALWARRIOR)
@@ -67,6 +138,14 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
+	local hermit=Duel.CreateToken(tp, 160201006)
+	Duel.SendtoGrave(hermit, REASON_RULE)
+
+	local hermit2=Duel.CreateToken(tp, 160201006)
+	Duel.SendtoGrave(hermit2, REASON_RULE)
+
+	local hermit3=Duel.CreateToken(tp, 160201006)
+	Duel.SendtoGrave(hermit3, REASON_RULE)
     
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end
@@ -76,6 +155,10 @@ function s.lowlevelfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsLevelBelow(6) and c:IsFaceup()
 end
 
+function s.addfusionfilter(c)
+	return c:IsCode(160204050) and c:IsAbleToHand()
+end
+
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
@@ -83,10 +166,11 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id+1)>0 then return end
 	--Boolean checks for the activation condition: b1, b2
 
---send top card from deck to gy, target 1 lvl 6 or lower monster you control, it is treated as 2 tributes
+--Once per turn, if you control "Valkyrian Sewkyrie", you can send the top 3 cards of your Deck to your GY, add 1 "Fusion" from your Deck or GY to your Hand.
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.lowlevelfilter,tp,LOCATION_MZONE,0,1,nil)
-						and Duel.IsPlayerCanDiscardDeckAsCost(tp, 1)
+			and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
+						and Duel.IsPlayerCanDiscardDeckAsCost(tp, 3)
+						and Duel.IsExistingMatchingCard(s.addfusionfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1,nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -100,8 +184,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 --copy the bxs from above
 
 local b1=Duel.GetFlagEffect(tp,id+1)==0
-and Duel.IsExistingMatchingCard(s.lowlevelfilter,tp,LOCATION_MZONE,0,1,nil)
-            and Duel.IsPlayerCanDiscardDeckAsCost(tp, 1)
+and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
+			and Duel.IsPlayerCanDiscardDeckAsCost(tp, 3)
+			and Duel.IsExistingMatchingCard(s.addfusionfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1,nil)
 
 
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
@@ -111,17 +196,11 @@ end
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.DiscardDeck(tp, 1, REASON_EFFECT) then
-        local tc=Duel.SelectMatchingCard(tp, s.lowlevelfilter, tp, LOCATION_MZONE, 0, 1, 1, false,nil):GetFirst()
+    if Duel.DiscardDeck(tp, 3, REASON_EFFECT) then
+        local tc=Duel.SelectMatchingCard(tp, s.addfusionfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1, 1, false,nil)
         if tc then
-            
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(EFFECT_DOUBLE_TRIBUTE)
-            e1:SetValue(s.eftg)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-            tc:RegisterEffect(e1)
-
+            Duel.SendtoHand(tc, tp, REASON_EFFECT)
+			Duel.ConfirmCards(1-tp, tc)
         end
     end
 
@@ -151,20 +230,34 @@ end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 
     if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-        local g=Duel.SelectMatchingCard(tp, s.rulerbackrowfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil):GetFirst()
-        if g then
-            Duel.Hint(HINT_CARD, tp, id)
+        local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.rulerbackrowfilter),tp,LOCATION_GRAVE,0,nil)
+
+		local sg=aux.SelectUnselectGroup(tg,e,tp,1,ft,aux.dncheck,1,tp,HINTMSG_TARGET)
+		if #sg>0 then
+		Duel.Hint(HINT_CARD, tp, id)
+
+			
+		local g=sg:GetFirst()
+
+        while g do
+			
             Duel.SSet(tp, g)
             --Banish it if it leaves the field
             local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetDescription(3300)
+            e1:SetDescription(3301)
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
             e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
             e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
-            e1:SetValue(LOCATION_REMOVED)
+            e1:SetValue(LOCATION_DECKBOT)
             g:RegisterEffect(e1)
+			
+			g=sg:GetNext()
         end
+		
+	end
+
+	end
     end
 	--sets the opd
 	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
