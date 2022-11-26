@@ -95,7 +95,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e8:SetCondition(s.otcon)
 		e8:SetOperation(s.otop)
 		e8:SetValue(SUMMON_TYPE_TRIBUTE)
-		c:RegisterEffect(e8)
 
 		local e9=Effect.CreateEffect(e:GetHandler())
 		e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
@@ -168,7 +167,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --Once per turn, if you control "Valkyrian Sewkyrie", you can send the top 3 cards of your Deck to your GY, add 1 "Fusion" from your Deck or GY to your Hand.
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
 						and Duel.IsPlayerCanDiscardDeckAsCost(tp, 3)
 						and Duel.IsExistingMatchingCard(s.addfusionfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1,nil)
 
