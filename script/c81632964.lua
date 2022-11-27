@@ -183,7 +183,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 --copy the bxs from above
 
 local b1=Duel.GetFlagEffect(tp,id+1)==0
-and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
+and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,160007001),tp,LOCATION_MZONE,0,1,nil)
 			and Duel.IsPlayerCanDiscardDeckAsCost(tp, 3)
 			and Duel.IsExistingMatchingCard(s.addfusionfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1,nil)
 
