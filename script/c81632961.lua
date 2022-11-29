@@ -265,7 +265,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
             and Duel.GetFlagEffect(tp, id+3)>0
-			and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
+			and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
             and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
 
@@ -285,7 +285,7 @@ local b1=Duel.GetFlagEffect(tp,id+1)==0
 
 local b2=Duel.GetFlagEffect(tp,id+2)==0
     and Duel.GetFlagEffect(tp, id+3)>0
-    and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
+    and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
     and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
 
@@ -324,7 +324,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     if tc then
         if Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false,false,POS_FACEUP) then
             local ritual=Duel.CreateToken(tp, 41850466)
-            Duel.SSet(tp, 41850466)
+            Duel.SSet(tp, ritual)
 
             local e7=Effect.CreateEffect(e:GetHandler())
             e7:SetDescription(aux.Stringid(id,2))
