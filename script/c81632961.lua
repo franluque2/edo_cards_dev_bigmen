@@ -56,11 +56,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e4=e6:Clone()
         e4:SetCode(EFFECT_CANNOT_SUMMON)
         e4:SetTarget(function(_,_) return true end)
-        Duel.RegisterEffect(e4,tp)
+
+        local e12=Effect.CreateEffect(e:GetHandler())
+        e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+        e12:SetTargetRange(LOCATION_MZONE,0)
+        e12:SetTarget(function (_,c) return s.thousandfilter(c) end)
+        e12:SetLabelObject(e4)
+        Duel.RegisterEffect(e12,tp)
 
         local e2=e4:Clone()
         e2:SetCode(EFFECT_CANNOT_MSET)
-        Duel.RegisterEffect(e2, tp)
+
+        local e13=Effect.CreateEffect(e:GetHandler())
+        e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+        e13:SetTargetRange(LOCATION_MZONE,0)
+        e13:SetTarget(function (_,c) return s.thousandfilter(c) end)
+        e13:SetLabelObject(e2)
+        Duel.RegisterEffect(e13,tp)
 
 
         local e7=Effect.CreateEffect(e:GetHandler())
