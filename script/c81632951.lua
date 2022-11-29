@@ -18,7 +18,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PREDRAW)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetCondition(s.flipcon)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
@@ -48,6 +48,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 		Duel.RegisterEffect(e3, tp)
 
+
+
+		local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetValue(0xe2)
+        Duel.RegisterEffect(e5,tp)
+
+		local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_RACE)
+        e6:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e6:SetValue(RACE_ROCK)
+        Duel.RegisterEffect(e6,tp)
 
 
 
@@ -93,15 +110,37 @@ function s.pyramidpop(e,tp,eg,ev,ep,re,r,rp)
 	end
 end
 
+function s.archetypefilter(c)
+	return c:IsSetCard(0x5c) and c:IsLevel(10)
+end
+
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	s.setpyramid(e,tp,eg,ep,ev,re,r,rp)
+
+	local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end
 

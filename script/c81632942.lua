@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetRange(0x5f)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
+	--aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
 end
 
 
