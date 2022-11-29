@@ -250,12 +250,15 @@ function s.setthousandbackrowfilter(c)
     return c:IsCode(56673480,93238626) and c:IsType(TYPE_SPELL) and c:IsType(TYPE_CONTINUOUS) and c:IsSSetable()
 end
 
+function s.umbralhorrorfilter(c)
+    return c:IsSetCard(0x87) and c:IsFaceup() and c:HasLevel()
+end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 and Duel.GetFlagEffect(tp, id+5)>0 then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
@@ -267,10 +270,13 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
             and Duel.GetFlagEffect(tp, id+3)>0
 			and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
             and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
+    
+    local b3=Duel.GetFlagEffect(tp, id+5)==0
+        and Duel.IsExistingMatchingCard(s.umbralhorrorfilter, tp, LOCATION_MZONE, 0, 1,nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b1 or b2 or b3)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
@@ -288,16 +294,24 @@ local b2=Duel.GetFlagEffect(tp,id+2)==0
     and Duel.IsExistingMatchingCard(s.sunyafilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
     and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
+local b3=Duel.GetFlagEffect(tp, id+5)==0
+    and Duel.IsExistingMatchingCard(s.umbralhorrorfilter, tp, LOCATION_MZONE, 0, 1,nil)
+
+
+
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+								  {b2,aux.Stringid(id,1)},
+                                  {b3,aux.Stringid(id,6)})
 	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	elseif op==1 then
 		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+    elseif op==2 then
+        s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
@@ -333,12 +347,28 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
             e7:SetRange(LOCATION_MZONE)
             e7:SetTarget(s.destg)
             e7:SetOperation(s.desop)
-            tc:RegisterEffect(e7)
+            tc:GetFirst():RegisterEffect(e7)
         end
     end
 
 	--sets the opd
 	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+end
+
+function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
+    local level=Duel.AnnounceLevel(tp,1,5)
+
+    local e4=Effect.CreateEffect(e:GetHandler())
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CHANGE_LEVEL)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetValue(level)
+    e4:SetReset(RESET_PHASE+PHASE_END)
+	e4:SetTarget(function(_,c) return s.umbralhorrorfilter(c) end)
+    Duel.RegisterEffect(e4, tp)
+
+
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 function s.numnetworkfilter(c)
