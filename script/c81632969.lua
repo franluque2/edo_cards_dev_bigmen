@@ -21,7 +21,7 @@ end
 
 
 --change this to change the locations where this acts
-local LOCATIONS=LOCATION_HAND and LOCATION_GRAVE and LOCATION_REMOVED and LOCATION_ONFIELD and LOCATION_OVERLAY
+local LOCATIONS=LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED
 
 --add archetype setcode here
 local ARCHETYPE=0x57b
