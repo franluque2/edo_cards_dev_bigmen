@@ -63,10 +63,10 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e4=Effect.CreateEffect(e:GetHandler())
 		e4:SetType(EFFECT_TYPE_FIELD)
-		e4:SetCode(EFFECT_SUMMON_PROC)
+		e4:SetCode(EFFECT_DECREASE_TRIBUTE)
 		e4:SetTargetRange(LOCATION_HAND,0)
-		e4:SetCondition(s.ntcon)
-		e4:SetTarget(aux.FieldSummonProcTg(s.nttg))
+		e4:SetValue(0x1)
+		e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x50))
 		Duel.RegisterEffect(e4,tp)
 
 
@@ -74,13 +74,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-function s.ntcon(e,c,minc)
-	if c==nil then return true end
-	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-end
-function s.nttg(e,c)
-	return c:IsSetCard(0x50) and c:GetTributeRequirement()>0
-end
 
 
 function s.repfilter(c,tp)
