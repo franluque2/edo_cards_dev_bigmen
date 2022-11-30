@@ -59,7 +59,7 @@ function s.setfilter(c)
 end
 
 function s.cleanmenfilter(c)
-	return (c:IsCode(160202021) or c:IsCode(160202022) or c:IsCode(160202023)) and c:IsAbleToDeck()
+	return (c:IsCode(160202021) or c:IsCode(160202022) or c:IsCode(160202023) or c:IsCode(81632134)) and c:IsAbleToDeck()
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -114,7 +114,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 	elseif op==1 then
 			local tg=Duel.GetMatchingGroup(s.cleanmenfilter,tp,LOCATION_GRAVE,0,nil)
-			local g=aux.SelectUnselectGroup(tg,e,tp,1,3,aux.dncheck,1,tp,HINTMSG_TODECK)
+			local g=aux.SelectUnselectGroup(tg,e,tp,1,99,aux.dncheck,1,tp,HINTMSG_TODECK)
 			Duel.SendtoDeck(g, tp, SEQ_DECKTOP, REASON_EFFECT)
 			Duel.SortDecktop(tp,tp,#g)
 			Duel.RegisterFlagEffect(tp, id+3, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
