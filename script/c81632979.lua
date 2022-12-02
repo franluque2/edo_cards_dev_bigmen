@@ -117,24 +117,24 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
             numbers[3]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
         end
-        numbers[4]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
+        --numbers[4]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
 
-        while numbers[4]==numbers[3] or numbers[4]==numbers[2] or numbers[4]==numbers[1] do
+        --while numbers[4]==numbers[3] or numbers[4]==numbers[2] or numbers[4]==numbers[1] do
 
-            numbers[4]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
-        end
-        numbers[5]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
+          --  numbers[4]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
+        --end
+        --numbers[5]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
 
-        while numbers[5]==numbers[4] or numbers[5]==numbers[3] or numbers[5]==numbers[2] or numbers[5]==numbers[1] do
+        --while numbers[5]==numbers[4] or numbers[5]==numbers[3] or numbers[5]==numbers[2] or numbers[5]==numbers[1] do
 
-            numbers[5]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
-        end
+          --  numbers[5]=Duel.GetRandomNumber(1,#ChristmasPresents[ep])
+        --end
 
         g:AddCard(ChristmasPresents[ep][numbers[1]])
         g:AddCard(ChristmasPresents[ep][numbers[2]])
         g:AddCard(ChristmasPresents[ep][numbers[3]])
-        g:AddCard(ChristmasPresents[ep][numbers[4]])
-        g:AddCard(ChristmasPresents[ep][numbers[5]])
+        --g:AddCard(ChristmasPresents[ep][numbers[4]])
+        --g:AddCard(ChristmasPresents[ep][numbers[5]])
 
         local g2=aux.SelectUnselectGroup(g, e, ep, 2, 2, nil, 1, ep, HINTMSG_CONFIRM, nil, nil,false)
 
