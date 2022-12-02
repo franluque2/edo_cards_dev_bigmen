@@ -167,6 +167,8 @@ function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
         local sclaws=Duel.CreateToken(ep, 46565218)
         Duel.SpecialSummon(sclaws, SUMMON_TYPE_SPECIAL, ep, ep, false, false, POS_FACEUP_DEFENSE)
 
+        Debug.Message("Yo Ho Ho! Merry Christmas! Have Some Life!")
+
         local giftcard1=Duel.CreateToken(ep, 39526584)
         local giftcard2=Duel.CreateToken(1-ep, 39526584)
 
