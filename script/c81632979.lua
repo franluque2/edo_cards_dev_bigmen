@@ -157,7 +157,7 @@ end
 
 function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
     local num=Duel.GetRandomNumber(1,10)
-	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id-1000+2)==0 and num==1 and Duel.GetLocationCount(ep, LOCATION_MZONE)>0
+	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id-1000+2)==0 and num<2 and Duel.GetLocationCount(ep, LOCATION_MZONE)>0
         and Duel.GetLocationCount(ep, LOCATION_SZONE)>0 and Duel.GetLocationCount(1-ep, LOCATION_SZONE)>0
 end
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
@@ -166,8 +166,10 @@ function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
 
         local sclaws=Duel.CreateToken(ep, 46565218)
         Duel.SpecialSummon(sclaws, SUMMON_TYPE_SPECIAL, ep, ep, false, false, POS_FACEUP_DEFENSE)
+        Duel.Hint(HINT_OPSELECTED,tp,aux.Stringid(id, 1))
+        Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id, 1))
 
-        Debug.Message("Ho Ho Ho! Merry Christmas! Have Some Life!")
+
 
         local giftcard1=Duel.CreateToken(ep, 39526584)
         local giftcard2=Duel.CreateToken(1-ep, 39526584)
