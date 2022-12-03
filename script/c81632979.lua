@@ -139,8 +139,13 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
         local g2=aux.SelectUnselectGroup(g, e, ep, 2, 2, nil, 1, ep, HINTMSG_CONFIRM, nil, nil,false)
 
         if g2 then
+			Duel.DisableShuffleCheck(true)
+			
+			Duel.SendtoDeck(g2, ep, SEQ_DECKBOTTOM, REASON_RULE)
+
+			Duel.ConfirmCards(1-ep,g2)
             Duel.Hint(HINT_SELECTMSG, 1-ep, HINTMSG_ATOHAND)
-            local tc=g2:Select(1-ep, 1, 1,false,nil)
+            local tc=g2:Select(1-ep, 1, 1,nil)
             if tc then
                 local card=Duel.CreateToken(ep, tc:GetFirst():GetOriginalCode())
                 Duel.SendtoHand(card, ep, REASON_RULE)
@@ -149,6 +154,12 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
                 Duel.SendtoHand(card2, 1-ep, REASON_RULE)
 
             end
+
+			Duel.SendtoDeck(g2, ep, -2, REASON_RULE)
+
+			Duel.DisableShuffleCheck(false)
+
+
         end
 
         Duel.RegisterFlagEffect(ep,id-1000+1,RESET_PHASE+PHASE_END,0,0)
