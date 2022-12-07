@@ -45,6 +45,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetOperation(s.spop)
 		Duel.RegisterEffect(e4,tp)
 
+		local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_FIELD)
+		e5:SetCode(EFFECT_ADD_RACE)
+		e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+		e5:SetTarget(aux.TargetBoolFunction(aux.TRUE()))
+		e5:SetValue(RACE_FIEND)
+		Duel.RegisterEffect(e5,tp)
+
 	end
 	e:SetLabel(1)
 end
