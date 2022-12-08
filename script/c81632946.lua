@@ -49,7 +49,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetType(EFFECT_TYPE_FIELD)
 		e5:SetCode(EFFECT_ADD_RACE)
 		e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
-		e5:SetTarget(aux.TargetBoolFunction(aux.TRUE()))
+		e5:SetTarget(function (_,c) return c:IsType(TYPE_MONSTER) end)
 		e5:SetValue(RACE_FIEND)
 		Duel.RegisterEffect(e5,tp)
 
