@@ -84,7 +84,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.IsExistingMatchingCard(s.monsterfilter,tp,LOCATION_MZONE,0,1,nil)
 
 	local b3=Duel.GetFlagEffect(ep,id+3)==0
-			and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0
+			and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>3
 
 	local b4=Duel.GetFlagEffect(ep, id+4)==0
 		and Duel.IsExistingMatchingCard(s.high_level_filter, tp, LOCATION_MZONE, 0, 1, nil)

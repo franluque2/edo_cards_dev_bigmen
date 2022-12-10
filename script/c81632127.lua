@@ -80,6 +80,7 @@ function s.cptg(e, tp, eg, ep, ev, re, r, rp, chk)
 		return true
 	end
 	local bc = Duel.SelectMatchingCard(tp, s.inffilter, tp, LOCATION_GRAVE, 0, 1, 1, nil,tp):GetFirst()
+	Duel.SetTargetCard(bc)
 	e:SetLabelObject(bc)
 end
 
