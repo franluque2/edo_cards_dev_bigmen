@@ -12,7 +12,6 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_REPEAT)
 	e1:SetCountLimit(1,id)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -44,9 +43,6 @@ function s.spcon2(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
-end
 function s.filter(c,e,tp)
 	return c:IsCode(alias) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
