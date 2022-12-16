@@ -39,6 +39,9 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
+
+    if not d then return false end
+
 	return (a:IsControler(tp) and a:IsCode(511005604))
 		or (d and d:IsControler(tp) and d:IsCode(511005604))
 end
