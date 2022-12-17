@@ -1,5 +1,5 @@
 --Mantis Egg (CT)
-Duel.LoadScript ("c420.lua")
+Duel.LoadScript ("big_aux.lua")
 local s,id=GetID()
 local TOKEN_BABY_MANTIS=id+1
 function s.initial_effect(c)
@@ -188,7 +188,7 @@ end
 
 
 function s.thfilter(c)
-	return c:IsMonster() and (c:IsMantis() or c:IsCode(66973070)) and c:IsAbleToHand()
+	return c:IsMonster() and (c:IsCTMantis() or c:IsCode(66973070)) and c:IsAbleToHand()
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -203,7 +203,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.mantfilter(c)
-	return c:IsFaceup() and c:IsMonster() and (c:IsMantis() or c:IsCode(66973070)) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsMonster() and (c:IsCTMantis() or c:IsCode(66973070)) and c:IsAbleToHand()
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)

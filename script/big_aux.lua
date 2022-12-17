@@ -87,6 +87,11 @@ CustomArchetype.Toy={
 
 Card.IsCTToy=MakeCheck({0x558,0xad,0x559},CustomArchetype.Toy)
 
+CustomArchetype.CTMantis={
+  58818411, 85505315, 51254980, 82738277, 100297002, 100297003, 94573223
+}
+Card.IsCTMantis=MakeCheck({0x535},CustomArchetype.CTMantis)
+
 
 end
 
