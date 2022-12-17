@@ -57,7 +57,7 @@ end
 s.listed_series={0x535}
 
 function s.spfilter(c,e,tp)
-	return c:IsRace(RACE_INSECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) and c:IsReason(REASON_RELEASE) and c:GetTurnID()==turn
+	return c:IsRace(RACE_INSECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) and c:IsReason(REASON_RELEASE) and c:GetTurnID()==Duel.GetTurnCount()
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
