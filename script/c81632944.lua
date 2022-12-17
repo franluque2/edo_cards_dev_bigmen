@@ -55,7 +55,7 @@ end
 function s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_HAND
 		local to_limbo=Duel.GetMatchingGroup(aux.TRUE, tp, location, 0, nil)
-		Duel.SendtoDeck(to_limbo, tp, -2, REASON_EFFECT)
+		Duel.RemoveCards(to_limbo)
 		Duel.DisableShuffleCheck(true)
 		local oppcards=Duel.GetMatchingGroup(aux.TRUE, tp, 0, location, nil)
 
@@ -79,7 +79,7 @@ local aoj_tuners={}
 function s.copyextra(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_EXTRA
 		local to_limbo=Duel.GetMatchingGroup(aux.TRUE, tp, location, 0, nil)
-		Duel.SendtoDeck(to_limbo, tp, -2, REASON_EFFECT)
+		Duel.RemoveCards(to_limbo)
 
 		local oppcards=Duel.GetMatchingGroup(aux.TRUE, tp, 0, location, nil)
 
@@ -104,7 +104,7 @@ function s.copydeck(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_DECK
 		local to_limbo=Duel.GetMatchingGroup(aux.TRUE, tp, location, 0, nil)
 		Duel.DisableShuffleCheck(true)
-		Duel.SendtoDeck(to_limbo, tp, -2, REASON_EFFECT)
+		Duel.RemoveCards(to_limbo)
 
 		local oppcardnum=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
 		local oppcards=Duel.GetDecktopGroup(1-tp, oppcardnum)
