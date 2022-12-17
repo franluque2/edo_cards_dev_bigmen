@@ -310,7 +310,7 @@ function s.adcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 
-local table_dsynchro={100000151,100000152,100000154,100000155,100000156}
+local table_dsynchro={100000151,100000152,100000154,100000155,81632324}  --og Dark Diviner: 100000156
 function s.getcard()
 return table_dsynchro[ Duel.GetRandomNumber(1, #table_dsynchro ) ]
 end

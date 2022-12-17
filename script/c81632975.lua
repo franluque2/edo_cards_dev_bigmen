@@ -1,6 +1,7 @@
 --Future Conscription of the Law
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -27,7 +28,7 @@ local ARCHETYPE=0x15a
 
 --All "Jutte" and "Goyo" monsters in your possession are also treated as "S-Force" monsters.
 function s.archetypefilter(c)
-  return c:IsSetCard(0x523, 0x52d)
+  return c:IsGoyo() or c:IsJutte()
 end
 
 
