@@ -165,11 +165,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
             local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-            e1:SetDescription(3002)
+            e1:SetDescription(3061)
 			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
             e1:SetRange(LOCATION_MZONE)
-			e1:SetValue(1)
+			e1:SetValue(aux.tgoval)
 			tc:RegisterEffect(e1)
         elseif op==3 then
             --cannot be destroyed by battle
