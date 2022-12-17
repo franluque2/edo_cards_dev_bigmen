@@ -146,7 +146,7 @@ end
 --op=2, Send your entire hand to the underworld
 function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 	local hand=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_HAND, 0, nil)
-	Duel.SendtoDeck(hand, tp, -2, REASON_EFFECT)
+	Duel.RemoveCards(hand)
 
 	if Duel.IsExistingMatchingCard(s.archfiendfilter, tp, LOCATION_DECK, 0, 1, nil) then
 		if Duel.SelectYesNo(tp, aux.Stringid(id, 4)) then
