@@ -3,6 +3,8 @@ local s,id,alias=GetID()
 function s.initial_effect(c)
     alias = c:GetOriginalCodeRule()
 
+	c:EnableCounterPermit(0xb)
+
     c:SetUniqueOnField(1,0,alias)
 	-- Activate
 	local e1=Effect.CreateEffect(c)
