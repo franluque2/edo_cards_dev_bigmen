@@ -93,7 +93,7 @@ function s.putbackseraphfilter(c)
 end
 
 function s.resetbariancardfilter(c)
-	return c:IsCode(97769122, 91110378) and c:IsAbleToDeck()
+	return c:IsCode(97769122, 57734012) and c:IsAbleToDeck()
 end
 
 function s.addstarseraphfilter(c)
