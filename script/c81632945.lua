@@ -133,7 +133,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(overlays, REASON_EFFECT)
 		end
 		local g2=Duel.GetMatchingGroup(s.notfield, tp, LOCATION_ONFIELD, 0, nil)
-		Duel.SendtoDeck(g2, tp, -2, REASON_EFFECT)
+		Duel.RemoveCards(g2)
 
 		local leviathan=Duel.CreateToken(tp, 81632154)
 		Duel.SpecialSummon(leviathan,0,tp,tp,true,false,POS_FACEUP)

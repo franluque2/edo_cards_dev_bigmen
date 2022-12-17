@@ -124,7 +124,7 @@ function s.limbofield(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(overlays, REASON_EFFECT)
 	end
 	local g2=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_ONFIELD, 0, nil)
-	Duel.SendtoDeck(g2, tp, -2, REASON_EFFECT)
+	Duel.RemoveCards(g2)
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
