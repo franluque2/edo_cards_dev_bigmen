@@ -41,9 +41,28 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e8,tp)
 
 
+		local e4=Effect.CreateEffect(e:GetHandler())
+		e4:SetType(EFFECT_TYPE_FIELD)
+		e4:SetCode(EFFECT_INDESTRUCTABLE)
+		e4:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
+		e4:SetTarget(aux.TargetBoolFunction(s.rulerofchairfilter,tp))
+		e4:SetValue(1)
+		Duel.RegisterEffect(e4,tp)
+
+
 	end
 	e:SetLabel(1)
 end
+
+
+function s.throneofdarknessfilter(c)
+	return c:IsFaceup() and c:IsCode(160202036)
+end
+
+function s.rulerofchairfilter(c,tp)
+	return c:IsCode(160202037,160203024) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.throneofdarknessfilter,tp,LOCATION_ONFIELD,0,1,nil)
+end
+
 
 function s.fuatkfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and (c:Attack()==0) and c:IsPosition(POS_FACEUP_ATTACK)
