@@ -26,7 +26,7 @@ local ARCHETYPE=CARD_SKULL_SERVANT
 
 --All Zombie monsters in your possession are also named skull servant
 function s.archetypefilter(c)
-  return c:IsRace(RACE_ZOMBIE)
+  return c:IsRace(RACE_ZOMBIE) and not c:IsCode(57473560)
 end
 
 function s.archetypefilter2(c)
@@ -64,7 +64,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e3:SetType(EFFECT_TYPE_FIELD)
     e3:SetCode(EFFECT_ADD_CODE)
     e3:SetTargetRange(LOCATIONS,0)
-    e3:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
+    e3:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
     e3:SetValue(ARCHETYPE)
     Duel.RegisterEffect(e3,tp)
 
@@ -150,6 +150,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e4=Effect.CreateEffect(e:GetHandler())
 				e4:SetType(EFFECT_TYPE_SINGLE)
 				e4:SetCode(id+2)
+				tc:RegisterEffect(e4)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e4=Effect.CreateEffect(e:GetHandler())
+				e4:SetType(EFFECT_TYPE_SINGLE)
+				e4:SetCode(id+3)
 				tc:RegisterEffect(e4)
 
 
