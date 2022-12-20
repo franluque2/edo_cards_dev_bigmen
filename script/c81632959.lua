@@ -59,7 +59,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e5=Effect.CreateEffect(e:GetHandler())
 		e5:SetType(EFFECT_TYPE_FIELD)
-		e5:SetTargetRange(LOCATION_MZONE,0)
+		e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
 		e5:SetCode(EFFECT_ADD_ATTRIBUTE)
 		e5:SetTarget(s.changeatttypefilter)
 		e5:SetValue(ATTRIBUTE_DARK)
@@ -67,7 +67,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e6=Effect.CreateEffect(e:GetHandler())
 		e6:SetType(EFFECT_TYPE_FIELD)
-		e6:SetTargetRange(LOCATION_MZONE,0)
+		e6:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
 		e6:SetCode(EFFECT_ADD_RACE)
 		e6:SetTarget(s.changeatttypefilter)
 		e6:SetValue(RACE_MACHINE)
@@ -177,7 +177,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 						and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,3,nil,TYPES_TOKEN)
+			and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,3,nil,TYPE_TOKEN)
             and Duel.IsExistingMatchingCard(s.skyunionfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
             and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
@@ -203,7 +203,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
                     and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
     local b2=Duel.GetFlagEffect(tp,id+2)==0
-        and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,3,nil,TYPES_TOKEN)
+        and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,3,nil,TYPE_TOKEN)
         and Duel.IsExistingMatchingCard(s.skyunionfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
         and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
 
