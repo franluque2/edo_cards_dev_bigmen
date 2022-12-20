@@ -47,6 +47,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetOperation(s.desrepop)
 		Duel.RegisterEffect(e2,tp)
 
+		local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_FIELD)
+		e5:SetTargetRange(LOCATION_REMOVED,0)
+		e5:SetCode(EFFECT_ADD_ATTRIBUTE)
+		e5:SetTarget(function (_, tc) return tc:IsRace(RACE_SPELLCASTER) end)
+		e5:SetValue(ATTRIBUTE_LIGHT)
+		Duel.RegisterEffect(e5, tp)
+
 
 	end
 	e:SetLabel(1)
