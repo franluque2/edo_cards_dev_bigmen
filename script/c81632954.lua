@@ -1,5 +1,5 @@
 --Order Up!
-Duel.LoadScript("big_aux.lua")
+--Duel.LoadScript("big_aux.lua")
 
 
 local s,id=GetID()
