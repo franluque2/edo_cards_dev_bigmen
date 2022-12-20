@@ -75,16 +75,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetValue(160007017)
 		Duel.RegisterEffect(e6,tp)
 
-		--change atk
-
-		local e7=Effect.CreateEffect(e:GetHandler())
-		e7:SetType(EFFECT_TYPE_FIELD)
-		e7:SetCode(EFFECT_SET_ATTACK)
-		e7:SetTargetRange(LOCATION_GRAVE,0)
-		e7:SetTarget(aux.TargetBoolFunction(Card.IsMonster))
-		e7:SetValue(0)
-		Duel.RegisterEffect(e7,tp)
-
 
 		--summon with 1 tribute
 		local e8=Effect.CreateEffect(e:GetHandler())
