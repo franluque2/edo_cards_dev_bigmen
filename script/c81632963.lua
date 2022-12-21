@@ -87,7 +87,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
         if tc:GetControler()==tp then
             local val=1000
         else
-            local val=1000
+            local val=-1000
         end
 
         local e1=Effect.CreateEffect(e:GetHandler())
