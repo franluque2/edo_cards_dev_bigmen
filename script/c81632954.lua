@@ -92,7 +92,7 @@ end
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)	
 		local g=Duel.GetMatchingGroup(s.royalcpaladdfilter,tp,LOCATION_DECK,0,nil)
-        if #g>0 then
+        if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
             Duel.Hint(HINT_CARD,tp,id)
             local cardnumber=Duel.GetRandomNumber(1, #g )
             local tc=g:GetFirst()
