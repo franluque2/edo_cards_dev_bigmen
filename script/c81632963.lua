@@ -81,7 +81,7 @@ end
 
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.chanfilter, nil)
-
+	Duel.Hint(HINT_CARD,tp,id)
     local tc=eg:GetFirst()
     while tc do
         if tc:GetControler()==tp then
