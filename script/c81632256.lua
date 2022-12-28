@@ -68,7 +68,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(Group.FromCards(fc))
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-    if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_SZONE,0,1,nil) then
+    if Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_SZONE,0,1,nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         local fc=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_SZONE,0,1,1,nil):GetFirst()
         if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	if fc:GetOverlayCount()<ft then ft=fc:GetOverlayCount() end
