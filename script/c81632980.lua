@@ -26,7 +26,7 @@ local ARCHETYPE=CARD_SKULL_SERVANT
 
 --All Zombie monsters in your possession are also named skull servant
 function s.archetypefilter(c)
-  return c:IsRace(RACE_ZOMBIE) and not c:IsCode(57473560)
+  return c:IsRace(RACE_ZOMBIE) and not c:IsCode(57473560,06128460)
 end
 
 function s.archetypefilter2(c)
