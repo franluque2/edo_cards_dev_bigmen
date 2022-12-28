@@ -26,13 +26,19 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 --add archetype setcode here
 local ARCHETYPE=0x15a
 
---All "Jutte" and "Goyo" monsters in your possession are also treated as "S-Force" monsters.
+--All "Jutte" and "Goyo" monsters or Samusata Gardna in your possession are also treated as "S-Force" monsters.
 function s.archetypefilter(c)
-  return c:IsGoyo() or c:IsJutte()
+  return c:IsGoyo() or c:IsJutte() or c:IsCode(511001748)
+end
+
+function s.smallsforcefiltertuna(_,c)
+	return (c:IsSetCard(0x15a) and c:IsLevelBelow(3)) or c:IsCode(511001748)
 end
 
 
-
+function s.supertypefilter(c)
+	return c:IsType(TYPE_FUSION) or c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_XYZ) or c:IsType(TYPE_LINK)
+end
 
 
 
@@ -54,6 +60,47 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
+
+		local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_TYPE)
+        e6:SetTargetRange(LOCATION_MZONE,0)
+        e6:SetTarget(s.smallsforcefiltertuna)
+        e6:SetValue(TYPE_TUNER)
+        Duel.RegisterEffect(e6,tp)
+
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e7:SetTargetRange(LOCATION_MZONE,0)
+        e7:SetTarget(function(_,c)  return c:IsSetCard(0x15a) end)
+        e7:SetValue(ATTRIBUTE_EARTH)
+        Duel.RegisterEffect(e7,tp)
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e8:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e8:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e8:SetValue(ATTRIBUTE_EARTH)
+        Duel.RegisterEffect(e8,tp)
+
+		local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_ADD_TYPE)
+        e9:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e9:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e9:SetValue(TYPE_SYNCHRO)
+        Duel.RegisterEffect(e9,tp)
+
+		local e10=Effect.CreateEffect(e:GetHandler())
+        e10:SetType(EFFECT_TYPE_FIELD)
+        e10:SetCode(EFFECT_ADD_RACE)
+        e10:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e10:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e10:SetValue(RACE_WARRIOR)
+        Duel.RegisterEffect(e10,tp)
 
 	end
 	e:SetLabel(1)
@@ -82,6 +129,23 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	g=Duel.GetMatchingGroup(s.supertypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+	
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+1)
 				tc:RegisterEffect(e3)
 
 
