@@ -69,7 +69,7 @@ end
 local tableHydra_l1={511009711,511009713,511009714,511600223,511027009}
 local tableHydra_l2={511009716}
 local tableHydra_l3={511106013,81632167, 81632168}
-local tableHydra_l4={81632169}
+local tableHydra_l4={81632169,511003212}
 
 function s.getcard1()
 return tableHydra_l1[ Duel.GetRandomNumber(1, #tableHydra_l1 ) ]
