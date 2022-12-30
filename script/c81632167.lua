@@ -105,7 +105,7 @@ function s.con(e)
 end
 
 function s.con2(e)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsAttribute,e:GetHandler():GetAttribute()),0,LOCATION_MZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsAttribute,e:GetHandler():GetAttribute()),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function s.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
