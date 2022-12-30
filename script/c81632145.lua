@@ -77,7 +77,7 @@ end
 
 
 function s.filter2(c,e,tp)
-	return (c:IsCode(100297011) or c:IsCode(73776643)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(61245403) or c:IsCode(73776643)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
