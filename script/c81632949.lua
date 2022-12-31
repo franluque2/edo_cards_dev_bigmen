@@ -61,11 +61,8 @@ end
 -- During the Standby Phase, if you do not control "Eva Token",
 -- 	You can Special Summon 1 "Eva Token"
 function s.adcon(e,tp,eg,ep,ev,re,r,rp)
-	if not (Duel.GetFlagEffect(tp,id+3)>0) then return end
-
 	local b1=Duel.GetFlagEffect(tp,id+3)==0
 			and not Duel.IsExistingMatchingCard(s.evatoken_onfield,tp,LOCATION_ONFIELD,0,1,nil)
-
 
 	return (b1)
 end
