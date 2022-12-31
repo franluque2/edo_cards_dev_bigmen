@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_DIRECT_ATTACK)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3013))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3013))
 	c:RegisterEffect(e3)
 
 end
