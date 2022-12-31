@@ -58,16 +58,16 @@ function s.evatoken_onfield(c)
 end
 
 
--- During your Standby Phase, if you do not control "Eva Token",
+-- During the Standby Phase, if you do not control "Eva Token",
 -- 	You can Special Summon 1 "Eva Token"
 function s.adcon(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.GetTurnPlayer()==tp and not (Duel.GetFlagEffect(tp,id+3)>0) then return end
+	if not (Duel.GetFlagEffect(tp,id+3)>0) then return end
 
 	local b1=Duel.GetFlagEffect(tp,id+3)==0
 			and not Duel.IsExistingMatchingCard(s.evatoken_onfield,tp,LOCATION_ONFIELD,0,1,nil)
 
 
-	return Duel.GetTurnPlayer()==tp and (b1)
+	return (b1)
 end
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
@@ -107,7 +107,7 @@ function s.greedquasarfilter(c)
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(id,tp)~=0 and Duel.IsExistingMatchingCard(s.greedquasarfilter, tp, LOCATION_ONFIELD, 0, 1,nil)
+	return Duel.GetTurnPlayer()~=tp and Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>2 and Duel.GetFlagEffect(id,tp)~=0 and Duel.IsExistingMatchingCard(s.greedquasarfilter, tp, LOCATION_ONFIELD, 0, 1,nil)
 end
 
 --Once per turn, at the start of the Battle Phase, you can banish 1 monster you control. Return that monster to your field during the End Phase.
