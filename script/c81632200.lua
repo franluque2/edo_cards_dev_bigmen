@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(s.tg)
 	e3:SetCondition(s.indescon)
-	e3:SetValue(aux.indoval)
+	e3:SetValue(1)
 	c:RegisterEffect(e3)
 
 end
