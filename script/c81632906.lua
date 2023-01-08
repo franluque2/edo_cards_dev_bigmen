@@ -1,10 +1,52 @@
 --Chosen by the Legendary Planet
 local s,id=GetID()
 function s.initial_effect(c)
-		aux.AddSkillProcedure(c,1,false,s.flipcon,s.flipop,1)
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_STARTUP)
+	e1:SetCountLimit(1)
+	e1:SetRange(0x5f)
+	e1:SetLabel(0)
+	e1:SetOperation(s.op)
+	c:RegisterEffect(e1)
 		aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
 end
 local planets={24413299,74711057,88071625,15033525,34004470,51402908,03912064,05645210,16255173,32588805}
+
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabel()==0 then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCountLimit(1)
+	e1:SetCondition(s.flipcon)
+	e1:SetOperation(s.flipop)
+	Duel.RegisterEffect(e1,tp)
+
+	--other passive duel effects go here
+
+	local e5=Effect.CreateEffect(e:GetHandler())
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_ADD_RACE)
+	e5:SetTargetRange(LOCATION_DECK,0)
+	e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+	e5:SetValue(RACE_REPTILE)
+	Duel.RegisterEffect(e5,tp)
+
+	local e6=Effect.CreateEffect(e:GetHandler())
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_ADD_RACE)
+	e6:SetTargetRange(LOCATION_GRAVE+LOCATION_ONFIELD,0)
+	e6:SetCondition(function(e,tp) return Duel.IsPlayerAffectedByEffect(e:GetHandler():GetControler(),511000380) end)
+	e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+	e6:SetValue(RACE_BEAST)
+	Duel.RegisterEffect(e6,tp)
+
+	end
+	e:SetLabel(1)
+end
+
 function s.flipconfilter(c)
 	return c:IsFaceup() and s.has_value(planets,c:GetOriginalCode())
 end
@@ -27,18 +69,42 @@ function s.has_value(tab, val)
 	return false
 end
 
+function s.flipcon2filter(c)
+	return s.has_value(planets,c:GetOriginalCode())
+end
+
+--add the conditions for the archetype swap here
+function s.archetypefilterforbbeast(c)
+  return c:IsSetCard(0x51e) and c:IsType(TYPE_MONSTER)
+end
+
+
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	--"cost" check
-	if not (Duel.IsExistingMatchingCard(s.flipconfilter,tp,LOCATION_ONFIELD,0,1,nil)) then return false end
-	--condition
-	return aux.CanActivateSkill(tp) and Duel.GetFlagEffect(tp,id)==0
+	return  Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and (Duel.IsExistingMatchingCard(s.flipcon2filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil))
 end
 
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
+
+	local g=Duel.GetMatchingGroup(s.archetypefilterforbbeast, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
 
 end
 
