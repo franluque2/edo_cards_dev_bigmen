@@ -47,7 +47,7 @@ function s.initial_effect(c)
 end
 
 function s.spfilter2(c,e,tp)
-	return c:IsCTToy() and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(alias)
+	return c:IsCTToy() and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsOriginalCode(id)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -90,7 +90,7 @@ end
 
 
 function s.spfilter(c,e,tp)
-	return c:IsCTToy() and not c:IsCode(alias) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCTToy() and not c:IsOriginalCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
