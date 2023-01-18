@@ -34,7 +34,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.spfilter2(c,e,tp)
-	return c:IsCode(511000005) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(511000005) or c:IsOriginalCode(81632229)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

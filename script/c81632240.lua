@@ -27,7 +27,7 @@ function s.initial_effect(c)
 end
 
 function s.setfilter(c)
-	return c:IsFaceup() and c:IsCode(511000006)
+	return c:IsFaceup() and (c:IsCode(511000005) or c:IsOriginalCode(81632229))
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_END
