@@ -102,6 +102,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e10:SetValue(RACE_WARRIOR)
         Duel.RegisterEffect(e10,tp)
 
+		local e11=Effect.CreateEffect(e:GetHandler())
+        e11:SetType(EFFECT_TYPE_FIELD)
+        e11:SetCode(EFFECT_ADD_SETCODE)
+        e11:SetTargetRange(LOCATION_HAND,0)
+        e11:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
+        e11:SetValue(0x52d)
+        Duel.RegisterEffect(e11,tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -111,6 +119,10 @@ function s.markedfilter(c,e)
     return #c:IsHasEffect(e)>0
 end
 
+
+function s.archetypefilter2(c)
+	return c:IsSetCard(0x15a) and c:IsLevelBelow(4)
+  end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
@@ -146,6 +158,23 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id+1)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+	
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+2)
 				tc:RegisterEffect(e3)
 
 
