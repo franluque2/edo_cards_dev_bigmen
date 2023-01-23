@@ -57,7 +57,7 @@ end
 
 
 function s.filter(c)
-	return c:IsCanChangePosition()
+	return c:IsCanChangePosition() and c:IsFaceup()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter(chkc) end
@@ -76,7 +76,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACk,POS_FACEUP_ATTACk)
 		if Duel.Damage(1-tp,400,REASON_EFFECT) then
-            if Duel.IsExistingMatchingCard(s.tarfilter, tp, 0, LOCATION_ONFIELD, 1,nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+            if Duel.IsExistingMatchingCard(s.tarfilter, tp, 0, LOCATION_ONFIELD, 1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsOriginalCode,81632229), tp, LOCATION_ONFIELD, 0, 1, nil)
+				 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
                 local tg=Duel.SelectMatchingCard(tp, s.tarfilter, tp, 0, LOCATION_ONFIELD, 1,1, false, nil)
                 if tg then
                     Duel.BreakEffect()

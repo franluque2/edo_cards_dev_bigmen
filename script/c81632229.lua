@@ -11,27 +11,32 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_BATTLE_DESTROYING)
 	e1:SetTarget(s.target)
+	e1:SetCountLimit(1,{id,2})
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 
     --spsummon
     local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 
-    --destroy replace
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_DESTROY_REPLACE)
-	e3:SetTarget(s.reptg)
-	e3:SetOperation(s.repop)
+	local e3=e2:Clone()
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+    --destroy replace
+	--local e3=Effect.CreateEffect(c)
+	--e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	--e3:SetCode(EFFECT_DESTROY_REPLACE)
+	--e3:SetTarget(s.reptg)
+	--e3:SetOperation(s.repop)
+	--c:RegisterEffect(e3)
 
     --Special summon on death
 	local e4=Effect.CreateEffect(c)
@@ -40,7 +45,7 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_DESTROYED)
 	e4:SetTarget(s.sptg2)
-    e4:SetCountLimit(1,id)
+    e4:SetCountLimit(1,{id,0})
 	e4:SetOperation(s.spop2)
 	c:RegisterEffect(e4)
 
@@ -58,10 +63,14 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_GRAVE,0,ft,ft,nil,e,tp)
-	if #g>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.GetMatchingGroup(s.spfilter2, tp, LOCATION_GRAVE, 0, nil, e,tp)
+	if g:GetClassCount(Card.GetCode, nil)<ft then
+		ft=g:GetClassCount(Card.GetCode, nil)
+	end
+	local sg=aux.SelectUnselectGroup(g,e,tp,ft,ft,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
+
+	if #sg>0 then
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
 	end
 end
 

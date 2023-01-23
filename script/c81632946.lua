@@ -72,6 +72,12 @@ function s.getflag(g,tp)
 	return ~flag
 end
 
+function s.filter2(c,p,otherseq)
+	local seq=c:GetSequence()
+	return seq<5 and c:IsControler(p) and math.abs(seq-otherseq)==1
+end
+
+
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
 		Duel.Hint(HINT_CARD,tp,id)
@@ -79,6 +85,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,0,nil)
 		g=g:Filter(Card.IsFacedown,nil)
 		local tc=g:Select(tp, 1, 1,false,nil):GetFirst()
+		g=g:Filter(s.filter2, nil, tp, tc:GetSequence())
 		local filter=s.getflag(g,tp)
 			Duel.HintSelection(tc)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)

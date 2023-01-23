@@ -39,7 +39,8 @@ end
 
 function s.spcon2(e,c)
 	if c==nil then return true end
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,alias), c:GetControler(), LOCATION_ONFIELD, 0, 1,nil)
+	return (Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,alias), c:GetControler(), LOCATION_ONFIELD, 0, 1,nil) 
+	or Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,58132856), c:GetControler(), LOCATION_ONFIELD, 0, 1,nil))
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
