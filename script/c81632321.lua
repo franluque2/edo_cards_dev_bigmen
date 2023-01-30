@@ -77,8 +77,8 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,100297102,0,TYPES_TOKEN,500,500,1,RACE_INSECT,ATTRIBUTE_WIND) then
-		local token=Duel.CreateToken(tp,100297102)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,31600514,0,TYPES_TOKEN,500,500,1,RACE_INSECT,ATTRIBUTE_WIND) then
+		local token=Duel.CreateToken(tp,31600514)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
