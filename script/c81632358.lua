@@ -47,7 +47,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local tc=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
-			local val=tc:GetLevel()*(-200) and c:GetRank()*(-200) and c:GetLink()*(-200)
+			local val=tc:GetLevel()*(-200) or c:GetRank()*(-200) or c:GetLink()*(-200)
 			if tc then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
