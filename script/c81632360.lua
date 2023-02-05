@@ -22,7 +22,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,3) end
 end
 function s.desfilter(c)
-	return c:IsFaceup() and c:IsLevelBelow(8) or c:IsRankBelow(8) or c:IsLinkBelow (4)
+	return (c:IsFaceup() and c:IsLevelBelow(8) or c:IsRankBelow(8) or c:IsLinkBelow (4))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,e:GetHandler())
