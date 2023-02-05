@@ -37,5 +37,5 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.LowerLevelFilter(c)
-	return c:IsFaceup() and (c:IsLevelBelow(7) or c:IsRankBelow(7) or c:IsLinkBelow (3))
+	return c:IsFaceup() and (c:IsLevelAbove(8) or c:IsRankAbove(8) or c:IsLinkAbove (4))
 end
