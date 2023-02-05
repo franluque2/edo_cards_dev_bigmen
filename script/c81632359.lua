@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(c:IsLevelAbove(8) or c:IsRankAbove(8) or c:IsLinkAbove (4)),tp,0,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.LowerLevelFilter,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.filter(c,e,tp)
 	return c:IsLevelAbove(5) and c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
@@ -35,4 +35,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			c:UpdateLevel(5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)
 		end
 	end
+end
+function s.LowerLevelFilter(c)
+	return c:IsFaceup() and (c:IsLevelBelow(7) or c:IsRankBelow(7) or c:IsLinkBelow (3))
 end
