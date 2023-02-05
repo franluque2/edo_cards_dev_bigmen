@@ -21,11 +21,11 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,3) end
 end
-function s.LowerLevelFilter(c)
-    return c:IsFaceup() and (c:IsLevelBelow(8) or c:IsRankBelow(8) or c:IsLinkBelow (4))
+function s.desfilter(c)
+	return c:IsFaceup() and (c:IsLevelBelow(8) or c:IsRankBelow(8) or c:IsLinkBelow (4))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local dg=Duel.GetMatchingGroup(s.LowerLevelFilter,tp,0,LOCATION_MZONE,e:GetHandler())
+	local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,e:GetHandler())
 	if chk==0 then return e:GetHandler():IsMaximumMode() and #dg>0 end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -33,7 +33,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.DiscardDeck(tp,3,REASON_COST)>0 then
 		--Effect
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local dg=Duel.GetMatchingGroup(s.LowerLevelFilter,tp,0,LOCATION_MZONE,e:GetHandler())
+		local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,e:GetHandler())
 		if #dg>0 then
 			local sg=dg:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
