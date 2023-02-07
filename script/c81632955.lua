@@ -37,6 +37,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DESTROY_REPLACE)
 		e2:SetTarget(s.desreptg)
 		e2:SetValue(s.desrepval)
+		e2:SetCountLimit(1)
 		e2:SetOperation(s.desrepop)
 		Duel.RegisterEffect(e2,tp)
 
