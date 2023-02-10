@@ -73,7 +73,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter2(c)
-	return c:IsFaceup() and c:IsCode(81632257)
+	return c:IsFaceup() and c:IsCode(511001086)
 end
 function s.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_SZONE) and s.filter2(chkc) end
