@@ -1,0 +1,101 @@
+--Valentine Duel!
+local s,id=GetID()
+function s.initial_effect(c)
+	--Activate Skill
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_STARTUP)
+	e1:SetCountLimit(1)
+	e1:SetRange(0x5f)
+	e1:SetLabel(0)
+	e1:SetOperation(s.op)
+	c:RegisterEffect(e1)
+
+end
+
+
+
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabel()==0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCondition(s.flipcon)
+		e1:SetOperation(s.flipop)
+        e1:SetCountLimit(1,id)
+		Duel.RegisterEffect(e1,tp)
+
+
+
+        Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+        --Duel.RegisterFlagEffect(tp, id+500, RESET_PHASE+RESET_OPPO_TURN+PHASE_END, 0, 0)
+
+        Duel.SendtoDeck(e:GetHandler(), tp, -2, REASON_EFFECT)
+
+        if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
+            Duel.Draw(tp, 1, REASON_EFFECT)
+        end
+
+	end
+	e:SetLabel(1)
+end
+
+function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
+		return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id-1000)<Duel.GetFlagEffect(tp, id) and Duel.GetTurnPlayer()==tp
+end
+function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+    Duel.RegisterFlagEffect(tp,id-1000,0,0,0)
+
+	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
+		Duel.Draw(tp, 1, REASON_EFFECT)
+	end
+
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
+	local ac=Duel.AnnounceCard(tp)
+
+    local base=Duel.CreateToken(tp,ac)
+
+    local archetypes=nil
+    archetypes={base:Setcode()}
+
+    for key,value in ipairs(archetypes) do
+
+        local e3=Effect.CreateEffect(e:GetHandler())
+        e3:SetType(EFFECT_TYPE_FIELD)
+        e3:SetCode(EFFECT_ADD_SETCODE)
+        e3:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e3:SetValue(value)
+        Duel.RegisterEffect(e3,tp)
+
+    end
+
+    if base:IsMonster() and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+
+            local op=Duel.SelectEffect(tp, {true,aux.Stringid(id,1)},
+                                        {true,aux.Stringid(id,2)})
+
+            if op==1 then
+
+                local e1=Effect.CreateEffect(e:GetHandler())
+                e1:SetType(EFFECT_TYPE_FIELD)
+                e1:SetCode(EFFECT_ADD_RACE)
+                e1:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+                e1:SetValue(base:Race())
+                Duel.RegisterEffect(e1,tp)
+
+            elseif op==2 then
+
+                local e1=Effect.CreateEffect(e:GetHandler())
+                e1:SetType(EFFECT_TYPE_FIELD)
+                e1:SetCode(EFFECT_ADD_ATTRIBUTE)
+                e1:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+                e1:SetValue(base:Attribute())
+                Duel.RegisterEffect(e1,tp)
+
+            end
+    end
+
+
+end
