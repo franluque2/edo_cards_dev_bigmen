@@ -47,11 +47,11 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=eg:Filter(s.chkfilter,nil,tp,re)
 	local g2=eg:Filter(s.chkfilter,nil,1-tp,re)
 	if #g1>0 then
-		local sum=g1:GetSum(Card.GetAttack()/2)
+		local sum=g1:GetSum(Card.GetAttack)/2
 		s[tp]=s[tp]+sum
 	end
 	if #g2>0 then
-		local sum=g2:GetSum(Card.GetAttack()/2)
+		local sum=g2:GetSum(Card.GetAttack)/2
 		s[1-tp]=s[1-tp]+sum
 	end
 end
