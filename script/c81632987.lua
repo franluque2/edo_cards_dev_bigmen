@@ -74,7 +74,8 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
     if base:IsMonster() and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 
             local op=Duel.SelectEffect(tp, {true,aux.Stringid(id,1)},
-                                        {true,aux.Stringid(id,2)})
+                                        {true,aux.Stringid(id,2)},
+                                        {true,aux.Stringid(id,3)})
 
             if op==1 then
 
@@ -93,6 +94,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
                 e1:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
                 e1:SetValue(base:Attribute())
                 Duel.RegisterEffect(e1,tp)
+
+            elseif op==3 then
+
+                local e1=Effect.CreateEffect(e:GetHandler())
+                e1:SetType(EFFECT_TYPE_FIELD)
+                e1:SetCode(EFFECT_ADD_RACE)
+                e1:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+                e1:SetValue(base:Race())
+                Duel.RegisterEffect(e1,tp)
+
+                local e2=Effect.CreateEffect(e:GetHandler())
+                e2:SetType(EFFECT_TYPE_FIELD)
+                e2:SetCode(EFFECT_ADD_ATTRIBUTE)
+                e2:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+                e2:SetValue(base:Attribute())
+                Duel.RegisterEffect(e2,tp)
 
             end
     end
