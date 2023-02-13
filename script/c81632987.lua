@@ -48,10 +48,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
     Duel.RegisterFlagEffect(tp,id-1000,0,0,0)
 
-	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
-		Duel.Draw(tp, 1, REASON_EFFECT)
-	end
-
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCard(tp)
 
