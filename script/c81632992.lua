@@ -30,10 +30,51 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		--other passive duel effects go here
         gPend.AddYuyaProcedure()(e,tp,eg,ep,ev,re,r,rp)
 
+		local e6=Effect.CreateEffect(e:GetHandler())
+		e6:SetType(EFFECT_TYPE_FIELD)
+		e6:SetCode(EFFECT_BECOME_LINKED_ZONE)
+		e6:SetRange(LOCATION_FZONE)
+		e6:SetValue(s.value)
+		Duel.RegisterEffect(e6,tp)
+
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetCode(EFFECT_FORCE_MZONE)
+		e3:SetRange(LOCATION_MZONE)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+		e3:SetTargetRange(1,0)
+		e3:SetValue(s.znval)
+		Duel.RegisterEffect(e3,tp)
+
+		local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e9:SetCode(EVENT_ADJUST)
+		e9:SetCondition(s.removeloccon)
+		e9:SetOperation(s.removelocop)
+        Duel.RegisterEffect(e9,tp)
 
 	end
 	e:SetLabel(1)
 end
+
+function s.removeloccon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.IsPlayerAffectedByEffect(tp, EFFECT_CANNOT_SPECIAL_SUMMON)
+end
+function s.removelocop(e,tp,eg,ep,ev,re,r,rp)
+	while Duel.IsPlayerAffectedByEffect(tp, EFFECT_CANNOT_SPECIAL_SUMMON) do
+		Duel.IsPlayerAffectedByEffect(tp, EFFECT_CANNOT_SPECIAL_SUMMON):Reset()
+	end
+end
+
+
+function s.value(e)
+	return 0x1f<<16*e:GetHandlerPlayer()
+end
+
+function s.znval(e)
+	return ~(0x60)
+end
+
 
 
 
@@ -62,22 +103,23 @@ end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
+	return false
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	--if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+	--local b1=Duel.GetFlagEffect(tp,id+1)==0
+			--and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
+						--and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
 
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+	--local b2=Duel.GetFlagEffect(tp,id+2)==0
+			--and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	--return aux.CanActivateSkill(tp) and (b1 or b2)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
@@ -376,40 +418,33 @@ function gPend.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg,inchain)
 				local rscale=rpz:GetRightScale()
 				local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				local ft2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_PENDULUM)
-                local ft3=Duel.GetLocationCountFromEx(tp, tp, nil, TYPE_PENDULUM, 0x1f)
 				local ft=Duel.GetUsableMZoneCount(tp)
 				if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then
 					if ft1>0 then ft1=1 end
 					if ft2>0 then ft2=1 end
-                    if ft3>0 then ft3=1 end
 					ft=1
 				end
 				local loc=0
-				if ft1>0 then loc=loc+LOCATION_HAND end
+				if ft1>0 then loc=loc+LOCATION_HAND+LOCATION_GRAVE end
 				if ft2>0 then loc=loc+LOCATION_EXTRA end
-                if ft3>0 then loc=loc+LOCATION_GRAVE end
 				local tg=nil
 				if og then
 					tg=og:Filter(Card.IsLocation,nil,loc):Match(gPend.Filter,nil,e,tp,lscale,rscale,c:IsHasEffect(511007000) and rpz:IsHasEffect(511007000))
 				else
 					tg=Duel.GetMatchingGroup(gPend.Filter,tp,loc,0,nil,e,tp,lscale,rscale,c:IsHasEffect(511007000) and rpz:IsHasEffect(511007000))
 				end
-				ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
+				ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND+LOCATION_GRAVE))
 				ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
-                ft3=math.min(ft3,tg:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE))
 				ft2=math.min(ft2,aux.CheckSummonGate(tp) or ft2)
 				while true do
-					local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+					local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND+LOCATION_GRAVE)
 					local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-                    local ct3=tg:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
 					local ct=ft
 					if ct1>ft1 then ct=math.min(ct,ft1) end
 					if ct2>ft2 then ct=math.min(ct,ft2) end
-                    if ct3>ft3 then ct=math.min(ct,ft3) end
 					local loc=0
-					if ft1>0 then loc=loc+LOCATION_HAND end
+					if ft1>0 then loc=loc+LOCATION_HAND+LOCATION_GRAVE end
 					if ft2>0 then loc=loc+LOCATION_EXTRA end
-                    if ft3>0 then loc=loc+LOCATION_GRAVE end
 					local g=tg:Filter(Card.IsLocation,sg,loc)
 					if #g==0 or ft==0 then break end
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -417,49 +452,39 @@ function gPend.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg,inchain)
 					if not tc then break end
 					if sg:IsContains(tc) then
 						sg:RemoveCard(tc)
-						if tc:IsLocation(LOCATION_HAND) then
+						if tc:IsLocation(LOCATION_HAND+LOCATION_GRAVE) then
 							ft1=ft1+1
-                        else if tc:IsLocation(LOCATION_GRAVE) then
-                            ft3=ft3+1
 						else
 							ft2=ft2+1
 						end
-                        end
 						ft=ft+1
 					else
 						sg:AddCard(tc)
 						if c:IsHasEffect(511007000)~=nil or rpz:IsHasEffect(511007000)~=nil then
 							if not gPend.Filter(tc,e,tp,lscale,rscale) then
 								local pg=sg:Filter(aux.TRUE,tc)
-								local ct0,ct3,ct4,ct5=#pg,pg:FilterCount(Card.IsLocation,nil,LOCATION_HAND),pg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA),pg:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
+								local ct0,ct3,ct4=#pg,pg:FilterCount(Card.IsLocation,nil,LOCATION_HAND+LOCATION_GRAVE),pg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
 								sg:Sub(pg)
 								ft1=ft1+ct3
 								ft2=ft2+ct4
-                                ft3=ft3+ct5
 								ft=ft+ct0
 							else
 								local pg=sg:Filter(aux.NOT(gPend.Filter),nil,e,tp,lscale,rscale)
 								sg:Sub(pg)
 								if #pg>0 then
-									if pg:GetFirst():IsLocation(LOCATION_HAND) then
+									if pg:GetFirst():IsLocation(LOCATION_HAND+LOCATION_GRAVE) then
 										ft1=ft1+1
-									else if tc:IsLocation(LOCATION_GRAVE) then
-                                        ft3=ft3+1
                                     else
                                         ft2=ft2+1
                                     end
-									end
 									ft=ft+1
 								end
 							end
 						end
-						if tc:IsLocation(LOCATION_HAND) then
+						if tc:IsLocation(LOCATION_HAND+LOCATION_GRAVE) then
 							ft1=ft1-1
-						else if tc:IsLocation(LOCATION_GRAVE) then
-                            ft3=ft3+1
 						else
 							ft2=ft2+1
-						end
 						end
 						ft=ft-1
 					end
