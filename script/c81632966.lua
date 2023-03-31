@@ -161,6 +161,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.operation_for_res0(e, tp, eg, ep, ev, re, r, rp)
+    Duel.DiscardDeck(tp, 1, REASON_RULE)
     local tribute = Duel.SelectMatchingCard(tp, s.istributableswordorman, tp, LOCATION_MZONE, 0, 1, 1, false, nil,e,tp)
     if s.istributableswordsman(tribute:GetFirst(),e,tp) then
         Duel.Release(tribute, REASON_RULE)
