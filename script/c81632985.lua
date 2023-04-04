@@ -117,7 +117,7 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thestarfilter(c)
-    return c:IsCode(81632330,81632331)
+    return c:IsCode(81632330,81632331, 160012046, 160012047, 160204027, 160204028)
 end
 
 function s.thestarfilteradd(c)
