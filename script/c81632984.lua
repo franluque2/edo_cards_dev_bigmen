@@ -16,7 +16,27 @@ function s.initial_effect(c)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
+
+	aux.GlobalCheck(s,function()
+		--register
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_DRAW)
+		ge1:SetOperation(s.op2)
+		Duel.RegisterEffect(ge1,0)
+	end)
 end
+
+function s.op2(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.GetCurrentPhase()==PHASE_DRAW then return end
+	local g=eg
+	local tc=g:GetFirst()
+	while tc do
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		tc=g:GetNext()
+	end
+end
+
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -31,9 +51,59 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		--uncomment (remove the --) the line below to make it a rush skill
 		bRush.addrules()(e,tp,eg,ep,ev,re,r,rp)
 
+		local c=e:GetHandler()
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCountLimit(1)
+		e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e2:SetCondition(s.adcon)
+		e2:SetOperation(s.adop)
+		Duel.RegisterEffect(e2,tp)
+
 
 	end
 	e:SetLabel(1)
+end
+
+function s.drewthisturnfilter(c)
+	return c:GetFlagEffect(id)>0 and c:IsAbleToDeck()
+end
+
+function s.addtransamufilter(c)
+	return c:IsCode(CARD_TRANSAMU_RAINAC) and c:IsAbleToHand()
+end
+
+function s.adcon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.GetTurnPlayer()==tp and not (Duel.GetFlagEffect(tp,id+3)>0) then return end
+
+	local b1=Duel.GetFlagEffect(tp,id+3)==0
+			and Duel.IsExistingMatchingCard(s.drewthisturnfilter,tp,LOCATION_HAND,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.addtransamufilter,tp,LOCATION_DECK,0,1,nil)
+
+
+	return Duel.GetTurnPlayer()==tp and (b1)
+end
+
+function s.adop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+		
+	
+		Duel.Hint(HINT_CARD,tp,id)
+
+				local g=Duel.SelectMatchingCard(tp,s.drewthisturnfilter,tp,LOCATION_HAND,0,1,1,nil)
+				if #g>0 then
+						Duel.ConfirmCards(1-tp, g)
+						Duel.SendtoDeck(g, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+						local transamu=Duel.GetFirstMatchingCard(s.addtransamufilter, tp, LOCATION_DECK, 0, nil)
+						if transamu then
+							Duel.SendtoHand(transamu, tp, REASON_RULE)
+							Duel.ConfirmCards(1-tp, transamu)
+						end
+				end
+			Duel.RegisterFlagEffect(tp, id+3, 0, 0, 0)
+
+		end
+
 end
 
 
@@ -49,16 +119,18 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
 	--start of duel effects go here
-
-	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-
 	Duel.RegisterFlagEffect(ep,id,0,0,0)
 end
 
-function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
-
+function s.futransamufilter(c)
+	return c:IsCode(CARD_TRANSAMU_RAINAC) and c:IsFaceup()
 end
+
+function s.highlevelfilter(c)
+	return c:IsLevelAbove(7) and c:IsFaceup() and not c:IsCode(...)
+end
+
 
 
 --effects to activate during the main phase go here
