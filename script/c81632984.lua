@@ -128,9 +128,24 @@ function s.futransamufilter(c)
 end
 
 function s.highlevelfilter(c)
-	return c:IsLevelAbove(7) and c:IsFaceup() and not c:IsCode(...)
+	return c:IsLevelAbove(7) and c:IsFaceup() and not c:IsCode(CARD_SEVENS_ROAD_MAGICIAN)
 end
 
+function s.galacticafilter(c)
+	return c:IsCode(160009002) and c:IsFaceup()
+end
+
+function s.transamuspelltrapfilter(c)
+	return c:IsCode(160012056,160311028) and c:IsSSetable()
+end
+
+function s.galacticaspelltrapfilter(c)
+	return c:IsCode(160311022,160313024,160011040,160313030) and c:IsSSetable()
+end
+
+function s.specialsummongalaxyfilter(c,e,tp)
+	return c:IsLevelBelow(4) and c:IsType(TYPE_NORMAL) and c:IsRace(RACE_GALAXY) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false)
+end
 
 
 --effects to activate during the main phase go here
@@ -142,11 +157,13 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.futransamufilter,tp,LOCATION_ONFIELD,0,1,nil)
+						and Duel.IsExistingMatchingCard(s.highlevelfilter,tp,LOCATION_MZONE,0,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.IsExistingMatchingCard(s.galacticafilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.GetMatchingGroupCount(aux.TRUE(), tp, LOCATION_MZONE, 0, nil)==1
+			and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -159,17 +176,18 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 --copy the bxs from above
 
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+local b1=Duel.GetFlagEffect(tp,id+1)==0
+and Duel.IsExistingMatchingCard(s.futransamufilter,tp,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.highlevelfilter,tp,LOCATION_MZONE,0,1,nil)
 
-
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+local b2=Duel.GetFlagEffect(tp,id+2)==0
+and Duel.IsExistingMatchingCard(s.galacticafilter,tp,LOCATION_HAND,0,1,nil,tp)
+and Duel.GetMatchingGroupCount(aux.TRUE(), tp, LOCATION_MZONE, 0, nil)==1
+and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2
 
 --effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,1)},
+								  {b2,aux.Stringid(id,2)})
 	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
 
 	if op==0 then
@@ -183,6 +201,17 @@ end
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
+	local tar=Duel.SelectMatchingCard(tp, s.highlevelfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+	if tar then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetValue(CARD_SEVENS_ROAD_MAGICIAN)
+		tar:GetFirst():RegisterEffect(e1)
+	end
+
 
 --sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
@@ -192,5 +221,5 @@ end
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
 	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end

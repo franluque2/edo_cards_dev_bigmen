@@ -41,14 +41,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	--Effect
 	local tc=eg:GetFirst()
-    if tc and Duel.SendtoDeck(tc, tp, SEQ_DECKTOP, REASON_EFFECT) then
+    if tc and Duel.SendtoDeck(tc, tc:GetOwner(), SEQ_DECKTOP, REASON_EFFECT) then
 
         if Duel.IsExistingMatchingCard(s.spsummonfilter, tp, 0, LOCATION_GRAVE, 2, nil, e, tp)
          and Duel.IsExistingMatchingCard(s.spsummonfilter2, tp, 0, LOCATION_GRAVE, 1, nil, e, tp) and Duel.GetLocationCount(1-tp, LOCATION_MZONE)>0
             and Duel.SelectYesNo(1-tp, aux.Stringid(id, 0)) then
             
             local g=Duel.GetMatchingGroup(s.spsummonfilter, tp, 0, LOCATION_GRAVE, nil,e,tp)
-            local tg=aux.SelectUnselectGroup(g,e,1-tp,2,2,s.rescon,1,tp,HINTMSG_SPSUMMON)
+            local tg=aux.SelectUnselectGroup(g,e,1-tp,2,2,s.rescon,1,1-tp,HINTMSG_SPSUMMON)
 
             if tg then
                 Duel.SpecialSummon(tg, SUMMON_TYPE_SPECIAL, 1-tp, 1-tp, false,false, POS_FACEUP)
