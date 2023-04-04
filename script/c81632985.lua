@@ -174,12 +174,12 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 --copy the bxs from above
 
 local b1=Duel.GetFlagEffect(tp,id+1)==0
-    and Duel.IsExistingMatchingCard(s.senddragonfilterhand,tp,LOCATION_HAND,0,1,nil)
+and Duel.IsExistingMatchingCard(s.senddragonfilterhand,tp,LOCATION_HAND,0,1,nil)
             and Duel.IsExistingMatchingCard(s.thestarfilteradd,tp,LOCATION_DECK,0,1,nil)
 
 local b2=Duel.GetFlagEffect(tp,id+2)==0
     and Duel.IsExistingMatchingCard(s.thedragiasfilter,tp,LOCATION_ONFIELD,0,2,nil)
-    and Duel.IsExistingMatchingCard(s.viceslasherfilter,tp,LOCATION_DECK,0,2,nil)
+    and Duel.IsExistingMatchingCard(s.viceslasherfilter,tp,LOCATION_DECK,0,1,nil)
     and Duel.GetLocationCount(tp, LOCATION_SZONE-LOCATION_FZONE)>0
 
 --effect selector
