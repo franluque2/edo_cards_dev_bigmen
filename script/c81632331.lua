@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
          and Duel.IsExistingMatchingCard(s.spsummonfilter2, tp, 0, LOCATION_GRAVE, 1, nil, e, tp) and Duel.GetLocationCount(1-tp, LOCATION_MZONE)>0
             and Duel.SelectYesNo(1-tp, aux.Stringid(id, 0)) then
             
-            local g=Duel.GetMatchingGroup(s.spsummonfilter, tp, 0, LOCATION_GRAVE, nil)
+            local g=Duel.GetMatchingGroup(s.spsummonfilter, tp, 0, LOCATION_GRAVE, nil,e,tp)
             local tg=aux.SelectUnselectGroup(g,e,1-tp,2,2,s.rescon,1,tp,HINTMSG_SPSUMMON)
 
             if tg then
