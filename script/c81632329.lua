@@ -40,6 +40,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,SUMMON_TYPE_SPECIAL,tp,tp,false,false,POS_FACEUP_ATTACK)
 
         local g2=Duel.GetMatchingGroup(s.fuattackfilter2, tp, 0, LOCATION_MZONE, nil)
-        Duel.ChangePosition(sg,POS_FACEUP_DEFENSE,0,0,0)
+        Duel.ChangePosition(g2,POS_FACEUP_DEFENSE,0,0,0)
 	end
 end
