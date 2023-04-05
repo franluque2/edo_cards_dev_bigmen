@@ -28,7 +28,7 @@ function s.spsummonfilter2(c,e)
 end
 
 function s.rescon(sg,e,tp,mg)
-	return sg:IsExists(s.spsummonfilter2,e)
+	return sg:IsExists(s.spsummonfilter2,1,nil,e)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
