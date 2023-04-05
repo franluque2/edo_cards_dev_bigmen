@@ -19,16 +19,16 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.filter1,1,nil,tp)
 end
 
-function s.spsummonfilter(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false)
+function s.spsummonfilter(c,e)
+    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, e:GetHandlerPlayer() , false,false)
 end
 
-function s.spsummonfilter2(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false) and c:IsLevelBelow(4)
+function s.spsummonfilter2(c,e)
+    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, e:GetHandlerPlayer(), false,false) and c:IsLevelBelow(4)
 end
 
 function s.rescon(sg,e,tp,mg)
-	return sg:IsExists(s.spsummonfilter2,e,tp)
+	return sg:IsExists(s.spsummonfilter2,e)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
