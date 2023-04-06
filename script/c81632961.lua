@@ -43,39 +43,20 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetType(EFFECT_TYPE_FIELD)
         e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
         e6:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+        e6:SetCondition(s.splimcon)
         e6:SetTargetRange(1,0)
         e6:SetTarget(s.splimit)
         Duel.RegisterEffect(e6,tp)
 
-        local e11=Effect.CreateEffect(e:GetHandler())
-        e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-        e11:SetTargetRange(LOCATION_MZONE,0)
-        e11:SetTarget(function (_,c) return s.thousandfilter(c) end)
-        e11:SetLabelObject(e6)
-        Duel.RegisterEffect(e11,tp)
 
         local e4=e6:Clone()
         e4:SetCode(EFFECT_CANNOT_SUMMON)
         e4:SetTarget(function(_,_) return true end)
         Duel.RegisterEffect(e4,tp)
 
-        local e12=Effect.CreateEffect(e:GetHandler())
-        e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-        e12:SetTargetRange(LOCATION_MZONE,0)
-        e12:SetTarget(function (_,c) return s.thousandfilter(c) end)
-        e12:SetLabelObject(e4)
-        Duel.RegisterEffect(e12,tp)
-
         local e2=e4:Clone()
         e2:SetCode(EFFECT_CANNOT_MSET)
         Duel.RegisterEffect(e2,tp)
-
-        local e13=Effect.CreateEffect(e:GetHandler())
-        e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-        e13:SetTargetRange(LOCATION_MZONE,0)
-        e13:SetTarget(function (_,c) return s.thousandfilter(c) end)
-        e13:SetLabelObject(e2)
-        Duel.RegisterEffect(e13,tp)
 
 
         local e7=Effect.CreateEffect(e:GetHandler())
@@ -150,6 +131,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 
 
 	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
+end
+
+function s.splimcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.thousandfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
 end
 
 
