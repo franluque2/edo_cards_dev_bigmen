@@ -103,7 +103,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
-	Duel.RegisterFlagEffect(ep,id,0,0,0)
+	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
@@ -197,6 +197,6 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
         Duel.SSet(tp, tc)
     end
 	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
 end
 

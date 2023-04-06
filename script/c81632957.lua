@@ -54,7 +54,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
-	Duel.RegisterFlagEffect(ep,id,0,0,0)
+	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 -- At the start of the duel, place 2 "Plague Wolf" in your GY from outside the duel, then activate 1 "Edge of Darkness" from outside the duel.

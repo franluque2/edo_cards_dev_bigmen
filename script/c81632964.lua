@@ -136,7 +136,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	local hermit3=Duel.CreateToken(tp, 160201006)
 	Duel.SendtoGrave(hermit3, REASON_RULE)
     
-	Duel.RegisterFlagEffect(ep,id,0,0,0)
+	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 
