@@ -45,6 +45,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
         e6:SetTargetRange(1,0)
         e6:SetTarget(s.splimit)
+        --Duel.RegisterEffect(e6,tp)
 
         local e11=Effect.CreateEffect(e:GetHandler())
         e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
@@ -56,6 +57,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e4=e6:Clone()
         e4:SetCode(EFFECT_CANNOT_SUMMON)
         e4:SetTarget(function(_,_) return true end)
+        --Duel.RegisterEffect(e4,tp)
 
         local e12=Effect.CreateEffect(e:GetHandler())
         e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
@@ -66,6 +68,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e2=e4:Clone()
         e2:SetCode(EFFECT_CANNOT_MSET)
+        --Duel.RegisterEffect(e2,tp)
 
         local e13=Effect.CreateEffect(e:GetHandler())
         e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
