@@ -58,7 +58,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetOperation(s.flipop2)
 	Duel.RegisterEffect(e1,tp)
 
-	--Double ATK
+	--Increase ATK
 	local e4=Effect.CreateEffect(e:GetHandler())
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
