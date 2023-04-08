@@ -151,8 +151,8 @@ function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(s.repfilter,tp,LOCATION_GRAVE,0,1,c) end
 	
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-    local g=Duel.SelectMatchingCard(tp,s.repfilter,tp,LOCATION_GRAVE,0,1,1,c)
-    Duel.Remove(g:GetFirst(),POS_FACEUP,REASON_EFFECT)
+    local g=Duel.GetFirstMatchingCard(s.repfilter, tp, LOCATION_GRAVE, 0, nil,c)
+    Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
     return true
 end
 

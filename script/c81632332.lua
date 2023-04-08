@@ -109,7 +109,7 @@ end
 
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=Duel.GetAttacker()
-	if c:IsControler(1-tp) then c=Duel.GetAttackTarget() end
+	if c:IsControler(tp) then c=Duel.GetAttackTarget() end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
