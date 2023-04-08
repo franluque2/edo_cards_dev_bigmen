@@ -93,7 +93,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
         local ng=Duel.GetDecktopGroup(p, ac)
 		Duel.SendtoGrave(ng, REASON_EFFECT)
 	end
-    if sg:GetFirst():IsCode(39078434) then
+    if sg and sg:GetFirst():IsCode(39078434) then
         Duel.BreakEffect()
         Duel.DiscardDeck(tp, 3, REASON_EFFECT)
     end
