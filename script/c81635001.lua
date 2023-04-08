@@ -55,14 +55,15 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
-function s.atohand(code,tp)
+function s.atohand(code,tp,group)
 	local token=Duel.CreateToken(tp, code)
-	Duel.SendtoHand(token, tp, REASON_RULE)
+	group:AddCard(token)
+	return group
 end
 
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)==0 and Duel.GetFlagEffect(tp, id+2)<2 and Duel.GetDrawCount(tp)>0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)==0 and Duel.GetFlagEffect(tp, id+2)<3 and Duel.GetDrawCount(tp)>0
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
@@ -80,13 +81,16 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(0)
 		Duel.RegisterEffect(e1,tp)
 	end
-
-	s.atohand(55144522,tp) --pog
-	s.atohand(12580477,tp) --geki
-	s.atohand(83764718,tp) --reborn
-	s.atohand(44095762,tp) --mforce
-	s.atohand(97631303,tp) --souls
-
+	local gr=Group.CreateGroup()
+	gr=s.atohand(55144522,tp,gr) --pog
+	gr=s.atohand(12580477,tp,gr) --geki
+	gr=s.atohand(83764718,tp,gr) --reborn
+	gr=s.atohand(44095762,tp,gr) --mforce
+	gr=s.atohand(97631303,tp,gr) --souls
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+	local card=gr:Select(tp,1,1,nil)
+	Duel.SendtoHand(card, tp, REASON_RULE)
+	Duel.ConfirmCards(1-tp, card)
 	Duel.RegisterFlagEffect(tp, id+2, 0,0,0)
 end
 	Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)

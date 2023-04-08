@@ -62,10 +62,10 @@ end
 
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)<2 and Duel.GetDrawCount(tp)>0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)<1 and Duel.GetDrawCount(tp)>0
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp, id+1)<2 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	if Duel.GetFlagEffect(tp, id+1)<1 and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 		local dt=Duel.GetDrawCount(tp)
 		if dt~=0 then
 			_replace_count=0
@@ -83,18 +83,6 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	local token=Duel.CreateToken(tp, 90953320)
 	Duel.SpecialSummon(token, SUMMON_TYPE_SYNCHRO, tp, tp, false, false, POS_FACEUP)
 
-	if Duel.GetFlagEffect(tp, id+1)<2 and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-		Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
-		local token=Duel.CreateToken(tp, 90953320)
-		Duel.SpecialSummon(token, SUMMON_TYPE_SYNCHRO, tp, tp, false, false, POS_FACEUP)
-
-		if Duel.GetFlagEffect(tp, id+1)<2 and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-			Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
-			local token=Duel.CreateToken(tp, 90953320)
-			Duel.SpecialSummon(token, SUMMON_TYPE_SYNCHRO, tp, tp, false, false, POS_FACEUP)
-
-		end
-	end
 end
 	Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end

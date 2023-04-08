@@ -105,5 +105,5 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	s.atohand(513000057,tp) --Sabatiel
 
-	Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(ep,id+1,0,0,0)
 end

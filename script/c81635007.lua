@@ -68,8 +68,6 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.Hint(HINT_CARD,tp,id)
 	s.atohand(85215458,tp)
-	s.atohand(85215458,tp)
-	s.atohand(85215458,tp)
 
 	Duel.RegisterFlagEffect(ep,id+1,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end

@@ -56,10 +56,10 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-	for k,v in pairs(CustomArchetype.kdr_ct_number) do
-		local number=Duel.CreateToken(tp, v)
-		Duel.SendtoDeck(number, tp, SEQ_DECKTOP, REASON_RULE)
-	 end
+	--for k,v in pairs(CustomArchetype.kdr_ct_number) do
+		--local number=Duel.CreateToken(tp, v)
+		--Duel.SendtoDeck(number, tp, SEQ_DECKTOP, REASON_RULE)
+	 --end
 
 end
 
