@@ -41,6 +41,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e4:SetType(EFFECT_TYPE_FIELD)
         e4:SetCode(EFFECT_CHANGE_CODE)
         e4:SetTargetRange(LOCATION_MZONE,0)
+        e4:SetCondition(s.changecon)
         e4:SetTarget(function(_,c) return c:IsFaceup() and c:IsLevelBelow(8) end)
         e4:SetValue(31709826)
         Duel.RegisterEffect(e4,tp)
@@ -64,6 +65,12 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 	end
 	e:SetLabel(1)
+end
+
+function s.changecon(e)
+    local ph=Duel.GetCurrentPhase()
+
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 
 function s.removeloccon(e,tp,eg,ep,ev,re,r,rp)
