@@ -189,10 +189,10 @@ function s.adcon(e,tp,eg,ep,ev,re,r,rp)
 			and not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_FZONE,0,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,48179391),0,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,48179391),tp,LOCATION_ONFIELD,0,1,nil)
 
 	local b3=Duel.GetFlagEffect(tp,id+5)==0
-			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,110000100),0,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,110000100),tp,LOCATION_ONFIELD,0,1,nil)
 
 
 	return Duel.GetTurnPlayer()==tp and (b1 or b2 or b3)
@@ -205,10 +205,10 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
 			and not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_FZONE,0,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,48179391),0,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,48179391),tp,LOCATION_ONFIELD,0,1,nil)
 
 	local b3=Duel.GetFlagEffect(tp,id+5)==0
-			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,110000100),0,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,110000100),tp,LOCATION_ONFIELD,0,1,nil)
 
 
 	if b1 then
