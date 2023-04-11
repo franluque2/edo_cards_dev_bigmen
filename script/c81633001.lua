@@ -118,7 +118,7 @@ function s.skipturncon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.skipturnop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLP(tp)<=2000 then return end
-    if Duel.GetFlagEffect(tp, id+2)<math.min(Duel.GetLP(tp)/2000) then
+    if Duel.GetFlagEffect(tp, id+2)<(math.min(Duel.GetLP(tp)/2000)-1) then
         Duel.Hint(HINT_CARD,tp,id)
 
         local e1=Effect.CreateEffect(e:GetHandler())
