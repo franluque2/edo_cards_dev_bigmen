@@ -272,7 +272,7 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.sendforbiddenonefilter(c)
-    return c:IsSetCard(0x40) and c:IsAbleToGrave()
+    return c:IsSetCard(0x40) and c:IsMonster() and c:IsAbleToGrave()
 end
 
 function s.listsforbiddenonefilter(c)
