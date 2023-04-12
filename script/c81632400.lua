@@ -5,7 +5,7 @@ function s.initial_effect(c)
     local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DISABLE)
 	e3:SetType(EFFECT_TYPE_ACTIVATE)
-    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetCode(EVENT_CHAINING)
     e3:SetCountLimit(1,{id,0})
 	e3:SetCondition(s.negcon)
@@ -82,7 +82,7 @@ end
 
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return ( Duel.GetAttacker() and s.exodfilter(Duel.GetAttacker()) or (Duel.GetAttackTarget() and s.exodfilter(Duel.GetAttackTarget())))
-		and rp~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE)
+		and rp~=tp
         and Duel.IsChainNegatable(ev) and e:GetHandler():GetFlagEffect(id)==0
 end
 
