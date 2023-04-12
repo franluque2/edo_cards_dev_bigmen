@@ -40,7 +40,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.filternegate,tp,0,LOCATION_ONFIELD,1,nil) and #exg>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
     local num=exg:GetClassCount(Card.GetCode)
-	Duel.SelectTarget(tp,s.filternegate,tp,0,LOCATION_ONFIELD,1,#num,nil)
+	Duel.SelectTarget(tp,s.filternegate,tp,0,LOCATION_ONFIELD,1,num,nil)
 end
 
 function s.activate2(e,tp,eg,ep,ev,re,r,rp)

@@ -111,7 +111,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.aclimit(e,re,tp)
-	return re:GetHandler():IsCode(58604027) and re:IsActiveType(TYPE_MONSTER)
+	return re:GetHandler():IsCode(58604027) and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():GetLocation()==LOCATION_MZONE
 end
 
 function s.winfilter(c,rc)
@@ -155,7 +155,7 @@ function s.isforbiddencon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.isstage3con(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetFlagEffect(e:GetHandlerPlayer(), id+2)>0)
+	return (Duel.GetFlagEffect(e:GetHandlerPlayer(), id+4)>0)
 end
 
 function s.atkval(_,c)
