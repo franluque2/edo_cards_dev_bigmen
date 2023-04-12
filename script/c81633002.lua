@@ -109,7 +109,7 @@ function s.sendforbiddencardop(e,tp,eg,ep,ev,re,r,rp)
     Duel.ConfirmCards(1-tp, forbiddencards)
 
     local exodius=Duel.SelectMatchingCard(tp, s.exodiusfilter, tp, LOCATION_MZONE, 0, 1,1,false, nil)
-    if exodius then
+    if exodius and #exodius>0 then
         local exd=exodius:GetFirst()
 
         Duel.SendtoGrave(forbiddencards, REASON_EFFECT)
