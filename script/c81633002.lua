@@ -95,9 +95,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetOperation(s.sendforbiddencardop)
         Duel.RegisterEffect(e6, tp)
 
+        --always active------
+
+        local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+        e7:SetCode(EFFECT_CANNOT_ACTIVATE)
+        e7:SetTargetRange(1,0)
+        e7:SetValue(s.aclimit)
+        Duel.RegisterEffect(e7,tp)
+
 
 	end
 	e:SetLabel(1)
+end
+
+function s.aclimit(e,re,tp)
+	return re:GetHandler():IsCode(58604027) and re:IsActiveType(TYPE_MONSTER)
 end
 
 function s.winfilter(c,rc)
@@ -133,7 +147,7 @@ function s.rdtg(e,c)
 end
 
 function s.cfilter(c,tp)
-	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK) and c:IsSetCard(0x40)
+	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK) and c:IsSetCard(0x40) and c:IsMonster()
 end
 
 function s.isforbiddencon(e,tp,eg,ep,ev,re,r,rp)
@@ -199,7 +213,7 @@ function s.changestage3op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.isforbiddenonefilter(c)
-    return c:IsSetCard(0x40)
+    return c:IsSetCard(0x40) and c:IsMonster()
 end
 
 function s.changestage2con(e,tp,eg,ep,ev,re,r,rp)
@@ -271,13 +285,6 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
     e1:SetReset(RESET_EVENT+RESETS_STANDARD)
     legexodia:RegisterEffect(e1,true)
 
-    local e2=Effect.CreateEffect(e:GetHandler())
-    e2:SetDescription(3302)
-    e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
-    e2:SetType(EFFECT_TYPE_SINGLE)
-    e2:SetCode(EFFECT_CANNOT_TRIGGER)
-    e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-    legexodia:RegisterEffect(e2,true)
 end
 
 function s.sendforbiddenonefilter(c)

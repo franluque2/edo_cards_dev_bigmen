@@ -70,7 +70,7 @@ function s.sumfilter(c, e, tp)
 end
 
 function s.sendfilter(c)
-    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsAbleToGrave()
+    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and c:IsAbleToGrave()
 end
 
 function s.target2(e, tp, eg, ep, ev, re, r, rp, chk)
