@@ -144,8 +144,8 @@ function s.isstage3con(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetFlagEffect(e:GetHandlerPlayer(), id+2)>0)
 end
 
-function s.atkval(c)
-    return c:GetAttack()
+function s.atkval(_,c)
+    return Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),LOCATION_GRAVE,0,nil,TYPE_NORMAL)*1000
 end
 
 function s.exodiusfilter(c)
@@ -270,6 +270,14 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
     e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
     e1:SetReset(RESET_EVENT+RESETS_STANDARD)
     legexodia:RegisterEffect(e1,true)
+
+    local e2=Effect.CreateEffect(e:GetHandler())
+    e2:SetDescription(3302)
+    e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
+    e2:SetType(EFFECT_TYPE_SINGLE)
+    e2:SetCode(EFFECT_CANNOT_TRIGGER)
+    e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+    legexodia:RegisterEffect(e2,true)
 end
 
 function s.sendforbiddenonefilter(c)
