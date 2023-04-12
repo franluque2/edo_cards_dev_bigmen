@@ -276,7 +276,7 @@ function s.sendforbiddenonefilter(c)
 end
 
 function s.listsforbiddenonefilter(c)
-    return ((c:ListsArchetype(0x40) and c:IsSpellTrap())) and c:IsAbleToHand() --or c:IsCode()
+    return ((c:ListsArchetype(0x40) and c:IsSpellTrap()) or c:IsCode(33244944,511000244,511000383)) and c:IsAbleToHand() --or c:IsCode()
 end
 
 --effects to activate during the main phase go here
