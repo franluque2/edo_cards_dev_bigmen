@@ -81,7 +81,7 @@ function s.exodfilter(c)
 end
 
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return ( s.exodfilter(Duel.GetAttacker()) or (Duel.GetAttackTarget() and s.exodfilter(Duel.GetAttackTarget())))
+	return ( Duel.GetAttacker() and s.exodfilter(Duel.GetAttacker()) or (Duel.GetAttackTarget() and s.exodfilter(Duel.GetAttackTarget())))
 		and rp~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE)
 		and re:IsActiveType(TYPE_TRAP) and Duel.IsChainNegatable(ev) and e:GetHandler():GetFlagEffect(id)==0
 end
