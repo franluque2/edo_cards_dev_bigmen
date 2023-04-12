@@ -140,7 +140,7 @@ function s.isforbiddencon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.isstage3con(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetFlagEffect(tp, id+2)>0)
+	return (Duel.GetFlagEffect(e:GetHandlerPlayer(), id+2)>0)
 end
 
 function s.atkval(c)
