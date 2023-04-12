@@ -122,7 +122,7 @@ function s.sendforbiddencardop(e,tp,eg,ep,ev,re,r,rp)
         end
 
         local g=Duel.GetMatchingGroup(s.winfilter,tp,LOCATION_GRAVE,0,nil,exd)
-		if s.winfilter(tc,exd) and g:GetClassCount(Card.GetCode)==5 then
+		if g:GetClassCount(Card.GetCode)==5 then
 			Duel.Win(tp,WIN_REASON_EXODIUS)
 		end
     end
