@@ -57,7 +57,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e5, tp)
 
         local e3=Effect.CreateEffect(e:GetHandler())
-        e3:SetType(EFFECT_TYPE_FIELD)
+        e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
         e3:SetCode(EVENT_CHANGE_POS)
         e3:SetCondition(s.atkcon)
         e3:SetOperation(s.atkop)
@@ -71,6 +71,9 @@ end
 function s.chanfilter(c)
 	local np=c:GetPosition()
 	local pp=c:GetPreviousPosition()
+
+	Debug.Message(np)
+	Debug.Message(pp)
 	return not c:IsStatus(STATUS_CONTINUOUS_POS) and ((np<3 and pp>3) or (pp<3 and np>3))
 end
 
@@ -83,10 +86,11 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
     local tc=eg:GetFirst()
     while tc do
+		local val
         if tc:GetControler()==tp then
-            local val=1000
+            val=1000
         else
-            local val=-1000
+            val=-1000
         end
 
         local e1=Effect.CreateEffect(e:GetHandler())
@@ -98,6 +102,8 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
+
+		tc=eg:GetNext()
     end
 end
 
