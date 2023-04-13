@@ -71,14 +71,11 @@ end
 function s.chanfilter(c)
 	local np=c:GetPosition()
 	local pp=c:GetPreviousPosition()
-
-	Debug.Message(np)
-	Debug.Message(pp)
 	return not c:IsStatus(STATUS_CONTINUOUS_POS) and ((np<3 and pp>3) or (pp<3 and np>3))
 end
 
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.chanfilter,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,15914410,41309150), tp, LOCATION_ONFIELD, 0, 1, nil)
+	return eg:IsExists(s.chanfilter,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,15914410,41309158), tp, LOCATION_ONFIELD, 0, 1, nil)
 end
 
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
