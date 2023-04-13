@@ -41,20 +41,20 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 
 		local e3=Effect.CreateEffect(e:GetHandler())
-		e3:SetType(EFFECT_TYPE_FIELD)
-		e3:SetCode(EFFECT_ADD_CODE)
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetCode(EFFECT_CHANGE_CODE)
 		e3:SetTargetRange(LOCATION_MZONE,0)
-		e3:SetTarget(function(_,c)  return c:IsType(TYPE_TOKEN) end)
-		e3:SetValue(511000882)
-		Duel.RegisterEffect(e3,tp)
+		e3:SetTarget(function(_,c) return c:IsType(TYPE_TOKEN) end)
+		e3:SetValue(511000882) --511000882
+		--Duel.RegisterEffect(e3,tp)
 
 		local e4=Effect.CreateEffect(e:GetHandler())
-		e4:SetType(EFFECT_TYPE_FIELD)
+		e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e4:SetCode(EFFECT_ADD_CODE)
 		e4:SetTargetRange(LOCATION_MZONE,0)
 		e4:SetTarget(function(_,c)  return c:IsType(TYPE_TOKEN) end)
 		e4:SetValue(140000085)
-		Duel.RegisterEffect(e4,tp)
+		--Duel.RegisterEffect(e4,tp)
 
 
 		local e5=Effect.CreateEffect(e:GetHandler())
@@ -100,7 +100,7 @@ function s.dmachinefilter(c,tp)
 end
 
 function s.changeatttypefilter(e,c)
-	return c:IsCode(67532912,79853073,75559356,140000083) and c:IsFaceup()
+	return c:IsCode(67532912,79853073,75559356,140000083)
 end
 
 
