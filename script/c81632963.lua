@@ -108,7 +108,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tg(e,c)
-	if not c:IsCode(TOKEN_ENGINE,TOKEN_MOTOR_PARTS) then return false end
+	if not c:IsCode(TOKEN_ENGINE,TOKEN_MOTOR_PARTS,511002412) then return false end
 	if c:GetFlagEffect(1)==0 then
 		c:RegisterFlagEffect(1,0,0,0)
 		local eff
@@ -126,7 +126,7 @@ end
 
 function s.enginetokenchange(e,tp,eg,ev,ep,re,r,rp)
 	local tc=eg:GetFirst()
-	if tc:IsSummonType(SUMMON_TYPE_SPECIAL) and tc:IsCode(TOKEN_ENGINE,TOKEN_MOTOR_PARTS) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	if tc:IsSummonType(SUMMON_TYPE_SPECIAL) and tc:IsCode(TOKEN_ENGINE,TOKEN_MOTOR_PARTS,511002412) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 		Duel.ChangePosition(eg,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 	end
 end
