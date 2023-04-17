@@ -58,24 +58,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetValue(RACE_DINOSAUR)
         Duel.RegisterEffect(e3,tp)
 
-        --Monsters in possession become DARK.
+        --Monsters in possession also become DARK.
         local e4=Effect.CreateEffect(e:GetHandler())
         e4:SetType(EFFECT_TYPE_FIELD)
-        e4:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+        e4:SetCode(EFFECT_ADD_ATTRIBUTE)
         e4:SetTargetRange(LOCATIONS,0)
         e4:SetTarget(aux.TargetBoolFunction(s.archetypefilter3))
         e4:SetValue(ATTRIBUTE_DARK)
         Duel.RegisterEffect(e4,tp)
     
-        --Jurassic Cards in Deck/GY also become Jurassic World
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_CODE)
-        e6:SetTargetRange(LOCATION_DECK+LOCATION_GRAVE,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e6:SetValue(10080320)
-        Duel.RegisterEffect(e6,tp)
-
         --Jurassic Cards in Deck/GY also become Polymerization
         local e7=Effect.CreateEffect(e:GetHandler())
         e7:SetType(EFFECT_TYPE_FIELD)
