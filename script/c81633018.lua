@@ -82,7 +82,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetCode(EFFECT_ADD_CODE)
         e7:SetTargetRange(LOCATION_DECK+LOCATION_GRAVE,0)
         e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e7:SetValue(27847700)
+        e7:SetValue(24094653)
         Duel.RegisterEffect(e7,tp)
 	end
 	e:SetLabel(1)
