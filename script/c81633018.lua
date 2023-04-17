@@ -52,7 +52,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         --Tyrant Dragon in possession becomes a Dinosaur.
         local e3=Effect.CreateEffect(e:GetHandler())
         e3:SetType(EFFECT_TYPE_FIELD)
-        e3:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e3:SetCode(EFFECT_ADD_RACE)
         e3:SetTargetRange(LOCATIONS,0)
         e3:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
         e3:SetValue(RACE_DINOSAUR)
@@ -101,7 +101,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
