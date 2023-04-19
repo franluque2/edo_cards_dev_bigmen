@@ -108,6 +108,7 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 
 	local c6=(Duel.GetFlagEffect(tp, id+7)==0) and Duel.GetLP(tp)<=0 and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_ONFIELD,0,1,nil,TYPE_FIELD)
+		and Duel.IsExistingMatchingCard(aux.TRUE, tp, LOCATION_ONFIELD, 0, 3, nil)
 
 	return ep==tp and c6
 end

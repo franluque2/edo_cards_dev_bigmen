@@ -386,8 +386,8 @@ function gPend.Filter(c,e,tp,lscale,rscale,lvchk)
 	else end
 		lv=c:GetLevel()
 	end
-	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PENDULUM) 
-        or (c:IsLocation(LOCATION_GRAVE) )))
+	return (c:IsLocation(LOCATION_HAND) or ((c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsLocation(LOCATION_EXTRA))
+        or (c:IsLocation(LOCATION_GRAVE) and c:IsSummonableCard() )))
 		and ((lvchk or (lv>lscale and lv<rscale) or c:IsHasEffect(511004423)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false) or gPend.IsValidPkTrapSummon(c,lscale,rscale))
 		and not c:IsForbidden()
 end
