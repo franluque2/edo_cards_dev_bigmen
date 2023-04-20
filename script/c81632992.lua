@@ -53,8 +53,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e9:SetOperation(s.removelocop)
         Duel.RegisterEffect(e9,tp)
 
+		--pk traps can be treated as level 7
+
+		local e10=Effect.CreateEffect(e:GetHandler())
+		e10:SetType(EFFECT_TYPE_FIELD)
+		e10:SetCode(EFFECT_XYZ_LEVEL)
+		e10:SetTargetRange(LOCATION_MZONE, 0)
+		e10:SetTarget(function (_,c) return gPend.PkTrapFilter(c)~=nil end)
+		e10:SetValue(s.xyzlv)
+        Duel.RegisterEffect(e10,tp)
+
 	end
 	e:SetLabel(1)
+end
+
+function s.xyzlv(e,c,rc)
+	return 0x70000+rc:GetLevel()
 end
 
 function s.removeloccon(e,tp,eg,ep,ev,re,r,rp)

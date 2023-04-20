@@ -17,6 +17,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
 end
+
+function s.xyzfilter(c)
+	return c:IsType(TYPE_XYZ)
+end
+
+function s.machinefilter(c)
+	return c:IsRace(RACE_MACHINE)
+end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -62,7 +70,35 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetCondition(s.atkcon)
         e3:SetOperation(s.atkop)
         Duel.RegisterEffect(e3,tp)
+
+		--xyz become dark machine motors
+		local e4=Effect.CreateEffect(e:GetHandler())
+        e4:SetType(EFFECT_TYPE_FIELD)
+        e4:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e4:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e4:SetTarget(aux.TargetBoolFunction(s.xyzfilter))
+        e4:SetValue(ATTRIBUTE_DARK)
+        Duel.RegisterEffect(e4,tp)
+
+		local e6=e4:Clone()
+		e6:SetCode(EFFECT_ADD_RACE)
+		e6:SetValue(RACE_MACHINE)
+		Duel.RegisterEffect(e6, tp)
+
+		local e7=e4:Clone()
+		e7:SetCode(EFFECT_ADD_SETCODE)
+		e7:SetValue(0x537)
+		Duel.RegisterEffect(e7, tp)
+
+		--machines become dark motors
+		local e9=e4:Clone()
+		e9:SetTarget(aux.TargetBoolFunction(s.machinefilter))
+		Duel.RegisterEffect(e9, tp)
 		
+		local e10=e9:Clone()
+		e10:SetCode(EFFECT_ADD_SETCODE)
+		e10:SetValue(0x537)
+		Duel.RegisterEffect(e10, tp)
 
 	end
 	e:SetLabel(1)
@@ -75,7 +111,7 @@ function s.chanfilter(c)
 end
 
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.chanfilter,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,15914410,41309158), tp, LOCATION_ONFIELD, 0, 1, nil)
+	return eg:IsExists(s.chanfilter,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,15914410,41309158), tp, LOCATION_ONFIELD, 0, 1, nil) and ((Duel.GetFlagEffect(tp,id+3) + Duel.GetFlagEffect(tp, id+4))<2)
 end
 
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
@@ -83,23 +119,30 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
     local tc=eg:GetFirst()
     while tc do
-		local val
+		local val=0
         if tc:GetControler()==tp then
-            val=1000
+			if (Duel.GetFlagEffect(tp,id+3)==0) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+				val=1000
+				Duel.RegisterFlagEffect(tp, id+3, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
+			end
         else
-            val=-1000
+			if (Duel.GetFlagEffect(tp,id+4)==0) and Duel.SelectYesNo(tp, aux.Stringid(id, 4)) then
+				val=-1000
+				Duel.RegisterFlagEffect(tp, id+4, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
+			end
         end
 
-        local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(val)
-		e1:SetReset(RESET_PHASE+PHASE_END,2)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		tc:RegisterEffect(e2)
-
+		if val~=0 then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(val)
+			e1:SetReset(RESET_PHASE+PHASE_END,2)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			tc:RegisterEffect(e2)
+		end
 		tc=eg:GetNext()
     end
 end
