@@ -47,7 +47,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 local levelcards={}
-levelcards[1]={60037599,18590133}
+levelcards[1]={18590133}
 levelcards[2]={68963107}
 levelcards[3]={10802915}
 levelcards[4]={08806072}
@@ -85,7 +85,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
                 level=12
             end
             --Debug.Message(levelcards[level][Duel.GetRandomNumber(1,#levelcards[level])])
-            tc:Recreate(levelcards[level][Duel.GetRandomNumber(1,#levelcards[level])], nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
+			tc:Recreate(levelcards[level][Duel.GetRandomNumber(1,#levelcards[level])],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
             tc:RegisterFlagEffect(id, RESETS_STANDARD, 0, 0)
         end
         
