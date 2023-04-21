@@ -108,7 +108,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	--start of duel effects go here
 
-	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
+	--s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
