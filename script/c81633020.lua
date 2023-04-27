@@ -140,13 +140,13 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
     else
 
         local light=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ONFIELD, 0, nil, 62089826)
-        if #light>1 then
+        if #light>0 then
             Duel.Hint(HINT_CARD,tp,id)
         end
         if light and Duel.SendtoDeck(light, tp, SEQ_DECKSHUFFLE, REASON_RULE) then
             local soul
             local souls=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND, 0 , nil, 48680970)
-            if #souls>0 then
+            if #souls>1 then
                 soul=souls:Select(tp, 1,1,nil):GetFirst()
             else
                 soul=souls:GetFirst()
