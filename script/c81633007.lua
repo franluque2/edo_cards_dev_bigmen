@@ -30,7 +30,10 @@ function s.archetypefilter(c)
   return c:IsCode(83011277, 97534104, 511000100, 100000548, 19113101)
 end
 
-
+--Plant become X
+function s.archetypefilter2(c)
+    return c:IsRace(RACE_PLANT)
+  end
 
 
 
@@ -58,7 +61,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e4:SetType(EFFECT_TYPE_FIELD)
         e4:SetCode(EFFECT_ADD_ATTRIBUTE)
         e4:SetTargetRange(LOCATION_DECK,0)
-        e4:SetTarget(RACE_PLANT)
+        e4:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
         e4:SetValue(ATTRIBUTE_DARK)
         Duel.RegisterEffect(e4,tp)
 
@@ -67,7 +70,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetType(EFFECT_TYPE_FIELD)
         e6:SetCode(EFFECT_CHANGE_ATTRIBUTE)
         e6:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,0)
-        e6:SetTarget(RACE_PLANT)
+        e6:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
         e6:SetValue(ATTRIBUTE_EARTH)
         Duel.RegisterEffect(e6,tp)
 
