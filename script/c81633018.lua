@@ -30,7 +30,7 @@ function s.archetypefilter(c)
 
 --Jurassic Cards
 function s.archetypefilter2(c)
-    return c:IsCode(101201053, 511000895, 76076738, 101201063)
+    return c:IsCode(23969415, 99531088, 76076738, 511000895)
   end
 
 --All Dinosaur Monsters become DARK.
