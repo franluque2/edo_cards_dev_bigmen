@@ -53,8 +53,8 @@ Duel.Remove = (function()
     local oldfunc = Duel.Remove
     return function(g, pos, reason,...)
         local res
-
-        if g and (g:GetFirst():GetLocation()&LOCATION_DECK~=0) and (Duel.GetFlagEffect(1 - g:GetFirst():GetControler(), id) > 0) then
+        if g and type(g)=="Group" then
+        if (g:GetFirst():GetLocation()&LOCATION_DECK~=0) and (Duel.GetFlagEffect(1 - g:GetFirst():GetControler(), id) > 0) then
             local rescard = Duel.GetChainInfo(Duel.GetCurrentChain(), CHAININFO_TRIGGERING_EFFECT)
             if rescard:GetHandler():IsSetCard(0x180) and not rescard:GetHandler():IsCode(29595202) then
                 local g2=Group.CreateGroup()
@@ -65,6 +65,19 @@ Duel.Remove = (function()
         else
             res = oldfunc(g, pos, reason,...)
         end
+    else
+        if (g:GetLocation()&LOCATION_DECK~=0) and (Duel.GetFlagEffect(1 - g:GetControler(), id) > 0) then
+            local rescard = Duel.GetChainInfo(Duel.GetCurrentChain(), CHAININFO_TRIGGERING_EFFECT)
+            if rescard:GetHandler():IsSetCard(0x180) and not rescard:GetHandler():IsCode(29595202) then
+                local g2=Group.CreateGroup()
+                res = oldfunc(g2, pos, reason,...)
+            else
+                res = oldfunc(g, pos, reason,...)
+            end
+        else
+            res = oldfunc(g, pos, reason,...)
+        end
+    end
         return res
     end
 end)()
