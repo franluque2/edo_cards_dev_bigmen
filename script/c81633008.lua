@@ -49,9 +49,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_ADD_CODE)
+        e5:SetCode(EFFECT_ADD_RACE)
         e5:SetTargetRange(LOCATION_ONFIELD,0)
-        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
         e5:SetValue(RACE_DRAGON)
         Duel.RegisterEffect(e5,tp)
     
