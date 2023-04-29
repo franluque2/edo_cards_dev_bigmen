@@ -46,8 +46,6 @@ function s.discon(e)
 	return not Duel.IsExistingMatchingCard(s.lokifilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
 end
 
-function Dummyfunc(g, pos, reason,...)
-end
 
 Duel.Remove = (function()
     local oldfunc = Duel.Remove
