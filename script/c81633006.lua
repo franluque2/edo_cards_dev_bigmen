@@ -52,7 +52,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_SETCODE)
         e5:SetTargetRange(LOCATIONS,0)
-        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
     
@@ -81,7 +81,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
@@ -99,4 +99,3 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
-
