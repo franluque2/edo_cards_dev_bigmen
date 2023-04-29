@@ -58,7 +58,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     
         local e6=Effect.CreateEffect(e:GetHandler())
         e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_SETCODE)
+        e6:SetCode(EFFECT_ADD_CODE)
         e6:SetTargetRange(LOCATION_DECK,0)
         e6:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
         e6:SetValue(75304793)
