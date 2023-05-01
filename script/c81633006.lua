@@ -37,6 +37,9 @@ function s.archetypefilter2(c)
 
 --Fusion Targets
 function s.SymphonicFusionMat(_,c)
+	Debug.Message(c:IsOriginalRace(RACE_MACHINE))
+	Debug.Message(c:IsOriginalAttribute(ATTRIBUTE_WIND))
+	Debug.Message(c:IsSetCard(0x1066))
     return c:IsOriginalRace(RACE_MACHINE) and c:IsOriginalAttribute(ATTRIBUTE_WIND) and c:IsSetCard(0x1066)
   end
 
@@ -104,7 +107,7 @@ local MusicianKings=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, ni
 if #MusicianKings>0 then
 	local tc=MusicianKings:GetFirst()
 		while tc do
-			Debug.Message("hi")
+	
 				Fusion.AddProcMixN(tc, true, true, s.SymphonicFusionMat, 2)
 
 
