@@ -21,6 +21,27 @@ function s.initial_effect(c)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
+    	--steal ATK
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_ATKCHANGE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetCondition(s.atkcon)
+	e3:SetTarget(s.atktg)
+	e3:SetOperation(s.atkop)
+	c:RegisterEffect(e3)
+    	--negate
+	local e4=Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_DISABLE)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_F)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e4:SetRange(LOCATION_MZONE)
+    e4:SetCountLimit(1)
+	e4:SetCondition(s.discon)
+	e4:SetTarget(s.distg)
+	e4:SetOperation(s.disop)
+	c:RegisterEffect(e4)
 end
 s.listed_names={56907389}
 function s.spfilter(c,ft,tp)
@@ -70,3 +91,42 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetBattleTarget()
+	return tc and tc:IsFaceup()
+end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return true end
+	e:GetHandler():GetBattleTarget():CreateEffectRelation(e)
+end
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=c:GetBattleTarget()
+	if not c:IsRelateToEffect(e) or c:IsFacedown() or not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		local atk=tc:GetAttack()
+		if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			e1:SetValue(math.ceil(atk/2))
+			tc:RegisterEffect(e1)
+		end
+	end
+end
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
+	local loc,tg=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TARGET_CARDS)
+	if not tg or not tg:IsContains(c) then return false end
+	return re:IsActiveType(TYPE_SPELL) and Duel.IsChainDisablable(ev) and loc~=LOCATION_DECK
+end
+function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp,chk)
+	Duel.NegateEffect(ev)
+end
