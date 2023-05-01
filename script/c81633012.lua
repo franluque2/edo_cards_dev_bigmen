@@ -32,8 +32,8 @@ end
 
 --add the conditions for the archetype swap here
 function s.archetypefilter2(c)
-    return c:IsCode(100000080)
-  end
+  return c:IsCode(100000080)
+end
 
 
 
@@ -55,22 +55,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
-
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_CODE)
-        e6:SetTargetRange(LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e6:SetValue(01050355)
-        Duel.RegisterEffect(e6,tp)
-
-        local e7=Effect.CreateEffect(e:GetHandler())
-        e7:SetType(EFFECT_TYPE_FIELD)
-        e7:SetCode(EFFECT_ADD_CODE)
-        e7:SetTargetRange(LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0)
-        e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e7:SetValue(74665651)
-        Duel.RegisterEffect(e7,tp)
     
 
 	end
@@ -100,23 +84,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id)
 				tc:RegisterEffect(e3)
-
-
-			tc=g:GetNext()
-		end
-	end
-
-    g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
-
-	
-    if #g>0 then
-		local tc=g:GetFirst()
-		while tc do
-			
-				local e8=Effect.CreateEffect(e:GetHandler())
-				e8:SetType(EFFECT_TYPE_SINGLE)
-				e8:SetCode(id)
-				tc:RegisterEffect(e8)
 
 
 			tc=g:GetNext()
