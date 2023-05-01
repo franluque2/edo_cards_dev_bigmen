@@ -48,38 +48,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--other passive duel effects go here
 
-        local e5=Effect.CreateEffect(e:GetHandler())
-        e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_ADD_CODE)
-        e5:SetTargetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0)
-        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e5:SetValue(53804307)
-        Duel.RegisterEffect(e5,tp)
-
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_CODE)
-        e6:SetTargetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e6:SetValue(26400609)
-        Duel.RegisterEffect(e6,tp)
-
-        local e7=Effect.CreateEffect(e:GetHandler())
-        e7:SetType(EFFECT_TYPE_FIELD)
-        e7:SetCode(EFFECT_ADD_CODE)
-        e7:SetTargetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0)
-        e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e7:SetValue(89399912)
-        Duel.RegisterEffect(e7,tp)
-
-        local e8=Effect.CreateEffect(e:GetHandler())
-        e8:SetType(EFFECT_TYPE_FIELD)
-        e8:SetCode(EFFECT_ADD_CODE)
-        e8:SetTargetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0)
-        e8:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e8:SetValue(90411554)
-        Duel.RegisterEffect(e8,tp)
-
         local e9=Effect.CreateEffect(e:GetHandler())
         e9:SetType(EFFECT_TYPE_FIELD)
         e9:SetCode(EFFECT_ADD_ATTRIBUTE)
@@ -109,8 +77,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e12:SetCode(EFFECT_ADD_ATTRIBUTE)
         e12:SetTargetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0)
         e12:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e12:SetValue(ATTRIBUTE_EARTH)
-        Duel.RegisterEffect(e9,tp)
+        e12:SetValue(ATTRIBUTE_FIRE)
+        Duel.RegisterEffect(e12,tp)
     
 
 	end
