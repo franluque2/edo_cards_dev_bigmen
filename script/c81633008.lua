@@ -32,6 +32,10 @@ function s.archetypefilter2(c)
     return c:IsLevelBelow(4) and c:IsRace(RACE_DRAGON)
 end
 
+--Light End Dark End
+function s.LightDarkEnd(c)
+	return c:IsCode(25132288, 88643579)
+end
 
 
 
@@ -95,7 +99,17 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
-
+	local EndDragons=Duel.GetMatchingGroup(s.LightDarkEnd, tp, LOCATION_EXTRA, 0, nil)
+	if #EndDragons>0 then
+	  local tc=EndDragons:GetFirst()
+		while tc do
+	  
+		--synchro summon
+		Synchro.AddProcedure(tc,nil,1,1,Synchro.NonTuner(nil),1,99)
+		  tc=EndDragons:GetNext()
+		end
+	end
+  
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
