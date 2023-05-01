@@ -34,6 +34,9 @@ function s.archetypefilter2(c)
   return c:IsType(TYPE_MONSTER), c:IsRace(RACE_DRAGON)
 end
 
+function s.archetypefilter3(c)
+  return c:IsCode(03292267, 64332231, 27337596)
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -70,6 +73,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
         e7:SetValue(ATTRIBUTE_WATER)
         Duel.RegisterEffect(e7,tp)
+
+        local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_ADD_SETCODE)
+        e8:SetTargetRange(LOCATION_EXTRA,0)
+        e8:SetTarget(aux.TargetBoolFunction(s.archetypefilter3))
+        e8:SetValue(0x48)
+        Duel.RegisterEffect(e8,tp)
 
 	end
 	e:SetLabel(1)
