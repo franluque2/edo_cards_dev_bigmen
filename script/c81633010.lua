@@ -68,7 +68,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetCode(EFFECT_ADD_CODE)
         e7:SetTargetRange(LOCATION_ONFIELD,0)
         e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e7:SetValue(RACE_MACHINE)
+        e7:SetValue(64268668)
         Duel.RegisterEffect(e7,tp)
 
         local e8=Effect.CreateEffect(e:GetHandler())
