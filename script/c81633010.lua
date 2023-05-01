@@ -34,6 +34,26 @@ function s.archetypefilter2(c)
     return c:IsCode(37057012)
   end
 
+--Machine Cyber Monsters
+function s.MachineCybers(c)
+  return c:IsSetCard(0x93) and c:IsRace(RACE_MACHINE)
+end
+--GY
+function s.OpGY(c, sc, st, tp)
+  return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp)
+end
+--Scrap Fusion
+function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
+	if not re then return end
+	local rc=re:GetHandler()
+	if (rc:IsCode(100000079)) and rc:IsType(TYPE_SPELL) then
+		local ec=eg:GetFirst()
+		while ec do
+			ec:RegisterFlagEffect(id-500,RESET_EVENT+RESETS_STANDARD,0,0)
+			ec=eg:GetNext()
+		end
+	end
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -79,6 +99,28 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetValue(ATTRIBUTE_DARK)
         Duel.RegisterEffect(e8,tp)
 
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+        e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e9:SetCode(EVENT_SPSUMMON_SUCCESS)
+        e9:SetOperation(s.mreborncheck)
+        Duel.RegisterEffect(e9,tp)
+
+        local e10=Effect.CreateEffect(e:GetHandler())
+        e10:SetType(EFFECT_TYPE_FIELD)
+        e10:SetCode(EFFECT_ADD_SETCODE)
+        e10:SetTargetRange(LOCATION_MZONE,0)
+        e10:SetTarget(function(_,c)  return c:IsHasEffect(id-500) end)
+        e10:SetValue(ARCHETYPE)
+        Duel.RegisterEffect(e10,tp)
+    
+        local e11=Effect.CreateEffect(e:GetHandler())
+        e11:SetType(EFFECT_TYPE_FIELD)
+        e11:SetCode(EFFECT_ADD_RACE)
+        e11:SetTargetRange(LOCATION_MZONE,0)
+        e11:SetTarget(function(_,c)  return c:IsHasEffect(id-500) end)
+        e11:SetValue(RACE_MACHINE)
+        Duel.RegisterEffect(e11,tp)
 	end
 	e:SetLabel(1)
 end
@@ -111,6 +153,17 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
+  local CyberOgres=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 37057012)
+  if #CyberOgres>0 then
+    local tc=CyberOgres:GetFirst()
+      while tc do
+    
+          Fusion.AddProcMixN(tc, true, true, s.MachineCybers, 2)
+          Fusion.AddProcMixN(tc, true, true, s.OpGY, 2)
+  
+        tc=CyberOgres:GetNext()
+      end
+  end
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
