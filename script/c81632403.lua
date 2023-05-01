@@ -24,7 +24,7 @@ function s.initial_effect(c)
     	--steal ATK
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_ATKCHANGE)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e3:SetCondition(s.atkcon)
 	e3:SetTarget(s.atktg)
