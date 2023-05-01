@@ -49,7 +49,6 @@ function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
 	if (rc:IsCode(100000079)) and rc:IsType(TYPE_SPELL) then
 		local ec=eg:GetFirst()
 		while ec do
-      Debug.Message("msg")
 			ec:RegisterFlagEffect(id-500,RESET_EVENT+RESETS_STANDARD,0,0)
 			ec=eg:GetNext()
 		end
@@ -111,7 +110,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e10:SetType(EFFECT_TYPE_FIELD)
         e10:SetCode(EFFECT_ADD_SETCODE)
         e10:SetTargetRange(LOCATION_MZONE,0)
-        e10:SetTarget(function(_,c)  return c:IsHasEffect(id-500) end)
+        e10:SetTarget(function(_,c)  return c:GetFlagEffect(id-500)>0 end)
         e10:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e10,tp)
     
@@ -119,7 +118,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetType(EFFECT_TYPE_FIELD)
         e11:SetCode(EFFECT_ADD_RACE)
         e11:SetTargetRange(LOCATION_MZONE,0)
-        e11:SetTarget(function(_,c)  return c:IsHasEffect(id-500) end)
+        e11:SetTarget(function(_,c)  return c:GetFlagEffect(id-500)>0 end)
         e11:SetValue(RACE_MACHINE)
         Duel.RegisterEffect(e11,tp)
 	end
