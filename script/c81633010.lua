@@ -49,6 +49,7 @@ function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
 	if (rc:IsCode(100000079)) and rc:IsType(TYPE_SPELL) then
 		local ec=eg:GetFirst()
 		while ec do
+      Debug.Message("msg")
 			ec:RegisterFlagEffect(id-500,RESET_EVENT+RESETS_STANDARD,0,0)
 			ec=eg:GetNext()
 		end
