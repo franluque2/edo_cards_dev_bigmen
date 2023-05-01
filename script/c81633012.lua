@@ -115,7 +115,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			
 				local e8=Effect.CreateEffect(e:GetHandler())
 				e8:SetType(EFFECT_TYPE_SINGLE)
-				e8:SetCode(id+1)
+				e8:SetCode(id)
 				tc:RegisterEffect(e8)
 
 
