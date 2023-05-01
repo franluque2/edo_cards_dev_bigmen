@@ -59,7 +59,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetType(EFFECT_TYPE_FIELD)
         e6:SetCode(EFFECT_ADD_RACE)
         e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e6:SetValue(RACE_MACHINE)
         Duel.RegisterEffect(e6,tp)
 
