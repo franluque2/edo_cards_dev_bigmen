@@ -33,8 +33,12 @@ end
 --Plant become X
 function s.archetypefilter2(c)
     return c:IsRace(RACE_PLANT)
-  end
+end
 
+--R3 Targets
+function s.RankPlants(_,c)
+	return c:IsCode(83011277, 97534104, 00525110, 19113101)
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -74,10 +78,26 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetValue(ATTRIBUTE_EARTH)
         Duel.RegisterEffect(e6,tp)
 
+		--Tomatos as R3
+		local e10=Effect.CreateEffect(e:GetHandler())
+		e10:SetType(EFFECT_TYPE_FIELD)
+		e10:SetCode(EFFECT_XYZ_LEVEL)
+		e10:SetTargetRange(LOCATION_MZONE, 0)
+		e10:SetTarget(s.RankPlants)
+		e10:SetValue(s.xyzlv)
+        Duel.RegisterEffect(e10,tp)
+		
+
 	end
 	e:SetLabel(1)
 end
 
+function s.xyzlv(e,c,rc)
+	if rc:IsRace(RACE_PLANT) then
+		return 3, c:GetLevel()
+	else return c:GetLevel()
+	end
+end
 
 function s.markedfilter(c,e)
     return #c:IsHasEffect(e)>0
