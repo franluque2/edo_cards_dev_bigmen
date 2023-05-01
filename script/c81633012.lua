@@ -110,10 +110,10 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		while tc do
 			
-				local e3=Effect.CreateEffect(e:GetHandler())
-				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id+1)
-				tc:RegisterEffect(e3)
+				local e8=Effect.CreateEffect(e:GetHandler())
+				e8:SetType(EFFECT_TYPE_SINGLE)
+				e8:SetCode(id+1)
+				tc:RegisterEffect(e8)
 
 
 			tc=g:GetNext()
@@ -121,7 +121,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	end
 
 	g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
-    
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
