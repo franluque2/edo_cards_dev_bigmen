@@ -23,20 +23,12 @@ end
 local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
 --add archetype setcode here
-local ARCHETYPE=0x167
+local ARCHETYPE=0x108
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
   return c:IsCode(511000712, 511002443, 810000025, 511002453, 511002454, 511002445)
 end
-
---add the conditions for the archetype swap here
-function s.archetypefilter2(c)
-  return c:IsCode(511000712, 511002443, 810000025)
-end
-
-
-
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -57,14 +49,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
-
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_TYPE)
-        e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
-        e6:SetValue(TYPE_NORMAL)
-        Duel.RegisterEffect(e6,tp)
     
 
 	end
