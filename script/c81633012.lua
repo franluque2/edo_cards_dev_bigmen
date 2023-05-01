@@ -106,6 +106,9 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+	
     if #g>0 then
 		local tc=g:GetFirst()
 		while tc do
@@ -119,8 +122,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
-
-	g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
