@@ -35,6 +35,10 @@ function s.archetypefilter2(c)
     return c:IsCode(68540058, 12503902)
   end
 
+--Fusion Targets
+function s.SymphonicFusionMat(_,c)
+    return c:IsOriginalRace(RACE_MACHINE) and c:IsOriginalAttribute(ATTRIBUTE_WIND) and c:IsSetCard(0x1066)
+  end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -96,6 +100,17 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
+local MusicianKings=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 56907389)
+if #MusicianKings>0 then
+	local tc=MusicianKings:GetFirst()
+		while tc do
+			Debug.Message("hi")
+				Fusion.AddProcMixN(tc, true, true, s.SymphonicFusionMat, 2)
 
+
+			tc=MusicianKings:GetNext()
+		end
+end
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
+
 end
