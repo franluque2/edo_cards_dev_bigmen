@@ -37,9 +37,6 @@ function s.archetypefilter2(c)
 
 --Fusion Targets
 function s.SymphonicFusionMat(c)
-	Debug.Message(c:IsOriginalRace(RACE_MACHINE))
-	Debug.Message(c:IsOriginalAttribute(ATTRIBUTE_WIND))
-	Debug.Message(c:IsSetCard(0x1066))
     return c:IsOriginalRace(RACE_MACHINE) and c:IsOriginalAttribute(ATTRIBUTE_WIND) and c:IsSetCard(0x1066)
   end
 
