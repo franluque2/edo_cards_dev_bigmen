@@ -49,10 +49,27 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
+
+		--"Magical Musket" Spell/Traps can be activated from the hand
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
+		e2:SetTargetRange(LOCATION_HAND,0)
+		e2:SetCondition(s.quickmspellscon)
+		e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,SET_MAGICAL_MUSKET))
+		Duel.RegisterEffect(e2,tp)
+		local e3=e2:Clone()
+		e3:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+		Duel.RegisterEffect(e3,tp)
+		
     
 
 	end
 	e:SetLabel(1)
+end
+
+function s.quickmspellscon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil, 511000712, 511002443, 810000025 )
 end
 
 
