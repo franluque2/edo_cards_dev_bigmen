@@ -22,7 +22,7 @@ end
 --change this to change the locations where this acts
 local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
---Dragonic Knight
+--Dragonic Warrior
 function s.archetypefilter(c)
   return c:IsCode(511002255)
 end
@@ -37,7 +37,15 @@ function s.LightDarkEnd(c)
 	return c:IsCode(25132288, 88643579)
 end
 
+--Burning Dragon
+function s.archetypefilter3(c)
+	return c:IsCode(08085950)
+end
 
+--Dragonic Knight
+function s.archetypefilter4(c)
+	return c:IsCode(38109772)
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -54,7 +62,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_RACE)
-        e5:SetTargetRange(LOCATION_ONFIELD,0)
+        e5:SetTargetRange(LOCATIONS,0)
         e5:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
         e5:SetValue(RACE_DRAGON)
         Duel.RegisterEffect(e5,tp)
@@ -66,6 +74,30 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetTarget(aux.TargetBoolFunction(s.archetypefilter2))
         e6:SetValue(ATTRIBUTE_WIND)
         Duel.RegisterEffect(e6,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e7:SetTargetRange(LOCATION_ONFIELD,0)
+        e7:SetTarget(aux.TargetBoolFunction(s.archetypefilter3))
+        e7:SetValue(ATTRIBUTE_DARK)
+        Duel.RegisterEffect(e7,tp)
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e8:SetTargetRange(LOCATION_ONFIELD,0)
+        e8:SetTarget(aux.TargetBoolFunction(s.archetypefilter3))
+        e8:SetValue(ATTRIBUTE_LIGHT)
+        Duel.RegisterEffect(e8,tp)
+
+		local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_ADD_CODE)
+        e9:SetTargetRange(LOCATION_ONFIELD,0)
+        e9:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e9:SetValue(511002255)
+        Duel.RegisterEffect(e9,tp)
 
 	end
 	e:SetLabel(1)
@@ -84,7 +116,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g=Duel.GetMatchingGroup(s.archetypefilter4, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
