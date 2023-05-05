@@ -52,7 +52,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(Card.IsRace, tp, LOCATION_ALL, LOCATION_ALL, nil,RACE_ILLUSIONIST)
+    local g=Duel.GetMatchingGroup(Card.IsRace, tp, LOCATION_ALL, LOCATION_ALL, nil,RACE_ILLUSION)
 
     if #g>0 then
 		local tc=g:GetFirst()
