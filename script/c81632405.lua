@@ -1,4 +1,5 @@
 --Healing Wind (CT)
+Duel.LoadScript ("c420.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--recover
