@@ -1,5 +1,8 @@
 --Shackles of Reality
 --Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
+
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -40,10 +43,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-function s.batval(e,re,c)
-	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
-end
-
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
@@ -58,14 +57,13 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		while tc do
 
-            local e2=Effect.CreateEffect(e:GetHandler())
-            e2:SetType(EFFECT_TYPE_FIELD)
-            e2:SetCode(511010508)
-            e2:SetRange(LOCATION_MZONE)
-            e2:SetTargetRange(LOCATION_MZONE,0)
-            e2:SetTarget(s.tg)
-            e2:SetValue(s.val)
-            tc:RegisterEffect(e2)
+			local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_BATTLE_INDES)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetTargetRange(LOCATION_MZONE,0)
+		e1:SetValue(s.batval)
+		tc:RegisterEffect(e1)
 
             tc=g:GetNext()
         end
@@ -75,10 +73,8 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
-function s.tg(e,c)
-	local bc=e:GetHandler()
-	return bc and bc:GetRace()==RACE_ILLUSIONIST
+
+function s.batval(e,re,c)
+	return re:GetHandler():IsRace(RACE_ILLUSION)
 end
-function s.val(e,re,c)
-	return re:GetOwnerPlayer()==e:GetHandlerPlayer()
-end
+
