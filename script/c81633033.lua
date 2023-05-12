@@ -70,9 +70,37 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetOperation(s.epop)
         e5:SetCountLimit(1)
 		Duel.RegisterEffect(e5,tp)
+
+        aux.GlobalCheck(s,function()
+            local ge=Effect.GlobalEffect()
+            ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+            ge:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+            ge:SetCode(EVENT_ADJUST)
+            ge:SetOperation(s.adjustop)
+            Duel.RegisterEffect(ge,0)
+        end)
+    
         
 	end
 	e:SetLabel(1)
+end
+
+
+function s.adjustop(e,tp,eg,ep,ev,re,r,rp)
+	local phase=Duel.GetCurrentPhase()
+	if (phase==PHASE_DAMAGE and not Duel.IsDamageCalculated()) or phase==PHASE_DAMAGE_CAL then return end
+	local sg=Duel.GetMatchingGroup(s.isghost, tp, LOCATION_ONFIELD, 0, nil)
+	local g1=Group.CreateGroup()
+	local readjust=false
+	if #sg>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		g1:Merge(sg:Select(tp,#sg-1,#sg-1,nil))
+	end
+	if #g1>0 then
+		Duel.SendtoGrave(g1,REASON_RULE,PLAYER_NONE)
+		readjust=true
+	end
+	if readjust then Duel.Readjust() end
 end
 
 function s.epcon(e,tp,eg,ep,ev,re,r,rp)
