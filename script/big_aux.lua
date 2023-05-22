@@ -93,6 +93,12 @@ CustomArchetype.CTMantis={
 Card.IsCTMantis=MakeCheck({0x535},CustomArchetype.CTMantis)
 
 
+CustomArchetype.CTLamp={
+  58818411, 85505315, 51254980, 82738277, 100297002, 100297003, 94573223, 100297102, 53754104, 31600513, 31600514, 101111083, --Replace these with tcg/rush/we lamps
+}
+Card.IsCTLamp=MakeCheck({0xbc},CustomArchetype.CTLamp)
+
+
 end
 
 
