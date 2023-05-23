@@ -32,7 +32,9 @@ end
 
 
 
-
+function s.RankSumm(_,c)
+	return c:GetFlagEffect(id)>0
+end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -52,15 +54,77 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
-    
+
+		local e10=Effect.CreateEffect(e:GetHandler())
+		e10:SetType(EFFECT_TYPE_FIELD)
+		e10:SetCode(EFFECT_XYZ_LEVEL)
+		e10:SetTargetRange(LOCATION_MZONE, 0)
+		e10:SetTarget(s.RankSumm)
+		e10:SetValue(s.xyzlv)
+        Duel.RegisterEffect(e10,tp)
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+		e8:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+		e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e8:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e8:SetOperation(s.tingoldfishcheck)
+		Duel.RegisterEffect(e8,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+		e7:SetType(EFFECT_TYPE_FIELD)
+		e7:SetCode(511001225)
+		e7:SetOperation(s.tgval)
+		e7:SetValue(1)
+		e7:SetTarget(function (_,c) return c:GetFlagEffect(id)>0 end)
+		e7:SetTargetRange(LOCATION_MZONE,0)
+		Duel.RegisterEffect(e7,tp)
+
+
+		local e11=Effect.CreateEffect(e:GetHandler())
+		e11:SetType(EFFECT_TYPE_FIELD)
+		e11:SetCode(EFFECT_XYZ_LEVEL)
+		e11:SetTargetRange(LOCATION_MZONE, 0)
+		e11:SetTarget(function (_,c) return c:GetFlagEffect(id)>0 end)
+		e11:SetValue(s.xyzlv)
+        Duel.RegisterEffect(e11,tp)
+
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_CHANGE_LEVEL)
+		e2:SetTargetRange(LOCATION_HAND,0)
+		e2:SetTarget(function (_,c) return c:IsLevel(3) and c:IsRace(RACE_MACHINE) end)
+		e2:SetCondition(function (e) return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_MZONE, 0, 1, nil, 18063928) end)
+		e2:SetValue(4)
+        Duel.RegisterEffect(e2,tp)
+		
 
 	end
 	e:SetLabel(1)
 end
 
+function s.tgval(e,c)
+	return c:IsCode(66506689)
+end
 
-function s.markedfilter(c,e)
-    return #c:IsHasEffect(e)>0
+
+function s.tingoldfishcheck(e,tp,eg,ev,ep,re,r,rp)
+	if not re then return end
+	local rc=re:GetHandler()
+	if (rc:IsCode(18063928)) and rc:IsType(TYPE_MONSTER) then
+		local ec=eg:GetFirst()
+		while ec do
+			ec:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
+			ec=eg:GetNext()
+		end
+	end
+end
+
+
+function s.xyzlv(e,c,rc)
+	if rc:IsRace(RACE_MACHINE) then
+		return 3,4,c:GetLevel()
+	else return c:GetLevel()
+	end
 end
 
 
