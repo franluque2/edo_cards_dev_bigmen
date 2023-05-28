@@ -32,12 +32,12 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
        
 
-        local e5=Effect.CreateEffect(e:GetHandler())
-        e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-        e5:SetTargetRange(LOCATION_MZONE,0)
+        --local e5=Effect.CreateEffect(e:GetHandler())
+        --e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+        --e5:SetTargetRange(LOCATION_MZONE,0)
         --e5:SetTarget(function(_,c) return c:IsRace(RACE_ILLUSIONIST) end)
-        e5:SetLabelObject(e2)
-        Duel.RegisterEffect(e5,tp)
+        --e5:SetLabelObject(e2)
+        --Duel.RegisterEffect(e5,tp)
         
 	end
 	e:SetLabel(1)

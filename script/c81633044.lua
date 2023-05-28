@@ -1,4 +1,85 @@
 --Exhausted Shackles of Fiction
-function c81633044.initial_effect(c)
-	
+
+local s,id=GetID()
+function s.initial_effect(c)
+	--Activate Skill
+	aux.AddSkillProcedure(c,2,false,nil,nil)
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_STARTUP)
+	e1:SetCountLimit(1)
+	e1:SetRange(0x5f)
+	e1:SetLabel(0)
+	e1:SetOperation(s.op)
+	c:RegisterEffect(e1)
+end
+
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabel()==0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCondition(s.flipcon)
+		e1:SetOperation(s.flipop)
+		Duel.RegisterEffect(e1,tp)
+
+		--other passive duel effects go here   
+        
+        local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_DISABLE)
+        e8:SetTargetRange(LOCATION_MZONE,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(function (_,c) return c:IsCode(99726621) end)
+        Duel.RegisterEffect(e8, tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_DISABLE)
+        e9:SetTargetRange(LOCATION_MZONE,0)
+        e9:SetTarget(function (_,c) return c:IsCode(10019086) end)
+        Duel.RegisterEffect(e9, tp)
+
+
+        local e5=Effect.CreateEffect(e:GetHandler())
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_CHAIN_SOLVING)
+	e5:SetCondition(s.discon2)
+	e5:SetOperation(s.disop2)
+    Duel.RegisterEffect(e5, tp)
+
+	end
+	e:SetLabel(1)
+end
+
+function s.discon2(e,tp,eg,ep,ev,re,r,rp)
+	local loc,code=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_CODE)
+	return re:IsActiveType(TYPE_MONSTER) and loc==LOCATION_MZONE and (code==10019086)
+end
+function s.disop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateEffect(ev)
+end
+
+
+function s.discon(e)
+	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(87074380)
+end
+
+
+
+
+function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
+end
+function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
+	Duel.Hint(HINT_CARD,tp,id)
+
+
+	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
