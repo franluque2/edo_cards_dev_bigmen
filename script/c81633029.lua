@@ -39,7 +39,9 @@ function s.NotJapan(c)
 end
 
 function s.StillNotJapan(c)
-    return (c:IsSetCard(0xd3) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))) or c:IsCode(76806714)
+    Debug.Message(c:IsSetCard(0xd3))
+    Debug.Message(c:IsSpellTrap())
+    return (c:IsSetCard(0xd3) and c:IsSpellTrap()) or c:IsCode(76806714)
 end
 
 
@@ -172,30 +174,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e16:SetValue(1264319)
         Duel.RegisterEffect(e16,tp)
 
-        local e17=Effect.CreateEffect(e:GetHandler())
-        e17:SetType(EFFECT_TYPE_FIELD)
-        e17:SetCode(EFFECT_ADD_CODE)
-        e17:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY-LOCATION_ONFIELD,0)
-        e17:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
-        e17:SetValue(83968380)
-        Duel.RegisterEffect(e17,tp)
 
         --Kaiju Cards
         local e18=Effect.CreateEffect(e:GetHandler())
         e18:SetType(EFFECT_TYPE_FIELD)
-        e18:SetCode(EFFECT_ADD_CODE)
-        e18:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e18:SetCode(EFFECT_CHANGE_CODE)
+        e18:SetTargetRange(LOCATION_DECK,0)
         e18:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
         e18:SetValue(1264319)
         Duel.RegisterEffect(e18,tp)
-
-        local e19=Effect.CreateEffect(e:GetHandler())
-        e19:SetType(EFFECT_TYPE_FIELD)
-        e19:SetCode(EFFECT_ADD_CODE)
-        e19:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
-        e19:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
-        e19:SetValue(83968380)
-        Duel.RegisterEffect(e19,tp)
 
         --Gora
         local e20=Effect.CreateEffect(e:GetHandler())
