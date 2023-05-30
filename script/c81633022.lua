@@ -75,7 +75,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetCode(EFFECT_ADD_SETCODE)
         e3:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
         e3:SetTarget(function(_,c)  return s.isfairybeastplant(c) end)
-        e3:SetValue(SET_MANADOME)
+        e3:SetValue(SET_MANNADIUM)
         Duel.RegisterEffect(e3,tp)
 
         local e4=Effect.CreateEffect(e:GetHandler())

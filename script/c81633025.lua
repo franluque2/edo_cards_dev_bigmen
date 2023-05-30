@@ -77,7 +77,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e7=e5:Clone()
         e7:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
-        e7:SetValue(511000910)
+        e7:SetValue(511000910) --160208002 511000910
         Duel.RegisterEffect(e7,tp)
 
         local e8=e5:Clone()
