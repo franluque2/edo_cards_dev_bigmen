@@ -24,7 +24,7 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
-  return c:IsCode(25862681)
+  return c:IsCode(25862681, 02403771, 25165047)
 end
 
 
