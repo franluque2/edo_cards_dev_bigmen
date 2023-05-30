@@ -39,8 +39,6 @@ function s.NotJapan(c)
 end
 
 function s.StillNotJapan(c)
-    Debug.Message(c:IsSetCard(0xd3))
-    Debug.Message(c:IsSpellTrap())
     return (c:IsSetCard(0xd3) and c:IsSpellTrap()) or c:IsCode(76806714)
 end
 
