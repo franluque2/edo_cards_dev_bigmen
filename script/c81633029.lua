@@ -39,7 +39,7 @@ function s.NotJapan(c)
 end
 
 function s.StillNotJapan(c)
-    return (c:IsSetCard(0x88) and c:IsSpellTrap()) or c:IsCode(76806714)
+    return (c:IsSetCard(0xd3) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))) or c:IsCode(76806714)
 end
 
 
@@ -94,7 +94,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetCode(EFFECT_ADD_SETCODE)
         e7:SetTargetRange(LOCATION_DECK,LOCATION_MZONE)
         e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e7:SetValue(0x37)
+        e7:SetValue(0xd3)
         Duel.RegisterEffect(e7,tp)
 
         --Turtles also treated as GemFusion in Deck
@@ -111,7 +111,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e9:SetType(EFFECT_TYPE_FIELD)
         e9:SetCode(EFFECT_ADD_SETCODE)
         e9:SetTargetRange(LOCATION_DECK+LOCATION_HAND,0)
-        e9:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
+        e9:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e9:SetValue(0xbd)
         Duel.RegisterEffect(e9,tp)
     
@@ -160,7 +160,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetType(EFFECT_TYPE_FIELD)
         e15:SetCode(EFFECT_CHANGE_CODE)
         e15:SetTargetRange(LOCATION_FZONE,0)
-        e15:SetTarget(function(_,c) Debug.Message("hi") return c:IsHasEffect(id+3) end)
+        e15:SetTarget(function(_,c) return c:IsHasEffect(id+2) end)
         e15:SetValue(12644061)
         Duel.RegisterEffect(e15,tp)
 
@@ -168,7 +168,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e16:SetType(EFFECT_TYPE_FIELD)
         e16:SetCode(EFFECT_ADD_CODE)
         e16:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY-LOCATION_ONFIELD,0)
-        e16:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
+        e16:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
         e16:SetValue(1264319)
         Duel.RegisterEffect(e16,tp)
 
@@ -176,7 +176,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e17:SetType(EFFECT_TYPE_FIELD)
         e17:SetCode(EFFECT_ADD_CODE)
         e17:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY-LOCATION_ONFIELD,0)
-        e17:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
+        e17:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
         e17:SetValue(83968380)
         Duel.RegisterEffect(e17,tp)
 
@@ -185,7 +185,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e18:SetType(EFFECT_TYPE_FIELD)
         e18:SetCode(EFFECT_ADD_CODE)
         e18:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
-        e18:SetTarget(function(_,c)  return c:IsHasEffect(id+4) end)
+        e18:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
         e18:SetValue(1264319)
         Duel.RegisterEffect(e18,tp)
 
@@ -193,14 +193,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e19:SetType(EFFECT_TYPE_FIELD)
         e19:SetCode(EFFECT_ADD_CODE)
         e19:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
-        e19:SetTarget(function(_,c)  return c:IsHasEffect(id+4) end)
+        e19:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
         e19:SetValue(83968380)
         Duel.RegisterEffect(e19,tp)
 
+        --Gora
         local e20=Effect.CreateEffect(e:GetHandler())
         e20:SetType(EFFECT_TYPE_FIELD)
         e20:SetCode(EFFECT_IMMUNE_EFFECT)
-        e20:SetTargetRange(0,LOCATION_MZONE+LOCATION_GRAVE)
+        e20:SetTargetRange(LOCATION_MZONE,0)
         e20:SetValue(s.efilter)
         Duel.RegisterEffect(e20, tp)
 
@@ -286,6 +287,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				e3:SetCode(id+3)
 				tc:RegisterEffect(e3)
 
+               
 
 			tc=g:GetNext()
 		end
