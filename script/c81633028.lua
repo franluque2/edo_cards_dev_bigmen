@@ -27,7 +27,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.BlasterFullArmorIllegal(c)
-  return c:IsCode(810000036, 810000039, 511005629)
+  return c:IsCode(810000036, 810000038, 511005629)
 end
 
 function s.BlasterIllegal(c)
@@ -82,14 +82,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
         e8:SetValue(ATTRIBUTE_FIRE)
         Duel.RegisterEffect(e8,tp)
-
-		local e9=Effect.CreateEffect(e:GetHandler())
-        e9:SetType(EFFECT_TYPE_FIELD)
-        e9:SetCode(EFFECT_ADD_CODE)
-        e9:SetTargetRange(LOCATION_GRAVE,0)
-        e9:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e9:SetValue(511000014)
-        Duel.RegisterEffect(e9,tp)
     
 
 	end
