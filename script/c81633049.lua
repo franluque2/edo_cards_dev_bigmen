@@ -105,6 +105,7 @@ function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+	s.changecode(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
@@ -175,3 +176,25 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
+function s.cfilter(c)
+    return c:IsCode(78060096,27882993)
+end
+function s.getchangecodevalue(code)
+    if code==78060096 then
+        return 95614612
+    else
+        return 90337190
+    end
+end
+function s.changecode(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ALL,LOCATION_ALL,nil)
+    g:ForEach(function(c)
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+        e1:SetCode(EFFECT_CHANGE_CODE)
+        e1:SetRange(LOCATION_MZONE)
+        e1:SetValue(s.getchangecodevalue(c:GetCode()))
+        c:RegisterEffect(e1)
+    end)
+end
