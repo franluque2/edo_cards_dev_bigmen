@@ -91,11 +91,30 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e10:SetTargetRange(LOCATION_MZONE,0)
 	e10:SetValue(LOCATION_REMOVED)
     Duel.RegisterEffect(e10,tp)
-       
+
+	--immunity
+	local e6=Effect.CreateEffect(e:GetHandler())
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e6:SetTargetRange(LOCATION_MZONE,0)
+	e6:SetTarget(s.indestg)
+	e6:SetValue(s.indval)
+	Duel.RegisterEffect(e6,tp)
 
 	end
 	e:SetLabel(1)
 end
+
+function s.indval(e,re,rp)
+	return re:GetOwner():IsCode(511001689)
+end
+
+function s.indestg(e,c)
+	return c:IsLevelAbove(6) and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)
+end
+
+
+
 
 
 function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
