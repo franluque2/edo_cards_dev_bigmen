@@ -254,7 +254,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.isinfectionfly(c)
-    return c:IsOriginalCodeIsCode(511002468)
+    return c:IsOriginalCode(511002468)
 end
 
 function s.infectionflyaddfilter(c)
