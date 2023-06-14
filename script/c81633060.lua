@@ -170,8 +170,7 @@ function s.addop(e,tp,eg,ep,ev,re,r,rp)
             Duel.RegisterEffect(e1,tp)
         end
         
-        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
-        local card=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
+        local card=Duel.GetFirstMatchingCard(s.infectionflyaddfilter, tp, LOCATION_DECK, 0, nil)
         Duel.SendtoHand(card, tp, REASON_RULE)
         Duel.ConfirmCards(1-tp, card)
     end
@@ -191,14 +190,14 @@ end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
     local g=eg:Filter(s.validreplacefilter, nil)
-    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
     Duel.Hint(HINT_CARD,tp,id)
     local tc=g:GetFirst()
     while tc do
-        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, tc:GetPosition()) then
+        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, tc:GetPosition()) then
             local pos=tc:GetPosition()
             Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_RULE)
-            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
+            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, e, tp, pos)
             Duel.SpecialSummon(fly, SUMMON_TYPE_SPECIAL, tp, tp, false, false, pos)
         end
         tc=g:GetNext()
