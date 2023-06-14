@@ -22,10 +22,6 @@ function s.archetypefilter(c)
     return c:IsType(TYPE_XYZ)
 end
 
-function s.archetypefilter2(c)
-    return c:IsMonster()
-end
-
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -98,14 +94,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e10=Effect.CreateEffect(e:GetHandler())
         e10:SetType(EFFECT_TYPE_FIELD)
         e10:SetCode(EFFECT_ADD_SETCODE)
-        e10:SetTargetRange(function(_,c)  return c:IsHasEffect(id+1) end)
+        e10:SetTargetRange(SetTarget(function(_,c)  return c:IsMonster() end),0)
         e10:SetValue(0x100a)
         Duel.RegisterEffect(e10,tp)
 
         local e11=Effect.CreateEffect(e:GetHandler())
         e11:SetType(EFFECT_TYPE_FIELD)
         e11:SetCode(EFFECT_ADD_SETCODE)
-        e11:SetTargetRange(function(_,c)  return c:IsHasEffect(id+1) end)
+        e11:SetTargetRange(SetTarget(function(_,c)  return c:IsMonster() end),0)
         e11:SetValue(0xe0)
         Duel.RegisterEffect(e11,tp)
 
@@ -247,22 +243,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id)
-				tc:RegisterEffect(e3)
-
-
-			tc=g:GetNext()
-		end
-	end
-
-    g=Duel.GetMatchingGroup(s.archetypefilter2, tp, LOCATION_ALL, LOCATION_ALL, nil)
-
-    if #g>0 then
-		local tc=g:GetFirst()
-		while tc do
-			
-				local e3=Effect.CreateEffect(e:GetHandler())
-				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id+2)
 				tc:RegisterEffect(e3)
 
 
