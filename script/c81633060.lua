@@ -179,7 +179,7 @@ function s.addop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.validreplacefilter(c)
-    return c:IsAbleToDeck() and (not c:IsOriginalCode(511002468)) and c:IsPreviousLocation(LOCATION_DECK)
+    return c:IsAbleToDeck() and (not c:IsOriginalCode(511002468)) and c:IsPreviousLocation(LOCATION_DECK) and c:IsMonster() and not c:IsReason(REASON_DRAW)
 end
 
 
