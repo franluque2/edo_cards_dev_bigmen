@@ -107,7 +107,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetValue(0xe0)
         Duel.RegisterEffect(e11,tp)
 
-        --All monsters you control and in GY become WATER monsters and name becomes "Infection Fly"
+        --All monsters you control and in GY become WATER monsters
         local e12=Effect.CreateEffect(e:GetHandler())
         e12:SetType(EFFECT_TYPE_FIELD)
         e12:SetCode(EFFECT_ADD_ATTRIBUTE)
@@ -115,11 +115,11 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e12:SetValue(ATTRIBUTE_WATER)
         Duel.RegisterEffect(e12,tp)
 
-
+        --monsters you control become "Infection Fly"
         local e13=Effect.CreateEffect(e:GetHandler())
         e13:SetType(EFFECT_TYPE_FIELD)
-        e13:SetCode(EFFECT_ADD_CODE)
-        e13:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e13:SetCode(EFFECT_CHANGE_CODE)
+        e13:SetTargetRange(LOCATION_MZONE,0)
         e13:SetValue(511002468)
         Duel.RegisterEffect(e13,tp)
 
@@ -144,7 +144,7 @@ function s.immcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.efilter(e,te)
-	return te:GetHandler():IsCode(04997565,67557908)
+	return te:GetHandler():IsOriginalCode(04997565,67557908)
 end
 
 
@@ -191,14 +191,14 @@ end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
     local g=eg:Filter(s.validreplacefilter, nil)
-    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
     Duel.Hint(HINT_CARD,tp,id)
     local tc=g:GetFirst()
     while tc do
-        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, tc:GetPosition()) then
+        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, tc:GetPosition()) then
             local pos=tc:GetPosition()
             Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_RULE)
-            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
+            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, e, tp, pos)
             Duel.SpecialSummon(fly, SUMMON_TYPE_SPECIAL, tp, tp, false, false, pos)
         end
         tc=g:GetNext()
@@ -354,13 +354,12 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
 	local lv=Duel.AnnounceLevel(tp,1,3)
 
-
     local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_CHANGE_LEVEL)
     e1:SetTargetRange(LOCATION_MZONE, 0)
     e1:SetValue(lv)
-    e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+    e1:SetReset(RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e1,tp)
 
 
