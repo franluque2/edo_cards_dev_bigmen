@@ -170,7 +170,8 @@ function s.addop(e,tp,eg,ep,ev,re,r,rp)
             Duel.RegisterEffect(e1,tp)
         end
         
-        local card=Duel.GetFirstMatchingCard(s.infectionflyaddfilter, tp, LOCATION_DECK, 0, nil)
+        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+        local card=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
         Duel.SendtoHand(card, tp, REASON_RULE)
         Duel.ConfirmCards(1-tp, card)
     end
@@ -190,14 +191,14 @@ end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
     local g=eg:Filter(s.validreplacefilter, nil)
-    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+    if #eg>0 and Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
     Duel.Hint(HINT_CARD,tp,id)
     local tc=g:GetFirst()
     while tc do
-        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, e, tp, tc:GetPosition()) then
+        if Duel.IsExistingMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, 1, nil, tc:GetPosition()) then
             local pos=tc:GetPosition()
             Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_RULE)
-            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, e, tp, pos)
+            local fly=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
             Duel.SpecialSummon(fly, SUMMON_TYPE_SPECIAL, tp, tp, false, false, pos)
         end
         tc=g:GetNext()
@@ -278,6 +279,9 @@ function s.isfuinfectionfly(c)
     return s.isinfectionfly(c) and c:IsFaceup()
 end
 
+function s.isfuoginfectionfly(c)
+    return c:IsOriginalCode(511002468) and c:IsFaceup()
+end
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
@@ -354,6 +358,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     local e1=Effect.CreateEffect(e:GetHandler())
     e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EFFECT_CHANGE_LEVEL)
+    e1:SetTargetRange(LOCATION_MZONE, 0)
     e1:SetValue(lv)
     e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e1,tp)
