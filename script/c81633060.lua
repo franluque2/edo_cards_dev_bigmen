@@ -171,7 +171,7 @@ function s.addop(e,tp,eg,ep,ev,re,r,rp)
         end
         
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
-        local card=Duel.GetFirstMatchingCard(s.infectionflyspfilter, tp, LOCATION_DECK, 0, nil, pos)
+        local card=Duel.GetFirstMatchingCard(s.infectionflyaddfilter, tp, LOCATION_DECK, 0, nil)
         Duel.SendtoHand(card, tp, REASON_RULE)
         Duel.ConfirmCards(1-tp, card)
     end
@@ -298,7 +298,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-        and Duel.IsExistingMatchingCard(s.isfuinfectionfly,tp,LOCATION_ONFIELD,0,1,nil)
+        and Duel.IsExistingMatchingCard(s.isfuoginfectionfly,tp,LOCATION_ONFIELD,0,1,nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -318,7 +318,7 @@ local b1=Duel.GetFlagEffect(tp,id+1)==0
 
 
 local b2=Duel.GetFlagEffect(tp,id+2)==0
-    and Duel.IsExistingMatchingCard(s.isfuinfectionfly,tp,LOCATION_ONFIELD,0,1,nil)
+    and Duel.IsExistingMatchingCard(s.isfuoginfectionfly,tp,LOCATION_ONFIELD,0,1,nil)
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
 								  {b2,aux.Stringid(id,1)})
