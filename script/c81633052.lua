@@ -45,13 +45,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--other passive duel effects go here
 
-        local e5=Effect.CreateEffect(e:GetHandler())
-        e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_ADD_CODE)
-        e5:SetTargetRange(LOCATIONS,0)
-        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e5:SetValue(10992251)
-        Duel.RegisterEffect(e5,tp)
 
         local e6=Effect.CreateEffect(e:GetHandler())
         e6:SetType(EFFECT_TYPE_FIELD)
