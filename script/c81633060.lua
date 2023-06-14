@@ -17,6 +17,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
 end
+
+function s.archetypefilter(c)
+    return c:IsType(TYPE_XYZ)
+end
+
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -61,6 +66,72 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(e7, tp)
 
         --add conscriptions effects here
+
+        --XYZ Monsters in Possession become "Heart Monsters"
+        local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATIONS,0)
+        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetValue(0x528)
+        Duel.RegisterEffect(e5,tp)
+
+        --All Monsters in Possession become DARK Insect "Steelswarm" "Amorphage" monsters
+        local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e6:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e6:SetValue(ATTRIBUTE_DARK)
+        Duel.RegisterEffect(e6,tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_ADD_RACE)
+        e9:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e9:SetValue(RACE_INSECT)
+        Duel.RegisterEffect(e9,tp)
+
+        local e10=Effect.CreateEffect(e:GetHandler())
+        e10:SetType(EFFECT_TYPE_FIELD)
+        e10:SetCode(EFFECT_ADD_SETCODE)
+        e10:SetTargetRange(SetTarget(function(_,c)  return c:IsMonster() end))
+        e10:SetValue(0x100a)
+        Duel.RegisterEffect(e10,tp)
+
+        local e11=Effect.CreateEffect(e:GetHandler())
+        e11:SetType(EFFECT_TYPE_FIELD)
+        e11:SetCode(EFFECT_ADD_SETCODE)
+        e11:SetTargetRange(SetTarget(function(_,c)  return c:IsMonster() end))
+        e11:SetValue(0xe0)
+        Duel.RegisterEffect(e11,tp)
+
+        --All monsters you control and in GY become WATER monsters and name becomes "Infection Fly"
+        local e12=Effect.CreateEffect(e:GetHandler())
+        e12:SetType(EFFECT_TYPE_FIELD)
+        e12:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e12:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e12:SetValue(ATTRIBUTE_WATER)
+        Duel.RegisterEffect(e12,tp)
+
+
+        local e13=Effect.CreateEffect(e:GetHandler())
+        e13:SetType(EFFECT_TYPE_FIELD)
+        e13:SetCode(EFFECT_ADD_CODE)
+        e13:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+        e13:SetValue(511002468)
+        Duel.RegisterEffect(e13,tp)
+
+        
+        --All monsters in Deck become "Heart Monsters"
+        local e14=Effect.CreateEffect(e:GetHandler())
+        e14:SetType(EFFECT_TYPE_FIELD)
+        e14:SetCode(EFFECT_ADD_SETCODE)
+        e14:SetTargetRange(LOCATION_DECK,0)
+        e14:SetValue(0x528)
+        Duel.RegisterEffect(e14,tp)
+
+
+
 
 	end
 	e:SetLabel(1)
@@ -162,6 +233,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
 	--start of duel effects go here
+
+    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
