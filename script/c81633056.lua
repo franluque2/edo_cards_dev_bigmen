@@ -35,7 +35,7 @@ function s.Backrow(c)
 end
 
 function s.Dog(c)
-    return c:IsSetCard(0x516)
+    return c:IsSetCode(0x516)
 end
 
 
