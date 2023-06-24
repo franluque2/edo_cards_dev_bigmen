@@ -35,7 +35,7 @@ function s.Backrow(c)
 end
 
 function s.Dog(c)
-    return c:IsSetCode(0x516)
+    return c:IsSetCard(0x516)
 end
 
 
@@ -139,7 +139,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetType(EFFECT_TYPE_FIELD)
         e15:SetCode(EFFECT_XYZ_LEVEL)
         e15:SetTargetRange(LOCATION_MZONE, 0)
-        e15:SetTarget(function(_,c)  return c:IsMonster() end)
+        e15:SetTarget(s.Dog)
         e15:SetValue(s.xyzlv)
         Duel.RegisterEffect(e15,tp)
     
