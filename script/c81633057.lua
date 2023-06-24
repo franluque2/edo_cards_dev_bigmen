@@ -92,7 +92,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e10:SetType(EFFECT_TYPE_FIELD)
         e10:SetCode(EFFECT_XYZ_LEVEL)
         e10:SetTargetRange(LOCATION_MZONE, 0)
-        e10:SetTarget(function(_,c)  return c:IsMonster() end)
+        e10:SetTarget(function(_,c)  return c:IsMonster() and c:HasLevel() end)
         e10:SetValue(s.xyzlv)
         Duel.RegisterEffect(e10,tp)
     
