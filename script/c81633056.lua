@@ -38,9 +38,6 @@ function s.Dog(c)
     return c:IsSetCard(0x516)
 end
 
-function s.DogXyz(c)
-    return c:IsMonster() and c:HasLevel()
-end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -144,7 +141,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetCode(EFFECT_XYZ_LEVEL)
         e15:SetTargetRange(LOCATION_MZONE, 0)
         e15:SetTarget(s.DogXyz)
-        e15:SetValue(s.xyzlv)
+        e15:SetValue(function(_,c)  return c:IsMonster() and not c:IsType(TYPE_XYZ) end)
         Duel.RegisterEffect(e15,tp)
     
 
