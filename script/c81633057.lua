@@ -27,7 +27,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
-  return c:IsSetCard(0x50e)
+  return c:IsSetCode(0x50e)
 end
 
 
