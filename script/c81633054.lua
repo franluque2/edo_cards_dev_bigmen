@@ -62,7 +62,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetType(EFFECT_TYPE_FIELD)
 		e6:SetCode(EFFECT_XYZ_LEVEL)
 		e6:SetTargetRange(LOCATION_MZONE, 0)
-		e6:SetTarget(s.archetypefilter)
+		e6:SetTarget(function(_,c)  return c:IsType(TYPE_NORMAL) end)
 		e6:SetValue(s.xyzlv)
         Duel.RegisterEffect(e6,tp)
     
