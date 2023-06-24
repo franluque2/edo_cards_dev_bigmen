@@ -72,7 +72,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzlv(e,c,rc)
-	if rc:IsCode(69058690) or rc:IsCode(95442074) then
+	if rc:IsCode(69058960) or rc:IsCode(95442074) then
 		return 1, c:GetLevel()
 	else return c:GetLevel()
 	end
