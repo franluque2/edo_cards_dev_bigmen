@@ -106,6 +106,11 @@ function s.stage2(e,tc,tp,sg,chk)
     end
 end
 
+function s.efilter(e,ct)
+	local te=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT)
+	return te:GetHandler()==e:GetHandler()
+end
+
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
