@@ -27,7 +27,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
-  return c:IsSetCode(0x50e)
+  return c:IsSetCard(0x50e)
 end
 
 
@@ -102,7 +102,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzlv(e,c,rc)
-    if rc:IsSetCode(0x50e) then
+    if rc:IsCode(28981598) or rc:IsCode(100000179) or rc:IsCode(54191698) or rc:IsCode(84224627) or rc:IsCode(100000178) then
         return 9,4,2,1, c:GetLevel()
     else return c:GetLevel()
     end
