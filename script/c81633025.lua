@@ -27,27 +27,27 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.CrashbugX(c)
-  return c:IsCode(87526784)
+  return c:IsOriginalCode(87526784)
 end
 
 function s.CrashbugY(c)
-    return c:IsCode(23915499)
+    return c:IsOriginalCode(23915499)
 end
 
 function s.CrashbugZ(c)
-  return c:IsCode(50319138)
+  return c:IsOriginalCode(50319138)
 end
 
 function s.DebuggerX(c)
-    return c:IsCode(511000908)
+    return c:IsOriginalCode(511000908)
 end
 
 function s.DebuggerY(c)
-    return c:IsCode(511000909)
+    return c:IsOriginalCode(511000909)
 end
 
 function s.DebuggerZ(c)
-    return c:IsCode(511000910)
+    return c:IsOriginalCode(511000910)
 end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
