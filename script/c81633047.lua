@@ -43,27 +43,27 @@ function s.RoidConnection(c)
 end
 
 function s.Steamroid(c)
-  return c:IsCode(44729197)
+  return c:IsOriginalCode(44729197)
 end
 
 function s.Drillroid(c)
-  return c:IsCode(71218746)
+  return c:IsOriginalCode(71218746)
 end
 
 function s.Submarineroid(c)
-  return c:IsCode(99861526)
+  return c:IsOriginalCode(99861526)
 end
 
 function s.Horn(c)
-  return c:IsCode(41230939)
+  return c:IsOriginalCode(41230939)
 end
 
 function s.Edge(c)
-  return c:IsCode(77625948)
+  return c:IsOriginalCode(77625948)
 end
 
 function s.Keel(c)
-  return c:IsCode(03019642)
+  return c:IsOriginalCode(03019642)
 end
 
 function s.vczop(e,tp,eg,ep,ev,re,r,rp)
