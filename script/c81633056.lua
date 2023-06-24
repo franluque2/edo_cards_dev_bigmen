@@ -139,7 +139,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetType(EFFECT_TYPE_FIELD)
         e15:SetCode(EFFECT_XYZ_LEVEL)
         e15:SetTargetRange(LOCATION_MZONE, 0)
-        e15:SetTarget(s.Dog)
+        e15:SetTarget(function(_,c)  return c:IsRace(RACE_BEAST) end)
         e15:SetValue(s.xyzlv)
         Duel.RegisterEffect(e15,tp)
     
