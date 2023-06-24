@@ -1,6 +1,7 @@
 --Conscription for Dogs
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -35,7 +36,7 @@ function s.Backrow(c)
 end
 
 function s.Dog(c)
-    return c:IsSetCard(0x516)
+    return c:IsDog()
 end
 
 
@@ -142,6 +143,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetTarget(function(_,c)  return c:IsMonster() and c:HasLevel() end)
         e15:SetValue(s.xyzlv)
         Duel.RegisterEffect(e15,tp)
+
+        --Monsters become "Tribulldog"
+        local e16=Effect.CreateEffect(e:GetHandler())
+        e16:SetType(EFFECT_TYPE_FIELD)
+        e16:SetCode(EFFECT_ADD_CODE)
+        e16:SetTargetRange(LOCATIONS, 0)
+        e16:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
+        e16:SetValue(100000540)
+        Duel.RegisterEffect(e16,tp)
+    
     
 
 	end
