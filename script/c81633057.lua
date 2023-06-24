@@ -92,7 +92,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e10:SetType(EFFECT_TYPE_FIELD)
         e10:SetCode(EFFECT_XYZ_LEVEL)
         e10:SetTargetRange(LOCATION_MZONE, 0)
-        e10:SetTarget(s.archetypefilter)
+        e10:SetTarget(function(_,c)  return c:IsMonster() end)
         e10:SetValue(s.xyzlv)
         Duel.RegisterEffect(e10,tp)
     
@@ -102,7 +102,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzlv(e,c,rc)
-    if rc:IsMonster() then
+    if rc:IsSetCode(0x50e) then
         return 9,4,2,1, c:GetLevel()
     else return c:GetLevel()
     end
