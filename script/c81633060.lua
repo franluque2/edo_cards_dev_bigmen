@@ -132,11 +132,67 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e14:SetValue(0x528)
         Duel.RegisterEffect(e14,tp)
 
+        -- can only activate number 2 once per turn
+
+        local e16=Effect.CreateEffect(c)
+		e16:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e16:SetCode(EVENT_CHAINING)
+		e16:SetRange(LOCATION_MZONE)
+		e16:SetOperation(s.aclimit)
+		e16:SetReset(RESET_EVENT|RESETS_STANDARD)
+        Duel.RegisterEffect(e16,tp)
+		local e17=e16:Clone()
+		e17:SetCode(EVENT_CHAIN_NEGATED)
+        Duel.RegisterEffect(e17,tp)
+
+        local e18=Effect.CreateEffect(e:GetHandler())
+        e18:SetType(EFFECT_TYPE_FIELD)
+        e18:SetCode(EFFECT_CANNOT_TRIGGER)
+        e18:SetTargetRange(LOCATION_MZONE,0)
+        e18:SetCondition(s.discon2)
+        e18:SetTarget(s.actfilter2)
+        Duel.RegisterEffect(e18, tp)
+
+        --cannot activate cicada king and mosquito on opps turn
+        local e15=Effect.CreateEffect(e:GetHandler())
+        e15:SetType(EFFECT_TYPE_FIELD)
+        e15:SetCode(EFFECT_CANNOT_TRIGGER)
+        e15:SetTargetRange(LOCATION_MZONE,0)
+        e15:SetCondition(s.discon)
+        e15:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e15, tp)
+
 
 
 
 	end
 	e:SetLabel(1)
+end
+
+function s.aclimit(e,tp,eg,ep,ev,re,r,rp)
+	if not re:GetHandler():IsCode(32453837) then return end
+	if e:GetCode()==EVENT_CHAINING then
+		Duel.RegisterFlagEffect(tp, id+4, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	else
+		Duel.ResetFlagEffect(tp, id+4)
+	end
+end
+
+function s.discon2(e)
+	return (Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()) and Duel.GetFlagEffect(e:GetHandlerPlayer(), id+4)>0
+end
+
+function s.actfilter2(e,c)
+	return c:IsCode(32453837)
+end
+
+
+function s.discon(e)
+	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(32453837, 04997565)
 end
 
 function s.immcon(e,tp,eg,ep,ev,re,r,rp)

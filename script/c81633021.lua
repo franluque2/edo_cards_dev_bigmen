@@ -70,10 +70,120 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e7:SetValue(s.valdef)
     Duel.RegisterEffect(e7,tp)
 
+	--sp increase stats
+	local e8=Effect.CreateEffect(e:GetHandler())
+	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e8:SetCountLimit(1)
+	e8:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e8:SetCondition(s.inccon)
+	e8:SetOperation(s.incop)
+	Duel.RegisterEffect(e8,tp)
 
+	local e9=Effect.CreateEffect(e:GetHandler())
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetCode(EFFECT_ADD_RACE)
+	e9:SetTargetRange(LOCATION_MZONE,0)
+	e9:SetTarget(function(_,c)  return s.darkfiendfilter(c) end)
+	e9:SetValue(RACE_ZOMBIE)
+	Duel.RegisterEffect(e9,tp)
+
+
+	local e10=Effect.CreateEffect(e:GetHandler())
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e10:SetTargetRange(LOCATION_MZONE,0)
+	e10:SetCondition(s.yamicon)
+	e10:SetTarget(function(_,c) return s.nonefflevelfivedarkfiendfilter(c) end)
+	e10:SetValue(1)
+	Duel.RegisterEffect(e10,tp)
+
+	local e11=Effect.CreateEffect(e:GetHandler())
+		e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e11:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
+		e11:SetCountLimit(1)
+		e11:SetCondition(s.spcon)
+		e11:SetOperation(s.spop)
+		Duel.RegisterEffect(e11,tp)
 
 	end
 	e:SetLabel(1)
+end
+
+function s.reapcardfilter(c,e,tp)
+	return c:IsCode(33066139) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false,POS_FACEDOWN_DEFENSE)
+end
+
+function s.notcastlefilter(c)
+	return c:IsFacedown() or not c:IsCode(00062121)
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp and (Duel.GetMatchingGroupCount(s.notcastlefilter, tp, LOCATION_MZONE, 0, nil)==0) and (not Duel.GetFlagEffect(id+5,tp)~=0) and Duel.IsExistingMatchingCard(s.darkillufilter, tp, LOCATION_MZONE, 0, 1,nil)
+		and Duel.IsExistingMatchingCard(s.reapcardfilter, tp, LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED, 0, 1,nil,e,tp)
+end
+
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+		Duel.Hint(HINT_CARD,tp,id)
+
+		local count=0
+		local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if ft1>0 then
+			if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft1=1 end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.reapcardfilter,tp,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0,ft1,ft1,nil,e,tp)
+			if #g>0 then
+				local tc=g:GetFirst()
+				while tc do
+					Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
+					tc=g:GetNext()
+					count=count+1
+				end
+			end
+		end
+		if count>0 then Duel.SpecialSummonComplete() end
+		
+		Duel.RegisterFlagEffect(tp, id+5, 0, 0, 0)
+	end
+end
+
+function s.darkillufilter(c)
+	return c:IsCode(00062121) and c:IsFaceup()
+end
+
+function s.nonefflevelfivedarkfiendfilter(c)
+	return s.darkfiendfilter(c) and c:IsLevel(5) and c:HasLevel() and not c:IsType(TYPE_EFFECT)
+end
+function s.darkfiendfilter(c)
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsFaceup()
+end
+
+function s.inccon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.GetTurnPlayer()==tp and (Duel.GetMatchingGroupCount(s.darkfiendfilter, tp, LOCATION_MZONE, 0, nil)==0) and not (Duel.GetFlagEffect(tp,id+4)>0) then return end
+
+	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(s.darkillufilter, tp, LOCATION_ONFIELD, 0, 1, nil)
+end
+
+function s.incop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+
+	local g=Duel.GetMatchingGroup(s.darkfiendfilter,tp,LOCATION_MZONE,0,nil)
+	for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(200)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		e2:SetValue(200)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e2)
+	end
+
+	Duel.RegisterFlagEffect(tp, id+4, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
 end
 
 function s.valatk(e,c)
@@ -126,76 +236,27 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
     Duel.SpecialSummonComplete()
     Duel.ChangePosition(castle,POS_FACEUP_DEFENSE)
 
-    local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
-		local mg,fid=g:GetMaxGroup(Card.GetFieldID)
-		local e1=Effect.CreateEffect(castle)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-		e1:SetTarget(s.atktg)
-		e1:SetValue(200)
-		e1:SetLabel(fid)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
-		castle:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		e2:SetLabelObject(e1)
-		castle:RegisterEffect(e2)
-		local e3=Effect.CreateEffect(castle)
-		e3:SetDescription(aux.Stringid(00062121,1))
-		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-		e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetCountLimit(1)
-		e3:SetCondition(s.atkcon)
-		e3:SetOperation(s.atkop)
-		e3:SetLabelObject(e2)
-		e3:SetLabel(2)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,4)
-		castle:RegisterEffect(e3)
-
-end
-local bool_to_number={ [true]=1, [false]=0 }
-
-function s.atktg(e,c)
-    if c:IsRace(RACE_ZOMBIE) then
-        Debug.Message("c:GetFieldID()<=e:GetLabel(): "..bool_to_number[(c:GetFieldID()<=e:GetLabel())])
-        Debug.Message("c:IsRace(RACE_ZOMBIE): ".. bool_to_number[c:IsRace(RACE_ZOMBIE)])
-    end
-	return c:GetFieldID()<=e:GetLabel() and c:IsRace(RACE_ZOMBIE)
-end
-function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
-end
-function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local ct=e:GetLabel()
-	e:GetLabelObject():SetValue(ct*200)
-	e:GetLabelObject():GetLabelObject():SetValue(ct*200)
-	e:SetLabel(ct+1)
 end
 
 
+function s.levelfivedarkfiendfilter(c,e,tp)
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5) and c:HasLevel() and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
+end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	if Duel.GetFlagEffect(tp,id+1)>0  then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
-
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
-
+			and Duel.IsExistingMatchingCard(s.darkillufilter,tp,LOCATION_ONFIELD,0,1,nil)
+						and Duel.IsExistingMatchingCard(s.levelfivedarkfiendfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b1)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
@@ -204,23 +265,16 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 --copy the bxs from above
 
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
-
-
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+local b1=Duel.GetFlagEffect(tp,id+1)==0
+and Duel.IsExistingMatchingCard(s.darkillufilter,tp,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.levelfivedarkfiendfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
 
 --effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)})
 	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
-	elseif op==1 then
-		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
@@ -229,13 +283,41 @@ end
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
 
+	local count=0
+	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft1>0 then
+		if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft1=1 end
+		local g=Duel.GetMatchingGroup(s.levelfivedarkfiendfilter, tp, LOCATION_HAND+LOCATION_GRAVE+LOCATION_EXTRA, 0, nil, e, tp)
+		local sg=aux.SelectUnselectGroup(g,e,tp,1,ft1,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
+
+		for tc in aux.Next(sg) do
+			if tc:IsType(TYPE_FUSION) and tc:GetLocation()==LOCATION_EXTRA then
+				tc:SetMaterial(nil)
+				Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
+				tc:CompleteProcedure()
+			else if tc:GetLocation()==LOCATION_GRAVE then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetDescription(3300)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+				e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+				e1:SetValue(LOCATION_REMOVED)
+				tc:RegisterEffect(e1,true)
+				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
+
+			else
+				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
+			end
+			
+		end
+		count=count+1
+	end
+	if count>0 then
+		Duel.SpecialSummonComplete()
+	end
+
 --sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
-end
-
-
-function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
-
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	end
 end
