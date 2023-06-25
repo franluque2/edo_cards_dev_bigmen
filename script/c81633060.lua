@@ -404,19 +404,28 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
+function s.haslevelfilter(c)
+    return c:IsFaceup() and c:HasLevel() and c:IsLevelBelow(4)
+end
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
 	local lv=Duel.AnnounceLevel(tp,1,3)
 
-    local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_CHANGE_LEVEL)
-    e1:SetTargetRange(LOCATION_MZONE, 0)
-    e1:SetValue(lv)
-    e1:SetReset(RESET_PHASE+PHASE_END)
-    Duel.RegisterEffect(e1,tp)
+    local g=Duel.GetMatchingGroup(s.haslevelfilter, tp, LOCATION_MZONE, 0, nil)
+
+    for tc in aux.Next(g) do
+        local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_LEVEL)
+		e1:SetValue(lv)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+        
+    end
+
+
 
 
 	--sets the opd
