@@ -42,6 +42,10 @@ function s.Kiryu(c)
   return c:IsCode(84814897)
 end
 
+function s.BigCards(c)
+	return c:IsCode(86805855, 810000093)
+end
+
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -115,6 +119,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e11:SetValue(24530661)
         Duel.RegisterEffect(e11,tp)
+
+		--The name of all "Dark Blade the Dragon Knight" and "Dragon Lady" you control are also treated as "Dark Blade".
+        local e12=Effect.CreateEffect(e:GetHandler())
+        e12:SetType(EFFECT_TYPE_FIELD)
+        e12:SetCode(EFFECT_ADD_CODE)
+        e12:SetTargetRange(LOCATION_MZONE,0)
+        e12:SetTarget(function(_,c)  return c:IsHasEffect(id+4) end)
+        e12:SetValue(11321183)
+        Duel.RegisterEffect(e12,tp)
     
 
 	end
@@ -191,6 +204,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id+3)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+	
+	g=Duel.GetMatchingGroup(s.BigCards, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+4)
 				tc:RegisterEffect(e3)
 
 
