@@ -179,6 +179,19 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    local BloomPrima=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 24672164)
+    if #BloomPrima>0 then
+	local tc=BloomPrima:GetFirst()
+		while tc do
+	
+            Fusion.AddProcMix(tc,true,true,06205579,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b))
+
+
+			tc=BloomPrima:GetNext()
+		end
+    end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
+
 end
 
