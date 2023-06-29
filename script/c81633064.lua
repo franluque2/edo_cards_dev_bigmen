@@ -105,11 +105,29 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetCondition(s.discon)
         e11:SetTarget(s.actfilter)
         Duel.RegisterEffect(e11, tp)
-    
 
+        local e2=Effect.CreateEffect(e:GetHandler())
+        e2:SetType(EFFECT_TYPE_FIELD)
+        e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+        e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+        e2:SetTargetRange(LOCATION_GRAVE,0)
+        e2:SetTarget(s.immtar)
+        e2:SetValue(s.value)
+        Duel.RegisterEffect(e2,tp)
 	end
 	e:SetLabel(1)
 end
+
+function s.value(e,re,rp)
+	local trig_cod,eff=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_EFFECT)
+	return re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
+		and (re:GetHandler():IsCode(25793414) or (eff==re and trig_cod==25793414))
+end
+
+function s.immtar(e,c)
+	return c:IsCode(76815942)
+end
+
 
 function s.discon(e)
 	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
