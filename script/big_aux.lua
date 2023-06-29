@@ -75,6 +75,12 @@ CustomArchetype.ruler_backrow={
 
 Card.IsRulerBackrow=MakeCheck(nil,CustomArchetype.ruler_backrow)
 
+CustomArchetype.armor_canine={
+  81632413, 81632412, 81632414
+}
+
+Card.IsArmorCanine=MakeCheck(nil,CustomArchetype.armor_canine)
+
 
 
 CustomArchetype.Toy={
