@@ -78,7 +78,7 @@ end
 
 
 function s.thfilter(c)
-	return c:IsCode(81632243) or (c:IsTrap() and (c:IsCode(511000649) or c:ListsCode(81632243))) and c:IsAbleToHand()
+	return c:IsCode(511001236) or (c:IsTrap() and (c:IsCode(511000649) or c:ListsCode(511001236))) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
