@@ -51,7 +51,7 @@ function s.discon(e)
 end
 
 function s.discon2(e)
-	return not Duel.IsExistingMatchingCard(aux.TRUE, e:GetHandlerPlayer(), LOCATION_FZONE, LOCATION_FZONE, 1, nil)
+	return not Duel.IsExistingMatchingCard(Card.IsFaceup, e:GetHandlerPlayer(), LOCATION_FZONE, LOCATION_FZONE, 1, nil)
 end
 
 
