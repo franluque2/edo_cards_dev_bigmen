@@ -4,7 +4,9 @@ Duel.LoadScript ("big_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,511009005,s.matfilter2)
+	Fusion.AddProcMix(c,true,true,511009005, 97590747)
+	Fusion.AddProcMix(c,true,true,511009005, 99510761)
+
 	--fusion success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -46,10 +48,6 @@ end
 
 function s.atlimit(e,c)
 	return c:IsLevelBelow(4) and c:IsCTLamp() and c:IsType(TYPE_EFFECT)
-end
-
-function s.matfilter2(c,fc,sumtype,tp)
-	return c:IsCode(97590747,99510761)
 end
 
 function s.spfilter(c,e,tp)
