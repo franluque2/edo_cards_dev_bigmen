@@ -1,4 +1,6 @@
 --Absorbing Lamp
+Duel.LoadScript ("big_aux.lua")
+
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -67,7 +69,7 @@ end
 s.counter_place_list={0x8654}
 
 function s.cfilter(c,tp)
-	return c:IsSetCard(0x8654) and c:IsPreviousPosition(POS_FACEUP) and c:IsFacedown() and c:IsControler(tp)
+	return c:IsCTLamp() and c:IsPreviousPosition(POS_FACEUP) and c:IsFacedown() and c:IsControler(tp)
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -114,7 +116,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter5(c)
-	return (c:IsSetCard(0x8654) or c:IsCode(97590747) or c:IsCode(99510761)) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return (c:IsCTLamp()) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter5(chkc) end
@@ -140,7 +142,7 @@ end
 
 function s.filterfu(c,e,tp)
 	return c:IsType(TYPE_FUSION) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and (c:IsSetCard(0x8654) or 
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and (c:IsCTLamp() or 
 		c:IsCode(19066538) or c:IsCode(72869010) or c:IsCode(81997228))
 end
 
@@ -156,6 +158,7 @@ function s.ecop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc then return end
 	tc:SetMaterial(nil)
 	if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)~=0 then
+		tc:CompleteProcedure()
 end
 end
 
