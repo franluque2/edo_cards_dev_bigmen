@@ -132,15 +132,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetValue(0x4093)
         Duel.RegisterEffect(e5,tp)
 
-        --All Original Roids are also named Cyber Dragon
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_CODE)
-        e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+9) end)
-        e6:SetValue(70095154)
-        Duel.RegisterEffect(e6,tp)
-
         --All "Cyber" Spell/Trap Cards in your possession are also treated as "Roid" cards.
         local e7=Effect.CreateEffect(e:GetHandler())
         e7:SetType(EFFECT_TYPE_FIELD)
