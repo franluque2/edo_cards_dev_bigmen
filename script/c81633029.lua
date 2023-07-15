@@ -27,11 +27,11 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.TOITLES(c)
-  return c:IsCode(53724621, 72929454, 96981563, 11714098, 04042268, 37313348, 15820147, 17441953, 55063751, 95727991, 05818294, 60806437, 42868711, 77044671, 07913375, 96287685, 65195959, 64734090, 34710660, 03493978, 89113320, 80233946, 76902476, 54747648, 91782219, 09540040, 10132124, 82176812, 46358784, 68215963)
+  return c:IsCode(9973359, 12275533, 53724621, 72929454, 96981563, 11714098, 04042268, 37313348, 15820147, 17441953, 55063751, 95727991, 05818294, 60806437, 42868711, 77044671, 07913375, 96287685, 65195959, 64734090, 34710660, 03493978, 89113320, 80233946, 76902476, 54747648, 91782219, 09540040, 10132124, 82176812, 46358784, 68215963)
 end
 
 function s.BIGBOI(c)
-    return c:IsCode(55063751, 39439590)
+    return c:IsCode(55063751, 39439590, 99733359, 12275533)
 end
 
 function s.NotJapan(c)
@@ -39,7 +39,11 @@ function s.NotJapan(c)
 end
 
 function s.StillNotJapan(c)
-    return (c:IsSetCard(0xd3) and c:IsSpellTrap()) or c:IsCode(76806714)
+    return (c:IsSetCard(0xd3) and c:IsSpellTrap()) or c:IsCode(76806714) or c:IsCode(24094653)
+end
+
+function s.JustDinoMoment(c)
+    return c:IsCode(39439590)
 end
 
 
@@ -190,6 +194,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e20:SetValue(s.efilter)
         Duel.RegisterEffect(e20, tp)
 
+        --Monsters in PLACES become Dinosaurs
+        local e21=Effect.CreateEffect(e:GetHandler())
+        e21:SetType(EFFECT_TYPE_FIELD)
+        e21:SetCode(EFFECT_ADD_RACE)
+        e21:SetTargetRange(LOCATION_MZONE+LOCATION_HAND,0)
+        e21:SetValue(RACE_DINOSAUR)
+        Duel.RegisterEffect(e21,tp)
+
+        --CyberDino becomes Stegocyber
+        local e22=Effect.CreateEffect(e:GetHandler())
+        e22:SetType(EFFECT_TYPE_FIELD)
+        e22:SetCode(EFFECT_ADD_CODE)
+        e22:SetTargetRange(LOCATIONS,0)
+        e22:SetTarget(function(_,c)  return c:IsHasEffect(id+4) end)
+        e22:SetValue(99733359)
+        Duel.RegisterEffect(e22,tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -278,8 +299,26 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    g=Duel.GetMatchingGroup(s.JustDinoMoment, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+        local tc=g:GetFirst()
+        while tc do
+            
+                local e3=Effect.CreateEffect(e:GetHandler())
+                e3:SetType(EFFECT_TYPE_SINGLE)
+                e3:SetCode(id+4)
+                tc:RegisterEffect(e3)
+    
+               
+    
+            tc=g:GetNext()
+        end
+    end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
+
 
 function s.efilter(e,te)
 	return te:GetHandler():IsCode(80233946)
