@@ -36,7 +36,7 @@ function s.archetypefilter2(c)
 --Monopole Chain, Space Gate and Marshalling Field
 function s.archetypefilter3(c)
     return c:IsCode(63881033, 511001928, 511001884)
-  end
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
