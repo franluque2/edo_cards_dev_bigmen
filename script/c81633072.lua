@@ -79,7 +79,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetType(EFFECT_TYPE_FIELD)
         e8:SetCode(EFFECT_ADD_RACE)
         e8:SetTargetRange(LOCATION_GRAVE,0)
-        e8:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e8:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e8:SetValue(RACE_SPELLCASTER)
         Duel.RegisterEffect(e8,tp)
     
