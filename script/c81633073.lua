@@ -89,7 +89,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
-    local Honse=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 24672164)
+    local Honse=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 160008042)
     if #Honse>0 then
 	local tc=Honse:GetFirst()
 		while tc do
