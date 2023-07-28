@@ -228,12 +228,12 @@ end
 
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp) and (Duel.IsExistingMatchingCard(s.heavycavalryfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
-	or Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_SZONE,0,1,nil,81632177))
+	or Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_SZONE,0,1,nil,160208059))
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.GetMatchingGroup(s.heavycavalryfilter, tp,LOCATION_DECK+LOCATION_GRAVE,0, nil)
-	local g2=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_SZONE,0, nil,81632177)
+	local g2=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_SZONE,0, nil,160208059)
 	g:Merge(g2)
 	if #g==0 then return end
 	Duel.SendtoDeck(g, tp, -2, REASON_EFFECT)

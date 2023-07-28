@@ -411,12 +411,9 @@ function s.orichalcosfield(c)
 	return (c:IsCode(48179391) or c:IsCode(110000100) or c:IsCode(110000101))
 end
 
-function s.tgcon(e)
-	return Duel.IsExistingMatchingCard(s.orichalcosfield,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil)
-end
 function s.effectfilter(e,ct)
 	local p=e:GetHandlerPlayer()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
 	local tc=te:GetHandler()
-	return p==tp and (loc&LOCATION_ONFIELD)~=0 and tc:IsSetCard(0xd0) and tc~=e:GetHandler()
+	return p==tp and (loc&LOCATION_ONFIELD)~=0 and s.orichalcosfield(tc) and tc~=e:GetHandler()
 end

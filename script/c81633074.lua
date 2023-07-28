@@ -84,11 +84,45 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e8:SetValue(0x144)
         Duel.RegisterEffect(e8,tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_CANNOT_DISEFFECT)
+        e9:SetValue(s.effectfilter)
+        Duel.RegisterEffect(e9,tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+        e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e9:SetCode(EVENT_SPSUMMON_SUCCESS)
+        e9:SetOperation(s.mreborncheck)
+        Duel.RegisterEffect(e9,tp)
     
 
 	end
 	e:SetLabel(1)
 end
+
+function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
+	if not re then return end
+	local rc=re:GetHandler()
+	if (rc:IsCode(24062258)) then
+		local ec=eg:GetFirst()
+		while ec do
+			ec:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
+			ec=eg:GetNext()
+		end
+	end
+end
+
+
+function s.effectfilter(e,ct)
+	local p=e:GetHandlerPlayer()
+	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
+	local tc=te:GetHandler()
+	return p==tp and (loc&LOCATION_ONFIELD)~=0 and tc~=e:GetHandler() and tc:GetFlagEffect(id)>0
+end
+
 
 
 function s.markedfilter(c,e)
