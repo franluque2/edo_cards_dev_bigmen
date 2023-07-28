@@ -1,6 +1,7 @@
 --Spirit Tech Conscription
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -27,7 +28,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
-  return (c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x54e)) or c:IsCode(511003002)
+  return (c:IsType(TYPE_PENDULUM) and c:IsSpirit()) or c:IsCode(511003002)
 end
 
 function s.archetypefilter2(c)
