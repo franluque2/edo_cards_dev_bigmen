@@ -134,7 +134,7 @@ function s.desfilter(c,tp)
 	return c:IsFaceup()and c:IsRace(RACE_BEAST)
 end
 function s.nsfilter(c,e,tp)
-	return c:IsRace(RACE_BEAST) and c:IsSummonable(true, e, 1)
+	return c:IsRace(RACE_BEAST) and c:IsSummonable(true, nil, 1)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
