@@ -52,10 +52,40 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsMonster() end)
         e5:SetValue(0x152)
         Duel.RegisterEffect(e5,tp)
+
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e2:SetCondition(s.repcon)
+		e2:SetOperation(s.repop)
+		Duel.RegisterEffect(e2,tp)
     
 
 	end
 	e:SetLabel(1)
+end
+
+function s.validreplacefilter(c,e)
+    return c:IsType(TYPE_TOKEN) and (not c:IsCode(511009337)) and c:GetOwner() ==e:GetHandlerPlayer()
+end
+
+function s.repcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.validreplacefilter, 1, nil, e)
+end
+
+function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+    Duel.Hint(HINT_CARD,tp,id)
+
+    local tc=eg:GetFirst()
+    while tc do
+        if s.validreplacefilter(tc, e) then
+			tc:Recreate(511009337,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
+        end
+        
+        tc=eg:GetNext()
+    end
+
 end
 
 
