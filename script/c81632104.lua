@@ -10,16 +10,21 @@ function s.initial_effect(c)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	c:RegisterEffect(e1)
 	--enable placing rub counters
-	c:EnableCounterPermit(0x8654)
-	c:SetCounterLimit(0x8654,3)
-	--place 1 rub counter on flip of a lamp
+	c:EnableCounterPermit(0x1656)
+	c:SetCounterLimit(0x1656,3)
+	--flip a lamp
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetDescription(aux.Stringid(id,3))
+	e3:SetCategory(CATEGORY_POSITION)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCode(EVENT_CHANGE_POS)
-	e3:SetCondition(s.spcon)
-	e3:SetOperation(s.ctop)
-	c:RegisterEffect(e3)	
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetCountLimit(1)
+	e3:SetTarget(s.postg)
+	e3:SetOperation(s.posop)
+	c:RegisterEffect(e3)
+
 
 	--remove 3 counters to summon a fusion
 	local e2=Effect.CreateEffect(c)
@@ -66,26 +71,33 @@ function s.initial_effect(c)
 
 end
 
-s.counter_place_list={0x8654}
+function s.filter(c)
+	return c:IsFaceup() and c:IsCTLamp() and c:IsCanTurnSet()
+end
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
+end
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) and Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)~=0 then
+		e:GetHandler():AddCounter(0x1656,1)
+	end
+end
+
+s.counter_place_list={0x1656}
 
 function s.cfilter(c,tp)
 	return c:IsCTLamp() and c:IsPreviousPosition(POS_FACEUP) and c:IsFacedown() and c:IsControler(tp)
 end
 
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp)
-end
-
-function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		c:AddCounter(0x8654,1)
-	end
-end
-
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x8654,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x8654,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1656,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x1656,3,REASON_COST)
 end
 
 
