@@ -34,7 +34,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_MZONE,0,2,nil) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local g=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_MZONE,0,nil)
 		local lc=g:GetFirst()
 		for lc in aux.Next(g) do
@@ -45,7 +44,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			lc:RegisterEffect(e1)
 		end
-	end
 end
 
 

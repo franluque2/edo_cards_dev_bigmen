@@ -65,6 +65,10 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e2:SetCode(EFFECT_EXTRA_SET_COUNT)
         e2:SetDescription(aux.Stringid(id,0))
         Duel.RegisterEffect(e2,tp)
+        local e15=e2:Clone()
+        e15:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
+        Duel.RegisterEffect(e15, tp)
+
 
         --Flip on summon turn
         local e3=Effect.CreateEffect(e:GetHandler())

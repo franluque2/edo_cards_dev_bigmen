@@ -115,14 +115,16 @@ end
 
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    local tar=Duel.GetDecktopGroup(p, d):GetFirst()
-	Duel.Draw(p,d,REASON_EFFECT)
+    local tar=Duel.GetDecktopGroup(tp, 1):GetFirst()
+	Duel.Draw(tp,1,REASON_EFFECT)
     local c=e:GetHandler()
+	local zone={}
     zone[0]=c:GetLinkedZone(0)
 	zone[1]=c:GetLinkedZone(1)
     if Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone[tp])>0
         and s.spfilter3(tar,e,tp) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
-            Duel.SpecialSummon(tar,0,tp,tp,false,false,POS_FACEUP,zone[sump])
+			Duel.ConfirmCards(1-tp, tar)
+            Duel.SpecialSummon(tar,0,tp,tp,false,false,POS_FACEUP,zone[tp])
         end
     
 end
@@ -137,10 +139,9 @@ end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return c:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_MZONE,0,1,c,tp)
-		and Duel.IsExistingMatchingCard(s.nsfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.desfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,c,tp)
+	local g=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,tp,LOCATION_HAND)
 end
