@@ -35,11 +35,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 	--Place this card in your Pendulum Zone
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(id,2))
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetTarget(s.pztg)
-	e6:SetOperation(s.pzop)
+	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e6:SetCode(EVENT_DESTROYED)
+	e6:SetProperty(EFFECT_FLAG_DELAY)
+	e6:SetCondition(s.pencon)
+	e6:SetTarget(s.pentg)
+	e6:SetOperation(s.penop)
 	c:RegisterEffect(e6)
 	aux.GlobalCheck(s,function()
 		--Keep track of "Spirit Gem" monsters that used their effect
@@ -67,10 +68,26 @@ end
 function s.tetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return e:GetHandler():IsAbleToExtra() end
 end
+function s.addfilter(c)
+	return c:IsSetCard(0x154e) and c:IsAbleToHand() and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
+end
 function s.teop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		if Duel.SendtoDeck(c,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 then
+			local g=Duel.GetMatchingGroup(s.addfilter,tp,LOCATION_EXTRA,0,nil)
+			local ct=g:GetClassCount(Card.GetCode)
+			if ct>1 and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local g1=g:Select(tp,1,1,nil)
+				g:Remove(Card.IsCode,nil,g1:GetFirst():GetCode())
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local g2=g:Select(tp,1,1,nil)
+				g1:Merge(g2)
+
+				Duel.SendtoHand(g1, tp, REASON_EFFECT)
+			end
+		end
 	end
 end
 function s.effilter(c)
@@ -109,11 +126,15 @@ function s.damval(e,re,val,r,rp,rc)
 	if cc==0 or r&REASON_EFFECT==0 then return val end
 	if re:GetHandler():GetFieldID()==e:GetLabel() then return val*2 else return val end
 end
-function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsType(TYPE_PENDULUM) and Duel.CheckPendulumZones(tp) end
+function s.pencon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
-function s.pzop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckPendulumZones(tp) then return end
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckPendulumZones(tp) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
