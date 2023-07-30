@@ -92,7 +92,7 @@ if not table.includes then
 end
 
 function s.inffilter(c,tp)
-	return c:IsMonster() and not table.includes(s.name_list_sfg[tp],c:GetOriginalCode()) and c:IsAbleToRemove()
+	return c:IsMonster() and not table.includes(s.name_list_sfg[tp],c:GetOriginalCode()) and c:IsAbleToRemove() and not c:IsOriginalCode(id)
 end
 
 function s.cpcon(e, tp, eg, ep, ev, re, r, rp, chk)
