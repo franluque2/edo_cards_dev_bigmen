@@ -144,7 +144,7 @@ end
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 	
-	local g=Duel.CreateToken(tp,s.getcard())
+	local g=Duel.CreateToken(tp,s.getrandomfusion())
 	Fusion.AddProcMixN(g,true,true,s.fusop,2)
 	Duel.SendtoDeck(g,tp,SEQ_DECKTOP,REASON_EFFECT)
 
