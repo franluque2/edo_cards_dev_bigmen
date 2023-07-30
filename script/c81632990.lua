@@ -172,7 +172,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.fusionfilter(c)
-	return c:IsType(TYPE_FUSION)
+	return c:IsType(TYPE_FUSION) and not (c:IsCode(81632387) or c:IsSetCard(0x145))
 end
 
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)

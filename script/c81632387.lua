@@ -116,7 +116,7 @@ function s.cpop(e, tp, eg, ep, ev, re, r, rp)
     end
 
 	if tg1 and tg2 and e:GetHandler():IsRelateToEffect(e) then
-		e:GetHandler():CopyEffect(tg2:GetOriginalCode(), RESET_EVENT + RESETS_STANDARD, 1)
+		e:GetHandler():CopyEffect(tg2:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,1)
 		table.insert(s.name_list_sfg[tp],tg2:GetOriginalCode())
         table.insert(s.name_list_sfg[tp],tg1:GetOriginalCode())
 
@@ -129,7 +129,7 @@ function s.cpop(e, tp, eg, ep, ev, re, r, rp)
 
         local e2=e1:Clone()
         e2:SetCode(EFFECT_UPDATE_DEFENSE)
-        e2:SetValue(tg2:GetDefense())
+        e2:SetValue(tg1:GetDefense())
         e:GetHandler():RegisterEffect(e2)
 
 
