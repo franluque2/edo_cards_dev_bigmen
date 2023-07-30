@@ -183,9 +183,16 @@ function s.fuslimit(e,se,sp,st)
 end
 
 function s.ffilter(c,fc,sumtype,sump,sub,matg,sg)
-	return c:IsLevelBelow(12) and (not sg or sg:FilterCount(aux.TRUE,c)==0 or (not sg:IsExists(s.fusfilter,1,c,c:GetLevel())))
-end
-
-function s.fusfilter(c,lv)
-	return c:IsLevel(lv)
+	return c:IsCode(48343627,
+	95178994,
+	54040484,
+	30312361,
+	87917187,
+	23309606,
+	8794435,
+	102380,
+	19847532,
+	69890967,
+	25833572,
+	31764700)
 end
