@@ -120,6 +120,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e13:SetType(EFFECT_TYPE_FIELD)
         e13:SetCode(EFFECT_ADD_CODE)
         e13:SetTargetRange(LOCATION_MZONE,0)
+        e13:SetTarget(function(_,c)  return not c:IsType(TYPE_XYZ) end)
         e13:SetValue(511002468)
         Duel.RegisterEffect(e13,tp)
 
