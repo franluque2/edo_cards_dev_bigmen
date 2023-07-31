@@ -58,6 +58,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
 
+        local e12=Effect.CreateEffect(e:GetHandler())
+        e12:SetType(EFFECT_TYPE_FIELD)
+        e12:SetCode(EFFECT_FUSION_SUBSTITUTE)
+        e12:SetTargetRange(LOCATIONS,0)
+        e12:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        Duel.RegisterEffect(e12,tp)
+
+
+
         local e6=Effect.CreateEffect(e:GetHandler())
         e6:SetType(EFFECT_TYPE_FIELD)
         e6:SetCode(EFFECT_ADD_SETCODE)
@@ -201,10 +210,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
     if #BloomPrima>0 then
 	local tc=BloomPrima:GetFirst()
 		while tc do
-	
-            Fusion.AddProcMix(tc,true,true,06205579,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b))
-
-
+      Fusion.AddProcMixRep(tc,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b),1,99,511009324)
 			tc=BloomPrima:GetNext()
 		end
     end
