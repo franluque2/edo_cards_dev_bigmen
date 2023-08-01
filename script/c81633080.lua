@@ -113,6 +113,65 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+	g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil,100000481)
+	if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e8=Effect.CreateEffect(e:GetHandler())
+				e8:SetType(EFFECT_TYPE_SINGLE)
+				e8:SetRange(LOCATION_MZONE)
+				e8:SetCode(30765615)
+				tc:RegisterEffect(e8)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil,27103517)
+	if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+
+			local tcid=tc:GetOriginalCode()
+			
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+			e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+			e2:SetCode(EVENT_TO_GRAVE)
+			e2:SetCountLimit(1,tcid)
+			e2:SetCondition(s.spcon)
+			e2:SetTarget(s.sptg)
+			e2:SetOperation(s.spop)
+			tc:RegisterEffect(e2)
+
+
+			tc=g:GetNext()
+		end
+	end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and (r&0x41)==0x41
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)~=0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_ADD_TYPE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(TYPE_TUNER)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e1)
+	end
+end
