@@ -61,7 +61,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e11:SetType(EFFECT_TYPE_FIELD)
 		e11:SetCode(EFFECT_XYZ_LEVEL)
 		e11:SetTargetRange(LOCATION_MZONE, 0)
-		e11:SetTarget(function (_,c) return c:GetFlagEffect(id) end)
+		e11:SetTarget(function (_,c) return c:IsHasEffect(id) end)
 		e11:SetValue(s.xyzlv)
         Duel.RegisterEffect(e11,tp)
     

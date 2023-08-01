@@ -150,7 +150,7 @@ function s.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 end
 
 function s.damval(e,re,val,r,rp,rc)
-	if re:GetHandler():IsCode(79279397) then
+	if re and re:GetHandler():IsCode(79279397) then
 		return 0
 	end
 	return val
