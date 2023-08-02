@@ -109,7 +109,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id)
+				e3:SetCode(id+1)
 				tc:RegisterEffect(e3)
 
 
@@ -117,7 +117,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
-<<<<<<< HEAD
 	local Nether=Duel.GetMatchingGroup(s.Drago, tp, LOCATION_EXTRA, 0, nil)
 	if #Nether>0 then
 	  local tc=Nether:GetFirst()
@@ -126,7 +125,10 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		--synchro summon
 		Synchro.AddProcedure(tc,nil,1,1,Synchro.NonTuner(nil),1,99)
 		  tc=Nether:GetNext()
-=======
+		end
+	end
+
+
 	g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil,100000481)
 	if #g>0 then
 		local tc=g:GetFirst()
@@ -162,7 +164,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 
 			tc=g:GetNext()
->>>>>>> 6bad022c3373fba876e8fff1a27df0f7092151dc
 		end
 	end
 
