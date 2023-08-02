@@ -34,6 +34,10 @@ function s.archetypefilter2(c)
   return c:IsType(TYPE_MONSTER) and c:IsLevelBelow(3)
 end
 
+function s.Drago(c)
+  return c:IsCode(21435914)
+end
+
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -110,6 +114,17 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 
 			tc=g:GetNext()
+		end
+	end
+
+	local Nether=Duel.GetMatchingGroup(s.Drago, tp, LOCATION_EXTRA, 0, nil)
+	if #Nether>0 then
+	  local tc=Nether:GetFirst()
+		while tc do
+	  
+		--synchro summon
+		Synchro.AddProcedure(tc,nil,1,1,Synchro.NonTuner(nil),1,99)
+		  tc=Nether:GetNext()
 		end
 	end
 
