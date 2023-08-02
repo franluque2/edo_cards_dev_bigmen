@@ -33,8 +33,20 @@ function s.initial_effect(c)
 	e4:SetOperation(s.tgop)
 	c:RegisterEffect(e4)
 
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(0,LOCATION_MZONE)
+	e2:SetValue(s.atlimit)
+	c:RegisterEffect(e2)
+
 end
 s.listed_names={511004336}
+
+function s.atlimit(e,c)
+	return c~=e:GetHandler()
+end
 
 function s.cfilter(c)
 	return c:IsFacedown() or not c:IsCode(id)
