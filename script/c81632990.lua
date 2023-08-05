@@ -221,7 +221,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	local b2=Duel.GetFlagEffect(tp,id+8)==0 and Duel.IsExistingMatchingCard(s.putbackyubelfilter, tp, LOCATION_HAND, 0, 1, nil) and Duel.IsPlayerCanDraw(tp)
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1)
+	return aux.CanActivateSkill(tp) and (b1 or b2)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
