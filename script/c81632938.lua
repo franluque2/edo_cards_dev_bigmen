@@ -134,7 +134,7 @@ local b4=Duel.GetFlagEffect(ep, id+4)==0
 			and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 100000058)
 			and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 100000059)
 			and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 100000060)
-			and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 100000067)
+			and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 100000066)
 			and (Duel.GetLP(tp)<=1000)
 			and (Duel.GetLocationCount(tp, LOCATION_SZONE)>0)
 
