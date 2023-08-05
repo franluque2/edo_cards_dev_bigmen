@@ -28,7 +28,10 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
+	local dest=Duel.GetMatchingGroup(s.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dest,#dest,0,0)
+
 end
 function s.filter(c)
 	return c:GetCounter(0x1107)>=1
