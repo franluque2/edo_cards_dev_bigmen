@@ -31,7 +31,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
         e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
         e2:SetTargetRange(0,LOCATION_GRAVE)
-        e2:SetTarget(1)
         e2:SetValue(s.value)
         Duel.RegisterEffect(e2,tp)
 
@@ -55,7 +54,7 @@ end
 
 function s.value(e,re,rp)
 	return re and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_HAND
-		and (re:GetHandler():IsSetCard(SET_BYSTIAL) and re:GetHandler():IsLevel(6))
+		and (re:GetHandler():IsSetCard(SET_BYSTIAL) and re:GetHandler():IsLevel(6)) and re:GetHandlerPlayer()==e:GetHandlerPlayer()
 end
 
 function s.discon(e)
