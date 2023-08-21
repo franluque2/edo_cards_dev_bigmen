@@ -17,14 +17,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
 
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e0:SetCode(EVENT_STARTUP)
-	e0:SetCondition(s.flipconextra)
-	e0:SetRange(0x5f)
-	e0:SetOperation(s.flipopextra)
-	c:RegisterEffect(e0)
-
     aux.GlobalCheck(s,function()
 		s[0]=0
 		s[1]=0
@@ -121,38 +113,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e9,tp)
 	end
 	e:SetLabel(1)
-end
-
-function s.brickfilter(c)
-	return c:IsCode(69890967,
-	6007213,
-	78371393,
-	31764700,
-	4779091,
-	89190953,
-	53701259,
-	13301895,
-	48130397,
-	13301895,
-	16317140,
-	101203055,
-	87917187,
-	89943723)
-end
-
-function s.flipconextra(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.brickfilter, tp, 0, LOCATION_DECK, 1, nil)
-end
-function s.flipopextra(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.brickfilter, tp, 0, LOCATION_DECK, nil)
-	if g then
-		local tg=g:RandomSelect(tp, 7)
-		for tc in tg:Iter() do
-			Duel.MoveSequence(tc,0)
-		end
-		Duel.ShuffleDeck(tp)
-	end
-
 end
 
 
