@@ -1,1 +1,10 @@
-.vscode/settings.json
+/*
+/*/
+!/script/
+!/pics/
+!/bigmen_homebrew.cdb
+!/kdrctedo.cdb
+!strings.conf
+
+.gitignore
+script/.vscode/settings.json
