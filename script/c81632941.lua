@@ -109,7 +109,7 @@ end
 
 function s.limcon(e,c)
 	--condition
-	return Duel.GetFlagEffect(e:GetHandlerPlayer(), id+2)>0
+	return Duel.GetFlagEffect(e:GetHandlerPlayer(), id+5)>0
 end
 
 function s.aclimit(e,re,tp)
@@ -119,11 +119,8 @@ end
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if (rc:IsCode(83764718) or rc:IsCode(160417004) or rc:IsCode(160417006)) and rc:IsType(TYPE_SPELL) then
-		Duel.SetChainLimit(s.chainlm)
+		Duel.RegisterFlagEffect(tp, id+5, RESET_EVENT+RESET_PHASE+PHASE_END, 0, 0)
 	end
-end
-function s.chainlm(e,rp,tp)
-	return tp==rp
 end
 
 function s.levelfilter(c)
