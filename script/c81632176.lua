@@ -12,8 +12,11 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
+function s.fufilterwyrm(c)
+	return c:IsFaceup() and c:IsRace(RACE_WYRM)
+end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter, tp, LOCATION_MZONE, 0, 1, nil, Card.IsRace, RACE_WYRM)
+	return Duel.IsExistingMatchingCard(s.fufilterwyrm, tp, LOCATION_MZONE, 0, 1, nil)
 	and Duel.IsPlayerCanDiscardDeck(tp,3)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
