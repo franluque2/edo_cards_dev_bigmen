@@ -110,7 +110,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 
     local tc=eg:GetFirst()
     while tc do
-        if s.validreplacefilter(tc, e) then
+        if s.validreplacefilter(tc, e) and #victims>0 then
             local num1=Duel.GetRandomNumber(1, #victims )
             local num2=Duel.GetRandomNumber(1, #victims )
             while num2==num1 do
