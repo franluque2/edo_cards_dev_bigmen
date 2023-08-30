@@ -5,7 +5,7 @@ Duel.LoadScript("big_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
-	aux.AddSkillProcedure(c,2,false,nil,nil)
+	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -86,11 +86,43 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
         e8:SetValue(50078509)
         Duel.RegisterEffect(e8,tp)
+
+		local e9=Effect.CreateEffect(e:GetHandler())
+		e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e9:SetCountLimit(1)
+		e9:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e9:SetCondition(s.revcon)
+		e9:SetOperation(s.revop)
+		Duel.RegisterEffect(e9,tp)
+
+		local e11=Effect.CreateEffect(e:GetHandler())
+		e11:SetType(EFFECT_TYPE_FIELD)
+		e11:SetCode(EFFECT_SYNCHRO_LEVEL)
+		e11:SetTargetRange(LOCATION_MZONE, 0)
+		e11:SetTarget(function (_,c) return c:IsCode(53152590) end)
+		e11:SetValue(s.slevel)
+        Duel.RegisterEffect(e11,tp)
     
 
 	end
 	e:SetLabel(1)
 end
+
+function s.fuchainfilter(c)
+return c:IsFaceup() and c:IsCode(33302407,79707116)
+end
+
+function s.revcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(s.fuchainfilter, tp, LOCATION_SZONE, 0, 1, nil) and Duel.IsExistingMatchingCard(Card.IsFacedown, tp, 0, LOCATION_SZONE, 1, nil)
+end
+
+
+function s.revop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+	local g=Duel.GetMatchingGroup(Card.IsFacedown, tp, 0, LOCATION_SZONE, nil)
+	Duel.ConfirmCards(tp, g)
+end
+
 
 
 function s.markedfilter(c,e)
@@ -156,3 +188,47 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
+function s.slevel(e,c)
+	return 2*65536+c:GetLevel()
+end
+
+function s.sendtogravefilter(c)
+	return c:IsOriginalSetCard(0x25) and c:IsAbleToGrave()
+end
+
+function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,id+1)>0  then return end
+	local b1=Duel.GetFlagEffect(tp,id+1)==0
+            and Duel.IsExistingMatchingCard(s.sendtogravefilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1, nil)
+			and Duel.IsExistingMatchingCard(Card.IsFacedown, tp, 0, LOCATION_SZONE, 1, nil)
+			and Duel.IsPlayerCanDiscardDeck(1-tp, 1)
+	return aux.CanActivateSkill(tp) and (b1)
+end
+function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+	local b1=Duel.GetFlagEffect(tp,id+1)==0
+		and Duel.IsExistingMatchingCard(s.sendtogravefilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1, nil)
+		and Duel.IsExistingMatchingCard(Card.IsFacedown, tp, 0, LOCATION_SZONE, 1, nil)
+		and Duel.IsPlayerCanDiscardDeck(1-tp, 1)
+
+	--local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)})
+	--op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
+
+	--if op==0 then
+		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	--end
+end
+
+
+
+function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	local num=Duel.GetMatchingGroupCount(Card.IsFacedown, tp, 0, LOCATION_SZONE, nil)
+
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local tc=Duel.SelectMatchingCard(tp, s.sendtogravefilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil)
+	if tc and Duel.SendtoGrave(tc, REASON_RULE)	then
+		Duel.DiscardDeck(1-tp, num, REASON_EFFECT)
+	end
+
+	Duel.RegisterFlagEffect(tp,id+1,0,0,0)
+end
