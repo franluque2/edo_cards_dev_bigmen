@@ -75,7 +75,7 @@ end
 function s.cfilter(c,tp)
 	local rc=c:GetReasonCard()
     local re=c:GetReasonEffect()
-	return (c:IsReason(REASON_BATTLE) and rc and rc:IsRelateToBattle() and rc:IsCode(DARK_ARCHETYPE)) or (c:IsReason(REASON_EFFECT) and re and re:GetOwner():IsCode(DARK_ARCHETYPE))
+	return c:IsMonster() and (c:IsReason(REASON_BATTLE) and rc and rc:IsRelateToBattle() and rc:IsCode(DARK_ARCHETYPE)) or (c:IsReason(REASON_EFFECT) and re and re:GetOwner():IsCode(DARK_ARCHETYPE))
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter, 1, nil, tp)
