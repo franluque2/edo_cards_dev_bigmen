@@ -97,7 +97,7 @@ function s.atohanddarchetypefilter(c)
 end
 
 function s.validreplacefilter(c,e)
-    return c:IsCode(DARK_ARCHETYPE) and c:IsFaceup() and c:GetOwner() ==e:GetHandlerPlayer()
+    return c:IsCode(DARK_ARCHETYPE) and c:IsFaceup() and c:GetReasonPlayer() ==e:GetHandlerPlayer()
 end
 
 function s.repcon(e,tp,eg,ep,ev,re,r,rp)
