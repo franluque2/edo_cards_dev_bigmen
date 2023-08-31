@@ -46,7 +46,7 @@ end
 local MAXIMUM_CENTERS={160202002,160203002,160207002,160428002,160005015}
 local MAXIMUM_LEFTS={160202001,160203001,160207001,160428001,160005014}
 local MAXIMUM_RIGHTS={160202003,160203003,160207003,160428003,160005016}
-local CARDS_TO_ADD={160001039,160002036,160006039,160402001,160402003,160011050,160012045,160013054}
+local CARDS_TO_ADD={160001039,160002036,160006039,160402001,160402003,160011050,160012045,160013054, 160001039}
 
 local maximums={}
 maximums[0]=Group.CreateGroup()
@@ -120,8 +120,8 @@ function s.ablereviece(c)
 end
 
 function s.stackcon(e,tp,eg,ep,ev,re,r,rp)
-	if not ( Duel.GetTurnCount()>2 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)==0 and Duel.GetLocationCount(tp, LOCATION_HAND)<3) then return false end
-    local g=Duel.GetDecktopGroup(tp, 5-Duel.GetLocationCount(tp, LOCATION_HAND))
+    if not ( Duel.GetTurnCount()>2 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+1)==0 and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)<3) then return false end
+    local g=Duel.GetDecktopGroup(tp, 5-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0))
     if g:IsExists(s.abletopiece, 1, nil) then return true end
     return false
 end
