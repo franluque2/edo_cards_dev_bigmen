@@ -37,6 +37,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetOperation(s.stackop)
 		Duel.RegisterEffect(e2,tp)
 
+        s.filltables()
 
 	end
 	e:SetLabel(1)
@@ -153,7 +154,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    s.filltables()
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
