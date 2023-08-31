@@ -152,7 +152,7 @@ function s.guardianthatmentionsfilter(c,code)
     return c:IsSetCard(0x52) and c:ListsCode(code)
 end
 
-function s.addequipspellfilter(c)
+function s.addequipspellfilter(c,tp)
     return c:IsSpell() and c:IsType(TYPE_EQUIP) and Duel.IsExistingMatchingCard(s.guardianthatmentionsfilter, tp, LOCATION_ALL, 0, nil, c:GetCode()) and c:IsAbleToHand()
 end
 
@@ -181,7 +181,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
     local b3=Duel.GetFlagEffect(tp,id+3)==0
         and Duel.IsExistingMatchingCard(s.shufflepowerfilter,tp,LOCATION_ONFIELD,0,1,nil)
-                    and Duel.IsExistingMatchingCard(s.addequipspellfilter,tp,LOCATION_DECK,0,1,nil)
+                    and Duel.IsExistingMatchingCard(s.addequipspellfilter,tp,LOCATION_DECK,0,1,nil,tp)
 
     local b4=Duel.GetFlagEffect(tp,id+4)==0
         and Duel.IsExistingMatchingCard(s.fusealfilter,tp,LOCATION_ONFIELD,0,1,nil)
@@ -269,7 +269,7 @@ function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
 
     if g and Duel.SendtoDeck(g, tp, SEQ_DECKSHUFFLE, REASON_RULE) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
-        local tc=Duel.SelectMatchingCard(tp, s.addequipspellfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+        local tc=Duel.SelectMatchingCard(tp, s.addequipspellfilter, tp, LOCATION_DECK, 0, 1,1,false,nil,tp)
         if tc then
             Duel.SendtoHand(tc, tp, REASON_RULE)
             Duel.ConfirmCards(1-tp, tc)
