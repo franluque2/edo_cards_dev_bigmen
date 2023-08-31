@@ -153,7 +153,7 @@ function s.guardianthatmentionsfilter(c,code)
 end
 
 function s.addequipspellfilter(c,tp)
-    return c:IsSpell() and c:IsType(TYPE_EQUIP) and Duel.IsExistingMatchingCard(s.guardianthatmentionsfilter, tp, LOCATION_ALL, 0, nil, c:GetCode()) and c:IsAbleToHand()
+    return c:IsSpell() and c:IsType(TYPE_EQUIP) and Duel.IsExistingMatchingCard(s.guardianthatmentionsfilter, tp, LOCATION_ALL, 0,1, nil, c:GetCode()) and c:IsAbleToHand()
 end
 
 function s.fusealfilter(c)
@@ -263,7 +263,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
 end
 
-function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
+function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
     local g=Duel.SelectMatchingCard(tp, s.shufflepowerfilter, tp, LOCATION_ONFIELD, 0, 1,1,false,nil)
 
@@ -287,7 +287,7 @@ function s.remfilter(c)
 end
 
 
-function s.operation_for_res4(e,tp,eg,ep,ev,re,r,rp)
+function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
     local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
