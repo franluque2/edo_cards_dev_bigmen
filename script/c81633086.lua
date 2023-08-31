@@ -303,7 +303,7 @@ function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
         and Duel.SelectYesNo(tp, aux.Stringid(id, 6)) then
             Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
 
-            local eatos=Duel.SelectMatchingCard(tp, s.summoneatosfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil):GetFirst()
+            local eatos=Duel.SelectMatchingCard(tp, s.summoneatosfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil,e,tp):GetFirst()
             if eatos then
                 local g=Duel.GetMatchingGroup(s.remfilter, tp, LOCATION_GRAVE, 0, eatos)
                 if Duel.Remove(g, POS_FACEUP, REASON_EFFECT) then
