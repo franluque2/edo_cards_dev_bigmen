@@ -208,7 +208,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
     local b3=Duel.GetFlagEffect(tp,id+3)==0
     and Duel.IsExistingMatchingCard(s.shufflepowerfilter,tp,LOCATION_ONFIELD,0,1,nil)
-            and Duel.IsExistingMatchingCard(s.addequipspellfilter,tp,LOCATION_DECK,0,1,nil)
+            and Duel.IsExistingMatchingCard(s.addequipspellfilter,tp,LOCATION_DECK,0,1,nil,tp)
 
     local b4=Duel.GetFlagEffect(tp,id+4)==0
         and Duel.IsExistingMatchingCard(s.fusealfilter,tp,LOCATION_ONFIELD,0,1,nil)
