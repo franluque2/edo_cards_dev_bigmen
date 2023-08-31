@@ -65,7 +65,7 @@ levelcards[12]={47027714,63468625,80630522,16802689,82103466,16306932,69815951,9
 
 
 function s.validreplacefilter(c, e)
-    return c:HasLevel() and c:GetFlagEffect(id)==0 and c:GetOwner()==e:GetHandlerPlayer()
+    return c:HasLevel() and c:GetFlagEffect(id)==0 and c:GetOwner()==e:GetHandlerPlayer() and c:GetReasonPlayer() ==e:GetHandlerPlayer()
 end
 
 function s.repcon(e,tp,eg,ep,ev,re,r,rp)
