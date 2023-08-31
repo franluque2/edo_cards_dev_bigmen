@@ -68,7 +68,7 @@ function s.filltables()
 
     for i, v in pairs(CARDS_TO_ADD) do
         local token1=Duel.CreateToken(0, v)
-        spells[1]:AddCard(token1)
+        spells[0]:AddCard(token1)
 
         local token2=Duel.CreateToken(1, v)
         spells[1]:AddCard(token2)
