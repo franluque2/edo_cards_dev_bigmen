@@ -301,7 +301,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_MZONE, 0, nil)
     if Duel.SendtoHand(g, tp, REASON_RULE) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-        local magician=Duel.SelectMatchingCard(tp, s.specialsummonmagicianfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
+        local magician=Duel.SelectMatchingCard(tp, s.specialsummonmagicianfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil,e,tp)
         Duel.SpecialSummon(magician, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
     end
 
