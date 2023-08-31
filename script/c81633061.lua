@@ -46,7 +46,7 @@ end
 local MAXIMUM_CENTERS={160202002,160203002,160207002,160428002,160005015}
 local MAXIMUM_LEFTS={160202001,160203001,160207001,160428001,160005014}
 local MAXIMUM_RIGHTS={160202003,160203003,160207003,160428003,160005016}
-local CARDS_TO_ADD={160001039,160002036,160006039,160402001,160402003,160011050,160012045,160013054, 160001039}
+local CARDS_TO_ADD={160001039,160002036,160006039,160402001,160402003,160011050,160012045,160013054}
 
 local maximums={}
 maximums[0]=Group.CreateGroup()
@@ -58,21 +58,24 @@ spells[1]=Group.CreateGroup()
 
 
 function s.filltables()
-    for i, v in pairs(MAXIMUM_CENTERS) do
-        local token1=Duel.CreateToken(0, v)
-        maximums[0]:AddCard(token1)
-        local token2=Duel.CreateToken(1, v)
-        maximums[1]:AddCard(token2)
+    if #maximums[0]==0 then
+        for i, v in pairs(MAXIMUM_CENTERS) do
+            local token1=Duel.CreateToken(0, v)
+            maximums[0]:AddCard(token1)
+            local token2=Duel.CreateToken(1, v)
+            maximums[1]:AddCard(token2)
 
 
-    end
+        end
 
-    for i, v in pairs(CARDS_TO_ADD) do
-        local token1=Duel.CreateToken(0, v)
-        spells[0]:AddCard(token1)
+        for i, v in pairs(CARDS_TO_ADD) do
+            local token1=Duel.CreateToken(0, v)
+            spells[0]:AddCard(token1)
 
-        local token2=Duel.CreateToken(1, v)
-        spells[1]:AddCard(token2)
+            local token2=Duel.CreateToken(1, v)
+            spells[1]:AddCard(token2)
+
+        end
 
     end
 end
