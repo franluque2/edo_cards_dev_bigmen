@@ -102,14 +102,8 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 			tc:CreateEffectRelation(te)
 			Duel.BreakEffect()
 			local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-			for etc in aux.Next(g) do
-				etc:CreateEffectRelation(te)
-			end
 			if op then op(te,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE,1) end
 			tc:ReleaseEffectRelation(te)
-			for etc in aux.Next(g) do
-				etc:ReleaseEffectRelation(te)
-			end
 			Duel.BreakEffect()
 			Duel.Remove(tc, POS_FACEUP, REASON_RULE)
 		end
@@ -221,6 +215,37 @@ function s.fu_dragon_normal_filter(c)
 	return c:IsFaceup() and c:IsLegend() and c:IsRace(RACE_DRAGON) and c:IsLevelAbove(7) and c:IsType(TYPE_NORMAL)
 end
 
+function s.fu_ultimate_filter(c)
+	return c:IsFaceup() and c:IsCode(23995346)
+end
+
+function s.special_legend_be_filter(c,e,tp)
+	return c:IsLegend() and c:IsRace(RACE_DRAGON) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP) and c:IsType(TYPE_NORMAL)
+end
+
+function s.recoverbefilter(c)
+    return c:IsLegend() and c:IsRace(RACE_DRAGON) and c:IsAbleToHand()
+end
+
+--red-eyes
+
+function s.fu_blackchick_filter(c)
+	return c:IsFaceup() and c:IsCode(23995346)
+end
+
+function s.recoverredfilter(c)
+    return c:IsLegend() and c:IsRace(RACE_DRAGON) and c:IsAbleToHand() and c:IsType(TYPE_NORMAL)
+end
+
+function s.rednamechangefilter(c)
+	return c:IsType(TYPE_NORMAL) and (c:IsLevel(6) or (c:IsLevel(4) and c:IsLegend()))
+end
+
+--summoned skull
+
+
+
+
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 and Duel.GetFlagEffect(tp,id+3)>0 and Duel.GetFlagEffect(tp,id+4)>0  and Duel.GetFlagEffect(tp,id+5)>0 and Duel.GetFlagEffect(tp,id+6)>0 
@@ -234,33 +259,45 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 		and Duel.IsExistingMatchingCard(s.fumagvalkfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.addvalkupfilter,tp,LOCATION_DECK,0,1,nil)
+		and CHOSEN_LEGEND[tp]==CARD_DARK_MAGICIAN
 
     local b3=Duel.GetFlagEffect(tp,id+3)==0
 			and Duel.IsExistingMatchingCard(s.dmgfilter,tp,LOCATION_ONFIELD,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.special_legend_dm_filter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+						and CHOSEN_LEGEND[tp]==CARD_DARK_MAGICIAN
 
 						--BEWD
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
 			and Duel.IsExistingMatchingCard(s.fu_dragon_normal_filter,tp,LOCATION_ONFIELD,0,1,nil)
+			and CHOSEN_LEGEND[tp]==CARD_BLUEEYES_W_DRAGON
 
     local b5=Duel.GetFlagEffect(tp,id+5)==0
-			and Duel.IsExistingMatchingCard(s.fulegendfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.addlegendsupfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.fu_ultimate_filter,tp,LOCATION_ONFIELD,0,1,nil)
+						and Duel.IsExistingMatchingCard(s.special_legend_be_filter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+						and CHOSEN_LEGEND[tp]==CARD_BLUEEYES_W_DRAGON
+
 
 						--REBD
 	local b6=Duel.GetFlagEffect(tp,id+6)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.fu_dragon_normal_filter,tp,LOCATION_ONFIELD,0,1,nil)
+		and CHOSEN_LEGEND[tp]==CARD_REDEYES_B_DRAGON
 
     local b7=Duel.GetFlagEffect(tp,id+7)==0
-			and Duel.IsExistingMatchingCard(s.fulegendfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.addlegendsupfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.fu_blackchick_filter,tp,LOCATION_ONFIELD,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.recoverredfilter,tp,LOCATION_GRAVE,0,1,nil)
+			and CHOSEN_LEGEND[tp]==CARD_REDEYES_B_DRAGON
+
 
 						--SUMM_SKULL
 	local b8=Duel.GetFlagEffect(tp,id+8)==0
 			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and CHOSEN_LEGEND[tp]==CARD_SUMMONED_SKULL
+
 
 	local b9=Duel.GetFlagEffect(tp,id+9)==0
 			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and CHOSEN_LEGEND[tp]==CARD_SUMMONED_SKULL
+
 
 	return aux.CanActivateSkill(tp) and (b1 or b2 or b3 or b4 or b5 or b6 or b7 or b8 or b9)
 end
