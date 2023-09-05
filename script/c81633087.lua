@@ -379,7 +379,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 
 
 	local b9 = Duel.GetFlagEffect(tp, id + 9) == 0
-		and Duel.IsExistingMatchingCard(s.fuarchfiendsolderfilter, tp, LOCATION_HAND, 0, 1, nil)
+		and Duel.IsExistingMatchingCard(s.fuarchfiendsolderfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
 		and Duel.IsExistingMatchingCard(s.fiendaddfilter, tp, LOCATION_GRAVE, 0, 1, nil)
 		and CHOSEN_LEGEND[tp] == CARD_SUMMONED_SKULL
 
