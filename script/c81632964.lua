@@ -113,7 +113,7 @@ end
 
 
 function s.celestialwarriorfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_CELESTIALWARRIOR)
+	return c:IsFaceup() and c:IsOriginalRace(RACE_CELESTIALWARRIOR)
 end
 
 
