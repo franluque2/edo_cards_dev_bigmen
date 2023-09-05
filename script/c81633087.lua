@@ -230,7 +230,7 @@ end
 --red-eyes
 
 function s.fu_blackchick_filter(c)
-	return c:IsFaceup() and c:IsCode(160404002)
+	return c:IsFaceup() and c:IsCode(36262024)
 end
 
 function s.recoverredfilter(c)
