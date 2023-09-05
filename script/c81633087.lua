@@ -154,7 +154,7 @@ function s.taglegends(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.startofdueleff(e, tp, eg, ep, ev, re, r, rp)
-	local chosen_id = Duel.SelectEffect(1, { 1, aux.Stringid(id, 0) },
+	local chosen_id = Duel.SelectEffect(tp, { 1, aux.Stringid(id, 0) },
 		{ 1, aux.Stringid(id, 1) },
 		{ 1, aux.Stringid(id, 2) },
 		{ 1, aux.Stringid(id, 3) })
