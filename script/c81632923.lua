@@ -88,11 +88,12 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	if Duel.GetFlagEffect(tp,id+2)>0 and Duel.GetFlagEffect(tp, id+3)>0 and Duel.GetFlagEffect(tp, id+4)>0 then return end
 	--
--- Once per turn, you can send the top 2 cards of your Deck to the GY, then declare 1 type.
---Until the end of this turn, all monsters your opponent controls becomes that type.
+	-- Once per turn, you can send the top 2 cards of your Deck to the GY, then declare 1 type.
+	--Until the end of this turn, monsters your opp controls become that type up to the number of cyborgs you have
 	local b1=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsPlayerCanDiscardDeckAsCost(tp,2)
 			and Duel.GetMatchingGroupCount(s.monsterfilter, tp, 0, LOCATION_MZONE, nil)>0
+			and Duel.IsExistingMatchingCard(s.fucyborgfilter, tp, LOCATION_MZONE, 0, 1,nil)
 
 
 -- Once per turn, you can discard 1 card, add 1 "Fusion" from your Deck to your Hand.
@@ -109,14 +110,19 @@ local b2=Duel.GetFlagEffect(tp, id+3)==0
 
 	return aux.CanActivateSkill(tp) and (b1 or b2 or b3)
 end
+
+function s.fucyborgfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_CYBORG)
+end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
 	-- Once per turn, you can send the top 2 cards of your Deck to the GY, then declare 1 type.
-	--Until the end of this turn, all monsters your opponent controls becomes that type.
-		local b1=Duel.GetFlagEffect(tp,id+2)==0
-				and Duel.IsPlayerCanDiscardDeckAsCost(tp,2)
-				and Duel.GetMatchingGroupCount(s.monsterfilter, tp, 0, LOCATION_MZONE, nil)>0
+	--Until the end of this turn, monsters your opp controls become that type up to the number of cyborgs you have
+	local b1=Duel.GetFlagEffect(tp,id+2)==0
+			and Duel.IsPlayerCanDiscardDeckAsCost(tp,2)
+			and Duel.GetMatchingGroupCount(s.monsterfilter, tp, 0, LOCATION_MZONE, nil)>0
+			and Duel.IsExistingMatchingCard(s.fucyborgfilter, tp, LOCATION_MZONE, 0, 1,nil)
 
 
 	-- Once per turn, you can discard 1 card, add 1 "Fusion" from your Deck to your Hand.
@@ -141,13 +147,19 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
 		local rc=Duel.AnnounceRace(tp,1,RACE_ALL)
 
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CHANGE_RACE)
-		e1:SetTargetRange(0,LOCATION_MZONE)
-		e1:SetValue(rc)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		local num=Duel.GetMatchingGroupCount(s.fucyborgfilter, tp, LOCATION_MZONE, 0, nil)
+
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TARGET)
+		local g=Duel.SelectMatchingCard(tp, s.monsterfilter, tp, 0, LOCATION_MZONE, 1,num,false,nil)
+
+		for tc in g:Iter() do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_RACE)
+			e1:SetValue(rc)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
+			tc:RegisterEffect(e1)			
+		end
 			--opt register
 			Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 	elseif op==1 then

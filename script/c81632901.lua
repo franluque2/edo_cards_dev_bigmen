@@ -64,5 +64,17 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetTargetRange(1,0)
 		e3:SetValue(s.znval)
 		Duel.RegisterEffect(e3,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_DISABLE)
+        e7:SetTargetRange(LOCATION_ONFIELD,0)
+        e7:SetCondition(s.discon)
+        e7:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xff))
+        Duel.RegisterEffect(e7, tp)
 	end
+end
+
+function s.discon(e)
+	return Duel.IsBattlePhase() and Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
