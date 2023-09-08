@@ -66,7 +66,7 @@ function s.filter2(c)
 end
 
 function s.sumfilter(c, e, tp)
-    return (c:IsSetCard(0xde) or c:IsCode(13893596)) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, true)
+    return (c:IsSetCard(0xde) or c:IsCode(13893596)) and c:IsMonster() and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, true)
 end
 
 function s.sendfilter(c)
