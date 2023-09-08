@@ -65,7 +65,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.indtg(e,c)
-	return c:IsCode(81632243)
+	return c:IsCode(511001236)
 end
 
 
