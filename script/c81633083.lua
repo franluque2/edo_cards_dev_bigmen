@@ -84,11 +84,14 @@ end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.cfilter, nil, tp)
     for tc in g:Iter() do
-        local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_CODE)
-		e1:SetValue(DARK_ARCHETYPE)
-		tc:RegisterEffect(e1)
+        if tc:IsMonster() then
+
+            local e1=Effect.CreateEffect(e:GetHandler())
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_CHANGE_CODE)
+            e1:SetValue(DARK_ARCHETYPE)
+            tc:RegisterEffect(e1)
+        end
     end
 end
 
@@ -149,7 +152,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             
             local e2=Effect.CreateEffect(e:GetHandler())
             e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_SET_ATTACK)
+            e2:SetCode(EFFECT_SET_BASE_ATTACK)
             e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
             e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET)
             e2:SetRange(LOCATION_MZONE)
@@ -157,7 +160,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             e2:SetValue(selection:GetBaseAttack())
             tc:RegisterEffect(e2)
             local e3=e2:Clone()
-            e3:SetCode(EFFECT_SET_DEFENSE)
+            e3:SetCode(EFFECT_SET_BASE_DEFENSE)
             e3:SetValue(selection:GetBaseDefense())
             tc:RegisterEffect(e3)
 
