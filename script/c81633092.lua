@@ -1,4 +1,6 @@
 --Shackles of Steadfast Traditions
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
+
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -105,5 +107,5 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.batval(e,re,c)
-	return Duel.IsExistingMatchingCard(Card.IsSpellTrap, re:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil) and c:IsCode(SHS_BLUEBRW)
+	return Duel.IsExistingMatchingCard(Card.IsSpellTrap, c:GetControler(), LOCATION_GRAVE, 0, 1, nil) and c:IsCode(SHS_BLUEBRW)
 end
