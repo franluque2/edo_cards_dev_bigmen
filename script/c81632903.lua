@@ -116,12 +116,12 @@ end
 --Add 1 Hydradrive link to extra deck, banish 1 hydradrive to add a hydradrive
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--opt check
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 then return end
+	if Duel.GetFlagEffect(tp,id+1)>0 then return end
 	--condition
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-	local b2=Duel.GetFlagEffect(tp,id+2)==0 and Duel.IsExistingMatchingCard(s.hydra_r_filter,tp,LOCATION_GRAVE,0,1,nil,tp) and Duel.IsExistingMatchingCard(s.hydra_d_filter,tp,LOCATION_DECK,0,1,nil,tp)
+	--local b2=Duel.GetFlagEffect(tp,id+2)==0 and Duel.IsExistingMatchingCard(s.hydra_r_filter,tp,LOCATION_GRAVE,0,1,nil,tp) and Duel.IsExistingMatchingCard(s.hydra_d_filter,tp,LOCATION_DECK,0,1,nil,tp)
 
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b1)
 end
 
 --c:RegisterFlagEffect(id,,0,1,fid)
@@ -129,7 +129,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	local b1=Duel.GetFlagEffect(ep,id+1)==0
-	local b2=Duel.GetFlagEffect(ep,id+2)==0 and Duel.IsExistingMatchingCard(s.hydra_r_filter,tp,LOCATION_GRAVE,0,1,nil,tp) and Duel.IsExistingMatchingCard(s.hydra_d_filter,tp,LOCATION_DECK,0,1,nil,tp)
+	--local b2=Duel.GetFlagEffect(ep,id+2)==0 and Duel.IsExistingMatchingCard(s.hydra_r_filter,tp,LOCATION_GRAVE,0,1,nil,tp) and Duel.IsExistingMatchingCard(s.hydra_d_filter,tp,LOCATION_DECK,0,1,nil,tp)
+	local p
+	local b2=false
 	if (b2 and b1) then
 		p=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
 	elseif b1 then
