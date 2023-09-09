@@ -26,6 +26,7 @@ function s.initial_effect(c)
 
     local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_ONFIELD,0)
