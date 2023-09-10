@@ -27,15 +27,32 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 
-        local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PREDRAW)
-		e1:SetCondition(s.flipcon3)
-		e1:SetOperation(s.flipop3)
-		Duel.RegisterEffect(e1,tp)
+        local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_PREDRAW)
+		e2:SetCondition(s.flipcon3)
+		e2:SetOperation(s.flipop3)
+		Duel.RegisterEffect(e2,tp)
 
 
-        --add conscript effects here
+		local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e5:SetTarget(function(_,c)  return c:IsOriginalRace(RACE_WINGEDBEAST) end)
+        e5:SetValue(ATTRIBUTE_WATER)
+        Duel.RegisterEffect(e5,tp)
+
+		local e6=e5:Clone()
+		e6:SetCode(EFFECT_ADD_RACE)
+		e6:SetTargetRange(LOCATION_DECK,0)
+		e6:SetValue(RACE_FISH)
+		Duel.RegisterEffect(e6,tp)
+
+		
+
+
+
 
 
 	end
