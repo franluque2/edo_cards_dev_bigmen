@@ -49,7 +49,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetValue(RACE_FISH)
 		Duel.RegisterEffect(e6,tp)
 
-		
+
 
 
 
@@ -105,26 +105,49 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
+function s.sendwingedbeastfilter(c)
+	return c:IsMonster() and c:IsRace(RACE_WINGEDBEAST) and c:IsAbleToGrave()
+end
+
+function s.addwingedbeastfilter(c)
+	return c:IsMonster() and c:IsRace(RACE_WINGEDBEAST) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
+end
+
+function s.sendfishfilter(c)
+	return c:IsMonster() and c:IsRace(RACE_FISH) and c:IsAbleToGrave()
+end
+
+function s.addfishfilter(c)
+	return c:IsMonster() and c:IsRace(RACE_FISH) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
+end
+
+function s.revsirenocafilter(c)
+	return c:IsCode(50074392) and not c:IsPublic()
+end
+
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp, id+3)>0 and Duel.GetFlagEffect(tp, id+5)>0 then return end
+	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp, id+3)>0 and Duel.GetFlagEffect(tp, id+5)>0 and Duel.GetFlagEffect(tp, id+6)>0 then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.revchairfilter,tp,LOCATION_HAND,0,1,nil)
-			and Duel.IsExistingMatchingCard(s.putontopseraphfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.GetFlagEffect(tp,id+6)==0
+			and Duel.IsExistingMatchingCard(s.addwingedbeastfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.sendwingedbeastfilter,tp,LOCATION_DECK,0,1,nil)
 		
 	local b2=Duel.GetFlagEffect(tp,id+3)==0
-	and Duel.IsExistingMatchingCard(s.resetbariancardfilter,tp,LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.addstarseraphfilter,tp,LOCATION_DECK,0,1,nil)
+	and Duel.GetFlagEffect(tp,id+6)==0
+	and Duel.IsExistingMatchingCard(s.sendfishfilter,tp,LOCATION_DECK,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.addfishfilter,tp,LOCATION_DECK,0,1,nil)
 
 	local b3=Duel.GetFlagEffect(tp,id+5)==0
-	and Duel.IsExistingMatchingCard(s.shufflebackchairfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,nil)
-	and Duel.IsPlayerCanDraw(tp,3)
+	and Duel.GetMatchingGroupCount(Card.IsFaceup, tp, LOCATION_MZONE, 0, nil)>0
+	and Duel.GetMatchingGroupCount(aux.TRUE, tp, LOCATION_MZONE, 0, nil)>1
+	and Duel.IsExistingMatchingCard(s.revsirenocafilter,tp,LOCATION_HAND,0,1,nil)
 
 
 
@@ -137,23 +160,26 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 	--Boolean check for effect 1:
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.revchairfilter,tp,LOCATION_HAND,0,1,nil)
-			and Duel.IsExistingMatchingCard(s.putontopseraphfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.GetFlagEffect(tp,id+6)==0
+			and Duel.IsExistingMatchingCard(s.addwingedbeastfilter,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.sendwingedbeastfilter,tp,LOCATION_DECK,0,1,nil)
 		
 	local b2=Duel.GetFlagEffect(tp,id+3)==0
-	and Duel.IsExistingMatchingCard(s.resetbariancardfilter,tp,LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.addstarseraphfilter,tp,LOCATION_DECK,0,1,nil)
+	and Duel.GetFlagEffect(tp,id+6)==0
+	and Duel.IsExistingMatchingCard(s.sendfishfilter,tp,LOCATION_DECK,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.addfishfilter,tp,LOCATION_DECK,0,1,nil)
 
 	local b3=Duel.GetFlagEffect(tp,id+5)==0
-	and Duel.IsExistingMatchingCard(s.shufflebackchairfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,nil)
-	and Duel.IsPlayerCanDraw(tp,3)
+	and Duel.GetMatchingGroupCount(Card.IsFaceup, tp, LOCATION_MZONE, 0, nil)>0
+	and Duel.GetMatchingGroupCount(aux.TRUE, tp, LOCATION_MZONE, 0, nil)>1
+	and Duel.IsExistingMatchingCard(s.revsirenocafilter,tp,LOCATION_HAND,0,1,nil)
 
 
 
 --copy the bxs from above
 local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,1)},
 									  {b2,aux.Stringid(id,2)},
-									  {b3,aux.Stringid(id,3)})
+									  {b3,aux.Stringid(id,4)})
 	op=op-1
 
 	if op==0 then
@@ -170,21 +196,65 @@ end
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
+	local tosend=Duel.SelectMatchingCard(tp, s.sendwingedbeastfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+	if tosend and Duel.SendtoGrave(tosend, REASON_RULE) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+		local tohand=Duel.SelectMatchingCard(tp, s.addwingedbeastfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+		if tohand and Duel.SendtoHand(tohand, tp, REASON_RULE) then
+			Duel.ConfirmCards(1-tp, tohand)
+		end
+	
+	end
 
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
-	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+1,0,0,0)
+	Duel.RegisterFlagEffect(tp,id+6,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+
 end
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
+	local tosend=Duel.SelectMatchingCard(tp, s.sendfishfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+	if tosend and Duel.SendtoGrave(tosend, REASON_RULE) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+		local tohand=Duel.SelectMatchingCard(tp, s.addfishfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+		if tohand and Duel.SendtoHand(tohand, tp, REASON_RULE) then
+			Duel.ConfirmCards(1-tp, tohand)
+		end
+	
+	end
 
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
+	Duel.RegisterFlagEffect(tp,id+6,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+
 end
 
 
 function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
+
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
+	local rev=Duel.SelectMatchingCard(tp, s.revsirenocafilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
+	if rev then
+		Duel.ConfirmCards(1-tp, rev)
+
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
+		local rc=Duel.AnnounceRace(tp,1,RACE_WINGEDBEAST|RACE_FISH)
+
+
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TARGET)
+		local tc=Duel.SelectMatchingCard(tp, Card.IsFaceup, tp, LOCATION_MZONE, 0, 1,1,false,nil):GetFirst()
+
+
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_RACE)
+			e1:SetValue(rc)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
+			tc:RegisterEffect(e1)
+
+	end
     
 
 	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
@@ -195,7 +265,7 @@ function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id+2)==0 and Duel.GetTurnCount()~=1 and Duel.GetTurnPlayer()==tp
 end
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 5)) then
         Duel.Hint(HINT_CARD,tp,id)
 
         local seventhone=Duel.CreateToken(tp, 57734012)
