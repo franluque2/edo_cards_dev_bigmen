@@ -37,28 +37,31 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_ADD_ATTRIBUTE)
-        e5:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+        e5:SetCode(EFFECT_ADD_RACE)
+        e5:SetTargetRange(LOCATION_DECK,0)
         e5:SetTarget(function(_,c)  return c:IsOriginalRace(RACE_WINGEDBEAST) end)
-        e5:SetValue(ATTRIBUTE_WATER)
+        e5:SetValue(RACE_FISH)
         Duel.RegisterEffect(e5,tp)
 
-		local e6=e5:Clone()
-		e6:SetCode(EFFECT_ADD_RACE)
-		e6:SetTargetRange(LOCATION_DECK,0)
-		e6:SetValue(RACE_FISH)
-		Duel.RegisterEffect(e6,tp)
-
-
-
-
-
-
-
+		local e15=Effect.CreateEffect(e:GetHandler())
+        e15:SetType(EFFECT_TYPE_FIELD)
+        e15:SetCode(EFFECT_CANNOT_TRIGGER)
+        e15:SetTargetRange(LOCATION_MZONE,0)
+        e15:SetCondition(s.discon)
+        e15:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e15, tp)
 	end
 	e:SetLabel(1)
 end
 
+
+function s.discon(e)
+	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
+end
+
+function s.actfilter(e,c)
+	return c:IsType(TYPE_XYZ)
+end
 
 
 
@@ -114,11 +117,11 @@ function s.addwingedbeastfilter(c)
 end
 
 function s.sendfishfilter(c)
-	return c:IsMonster() and c:IsRace(RACE_FISH) and c:IsAbleToGrave()
+	return c:IsMonster() and c:IsOriginalRace(RACE_FISH) and c:IsAbleToGrave()
 end
 
 function s.addfishfilter(c)
-	return c:IsMonster() and c:IsRace(RACE_FISH) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
+	return c:IsMonster() and c:IsOriginalRace(RACE_FISH) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
 end
 
 function s.revsirenocafilter(c)
@@ -209,7 +212,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
 
 	Duel.RegisterFlagEffect(tp,id+1,0,0,0)
-	Duel.RegisterFlagEffect(tp,id+6,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+6,0,0,0)
 
 end
 
@@ -227,7 +230,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
 
 	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
-	Duel.RegisterFlagEffect(tp,id+6,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+6,0,0,0)
 
 end
 
