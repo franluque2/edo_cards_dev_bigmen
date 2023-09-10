@@ -88,6 +88,7 @@ function s.epcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 80208158) and
         not Duel.IsExistingMatchingCard(s.fusparrowfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
         and Duel.IsExistingMatchingCard(s.setsparrowforeverfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil)
+		and Duel.GetTurnPlayer()==tp
 end
 function s.epop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp, LOCATION_SZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
@@ -295,6 +296,7 @@ end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 and Duel.GetFlagEffect(tp,id+3)>0  then return end
+
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.discardesperfilter,tp,LOCATION_HAND,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.addfriendfilter,tp,LOCATION_DECK,0,1,nil)
@@ -305,20 +307,22 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
     local b3=Duel.GetFlagEffect(tp,id+2)==0
         and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
-        and Duel.IsExistingMatchingCard(s.setbackrowfilter, tp, LOCATION_HAND|LOCATION_GRAVE, 0, 1, nil)
+        and Duel.IsExistingMatchingCard(s.setbackrowfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil)
 
     local b4=Duel.GetFlagEffect(tp,id+3)==0
         and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fupumafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fugairudafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fuironhammerfilter,tp,LOCATION_ONFIELD,0,1,nil)
-        and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
+        and (Duel.GetLocationCount(tp, LOCATION_SZONE)>0)
 
     local b5=Duel.GetFlagEffect(tp,id+3)==0
-        and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_MZONE,0,1,nil)
+        and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fupumafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fugairudafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fuironhammerfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(Card.HasLevel,tp,LOCATION_MZONE,0,3,nil)
+
 
 
 	return aux.CanActivateSkill(tp) and (b1 or b2 or b3 or b4 or b5)
@@ -338,20 +342,21 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
     local b3=Duel.GetFlagEffect(tp,id+2)==0
         and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
-        and Duel.IsExistingMatchingCard(s.setbackrowfilter, tp, LOCATION_HAND|LOCATION_GRAVE, 0, 1, nil)
+        and Duel.IsExistingMatchingCard(s.setbackrowfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil)
 
     local b4=Duel.GetFlagEffect(tp,id+3)==0
         and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fupumafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fugairudafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fuironhammerfilter,tp,LOCATION_ONFIELD,0,1,nil)
-        and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
+        and (Duel.GetLocationCount(tp, LOCATION_SZONE)>0)
 
     local b5=Duel.GetFlagEffect(tp,id+3)==0
-        and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_MZONE,0,1,nil)
+        and Duel.IsExistingMatchingCard(s.fusparrowfilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fupumafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fugairudafilter,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.fuironhammerfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(Card.HasLevel,tp,LOCATION_MZONE,0,3,nil)
 
 
 --effect selector
@@ -426,22 +431,28 @@ function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
-			change:GetFirst():RegisterEffect(e1)
+			change:RegisterEffect(e1)
 
 	--sets the opd
 	Duel.RegisterFlagEffect(tp,id+3,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
-
+function s.fuhaslevelfilter(c)
+	return c:HasLevel() and c:IsFaceup()
+end
 function s.operation_for_res4(e,tp,eg,ep,ev,re,r,rp)
-    local esper=Duel.SelectMatchingCard(tp, s.fusparrowfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
-    if esper then
+    local tochange=Duel.SelectMatchingCard(tp, s.fuhaslevelfilter, tp, LOCATION_MZONE, 0, 3,3,false,nil)
+    if tochange then
+		for tc in tochange:Iter() do
+			
+		
         local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		esper:GetFirst():RegisterEffect(e1)
+		tc:RegisterEffect(e1)
+		end
     end
 
 	--sets the opd
