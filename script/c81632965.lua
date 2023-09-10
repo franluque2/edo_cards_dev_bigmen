@@ -236,7 +236,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
                 e1:SetValue(card:Level())
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD)
                 tc:RegisterEffect(e1)
-                tc=cards:GetNext()
+                tc=targets:GetNext()
             end
         end
     end
