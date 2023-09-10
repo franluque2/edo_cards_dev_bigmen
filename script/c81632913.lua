@@ -60,7 +60,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 then return end
 	local g=Duel.GetMatchingGroup(s.water_banish_filter, tp, LOCATION_GRAVE, 0, nil)
-	local g2=Duel.GetMatchingGroup(s.dscale_summon_filter, tp, LOCATION_HAND+LOCATION_GRAVE, 0, nil)
+	local g2=Duel.GetMatchingGroup(s.dscale_summon_filter, tp, LOCATION_HAND+LOCATION_GRAVE, 0, nil,e,tp)
 	--Boolean checks for the activation condition: b1, b2, b3
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.water_discard_filter,tp,LOCATION_HAND,0,1,nil)
@@ -78,7 +78,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	local g=Duel.GetMatchingGroup(s.water_banish_filter, tp, LOCATION_GRAVE, 0, nil)
-	local g2=Duel.GetMatchingGroup(s.dscale_summon_filter, tp, LOCATION_HAND+LOCATION_GRAVE, 0, nil)
+	local g2=Duel.GetMatchingGroup(s.dscale_summon_filter, tp, LOCATION_HAND+LOCATION_GRAVE, 0, nil,e,tp)
 
 	--Boolean check for effect 1:
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
