@@ -165,7 +165,7 @@ end
 function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     --jet iron
-	local g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,15574615)
+	local g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,15574615)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
@@ -193,6 +193,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
         e2:SetType(EFFECT_TYPE_QUICK_O)
         e2:SetCode(EVENT_FREE_CHAIN)
         e2:SetRange(LOCATION_MZONE)
+		e2:SetCondition(s.maincon)
         e2:SetCost(s.cost)
         e2:SetTarget(s.target)
         e2:SetOperation(s.operation)
@@ -201,7 +202,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 	end
 
     --Galaxy Queen
-	g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,48928529)
+	g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,48928529)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
@@ -219,6 +220,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
         e1:SetType(EFFECT_TYPE_QUICK_O)
         e1:SetCode(EVENT_FREE_CHAIN)
         e1:SetCountLimit(1,tc:GetCode())
+		e1:SetCondition(s.maincon)
         e1:SetRange(LOCATION_MZONE)
         e1:SetCost(s.gqueencost)
         e1:SetOperation(s.gqueenoperation)
@@ -227,6 +229,9 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.maincon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsMainPhase()
+end
 
 function s.ntcon(e,c,minc)
 	if c==nil then return true end
