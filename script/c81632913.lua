@@ -70,7 +70,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.water_banish_filter,tp,LOCATION_GRAVE,0,1,nil,tp)
 			and Duel.IsExistingMatchingCard(s.dscale_summon_filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
-			and (#g+#g2)>0
+			and (#g+#g2)>1
 
 	return aux.CanActivateSkill(tp) and (b1 or b2)
 end
