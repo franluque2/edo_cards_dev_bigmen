@@ -282,7 +282,7 @@ function s.setbackrowfilter(c)
 end
 
 function s.spsummonnotjrionfilter(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP) and not c:IsCode(15574615)
+    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP) and c:IsLevelBelow(10) and not c:IsCode(15574615)
 end
 
 function s.fupumafilter(c)
