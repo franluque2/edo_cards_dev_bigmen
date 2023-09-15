@@ -28,7 +28,8 @@ end
 local DARK_ARCHETYPE=100000032
 
 
-local victims={11224103,63014935,85520851,38670435,44729197,71218746,71930383,61538782,10449150,99861526,18325492,46384672,77235086,36256625,16114248,40391316,91998119,2111707,58859575,10248389}
+local victims={11224103,63014935,85520851,38670435,44729197,71218746,71930383,61538782,10449150,99861526,18325492,46384672,77235086,36256625,16114248,40391316,91998119,2111707,58859575,10248389,
+                88264978,17132130,83104731,511001235,81632203,511001218,65192027,59712426,34568403,7541475,81632229,78658564,35975813,42386471,7572887,84430950,83982270,67316075,37057012}
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -100,7 +101,7 @@ function s.atohanddarchetypefilter(c)
 end
 
 function s.validreplacefilter(c,e)
-    return c:IsCode(DARK_ARCHETYPE) and c:IsFaceup() and c:GetReasonPlayer() ==e:GetHandlerPlayer()
+    return c:IsCode(DARK_ARCHETYPE) and c:IsFaceup() and c:GetReasonPlayer() ==e:GetHandlerPlayer() and c:GetFlagEffect(id)==0
 end
 
 function s.repcon(e,tp,eg,ep,ev,re,r,rp)
@@ -108,12 +109,14 @@ function s.repcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
     Duel.Hint(HINT_CARD,tp,id)
+
+    eg=eg:Filter(s.validreplacefilter, nil, e)
 
     local tc=eg:GetFirst()
     while tc do
         if s.validreplacefilter(tc, e) and #victims>2 then
+            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET, 0, 0)
             local num1=Duel.GetRandomNumber(1, #victims )
             local num2=Duel.GetRandomNumber(1, #victims )
             while num2==num1 do
@@ -147,8 +150,8 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             end
 
 
-            tc:CopyEffect(selection:GetCode(),RESET_EVENT+RESETS_STANDARD,1)
-            tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
+            tc:CopyEffect(selection:GetCode(),RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET,1)
+            tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
             
             local e2=Effect.CreateEffect(e:GetHandler())
             e2:SetType(EFFECT_TYPE_SINGLE)
@@ -163,6 +166,12 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             e3:SetCode(EFFECT_SET_BASE_DEFENSE)
             e3:SetValue(selection:GetBaseDefense())
             tc:RegisterEffect(e3)
+
+            if selection:IsSetCard(SET_ARCANA_FORCE) then
+                Duel.RaiseEvent(tc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,tc:GetControler(),ev)
+                Duel.RaiseSingleEvent(tc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,tc:GetControler(),ev)
+        
+            end
 
         end
         
