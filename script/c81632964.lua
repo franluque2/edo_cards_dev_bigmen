@@ -207,7 +207,7 @@ function s.ishighlevelwarrfilter(c)
 end
 
 function s.rulerbackrowfilter(c)
-    return c:IsRulerBackrow() and c:IsSSetable()
+    return (c:IsRulerBackrow() or c:IsCode(160209055)) and c:IsSSetable()
 end
 
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
