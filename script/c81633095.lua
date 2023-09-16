@@ -95,7 +95,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 			if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
 				local zones=Duel.GetLocationCount(tp, LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-				local tosum=Group.Select(sum, tp, 1, zones)
+				local tosum=Group.Select(sum, tp, 1, zones,nil)
 				Duel.SpecialSummon(tosum, SUMMON_TYPE_SPECIAL, tp, tp, false, false,POS_FACEUP_ATTACK|POS_FACEDOWN_DEFENSE)
 				g=g:RemoveCard(tosum)
 			end
