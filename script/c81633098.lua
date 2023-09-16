@@ -253,6 +253,7 @@ local lackeys={}
 lackeys[0]=Group.CreateGroup()
 lackeys[1]=Group.CreateGroup()
 function s.filltables()
+	if #darkspells[0]==0 then
         for i, v in pairs(CARDS_TO_ADD) do
             local token1=Duel.CreateToken(0, v)
             darkspells[0]:AddCard(token1)
@@ -268,6 +269,7 @@ function s.filltables()
             local token2=Duel.CreateToken(1, v)
             lackeys[1]:AddCard(token2)
         end
+	end
 end
 
 
