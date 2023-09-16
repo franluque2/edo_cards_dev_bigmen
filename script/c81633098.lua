@@ -230,10 +230,10 @@ function s.sendop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 	local card=Duel.GetDecktopGroup(tp, 1):GetFirst()
 	Duel.ConfirmDecktop(tp, 1)
-	if s.darkspellcasterfilter(card) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) and Duel.SendtoGrave(card, REASON_EFFECT) and Duel.IsExistingMatchingCard(s.differentspellcasterfilter, tp, LOCATION_GRAVE,0, 1, nil, card:GetCode()) then
+	if s.darkspellcasterfilter(card) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) and Duel.SendtoGrave(card, REASON_EFFECT) and Duel.IsExistingMatchingCard(s.differentspellcasterfilter, tp, LOCATION_DECK,0, 1, nil, card:GetCode()) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
-		local tc=Duel.SelectMatchingCard(tp, s.differentspellcasterfilter, tp, LOCATION_HAND, 0,1,1,false,nil,card:GetCode())
+		local tc=Duel.SelectMatchingCard(tp, s.differentspellcasterfilter, tp, LOCATION_DECK, 0,1,1,false,nil,card:GetCode())
 		Duel.SendtoGrave(tc, REASON_EFFECT)
 	 end
 
