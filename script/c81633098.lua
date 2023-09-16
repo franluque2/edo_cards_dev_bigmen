@@ -83,24 +83,34 @@ function s.ishighleveldarkspellcasterfilter(c)
 end
 
 function s.darknessroadbackrowfilter(c)
-    return (c:IsCode(511310100,1475311,78811937,80168720,81632424,160203027,
+    return c:IsCode(511310100,1475311,78811937,80168720,81632424,160203027,
 	511000418,69542930,511000357,21862633,90434926,511002451,59160188,
 	100000080,160428020,511310023,29826127,79766336,81632425,100000264,9030160,78637313,
 	84970821,511000958,511001528,511310101,511310102,511310103,36935434,58120309,100000553,
 	160428021,511000318,62829077,160001039,160002036,160006039,160402001,160402001,160402003,
-	160428019,69042950,160011050,160012045,2144946)) and c:IsSSetable()
+	160428019,69042950,160011050,160012045,2144946)
+end
+
+
+function s.darknessroadbackrowsetfilter(c)
+    return s.darknessroadbackrowfilter(c) and c:IsSSetable()
+end
+
+
+function s.monsterordarknessroadbackrowaddfilter(c,code)
+    return ((c:IsMonster() and c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and not c:IsCode(code)) or (s.darknessroadbackrowfilter(c))) and c:IsAbleToHand()
 end
 
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	if (Duel.GetFlagEffect(tp,id+5)>0) then return false end
 	local g=Duel.IsExistingMatchingCard(s.ishighleveldarkspellcasterfilter, tp, LOCATION_ONFIELD, 0, 1,nil)
-	return Duel.GetTurnPlayer()==tp and g and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(s.darknessroadbackrowfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.GetTurnPlayer()==tp and g and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(s.darknessroadbackrowsetfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 
     if Duel.SelectYesNo(tp, aux.Stringid(id, 6)) then
-        local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.darknessroadbackrowfilter),tp,LOCATION_GRAVE,0,nil)
+        local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.darknessroadbackrowsetfilter),tp,LOCATION_GRAVE,0,nil)
 
 		local sg=aux.SelectUnselectGroup(tg,e,tp,1,1,aux.dncheck,1,tp,HINTMSG_TARGET)
 		if #sg>0 then
@@ -234,9 +244,9 @@ end
 
 
 local CARDS_TO_ADD={160013054,160428019}
-local spells={}
-spells[0]=Group.CreateGroup()
-spells[1]=Group.CreateGroup()
+local darkspells={}
+darkspells[0]=Group.CreateGroup()
+darkspells[1]=Group.CreateGroup()
 
 local LACKEYS_TO_SUMMON={160004037,160006028,160008025,160205022,160202042}
 local lackeys={}
@@ -245,10 +255,10 @@ lackeys[1]=Group.CreateGroup()
 function s.filltables()
         for i, v in pairs(CARDS_TO_ADD) do
             local token1=Duel.CreateToken(0, v)
-            spells[0]:AddCard(token1)
+            darkspells[0]:AddCard(token1)
 
             local token2=Duel.CreateToken(1, v)
-            spells[1]:AddCard(token2)
+            darkspells[1]:AddCard(token2)
         end
 
 		for i, v in pairs(LACKEYS_TO_SUMMON) do
@@ -276,6 +286,13 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
+function s.revtargetfilter(c)
+	return c:IsCode(CARD_SEVENS_ROAD_MAGICIAN,160428006) and not c:IsPublic()
+end
+
+function s.furoadmagicianfilter(c)
+	return c:IsCode(CARD_SEVENS_ROAD_MAGICIAN) and c:IsFaceup()
+end
 
 
 --effects to activate during the main phase go here
@@ -287,11 +304,12 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.revtargetfilter,tp,LOCATION_HAND,0,1,nil)
+						and Duel.GetLocationCount(tp, LOCATION_DECK)>2
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.IsExistingMatchingCard(s.furoadmagicianfilter,tp,LOCATION_ONFIELD,0,1,nil)
+			and #darkspells[tp]>0
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -305,17 +323,16 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 --copy the bxs from above
 
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
-
+		and Duel.IsExistingMatchingCard(s.revtargetfilter,tp,LOCATION_HAND,0,1,nil)
+				and Duel.GetLocationCount(tp, LOCATION_DECK)>2
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.furoadmagicianfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and #darkspells[tp]>0
 
---effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
-	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,2)},
+								  {b2,aux.Stringid(id,4)})
+	op=op-1
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
@@ -327,15 +344,36 @@ end
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
+	local card=Duel.SelectMatchingCard(tp, s.revtargetfilter, tp, LOCATINO_HAND, 0, 1,1,false,nil):GetFirst()
+	if card then
+		Duel.ConfirmCards(1-tp, card)
+		local g=Duel.GetDecktopGroup(tp, 3)
+		Duel.ConfirmDecktop(tp, 3)
+
+		local g2=g:Filter(s.monsterordarknessroadbackrowaddfilter, nil, card:GetCode())
+		if #g2>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOHAND)
+			local tc=g2:Select(tp, 1,1,false,nil):GetFIrst()
+			Duel.SendtoHand(tc, tp, REASON_RULE)
+			g:RemoveCard(tc)
+		end
+		Duel.SendtoGrave(g, REASON_EFFECT)
+	end
 
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+	local tar=darkspells[tp]:Select(tp,1,1,nil):GetFirst()
+	darkspells[tp]:RemoveCard(tar)
+	Duel.SendtoHand(tar, tp, REASON_RULE)
+	Duel.ConfirmCards(1-tp, tar)
+
+
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
