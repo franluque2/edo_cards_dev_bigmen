@@ -56,10 +56,120 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e6,tp)
 
 
+		local e3=Effect.CreateEffect(e:GetHandler())
+        e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+        e3:SetCode(EVENT_LEAVE_FIELD)
+        e3:SetCountLimit(1)
+        e3:SetCondition(s.summonlackeyscon)
+        e3:SetOperation(s.summonlackeysop)
+        Duel.RegisterEffect(e3,tp)
+
+		local e4=Effect.CreateEffect(e:GetHandler())
+		e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e4:SetCountLimit(1)
+		e4:SetCode(EVENT_PHASE+PHASE_END)
+		e4:SetCondition(s.setcon)
+		e4:SetOperation(s.setop)
+		Duel.RegisterEffect(e4,tp)
+
 
 	end
 	e:SetLabel(1)
 end
+
+function s.ishighleveldarkspellcasterfilter(c)
+    return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(7) and c:IsFaceup()
+end
+
+function s.darknessroadbackrowfilter(c)
+    return (c:IsCode(511310100,1475311,78811937,80168720,81632424,160203027,
+	511000418,69542930,511000357,21862633,90434926,511002451,59160188,
+	100000080,160428020,511310023,29826127,79766336,81632425,100000264,9030160,78637313,
+	84970821,511000958,511001528,511310101,511310102,511310103,36935434,58120309,100000553,
+	160428021,511000318,62829077,160001039,160002036,160006039,160402001,160402001,160402003,
+	160428019,69042950,160011050,160012045,2144946)) and c:IsSSetable()
+end
+
+function s.setcon(e,tp,eg,ep,ev,re,r,rp)
+	if (Duel.GetFlagEffect(tp,id+5)>0) then return false end
+	local g=Duel.IsExistingMatchingCard(s.ishighleveldarkspellcasterfilter, tp, LOCATION_ONFIELD, 0, 1,nil)
+	return Duel.GetTurnPlayer()==tp and g and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(s.darknessroadbackrowfilter,tp,LOCATION_GRAVE,0,1,nil)
+end
+
+function s.setop(e,tp,eg,ep,ev,re,r,rp)
+
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 6)) then
+        local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.darknessroadbackrowfilter),tp,LOCATION_GRAVE,0,nil)
+
+		local sg=aux.SelectUnselectGroup(tg,e,tp,1,1,aux.dncheck,1,tp,HINTMSG_TARGET)
+		if #sg>0 then
+		Duel.Hint(HINT_CARD, tp, id)
+
+			
+		local g=sg:GetFirst()
+
+        while g do
+			
+            Duel.SSet(tp, g)
+            --Banish it if it leaves the field
+            local e1=Effect.CreateEffect(e:GetHandler())
+            e1:SetDescription(3301)
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+            e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+            e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+            e1:SetValue(LOCATION_DECKBOT)
+            g:RegisterEffect(e1)
+			
+			g=sg:GetNext()
+        end
+		
+		end
+
+	end
+
+	--sets the opd
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+end
+
+
+function s.darksevensfilter(c)
+    return (c:GetReasonPlayer()~=c:GetControler()) and c:IsCode(160428005)
+end
+
+function s.summonlackeyscon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(tp, id+4)==0 and eg:IsExists(s.darksevensfilter, 1, nil) and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
+end
+
+function s.summonlackeysop(e,tp,eg,ep,ev,re,r,rp)
+	local num=Duel.GetLocationCount(tp, LOCATION_MZONE)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 7)) then
+		Duel.Hint(HINT_CARD,tp,id)
+		Duel.RegisterFlagEffect(tp,id+4,0,0,0)
+
+		for i = 1, num, 1 do
+			local lackey=lackeys[tp][Duel.GetRandomNumber(1,#lackeys[tp])]
+			Duel.SpecialSummon(lackey, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
+			lackeys[tp]:RemoveCard(lackey)
+			
+			local e5=Effect.CreateEffect(e:GetHandler())
+			e5:SetType(EFFECT_TYPE_SINGLE)
+			e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+			e5:SetCode(EFFECT_CHANGE_RACE)
+			e5:SetValue(RACE_SPELLCASTER)
+			lackey:RegisterEffect(e5)
+
+			local e6=e5:Clone()
+			e6:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+			e6:SetValue(ATTRIBUTE_DARK)
+			lackey:RegisterEffect(e6)
+		end
+
+
+	end
+end
+
 
 
 function s.repfilter(c,tp)
