@@ -34,7 +34,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_CODE)
         e5:SetTargetRange(LOCATION_GRAVE,0)
-        e5:SetTarget(function(_,c)  return c:IsOriginalCode(CARD_SEVENS_ROAD_MAGICIAN,160428006) end)
+        e5:SetTarget(function(_,c) return c:IsHasEffect(id) end)
         e5:SetValue(CARD_DARK_MAGICIAN)
         Duel.RegisterEffect(e5,tp)
 
@@ -281,8 +281,31 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
 	--start of duel effects go here
+	s.tagspellcasters(e,tp,eg,ep,ev,re,r,rp)
+	s.filltables()
+
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
+end
+function s.changetarfilter(c)
+	return c:IsCode(CARD_SEVENS_ROAD_MAGICIAN,160428006)
+end
+function s.tagspellcasters(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.changetarfilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end	
 end
 
 
@@ -367,6 +390,8 @@ end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+
+	Duel.DiscardDeck(tp, 1, REASON_RULE)
 
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
 	local tar=darkspells[tp]:Select(tp,1,1,nil):GetFirst()
