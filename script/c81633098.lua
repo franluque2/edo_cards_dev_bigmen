@@ -353,8 +353,8 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
 		local g2=g:Filter(s.monsterordarknessroadbackrowaddfilter, nil, card:GetCode())
 		if #g2>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOHAND)
-			local tc=g2:Select(tp, 1,1,false,nil):GetFIrst()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local tc=g2:Select(tp, 1,1,false,nil):GetFirst()
 			Duel.SendtoHand(tc, tp, REASON_RULE)
 			g:RemoveCard(tc)
 		end
