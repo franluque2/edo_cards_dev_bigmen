@@ -46,8 +46,31 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetCountLimit(1)
 		Duel.RegisterEffect(e6,tp)
 
+		s.filltables()
+
+
 	end
 	e:SetLabel(1)
+end
+
+local MAXIMUM_CENTERS={160202002,160203002,160207002,160428002,160005015,160202011,160004022,160422002}
+
+local maximums={}
+maximums[0]=Group.CreateGroup()
+maximums[1]=Group.CreateGroup()
+
+
+function s.filltables()
+    if #maximums[0]==0 then
+        for i, v in pairs(MAXIMUM_CENTERS) do
+            local token1=Duel.CreateToken(0, v)
+            maximums[0]:AddCard(token1)
+            local token2=Duel.CreateToken(1, v)
+            maximums[1]:AddCard(token2)
+
+
+        end
+    end
 end
 
 function s.cfilter1(c,e,tp)
@@ -165,54 +188,74 @@ function s.sumnofusfilter(c,e,tp)
 	return c:IsLevelAbove(7) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false,POS_FACEUP) and not c:IsType(TYPE_FUSION)
 end
 
+function s.level7filter(c)
+	return c:IsLevelAbove(7) and not c:IsType(TYPE_MAXIMUM) and not c:IsPublic()
+end
+
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0 and Duel.GetFlagEffect(tp,id+4)>0   then return end
 	--Boolean checks for the activation condition: b1, b2
+
+	local g=Duel.GetMatchingGroup(s.level7filter, tp, LOCATION_HAND, 0, nil)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.fuhighfilter,tp,LOCATION_MZONE,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.sumhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 						and Duel.CheckLPCost(tp, 700)
+						and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 		and Duel.IsExistingMatchingCard(s.summonedmaximummonster,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.sumnofusfilter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 
+		local b3=Duel.GetFlagEffect(tp,id+4)==0
+		and g:GetClassCount(Card.GetCode)>2
+		and #maximums[tp]>0
+
 
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b1 or b2 or b3)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
 	Duel.Hint(HINT_CARD,tp,id)
 
+	local g=Duel.GetMatchingGroup(s.level7filter, tp, LOCATION_HAND, 0, nil)
 
+--do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-	and Duel.IsExistingMatchingCard(s.fuhighfilter,tp,LOCATION_MZONE,0,1,nil)
-				and Duel.IsExistingMatchingCard(s.sumhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
-				and Duel.CheckLPCost(tp, 700)
+			and Duel.IsExistingMatchingCard(s.fuhighfilter,tp,LOCATION_MZONE,0,1,nil)
+						and Duel.IsExistingMatchingCard(s.sumhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+						and Duel.CheckLPCost(tp, 700)
+						and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-	and Duel.IsExistingMatchingCard(s.summonedmaximummonster,tp,LOCATION_MZONE,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.sumnofusfilter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(s.summonedmaximummonster,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.sumnofusfilter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 
+		local b3=Duel.GetFlagEffect(tp,id+4)==0
+		and g:GetClassCount(Card.GetCode)>2
+		and #maximums[tp]>0
 
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+								  {b2,aux.Stringid(id,1)},
+								  {b3,aux.Stringid(id,4)})
 	op=op-1 
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	elseif op==1 then
 		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==2 then
+		s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
@@ -242,4 +285,35 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
 	--sets the opd
 	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+end
+
+
+function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
+    local g2=Duel.GetMatchingGroup(s.level7filter, tp, LOCATION_HAND, 0, nil)
+	local g=aux.SelectUnselectGroup(g2,e,tp,3,3,aux.dncheck,1,tp,HINTMSG_CONFIRM)
+    if g then
+
+        Duel.ConfirmCards(1-tp, g)
+
+        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+        local tar=maximums[tp]:Select(tp,1,1,nil):GetFirst()
+        maximums[tp]:RemoveCard(tar)
+
+        local tar1=Duel.CreateToken(tp, tar:GetCode()+1)
+        local tar2=Duel.CreateToken(tp, tar:GetCode()-1)
+
+        local cards=Group.CreateGroup()
+        cards:AddCard(tar)
+        cards:AddCard(tar2)
+        cards:AddCard(tar1)
+
+        Duel.SendtoDeck(g, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+
+        Duel.SendtoHand(cards, tp, REASON_RULE)
+        Duel.ConfirmCards(1-tp, cards)
+
+
+    end
+	Duel.RegisterFlagEffect(tp,id+4,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
