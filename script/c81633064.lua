@@ -139,7 +139,7 @@ end
 
 
 function s.discon(e)
-	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
+	return true
 end
 
 function s.actfilter(e,c)

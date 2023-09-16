@@ -38,15 +38,100 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetValue(CARD_DARK_MAGICIAN)
         Duel.RegisterEffect(e5,tp)
 
+		local e2=Effect.CreateEffect(e:GetHandler())
+        e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e2:SetCountLimit(1)
+        e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
+        e2:SetCondition(s.sendcon)
+        e2:SetOperation(s.sendop)
+        Duel.RegisterEffect(e2,tp)
+
+
+		local e6=Effect.CreateEffect(e:GetHandler())
+		e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		e6:SetCode(EFFECT_DESTROY_REPLACE)
+		e6:SetTarget(s.desreptg)
+		e6:SetValue(s.desrepval)
+		e6:SetOperation(s.desrepop)
+		Duel.RegisterEffect(e6,tp)
+
+
 
 	end
 	e:SetLabel(1)
 end
 
+
+function s.repfilter(c,tp)
+	return c:IsControler(tp) and c:IsCode(160428005) and c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD)
+		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+		and c:GetReasonPlayer()~=tp
+end
+function s.desfilter(c,e,tp)
+	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToDeckAsCost()
+end
+function s.cfilter(c)
+	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToDeckAsCost()
+end
+function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
+	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp)
+		and g:GetClassCount(Card.GetCode)>2 end
+	if Duel.SelectYesNo(tp,aux.Stringid(id, 3)) then
+		local sg=aux.SelectUnselectGroup(g,e,tp,3,3,aux.dncheck,1,tp,HINTMSG_DESREPLACE)
+		e:SetLabelObject(sg)
+		Duel.HintSelection(sg)
+		return true
+	else return false end
+end
+function s.desrepval(e,c)
+	return s.repfilter(c,e:GetHandlerPlayer())
+end
+function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.SendtoDeck(tc, tp, SEQ_DECKBOTTOM, REASON_EFFECT+REASON_REPLACE)
+end
+
+
+function s.sendcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp and Duel.GetLocationCount(tp, LOCATION_DECK)>0
+end
+
+function s.darkspellcasterfilter(c)
+	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK)
+end
+
+function s.differentspellcasterfilter(c, code)
+	return s.darkspellcasterfilter(c) and not c:IsCode(code)
+end
+
+function s.sendop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	Duel.Hint(HINT_CARD,tp,id)
+	local card=Duel.GetDecktopGroup(tp, 1):GetFirst()
+	Duel.ConfirmDecktop(tp, 1)
+	if s.darkspellcasterfilter(card) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) and Duel.SendtoGrave(card, REASON_EFFECT) and Duel.IsExistingMatchingCard(s.differentspellcasterfilter, tp, LOCATION_GRAVE,0, 1, nil, card:GetCode()) then
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
+		local tc=Duel.SelectMatchingCard(tp, s.differentspellcasterfilter, tp, LOCATION_GRAVE, 0,1,1,false,nil,card:GetCode())
+		Duel.SendtoGrave(tc, REASON_EFFECT)
+	 end
+
+	end
+
+end
+
+
+
 local CARDS_TO_ADD={160013054,160428019}
 local spells={}
 spells[0]=Group.CreateGroup()
 spells[1]=Group.CreateGroup()
+
+local LACKEYS_TO_SUMMON={160004037,160006028,160008025,160205022,160202042}
+local lackeys={}
+lackeys[0]=Group.CreateGroup()
+lackeys[1]=Group.CreateGroup()
 function s.filltables()
         for i, v in pairs(CARDS_TO_ADD) do
             local token1=Duel.CreateToken(0, v)
@@ -54,6 +139,14 @@ function s.filltables()
 
             local token2=Duel.CreateToken(1, v)
             spells[1]:AddCard(token2)
+        end
+
+		for i, v in pairs(LACKEYS_TO_SUMMON) do
+            local token1=Duel.CreateToken(0, v)
+            lackeys[0]:AddCard(token1)
+
+            local token2=Duel.CreateToken(1, v)
+            lackeys[1]:AddCard(token2)
         end
 end
 
@@ -69,15 +162,10 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	--start of duel effects go here
 
-	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
-function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
-
-end
 
 
 --effects to activate during the main phase go here
