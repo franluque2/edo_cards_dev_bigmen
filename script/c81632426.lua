@@ -39,16 +39,16 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local todeck=Duel.SelectMatchingCard(tp, s.shufflefilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
+    local todeck=Duel.SelectMatchingCard(tp, s.shufflefilter, tp, LOCATION_GRAVE, 0, 2,2,false,nil)
     Duel.SendtoDeck(todeck, tp, SEQ_DECKSHUFFLE, REASON_COST)
 
     local g=Duel.GetMatchingGroup(s.levelsummonfilter, tp, LOCATION_GRAVE, 0, nil,e,tp)
     if #g<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc1=g:Select(tp, 1,1,false,nil)
-	Duel.SpecialSummonStep(tc1,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+	Duel.SpecialSummonStep(tc1:GetFirst(),0,tp,tp,false,false,POS_FACEUP_ATTACK)
     g=g:Filter(s.otherracefilter,nil,e,tp,tc1:GetFirst():GetRace())
     local tc2=g:Select(tp, 1,1,false,nil)
-    Duel.SpecialSummonStep(tc2,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+    Duel.SpecialSummonStep(tc2:GetFirst(),0,tp,tp,false,false,POS_FACEUP_ATTACK)
     Duel.SpecialSummonComplete()
 end
