@@ -214,7 +214,7 @@ end
 
 
 function s.sendcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetLocationCount(tp, LOCATION_DECK)>0
+	return Duel.GetTurnPlayer()==tp and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 end
 
 function s.darkspellcasterfilter(c)
@@ -305,7 +305,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.revtargetfilter,tp,LOCATION_HAND,0,1,nil)
-						and Duel.GetLocationCount(tp, LOCATION_DECK)>2
+						and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.furoadmagicianfilter,tp,LOCATION_ONFIELD,0,1,nil)
@@ -324,7 +324,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 		and Duel.IsExistingMatchingCard(s.revtargetfilter,tp,LOCATION_HAND,0,1,nil)
-				and Duel.GetLocationCount(tp, LOCATION_DECK)>2
+				and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 		and Duel.IsExistingMatchingCard(s.furoadmagicianfilter,tp,LOCATION_ONFIELD,0,1,nil)
@@ -345,7 +345,7 @@ end
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
-	local card=Duel.SelectMatchingCard(tp, s.revtargetfilter, tp, LOCATINO_HAND, 0, 1,1,false,nil):GetFirst()
+	local card=Duel.SelectMatchingCard(tp, s.revtargetfilter, tp, LOCATION_HAND, 0, 1,1,false,nil):GetFirst()
 	if card then
 		Duel.ConfirmCards(1-tp, card)
 		local g=Duel.GetDecktopGroup(tp, 3)
