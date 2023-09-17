@@ -83,6 +83,15 @@ function s.darknessroadbackrowfilter(c)
 	160428019,69042950,160011050,160012045,2144946)
 end
 
+local CARDS_TO_ADD={160013054,160428019}
+local darkspells={}
+darkspells[0]=Group.CreateGroup()
+darkspells[1]=Group.CreateGroup()
+
+local LACKEYS_TO_SUMMON={160004037,160006028,160008025,160205022,160202042}
+local lackeys={}
+lackeys[0]=Group.CreateGroup()
+lackeys[1]=Group.CreateGroup()
 
 function s.darknessroadbackrowsetfilter(c)
     return s.darknessroadbackrowfilter(c) and c:IsSSetable()
@@ -136,12 +145,12 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-function s.darksevensfilter(c)
-    return (c:GetReasonPlayer()~=c:GetControler()) and c:IsCode(160428005)
+function s.darksevensfilter(c,tp)
+    return (c:GetReasonPlayer()~=c:GetControler()) and c:IsCode(160428005) and c:GetControler()==tp
 end
 
 function s.summonlackeyscon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp, id+4)==0 and eg:IsExists(s.darksevensfilter, 1, nil) and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
+	return Duel.GetFlagEffect(tp, id+4)==0 and eg:IsExists(s.darksevensfilter, 1, nil,tp) and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 end
 
 function s.summonlackeysop(e,tp,eg,ep,ev,re,r,rp)
@@ -151,7 +160,7 @@ function s.summonlackeysop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterFlagEffect(tp,id+4,0,0,0)
 
 		for i = 1, num, 1 do
-			local lackey=lackeys[tp][Duel.GetRandomNumber(1,#lackeys[tp])]
+			local lackey=lackeys[tp]:TakeatPos(Duel.GetRandomNumber(1,#lackeys[tp]))
 			Duel.SpecialSummon(lackey, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
 			lackeys[tp]:RemoveCard(lackey)
 			
@@ -189,11 +198,10 @@ function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
 	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp)
 		and g:GetClassCount(Card.GetCode)>2 end
-	if Duel.SelectYesNo(tp,aux.Stringid(id, 3)) then
+	if Duel.SelectYesNo(tp,aux.Stringid(id, 5)) then
 		local sg=aux.SelectUnselectGroup(g,e,tp,3,3,aux.dncheck,1,tp,HINTMSG_DESREPLACE)
-		e:SetLabelObject(sg)
 		Duel.HintSelection(sg)
-		Duel.SendtoDeck(tc, tp, SEQ_DECKBOTTOM, REASON_EFFECT+REASON_REPLACE)
+		Duel.SendtoDeck(sg, tp, SEQ_DECKBOTTOM, REASON_EFFECT+REASON_REPLACE)
 		return true
 	else return false end
 end
@@ -234,15 +242,7 @@ end
 
 
 
-local CARDS_TO_ADD={160013054,160428019}
-local darkspells={}
-darkspells[0]=Group.CreateGroup()
-darkspells[1]=Group.CreateGroup()
 
-local LACKEYS_TO_SUMMON={160004037,160006028,160008025,160205022,160202042}
-local lackeys={}
-lackeys[0]=Group.CreateGroup()
-lackeys[1]=Group.CreateGroup()
 function s.filltables()
 	if #darkspells[0]==0 then
         for i, v in pairs(CARDS_TO_ADD) do
