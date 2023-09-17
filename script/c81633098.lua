@@ -193,6 +193,7 @@ function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local sg=aux.SelectUnselectGroup(g,e,tp,3,3,aux.dncheck,1,tp,HINTMSG_DESREPLACE)
 		e:SetLabelObject(sg)
 		Duel.HintSelection(sg)
+		Duel.SendtoDeck(tc, tp, SEQ_DECKBOTTOM, REASON_EFFECT+REASON_REPLACE)
 		return true
 	else return false end
 end
@@ -200,8 +201,6 @@ function s.desrepval(e,c)
 	return s.repfilter(c,e:GetHandlerPlayer())
 end
 function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	Duel.SendtoDeck(tc, tp, SEQ_DECKBOTTOM, REASON_EFFECT+REASON_REPLACE)
 end
 
 
