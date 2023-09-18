@@ -210,7 +210,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
     if #BloomPrima>0 then
 	local tc=BloomPrima:GetFirst()
 		while tc do
-      Fusion.AddProcMixRep(tc,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b),1,99,511009324)
+      Fusion.AddProcMixRep(tc,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b),1,1,511009324)
 			tc=BloomPrima:GetNext()
 		end
     end
