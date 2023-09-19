@@ -1,7 +1,7 @@
 -- Chimera Hydradrive Draghead - Flame
 local s,id=GetID()
 function s.initial_effect(c)
-	--link summon
+	--link summon 
 	Link.AddProcedure(c,s.filtermats,5,5)
 	c:EnableReviveLimit()
 	--cannot special summon from Gy or banish
