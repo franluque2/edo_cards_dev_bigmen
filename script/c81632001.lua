@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetCondition(s.tdcon)
-	e2:SetTarget(s.sptg)
+	e2:SetTarget(s.sptg) 
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 
