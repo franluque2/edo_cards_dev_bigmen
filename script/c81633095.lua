@@ -36,6 +36,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e12:SetCode(EFFECT_FUSION_SUBSTITUTE)
         e12:SetTargetRange(LOCATION_ALL,0)
         e12:SetTarget(function(_,c)  return c:IsCode(CARD_SEVENS_ROAD_MAGICIAN) end)
+		e12:SetValue(s.subval)
+
         Duel.RegisterEffect(e12,tp)
 
 		local e6=Effect.CreateEffect(e:GetHandler())
@@ -71,6 +73,10 @@ function s.filltables()
 
         end
     end
+end
+
+function s.subval(e,c)
+    return not c:ListsCodeAsMaterial(CARD_SEVENS_ROAD_MAGICIAN)
 end
 
 function s.cfilter1(c,e,tp)
