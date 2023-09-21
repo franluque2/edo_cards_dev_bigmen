@@ -105,9 +105,33 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetValue(s.aclimit)
         Duel.RegisterEffect(e7,tp)
 
+        -- win if all 5 pieces are in GY
+        local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e8:SetCode(EVENT_TO_GRAVE)
+        e8:SetCondition(s.wincon)
+        e8:SetOperation(s.winop)
+        e8:SetCountLimit(1)
+        Duel.RegisterEffect(e8, tp)
+
 
 	end
 	e:SetLabel(1)
+end
+
+function s.sentfilter(c)
+    local rc=c:GetReasonCard()
+    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and ((rc and rc:IsCode(id,13893596,511000244)) or c:GetFlagEffect(id)>0)
+end
+
+function s.wincon(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.sentfilter, tp, LOCATION_GRAVE, 0, nil)
+    return (Duel.GetFlagEffect(tp, id+4)>0) and Duel.IsExistingMatchingCard(s.exodiusfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and g:GetClassCount(Card.GetCode)>4
+end
+
+function s.winop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_CARD,tp,id+2)
+    Duel.Win(tp, 0x1680)
 end
 
 function s.aclimit(e,re,tp)
@@ -120,25 +144,9 @@ end
 
 function s.sendforbiddencardop(e,tp,eg,ep,ev,re,r,rp)
     local forbiddencards=eg:Filter(s.cfilter, nil, tp)
-    Duel.ConfirmCards(1-tp, forbiddencards)
-
-    local exodius=Duel.SelectMatchingCard(tp, s.exodiusfilter, tp, LOCATION_MZONE, 0, 1,1,false, nil)
     Duel.SendtoGrave(forbiddencards, REASON_EFFECT)
-
-    if exodius and (#exodius>0) then
-        local exd=exodius:GetFirst()
-
-       
-        local tc=forbiddencards:GetFirst()
-        while tc do
-            tc:SetReasonCard(exd)
-            tc=forbiddencards:GetNext()
-        end
-
-        local g=Duel.GetMatchingGroup(s.winfilter,tp,LOCATION_GRAVE,0,nil,exd)
-		if g:GetClassCount(Card.GetCode)==5 then
-			Duel.Win(tp,WIN_REASON_EXODIUS)
-		end
+    for tc in forbiddencards:Iter() do
+        tc:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD, 0, 0)
     end
 end
 
@@ -151,7 +159,7 @@ function s.cfilter(c,tp)
 end
 
 function s.isforbiddencon(e,tp,eg,ep,ev,re,r,rp)
-    return eg:IsExists(s.cfilter,1,nil,tp) and (Duel.GetFlagEffect(tp, id+2)>0)
+    return eg:IsExists(s.cfilter,1,nil,tp) and (Duel.GetFlagEffect(tp, id+4)>0) and Duel.IsExistingMatchingCard(s.exodiusfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
 end
 
 function s.isstage3con(e,tp,eg,ep,ev,re,r,rp)

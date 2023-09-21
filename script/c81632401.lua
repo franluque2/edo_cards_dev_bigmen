@@ -101,20 +101,6 @@ function s.activate2(e, tp, eg, ep, ev, re, r, rp)
                     cg:Merge(sg)
                 end
                 Duel.SendtoGrave(cg, REASON_EFFECT)
-
-                local exd = g:GetFirst()
-                if exd:IsCode(13893596) then
-                    local tc = cg:GetFirst()
-                    while tc do
-                        tc:SetReasonCard(exd)
-                        tc = cg:GetNext()
-                    end
-
-                    local g3 = Duel.GetMatchingGroup(s.winfilter, tp, LOCATION_GRAVE, 0, nil, exd)
-                    if g3:GetClassCount(Card.GetCode) == 5 then
-                        Duel.Win(tp, WIN_REASON_EXODIUS)
-                    end
-                end
             end
         end
     end
