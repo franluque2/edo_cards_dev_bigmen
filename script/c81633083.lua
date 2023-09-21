@@ -116,7 +116,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
     local tc=eg:GetFirst()
     while tc do
         if s.validreplacefilter(tc, e) and #victims>2 then
-            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET, 0, 0)
+            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET+RESET_LEAVE, 0, 0)
             local num1=Duel.GetRandomNumber(1, #victims )
             local num2=Duel.GetRandomNumber(1, #victims )
             while num2==num1 do
@@ -150,8 +150,8 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             end
 
 
-            tc:CopyEffect(selection:GetCode(),RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET,1)
-            tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
+            tc:CopyEffect(selection:GetCode(),RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET+RESET_LEAVE,1)
+            tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_TURN_SET+RESET_LEAVE,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
             
             local e2=Effect.CreateEffect(e:GetHandler())
             e2:SetType(EFFECT_TYPE_SINGLE)
