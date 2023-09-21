@@ -276,7 +276,7 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 
     local legexodia=Duel.CreateToken(tp, 58604027)
-    Duel.SpecialSummon(legexodia, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP_DEFENSE)
+    Duel.SpecialSummon(legexodia, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
     local e1=Effect.CreateEffect(e:GetHandler())
     e1:SetDescription(3206)
     e1:SetType(EFFECT_TYPE_SINGLE)
