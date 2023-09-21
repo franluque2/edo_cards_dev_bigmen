@@ -95,6 +95,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e10:SetCondition(s.yamicon)
 	e10:SetTarget(function(_,c) return s.nonefflevelfivedarkfiendfilter(c) end)
 	e10:SetValue(1)
+	e10:SetCountLimit(1)
 	Duel.RegisterEffect(e10,tp)
 
 	local e11=Effect.CreateEffect(e:GetHandler())
@@ -105,8 +106,66 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e11:SetOperation(s.spop)
 		Duel.RegisterEffect(e11,tp)
 
+	local e12=Effect.CreateEffect(e:GetHandler())
+	e12:SetType(EFFECT_TYPE_FIELD)
+	e12:SetCode(EFFECT_SUMMON_PROC)
+	e12:SetTargetRange(LOCATION_HAND,0)
+	e12:SetCondition(s.ntcon)
+	e12:SetTarget(aux.FieldSummonProcTg(s.nttg))
+	Duel.RegisterEffect(e12,tp)
+
+	local e13=Effect.CreateEffect(e:GetHandler())
+		e13:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		e13:SetCode(EFFECT_DESTROY_REPLACE)
+		e13:SetTarget(s.desreptg)
+		e13:SetValue(s.desrepval)
+		e13:SetOperation(s.desrepop)
+		Duel.RegisterEffect(e13,tp)
+
 	end
 	e:SetLabel(1)
+end
+
+
+function s.repfilter(c,tp)
+	return c:IsControler(tp) and c:IsCode(00062121) and c:IsLocation(LOCATION_ONFIELD)
+		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+		and c:GetReasonPlayer()~=tp
+end
+function s.desfilter(c,e,tp)
+	return c:IsAbleToRemoveAsCost()
+end
+function s.cfilter(c)
+	return c:IsLevel(5) and c:IsRace(RACE_FIEND) and c:IsAbleToRemoveAsCost()
+end
+function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,nil)
+	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp)
+		and g:IsExists(s.desfilter,1,nil,e,tp) end
+	if Duel.SelectYesNo(tp,aux.Stringid(id, 2)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+		local sg=g:FilterSelect(tp,s.desfilter,1,1,nil,e,tp)
+		e:SetLabelObject(sg:GetFirst())
+		Duel.HintSelection(sg)
+		return true
+	else return false end
+end
+function s.desrepval(e,c)
+	return s.repfilter(c,e:GetHandlerPlayer())
+end
+function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Remove(tc, POS_FACEUP, REASON_REPLACE)
+end
+
+
+
+function s.ntcon(e,c,minc)
+	if c==nil then return true end
+	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+end
+function s.nttg(e,c)
+	return c:IsLevel(5) and c:IsRace(RACE_FIEND) and not Duel.IsExistingMatchingCard(s.darkillufilter, c:GetControler(), LOCATION_ONFIELD, 0, 1, nil)
 end
 
 function s.reapcardfilter(c,e,tp)

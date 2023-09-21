@@ -24,9 +24,9 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 --add archetype setcode here
 local ARCHETYPE=CARD_SKULL_SERVANT
 
---All Zombie monsters in your possession are also named skull servant
+--All Zombie monsters in your possession that do not name skull servant are also named skull servant
 function s.archetypefilter(c)
-  return c:IsRace(RACE_ZOMBIE) and not c:IsCode(57473560,06128460)
+  return c:IsRace(RACE_ZOMBIE) and not c:ListsCode(CARD_SKULL_SERVANT)
 end
 
 function s.archetypefilter2(c)
