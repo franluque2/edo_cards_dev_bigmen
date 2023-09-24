@@ -31,7 +31,7 @@ function s.Goblins(c)
   end
   
   function s.Dinos(c)
-	return c:IsLevelBelow(6) and c:IsRace(Race_Dinosaur)
+	return c:IsLevelBelow(6) and c:IsRace(RACE_DINOSAUR)
   end
   
   function s.Oasis(c)
