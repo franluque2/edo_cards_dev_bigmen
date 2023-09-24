@@ -31,7 +31,7 @@ function s.Goblins(c)
   end
   
   function s.Dinos(c)
-	return c:IsLevelBelow(6) and c:IsRace(RACE_DINOSAUR)
+	return c:IsLevelBelow(6) and c:IsRace(RACE_DINOSAUR) and not c:IsCode(160203011)
   end
   
   function s.Oasis(c)
