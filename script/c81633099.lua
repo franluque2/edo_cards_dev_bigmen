@@ -1,4 +1,4 @@
---Conscription of the Duel Dinosaur Club
+--Conscription of Dinosaur Duel Club
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
 
@@ -27,16 +27,19 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.Goblins(c)
-  return c:IsCode(160421039, 160203048)
-end
+	return c:IsCode(160421039, 160203048)
+  end
+  
+  function s.Dinos(c)
+	return c:IsLevelBelow(6) and c:IsRace(Race_Dinosaur) and not c:IsCode(160203011)
+  end
+  
+  function s.Oasis(c)
+	return c:IsCode(160008059)
+  end
 
-function s.Dinos(c)
-  return c:IsLevelBelow(6) and c:IsRace(Race_Dinosaur) and not c:IsCode(160203011)
-end
 
-function s.Oasis(c)
-  return c:IsCode(160008059)
-end
+
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -49,6 +52,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 		--other passive duel effects go here
+
+        bRush.addrules()(e,tp,eg,ep,ev,re,r,rp)
 
         local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
@@ -142,4 +147,3 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
-
