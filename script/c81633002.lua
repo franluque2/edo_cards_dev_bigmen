@@ -108,10 +108,10 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         -- win if all 5 pieces are in GY
         local e8=Effect.CreateEffect(e:GetHandler())
         e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e8:SetProperty(EFFECT_FLAG_DELAY)
         e8:SetCode(EVENT_TO_GRAVE)
         e8:SetCondition(s.wincon)
         e8:SetOperation(s.winop)
-        e8:SetCountLimit(1)
         Duel.RegisterEffect(e8, tp)
 
 
@@ -119,13 +119,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-function s.sentfilter(c)
-    local rc=c:GetReasonCard()
-    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and ((rc and rc:IsCode(id,13893596,511000244)) or c:GetFlagEffect(id)>0)
+function s.sentfilter(c,re)
+    local rc
+    if re then
+        rc=re:GetHandler()
+    end
+    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and ((rc and rc:IsCode(13893596,511000244)) or c:GetFlagEffect(id)>0)
 end
 
 function s.wincon(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(s.sentfilter, tp, LOCATION_GRAVE, 0, nil)
+    local g=Duel.GetMatchingGroup(s.sentfilter, tp, LOCATION_GRAVE, 0, nil,re)
     return (Duel.GetFlagEffect(tp, id+4)>0) and Duel.IsExistingMatchingCard(s.exodiusfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and g:GetClassCount(Card.GetCode)>4
 end
 
