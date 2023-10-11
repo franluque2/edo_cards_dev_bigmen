@@ -223,7 +223,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
     local tribg=Duel.SelectMatchingCard(tp, s.tributesalvofilter, tp, LOCATION_MZONE, 0, 1,#g,false,nil)
     if Duel.Release(tribg, REASON_COST) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-        local sum=g:Select(tp, #tribg, #tribg)
+        local sum=g:Select(tp, #tribg, #tribg,nil)
         Duel.SpecialSummon(sum, SUMMON_TYPE_SPECIAL, tp, tp, true, false,POS_FACEUP)
     end
 
