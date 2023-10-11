@@ -160,7 +160,7 @@ function s.summonlackeysop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterFlagEffect(tp,id+4,0,0,0)
 
 		for i = 1, num, 1 do
-			local lackey=lackeys[tp]:TakeatPos(Duel.GetRandomNumber(1,#lackeys[tp]))
+			local lackey=lackeys[tp]:TakeatPos(Duel.GetRandomNumber(0,#lackeys[tp]-1))
 			Duel.SpecialSummon(lackey, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
 			lackeys[tp]:RemoveCard(lackey)
 			
