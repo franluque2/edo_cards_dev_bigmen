@@ -115,6 +115,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(e8, tp)
 
 
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e9:SetProperty(EFFECT_FLAG_DELAY)
+        e9:SetCode(EVENT_TO_GRAVE)
+        e9:SetCondition(s.tagcon)
+        e9:SetOperation(s.tagop)
+        Duel.RegisterEffect(e9, tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -124,11 +132,28 @@ function s.sentfilter(c,re)
     if re then
         rc=re:GetHandler()
     end
-    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and ((rc and rc:IsCode(13893596,511000244)) or c:GetFlagEffect(id)>0)
+    return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsMonster() and (rc and rc:IsCode(13893596,511000244))
+end
+
+function s.tagcon(e,tp,eg,ep,ev,re,r,rp)
+    local g=eg:Filter(s.sentfilter, nil, re)
+    return #g>0
+end
+
+function s.tagop(e,tp,eg,ep,ev,re,r,rp)
+    local g=eg:Filter(s.sentfilter, nil, re)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD, 0, 0)  
+    end
+end
+
+
+function s.flagfilter(c)
+    return c:GetFlagEffect(id)>0
 end
 
 function s.wincon(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(s.sentfilter, tp, LOCATION_GRAVE, 0, nil,re)
+    local g=Duel.GetMatchingGroup(s.flagfilter, tp, LOCATION_GRAVE, 0, nil,re)
     return (Duel.GetFlagEffect(tp, id+4)>0) and Duel.IsExistingMatchingCard(s.exodiusfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and g:GetClassCount(Card.GetCode)>4
 end
 
