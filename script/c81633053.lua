@@ -52,11 +52,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e5:SetValue(ARCHETYPE)
         Duel.RegisterEffect(e5,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_IMMUNE_EFFECT)
+        e7:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+        e7:SetValue(s.efilter)
+        Duel.RegisterEffect(e7, tp)
     
 
 	end
 	e:SetLabel(1)
 end
+
+function s.efilter(e,te)
+	return te:GetHandler():IsCode(101203058)
+end
+
 
 
 function s.markedfilter(c,e)
