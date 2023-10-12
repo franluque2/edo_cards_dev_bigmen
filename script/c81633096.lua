@@ -87,7 +87,7 @@ function s.epcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 80208158) and
         not Duel.IsExistingMatchingCard(s.fusparrowfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
         and Duel.IsExistingMatchingCard(s.setsparrowforeverfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil)
-		and Duel.GetTurnPlayer()==tp
+		and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+8)
 end
 function s.epop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp, LOCATION_SZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
@@ -103,8 +103,8 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
             e1:SetValue(LOCATION_REMOVED)
             card:GetFirst():RegisterEffect(e1,true)
         end
+		Duel.RegisterFlagEffect(tp, id+8, 0, 0, 0)
     end
-
 end
 
 function s.cfilter1(c,e,tp)
