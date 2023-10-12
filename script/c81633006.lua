@@ -68,9 +68,30 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetValue(75304793)
         Duel.RegisterEffect(e6,tp)
 
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_CANNOT_TRIGGER)
+        e8:SetTargetRange(LOCATION_FZONE,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e8, tp)
+
 	end
 	e:SetLabel(1)
 end
+
+function s.fuheavymetalfilter(c)
+	return c:IsCode(81632403) and c:IsFaceup()
+end
+
+function s.discon(e)
+	return not Duel.IsExistingMatchingCard(s.fuheavymetalfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(75304793)
+end
+
 
 
 function s.markedfilter(c,e)
