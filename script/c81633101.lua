@@ -354,8 +354,9 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 								  {true,aux.Stringid(id,5)})
 
 			if op==1 then
-				Duel.
+				Duel.PayLPCost(tp, tc3:GetAttack())
 			else
+				Duel.PayLPCost(tp, tc3:GetDefense())
 			end
 
 		end
