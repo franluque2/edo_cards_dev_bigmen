@@ -98,6 +98,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e6:SetOperation(s.recop2)
     Duel.RegisterEffect(e6,tp)
 
+	local e7=Effect.CreateEffect(e:GetHandler())
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_ADD_RACE)
+	e7:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+	e7:SetTarget(function (_,c) return c:IsSetCard(0x45) end)
+	e7:SetValue(RACE_FIEND)
+	Duel.RegisterEffect(e7,tp)
+
+	local e8=Effect.CreateEffect(e:GetHandler())
+	e8:SetType(EFFECT_TYPE_FIELD)
+	e8:SetCode(EFFECT_ADD_CODE)
+	e8:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+	e8:SetTarget(function (_,c) return c:IsOriginalCode(35606858) end)
+	e8:SetValue(35975813)
+	Duel.RegisterEffect(e8,tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -126,7 +142,7 @@ function s.recop2(e,tp,eg,ep,ev,re,r,rp)
 
             local sc=monsters[tp]:Select(tp,1,1,nil):GetFirst()
             if sc then
-                local archfiend=Duel.CreateToken(tp, sc:GetCode())
+                local archfiend=Duel.CreateToken(tp, sc:GetOriginalCode())
                 Duel.SpecialSummon(archfiend, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
             end
         end
@@ -232,7 +248,7 @@ chessvalueindexes[52248570]=8
 chessvalueindexes[35606858]=9
 
 function s.haschessvalue(c)
-    return chesspointvalues[c:GetCode()]~=nil
+    return chesspointvalues[c:GetOriginalCode()]~=nil
 end
 
 
@@ -288,7 +304,7 @@ function s.specialsummonchessarchfiendfilter(c,e,tp,codelist)
 end
 
 function s.centerarchfiendfilter(c,e,tp)
-    return s.haschessvalue(c) and lowerchessvalues[c:GetCode()]~=nil and Duel.IsExistingMatchingCard(s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 2, nil, e, tp, lowerchessvalues[c:GetCode()])
+    return s.haschessvalue(c) and lowerchessvalues[c:GetOriginalCode()]~=nil and Duel.IsExistingMatchingCard(s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 2, nil, e, tp, lowerchessvalues[c:GetOriginalCode()])
 end
 
 --effects to activate during the main phase go here
@@ -344,9 +360,9 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(tc1)
 
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-		local tc2=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetCode()])
+		local tc2=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetOriginalCode()])
 		Duel.Hint(HINT_SELECTMSG,tp, HINTMSG_CONFIRM)
-		local tc3=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetCode()]):GetFirst()
+		local tc3=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetOriginalCode()]):GetFirst()
 
 		Duel.SpecialSummon(tc2, SUMMON_TYPE_SPECIAL, tp, tp, false,false,POS_FACEUP)
 
