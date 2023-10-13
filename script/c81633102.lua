@@ -1,4 +1,6 @@
 --Wandering Shackles of Calamity
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
+
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
