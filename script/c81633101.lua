@@ -39,20 +39,74 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e3,tp)
 
         local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(s.haschessvalue))
-	e2:SetValue(s.tglimit)
-    Duel.RegisterEffect(e2,tp)
+        e2:SetType(EFFECT_TYPE_FIELD)
+        e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+        e2:SetTargetRange(LOCATION_MZONE,0)
+        e2:SetTarget(aux.TargetBoolFunction(s.haschessvalue))
+        e2:SetValue(s.tglimit)
+        Duel.RegisterEffect(e2,tp)
 
+
+        local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_ADJUST)
+	e4:SetCondition(s.descon)
+	e4:SetOperation(s.desop)
+    Duel.RegisterEffect(e4,tp)
+
+    aux.GlobalCheck(s,function()
+        s[0]=0
+        s[1]=0
+        local ge1=Effect.CreateEffect(e:GetHandler())
+        ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        ge1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+        ge1:SetCode(EVENT_PAY_LPCOST)
+        ge1:SetCondition(function(_,tp,_,ep) return ep==tp end)
+        ge1:SetOperation(s.checkop)
+        Duel.RegisterEffect(ge1,0)
+        local ge2=Effect.CreateEffect(e:GetHandler())
+        ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        ge2:SetCode(EVENT_ADJUST)
+        ge2:SetCountLimit(1)
+        ge2:SetOperation(s.clear)
+        Duel.RegisterEffect(ge2,0)
+    end)
 
 	end
 	e:SetLabel(1)
 end
 
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+    s[ep]=s[ep]+ev
+end
+function s.clear(e,tp,eg,ep,ev,re,r,rp)
+    s[0]=0
+    s[1]=0
+end
+
 local CARD_PANDEMONIUM=94585852
 local ARCHFIEND_MATADOR=511000009
+local VILEPAWN_ARCHFIEND=73219648
+local MASTERKING_ARCHFIEND=35606858
+
+
+function s.fumatadorfilter(c,e)
+    return c:IsCode(ARCHFIEND_MATADOR) and c:IsFaceup() and c:IsDestructable(e)
+end
+
+function s.descon(e)
+	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(s.fumatadorfilter,tp,LOCATION_ONFIELD,0,1,nil,e) and not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+	local g=Duel.GetMatchingGroup(s.fumatadorfilter, tp, LOCATION_ONFIELD, 0, nil, e)
+	Duel.Destroy(g,REASON_EFFECT)
+end
+
+
+
 
 function s.tglimit(e,c)
 	return c and not c:GetColumnGroup():IsContains(c:GetBattleTarget())
@@ -69,12 +123,34 @@ local chesspointvalues={}
 chesspointvalues[73219648]=1
 chesspointvalues[72192100]=5
 chesspointvalues[92039899]=3
-chesspointvalues[9603356]=3
+chesspointvalues[9603356]=3 --
 chesspointvalues[35798491]=3
 chesspointvalues[8581705]=9
 chesspointvalues[35975813]=4
 chesspointvalues[52248570]=9
 chesspointvalues[35606858]=4
+
+local lowerchessvalues={}
+lowerchessvalues[73219648]=nil
+lowerchessvalues[72192100]={73219648,92039899,9603356,35798491,35975813,35606858}
+lowerchessvalues[92039899]={73219648}
+lowerchessvalues[9603356]={73219648}
+lowerchessvalues[35798491]={73219648}
+lowerchessvalues[8581705]={73219648,92039899,9603356,35798491,35975813,35606858,72192100}
+lowerchessvalues[35975813]={73219648,92039899,9603356,35798491}
+lowerchessvalues[52248570]={73219648,92039899,9603356,35798491,35975813,35606858,72192100}
+lowerchessvalues[35606858]={73219648,92039899,9603356,35798491}
+
+local chessvalueindexes={}
+chessvalueindexes[73219648]=1
+chessvalueindexes[72192100]=2
+chessvalueindexes[92039899]=3
+chessvalueindexes[9603356]=4
+chessvalueindexes[35798491]=5
+chessvalueindexes[8581705]=6
+chessvalueindexes[35975813]=7
+chessvalueindexes[52248570]=8
+chessvalueindexes[35606858]=9
 
 function s.haschessvalue(c)
     return chesspointvalues[c:GetCode()]~=nil
