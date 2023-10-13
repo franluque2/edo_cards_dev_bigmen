@@ -30,26 +30,55 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		--uncomment (remove the --) the line below to make it a rush skill
 		--bRush.addrules()(e,tp,eg,ep,ev,re,r,rp)
 
+        local e3=Effect.CreateEffect(e:GetHandler())
+        e3:SetType(EFFECT_TYPE_FIELD)
+        e3:SetCode(EFFECT_PATRICIAN_OF_DARKNESS)
+        e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+        e3:SetTargetRange(0,1)
+        e3:SetCondition(s.battlecon)
+		Duel.RegisterEffect(e3,tp)
+
+        local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
+	e2:SetTarget(aux.TargetBoolFunction(s.haschessvalue))
+	e2:SetValue(s.tglimit)
+    Duel.RegisterEffect(e2,tp)
+
 
 	end
 	e:SetLabel(1)
 end
 
-
 local CARD_PANDEMONIUM=94585852
 local ARCHFIEND_MATADOR=511000009
 
+function s.tglimit(e,c)
+	return c and not c:GetColumnGroup():IsContains(c:GetBattleTarget())
+end
+
+
+
+function s.battlecon(e)
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,ARCHFIEND_MATADOR),tp,LOCATION_ONFIELD,0,1,nil)
+end
+
 local chesspointvalues={}
-chesspointvalues[81633101]=1
 chesspointvalues[73219648]=1
-chesspointvalues[72192100]=1
-chesspointvalues[92039899]=1
-chesspointvalues[9603356]=1
-chesspointvalues[35798491]=1
+chesspointvalues[72192100]=5
+chesspointvalues[92039899]=3
+chesspointvalues[9603356]=3
+chesspointvalues[35798491]=3
 chesspointvalues[8581705]=9
 chesspointvalues[35975813]=4
 chesspointvalues[52248570]=9
 chesspointvalues[35606858]=4
+
+function s.haschessvalue(c)
+    return chesspointvalues[c:GetCode()]~=nil
+end
 
 
 
