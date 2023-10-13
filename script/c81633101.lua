@@ -46,10 +46,10 @@ chesspointvalues[72192100]=1
 chesspointvalues[92039899]=1
 chesspointvalues[9603356]=1
 chesspointvalues[35798491]=1
-chesspointvalues[8581705]=1
-chesspointvalues[35975813]=1
-chesspointvalues[52248570]=1
-chesspointvalues[35606858]=1
+chesspointvalues[8581705]=9
+chesspointvalues[35975813]=4
+chesspointvalues[52248570]=9
+chesspointvalues[35606858]=4
 
 
 
