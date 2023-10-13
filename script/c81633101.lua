@@ -47,7 +47,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(e2,tp)
 
 
-        local e4=Effect.CreateEffect(c)
+        local e4=Effect.CreateEffect(e:GetHandler())
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_ADJUST)
 	e4:SetCondition(s.descon)
@@ -91,7 +91,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetOperation(s.recop)
 		Duel.RegisterEffect(e5,tp)
 
-    local e6=Effect.CreateEffect(c)
+    local e6=Effect.CreateEffect(e:GetHandler())
     e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e6:SetCode(EVENT_BATTLE_DAMAGE)
     e6:SetCondition(s.reccon2)
@@ -107,6 +107,9 @@ local ARCHFIEND_MATADOR=511000009
 local VILEPAWN_ARCHFIEND=73219648
 local MASTERKING_ARCHFIEND=35606858
 
+local monsters={}
+monsters[0]=Group.CreateGroup()
+monsters[1]=Group.CreateGroup()
 
 function s.vilepawnfilter(c,tp)
 	return c:IsControler(tp) and c:IsCode(VILEPAWN_ARCHFIEND)
@@ -235,9 +238,7 @@ end
 
 
 local CARDS_TO_SUMMON={72192100,92039899,9603356,35798491,8581705,35975813,52248570,35606858}
-local monsters={}
-monsters[0]=Group.CreateGroup()
-monsters[1]=Group.CreateGroup()
+
 
 
 function s.filltables()
@@ -269,6 +270,7 @@ end
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
     local pandem=Duel.CreateToken(tp, CARD_PANDEMONIUM)
 	Duel.ActivateFieldSpell(pandem,e,tp,eg,ep,ev,re,r,rp)
+	s.filltables()
 end
 
 
@@ -286,7 +288,7 @@ function s.specialsummonchessarchfiendfilter(c,e,tp,codelist)
 end
 
 function s.centerarchfiendfilter(c,e,tp)
-    return s.haschessvalue(c) and Duel.IsExistingMatchingCard(s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 2, nil, e, tp, lowerchessvalues[c:GetCode()])
+    return s.haschessvalue(c) and lowerchessvalues[c:GetCode()]~=nil and Duel.IsExistingMatchingCard(s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 2, nil, e, tp, lowerchessvalues[c:GetCode()])
 end
 
 --effects to activate during the main phase go here
