@@ -72,9 +72,84 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(ge2,0)
     end)
 
+    local e10=Effect.CreateEffect(e:GetHandler())
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e10:SetTargetRange(LOCATION_ONFIELD,0)
+	e10:SetCondition(s.mkingcon)
+	e10:SetTarget(function(_,c) return c:IsCode(CARD_PANDEMONIUM) and c:IsFaceup() end)
+	e10:SetValue(1)
+	e10:SetCountLimit(1)
+	Duel.RegisterEffect(e10,tp)
+
+    local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetCategory(CATEGORY_RECOVER)
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e5:SetCode(EVENT_PHASE+PHASE_END)
+        e5:SetCondition(s.reccon)
+		e5:SetCountLimit(1)
+		e5:SetOperation(s.recop)
+		Duel.RegisterEffect(e5,tp)
+
+    local e6=Effect.CreateEffect(c)
+    e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e6:SetCode(EVENT_BATTLE_DAMAGE)
+    e6:SetCondition(s.reccon2)
+    e6:SetOperation(s.recop2)
+    Duel.RegisterEffect(e6,tp)
+
 	end
 	e:SetLabel(1)
 end
+
+local CARD_PANDEMONIUM=94585852
+local ARCHFIEND_MATADOR=511000009
+local VILEPAWN_ARCHFIEND=73219648
+local MASTERKING_ARCHFIEND=35606858
+
+
+function s.vilepawnfilter(c,tp)
+	return c:IsControler(tp) and c:IsCode(VILEPAWN_ARCHFIEND)
+end
+function s.reccon2(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and eg:IsExists(s.vilepawnfilter,1,nil,tp) and Duel.GetAttackTarget()==nil
+end
+function s.recop2(e,tp,eg,ep,ev,re,r,rp)
+    local tc=eg:Filter(s.vilepawnfilter, nil, tp):GetFirst()
+    if tc and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+        Duel.Hint(HINT_CARD,tp,id)
+        if Duel.SendtoGrave(tc, REASON_RULE) then
+            Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+
+            local sc=monsters[tp]:Select(tp,1,1,nil):GetFirst()
+            if sc then
+                local archfiend=Duel.CreateToken(tp, sc:GetCode())
+                Duel.SpecialSummon(archfiend, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
+            end
+        end
+    end
+end
+
+
+function s.kingqueenfilter(c)
+    return c:IsCode(52248570,8581705,35975813,36407615,35606858) and c:IsFaceup()
+end
+
+
+
+function s.reccon(e)
+	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingMatchingCard(s.kingqueenfilter,tp,LOCATION_MZONE,0,1,nil) and s[tp]>0
+end
+
+function s.recop(e,tp,eg,ep,ev,re,r,rp)
+    if(s[tp]>0) then
+    Duel.Hint(HINT_CARD,tp,id)
+    Duel.Recover(tp,s[tp],REASON_EFFECT)
+end
+end
+
 
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
     s[ep]=s[ep]+ev
@@ -84,10 +159,11 @@ function s.clear(e,tp,eg,ep,ev,re,r,rp)
     s[1]=0
 end
 
-local CARD_PANDEMONIUM=94585852
-local ARCHFIEND_MATADOR=511000009
-local VILEPAWN_ARCHFIEND=73219648
-local MASTERKING_ARCHFIEND=35606858
+
+
+function s.mkingcon(e)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,MASTERKING_ARCHFIEND),tp,LOCATION_ONFIELD,0,1,nil)
+end
 
 
 function s.fumatadorfilter(c,e)
@@ -123,7 +199,7 @@ local chesspointvalues={}
 chesspointvalues[73219648]=1
 chesspointvalues[72192100]=5
 chesspointvalues[92039899]=3
-chesspointvalues[9603356]=3 --
+chesspointvalues[9603356]=3
 chesspointvalues[35798491]=3
 chesspointvalues[8581705]=9
 chesspointvalues[35975813]=4
@@ -158,13 +234,22 @@ end
 
 
 
+local CARDS_TO_SUMMON={72192100,92039899,9603356,35798491,8581705,35975813,52248570,35606858}
+local monsters={}
+monsters[0]=Group.CreateGroup()
+monsters[1]=Group.CreateGroup()
 
 
-
-
-
-
-
+function s.filltables()
+    if #monsters[0]==0 then
+        for i, v in pairs(CARDS_TO_SUMMON) do
+            local token1=Duel.CreateToken(0, v)
+            monsters[0]:AddCard(token1)
+            local token2=Duel.CreateToken(1, v)
+            monsters[1]:AddCard(token2)
+        end
+    end
+end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -186,6 +271,19 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ActivateFieldSpell(pandem,e,tp,eg,ep,ev,re,r,rp)
 end
 
+
+function s.abletohandfilter(c,codelist)
+    return c:IsCode(table.unpack(codelist)) and c:IsAbleToHand()
+end
+
+function s.summonarchfiendhandfilter(c,e,tp)
+    return c:IsSetCard(0x45) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+end
+
+
+function s.specialsummonchessarchfiendfilter(c,e,tp)
+    return s. and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
