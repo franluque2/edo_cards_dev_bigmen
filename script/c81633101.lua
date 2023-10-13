@@ -165,7 +165,7 @@ end
 
 
 function s.mkingcon(e)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,MASTERKING_ARCHFIEND),tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,MASTERKING_ARCHFIEND),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 
 
