@@ -144,7 +144,7 @@ function s.reccon(e)
 end
 
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
-    if(s[tp]>0) then
+    if(s[tp]>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
     Duel.Hint(HINT_CARD,tp,id)
     Duel.Recover(tp,s[tp],REASON_EFFECT)
 end
@@ -281,48 +281,40 @@ function s.summonarchfiendhandfilter(c,e,tp)
 end
 
 
-function s.specialsummonchessarchfiendfilter(c,e,tp)
-    return s. and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+function s.specialsummonchessarchfiendfilter(c,e,tp,codelist)
+    return c:IsCode(table.unpack(codelist)) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+end
+
+function s.centerarchfiendfilter(c,e,tp)
+    return s.haschessvalue(c) and Duel.IsExistingMatchingCard(s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 2, nil, e, tp, lowerchessvalues[c:GetCode()])
 end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	--OPT check
-	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
-	--Boolean checks for the activation condition: b1, b2
 
---do bx for the conditions for each effect, and at the end add them to the return
+	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.IsExistingMatchingCard(s.centerarchfiendfilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
 
-
---return the b1 or b2 or .... in parenthesis at the end
 	return aux.CanActivateSkill(tp) and (b1 or b2)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
-	--"pop" the skill card
 	Duel.Hint(HINT_CARD,tp,id)
-	--Boolean check for effect 1:
 
---copy the bxs from above
+if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+local b1=Duel.GetFlagEffect(tp,id+1)==0
+		and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+local b2=Duel.GetFlagEffect(tp,id+2)==0
+		and Duel.IsExistingMatchingCard(s.centerarchfiendfilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
 
 
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
-
---effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
 								  {b2,aux.Stringid(id,1)})
-	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
+	op=op-1
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
@@ -335,14 +327,41 @@ end
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
+	local tc=Duel.SelectMatchingCard(tp, s.summonarchfiendhandfilter, tp, LOCATION_HAND, 0, 1,1,false,nil,e,tp)
+	if tc then
+		Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
+	end
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+	local tc1=Duel.SelectMatchingCard(tp, s.centerarchfiendfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil,e,tp)
+	if tc1 then
+		Duel.HintSelection(tc1)
 
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+		local tc2=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetCode()])
+		Duel.Hint(HINT_SELECTMSG,tp, HINTMSG_CONFIRM)
+		local tc3=Duel.SelectMatchingCard(tp, s.specialsummonchessarchfiendfilter, tp, LOCATION_HAND+LOCATION_DECK, 0, 1,1,false,nil,e,tp,lowerchessvalues[tc1:GetFirst():GetCode()]):GetFirst()
+
+		Duel.SpecialSummon(tc2, SUMMON_TYPE_SPECIAL, tp, tp, false,false,POS_FACEUP)
+
+		if tc3 then
+
+			local op=Duel.SelectEffect(tp, {true,aux.Stringid(id,4)},
+								  {true,aux.Stringid(id,5)})
+
+			if op==1 then
+				Duel.
+			else
+			end
+
+		end
+
+
+	end
+
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
