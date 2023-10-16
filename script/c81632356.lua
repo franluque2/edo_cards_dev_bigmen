@@ -42,9 +42,21 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
-		local sg=g:GetMinGroup(Card.GetLevel)
+		local sg=Group.CreateGroup()
+		local sg1=g:Filter(Card.HasLevel,nil):GetMinGroup(Card.GetLevel)
+		local sg2=g:Filter(Card.IsType,nil,TYPE_XYZ):GetMinGroup(Card.GetRank)
+		local sg3=g:Filter(Card.IsType,nil,TYPE_LINK):GetMinGroup(Card.GetLink)
+		if sg1 then
+			sg:Merge(sg1)
+		end
+		if sg2 then
+			sg:Merge(sg2)
+		end
+		if sg3 then
+			sg:Merge(sg3)
+		end
 		if #sg>1 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			sg=sg:Select(tp,1,1,nil)
 		end
 		sg=sg:AddMaximumCheck()
