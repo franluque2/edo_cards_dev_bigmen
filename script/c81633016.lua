@@ -84,7 +84,7 @@ end
 
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:IsMonster() then
+	if rc:IsMonster() then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
