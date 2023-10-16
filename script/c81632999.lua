@@ -98,7 +98,7 @@ function s.op(e, tp, eg, ep, ev, re, r, rp)
 		e10:SetValue(LOCATION_REMOVED)
 		Duel.RegisterEffect(e10,tp)
 
-		local e11=Effect.CreateEffect(c)
+		local e11=Effect.CreateEffect(e:GetHandler())
 		e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e11:SetCode(EVENT_CHAINING)
 		e11:SetOperation(s.chainop)
