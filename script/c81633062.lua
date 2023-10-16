@@ -72,6 +72,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e7:SetValue(0x132)
         Duel.RegisterEffect(e7,tp)
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e87:SetType(EFFECT_TYPE_FIELD)
+        e87:SetCode(EFFECT_ADD_SETCODE)
+        e87:SetTargetRange(LOCATIONS,0)
+        e87:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e87:SetValue(SET_BATTLIN_BOXING)
+        Duel.RegisterEffect(e8,tp)
+
+		
     
 
 	end
