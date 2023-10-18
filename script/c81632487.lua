@@ -14,7 +14,7 @@ function s.initial_effect(c)
     c:RegisterEffect(e1)
 end
 function s.cfilter(c)
-    return c:IsRace(RACE_CYBERSE) and c:IsFaceUp() and c:IsAbleToGraveAsCost()
+    return c:IsRace(RACE_CYBERSE) and c:IsFaceup() and c:IsAbleToGraveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
