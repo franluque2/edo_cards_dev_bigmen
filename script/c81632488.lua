@@ -29,7 +29,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.DiscardDeck(tp,1,REASON_COST)<0 then return end
 	--Effect
-        if Duel.Damage(1-tp, 500)
+        if Duel.Damage(1-tp, 500, REASON_EFFECT)
 		and Duel.IsExistingMatchingCard(s.Fusion,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
