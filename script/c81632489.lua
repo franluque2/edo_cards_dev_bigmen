@@ -14,7 +14,7 @@ function s.initial_effect(c)
     c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode(81632487)),tp,LOCATION_ONFIELD,0,1,nil)
+    return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode(81632487),tp,LOCATION_ONFIELD,0,1,nil))
 end
 function s.thfilter(c)
     return c:IsRace(RACE_CYBERSE) and c:IsLevelAbove(2) and c:IsAbleToHand()
