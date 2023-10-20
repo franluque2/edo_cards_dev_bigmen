@@ -18,7 +18,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cfilter(c)
-    return c:IsCode(81632487) and c:IsFaceup()
+    return c:IsCode(81632487) or (c:IsType(TYPE_FUSION) and c:IsRace(RACE_CYBERSE) and c:IsLevelAbove(9)) and c:IsFaceup()
 end
 
 function s.Fusion(c)
