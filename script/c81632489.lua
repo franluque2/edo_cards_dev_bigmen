@@ -29,9 +29,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
 	if #g>0 then
-		if Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
-			Duel.ConfirmCards(1-tp,g)
-			local ct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,LOCATION_HAND)
+        if Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
+            Duel.ConfirmCards(1-tp,g)
         end
     end
 end
