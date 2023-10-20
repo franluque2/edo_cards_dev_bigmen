@@ -14,7 +14,7 @@ function s.initial_effect(c)
     c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode , 81632487)),tp,LOCATION_ONFIELD,0,1,nil)
+    return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.thfilter(c)
     return c:IsRace(RACE_CYBERSE) and c:IsLevelAbove(2) and c:IsAbleToHand()
@@ -28,4 +28,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     --effect
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
     local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+end
+
+function s.cfilter(c)
+    return c:IsCode(81632487) and c:IsFaceup()
 end
