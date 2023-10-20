@@ -20,7 +20,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	--Requirement
+	if Duel.SendtoGrave(c,REASON_COST)~=0 then
 	--Effect
 	local g=Duel.SelectMatchingCard(tp,aux.FilterMaximumSideFunctionEx(s.filter),tp,LOCATION_MZONE,0,1,1,nil)
 	if #g>0 then
@@ -34,7 +35,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffectRush(e1)
 		--Cannot be destroyed by opponent's card effects
 		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetDescription(3060)
+		e1:SetDescription(3064)
 		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -42,6 +43,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffectRush(e1)
 	end
+end
 end
 function s.efilter(e,te)
 	return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
