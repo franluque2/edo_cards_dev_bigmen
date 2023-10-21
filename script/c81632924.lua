@@ -83,16 +83,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		local e6=Effect.CreateEffect(e:GetHandler())
 		e6:SetType(EFFECT_TYPE_FIELD)
 		e6:SetCode(EFFECT_CANNOT_INACTIVATE)
-		e3:SetCondition(s.immconnonegate)
-
+		e6:SetCondition(s.immconnonegate)
 		e6:SetValue(s.effectfilter)
 		Duel.RegisterEffect(e6,tp)
-		local e6=Effect.CreateEffect(e:GetHandler())
-		e6:SetType(EFFECT_TYPE_FIELD)
-		e6:SetCode(EFFECT_CANNOT_DISEFFECT)
-		e3:SetCondition(s.immconnonegate)
-		e6:SetValue(s.effectfilter)
-		Duel.RegisterEffect(e6,tp)
+		local e7=Effect.CreateEffect(e:GetHandler())
+		e7:SetType(EFFECT_TYPE_FIELD)
+		e7:SetCode(EFFECT_CANNOT_DISEFFECT)
+		e7:SetCondition(s.immconnonegate)
+		e7:SetValue(s.effectfilter)
+		Duel.RegisterEffect(e7,tp)
 
 
 
@@ -116,7 +115,7 @@ function s.notargetcon(e)
 end
 
 function s.efilternotmon(e,re,rp)
-	local c=e:GetHandler()
+	local c=re:GetHandler()
 	return c and not (c:IsMonster() and c:IsLevelAbove(10))
 end
 
@@ -126,7 +125,7 @@ function s.immconspel(e)
 end
 
 function s.efilterspel(e,re,rp)
-	local c=e:GetHandler()
+	local c=re:GetHandler()
 	return c and c:IsSpell()
 end
 
@@ -136,7 +135,7 @@ function s.immconmon(e)
 end
 
 function s.efiltermon(e,re,rp)
-	local c=e:GetHandler()
+	local c=re:GetHandler()
 	return c and c:IsMonster() and not c:IsLevelAbove(10)
 end
 
@@ -197,7 +196,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_IGNITION)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCountLimit(1)
-		e1:SetCondition(s.maxConNoHicotron)
+		e1:SetCondition(s.maxConNoHighdron)
 		e1:SetCost(s.costYggL)
 		e1:SetTarget(s.targetYggL)
 		e1:SetOperation(s.operationYggL)
@@ -211,7 +210,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EVENT_SUMMON_SUCCESS)
 		e2:SetRange(LOCATION_MZONE)
 		e2:SetCountLimit(1)
-		e2:SetCondition(s.maxConNoHicotronHighdron)
+		e2:SetCondition(s.maxConHicotronNoHighdron)
 		e2:SetCost(s.costYggLFast)
 		e2:SetTarget(s.targetYggLFast)
 		e2:SetOperation(s.operationYggL)
@@ -229,7 +228,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_IGNITION)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetCountLimit(1)
-		e3:SetCondition(s.maxConHicotron)
+		e3:SetCondition(s.maxConHighdron)
 		e3:SetCost(s.costYggL)
 		e3:SetTarget(s.targetYggL)
 		e3:SetOperation(s.operationYggLAll)
@@ -263,7 +262,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e11:SetType(EFFECT_TYPE_IGNITION)
 		e11:SetRange(LOCATION_MZONE)
 		e11:SetCountLimit(1)
-		e11:SetCondition(s.maxConNoHicotron)
+		e11:SetCondition(s.maxConNoHighdron)
 		e11:SetCost(s.costYggL)
 		e11:SetTarget(s.targetYggR)
 		e11:SetOperation(s.operationYggR)
@@ -277,7 +276,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e12:SetCode(EVENT_SUMMON_SUCCESS)
 		e12:SetRange(LOCATION_MZONE)
 		e12:SetCountLimit(1)
-		e12:SetCondition(s.maxConNoHicotronHighdron)
+		e12:SetCondition(s.maxConHicotronNoHighdron)
 		e12:SetCost(s.costYggLFast)
 		e12:SetTarget(s.targetYggRFast)
 		e12:SetOperation(s.operationYggR)
@@ -285,7 +284,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 
 		local e15=e12:Clone()
 		e15:SetCode(EVENT_SPSUMMON_SUCCESS)
-		c:RegisterEffect(e15)
+		tc:RegisterEffect(e15)
 
 	
 
@@ -295,7 +294,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e13:SetType(EFFECT_TYPE_IGNITION)
 		e13:SetRange(LOCATION_MZONE)
 		e13:SetCountLimit(1)
-		e13:SetCondition(s.maxConHicotron)
+		e13:SetCondition(s.maxConHighdron)
 		e13:SetCost(s.costYggL)
 		e13:SetTarget(s.targetYggR)
 		e13:SetOperation(s.operationYggRAll)
@@ -317,14 +316,13 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 
 		local e16=e4:Clone()
 		e16:SetCode(EVENT_SPSUMMON_SUCCESS)
-		c:RegisterEffect(e16)
+		tc:RegisterEffect(e16)
 
 		local e23=Effect.CreateEffect(c)
 		e23:SetType(EFFECT_TYPE_SINGLE)
 		e23:SetCode(EFFECT_ATTACK_ALL)
-		e23:SetCondition(s.attackallcon)
-		e23:SetValue(1)
-		c:RegisterEffect(e23)
+		e23:SetValue(s.atkfilter)
+		tc:RegisterEffect(e23)
 
 		local e24=Effect.CreateEffect(c)
 		e24:SetCategory(CATEGORY_DAMAGE+CATEGORY_TOGRAVE)
@@ -332,14 +330,14 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e24:SetCode(EVENT_BATTLE_START)
 		e24:SetTarget(s.tgtg)
 		e24:SetOperation(s.tgop)
-		c:RegisterEffect(e24)
+		tc:RegisterEffect(e24)
 
 		local e25=Effect.CreateEffect(c)
 	e25:SetType(EFFECT_TYPE_SINGLE)
 	e25:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e25:SetCondition(s.indcon)
 	e25:SetValue(1)
-	c:RegisterEffect(e25)
+	tc:RegisterEffect(e25)
 
 	local e26=Effect.CreateEffect(c)
 	e26:SetCategory(CATEGORY_TODECK)
@@ -348,17 +346,21 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 	e26:SetRange(LOCATION_MZONE)
 	e26:SetCondition(s.atkcon)
 	e26:SetOperation(s.atkop)
-	c:RegisterEffect(e26)
+	tc:RegisterEffect(e26)
 	
 		end
 	end
 end
 
+function s.atkfilter(e,c)
+	return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160202016) and e:GetHandler():IsMaximumModeCenter()
+end
+
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return c:IsStatus(STATUS_OPPO_BATTLE) and c==Duel.GetAttacker() and c:IsRelateToBattle() and bc:IsRelateToBattle()
-		and (bc:IsAbleToDeck()) and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160007019)
+	return c==Duel.GetAttacker() and c:IsRelateToBattle() and bc:IsRelateToBattle()
+		and (bc:IsAbleToDeck()) and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160007019) and e:GetHandler():IsMaximumModeCenter()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -376,7 +378,7 @@ end
 
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=Duel.GetAttackTarget()
-	if chk ==0 then return Duel.GetAttacker()==e:GetHandler() and d and d:IsDefensePos() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160203021) end
+	if chk ==0 then return Duel.GetAttacker()==e:GetHandler() and d and d:IsDefensePos() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160203021) and e:GetHandler():IsMaximumModeCenter() end
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,d,1,0,0)
 end
@@ -388,13 +390,6 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-
-
-
-function s.attackallcon(e)
-	return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160202016)
-end
-
 
 function s.epcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(s.maximumsummonedyggfilter, tp, LOCATION_MZONE, 0, 1, nil)
@@ -494,19 +489,19 @@ end
 
 
 
-function s.maxConNoHicotron(e)
-	return e:GetHandler():IsMaximumModeCenter() and not Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160204035)
+function s.maxConNoHighdron(e)
+	return e:GetHandler():IsMaximumModeCenter() and not Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
 end
-function s.maxConNoHicotronHighdron(e)
-	return e:GetHandler():IsMaximumModeCenter() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
-			 and not Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160204035)
-end
-function s.maxConHicotron(e)
+function s.maxConHicotronNoHighdron(e)
 	return e:GetHandler():IsMaximumModeCenter() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160204035)
+			 and not Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
+end
+function s.maxConHighdron(e)
+	return e:GetHandler():IsMaximumModeCenter() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
 end
 function s.maxConHicotronHighdron(e)
-	return e:GetHandler():IsMaximumModeCenter() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
-	and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160204035)
+	return e:GetHandler():IsMaximumModeCenter() and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160204035)
+	and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160421013)
 end
 
 function s.costYggL(e,tp,eg,ep,ev,re,r,rp,chk)
