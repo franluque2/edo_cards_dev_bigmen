@@ -26,7 +26,7 @@ end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
-	return tc and tc:IsFaceup() and tc:IsControler(tp) and tc:IsRace(RACE_CYBERSE) and tc:IsPosition(POS_FACEUP) and tc:IsType(TYPE_FUSION)
+	return tc and tc:IsFaceup() and tc:IsControler(tp) and tc:IsRace(RACE_CYBERSE) and tc:IsPosition(POS_FACEUP) and tc:IsLevelAbove(5)
         and Duel.IsExistingMatchingCard(s.putbackmonfilter, tp, LOCATION_GRAVE, 0, 3, nil)
         and Duel.IsExistingMatchingCard(s.fusordeepwarfilter, tp, LOCATION_GRAVE, 0, 1, nil)
 end

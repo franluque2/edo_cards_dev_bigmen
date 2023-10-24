@@ -17,10 +17,10 @@ end
 
 function s.cfilter(c,tp,re)
 	return c:GetReasonPlayer()==1-tp and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE)
-		and (c:IsReason(REASON_BATTLE) and Duel.GetAttacker():IsControler(1-tp)) and c:IsRace(RACE_CYBERSE) and c:IsLevelAbove(7)
+		and c:IsRace(RACE_CYBERSE) and c:IsLevelAbove(5)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp,re) and not Duel.IsExistingMatchingCard(aux.TRUE, tp, LOCATION_MZONE, 0, 1, nil)
+	return eg:IsExists(s.cfilter,1,nil,tp,re)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
