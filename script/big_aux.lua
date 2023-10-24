@@ -2,6 +2,8 @@ big_aux={}
 
 baux=big_aux
 
+SPACE_YGGDRAGO=81632487
+
 if not CustomArchetype then
 	CustomArchetype = {}
 
