@@ -1,10 +1,11 @@
 -- Space Seed Driver(CT)
+Duel.LoadScript("big_aux.lua")
+
 local s,id=GetID()
 function s.initial_effect(c)
     --Add card to hand
     local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,0))
-    e1:SetCategory(CATEGORY_TOHAND)
+    e1:SetCategory(CATEGORY_TOHAND+CATEGORY_DRAW)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_MZONE)
     e1:SetCountLimit(1)
@@ -31,6 +32,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
         if Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
             Duel.ConfirmCards(1-tp,g)
+            if g:GetFirst():IsCode(SPACE_YGGDRAGO) and Duel.IsPlayerCanDraw(tp) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+                Duel.Draw(tp, 1, REASON_EFFECT)
+            end
         end
     end
 end
