@@ -101,8 +101,24 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
     Duel.ConfirmCards(1-tp, rsoul)
 
     Duel.RegisterFlagEffect(tp, id+3, 0, 0, 0)
+
+    local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_PHASE+PHASE_END)
+		e2:SetCountLimit(1)
+		e2:SetOperation(s.damop)
+        e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+        e2:SetDescription(aux.Stringid(81633020,3))
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e2,tp)
 	
 end
+
+
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Damage(tp,8000,REASON_EFFECT)
+end
+
 
 function s.epcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_ONFIELD, 0, 1, nil, 48680970,62089826)
@@ -377,6 +393,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     e7:SetCode(EVENT_CHAINING)
     e7:SetReset(RESET_PHASE+PHASE_END)
     e7:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+    e7:SetDescription(aux.Stringid(81633020,2))
     e7:SetOperation(s.actop)
     Duel.RegisterEffect(e7,tp)
 
