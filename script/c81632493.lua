@@ -41,7 +41,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
                 local send=Duel.SelectMatchingCard(tp, s.sendcybersefilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
                 if send and Duel.SendtoGrave(send, REASON_EFFECT) then
                     local lv=send:GetFirst():GetLevel()
-                    Duel.Damage(1-tp, lv, REASON_EFFECT)
+                    Duel.Damage(1-tp, 200*lv, REASON_EFFECT)
                 end
             end
 		end
