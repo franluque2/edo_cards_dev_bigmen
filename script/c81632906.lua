@@ -82,7 +82,7 @@ end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	--"cost" check
-	return  Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and (Duel.IsExistingMatchingCard(s.flipcon2filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil))
+	return  Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and (Duel.IsExistingMatchingCard(s.flipcon2filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil))
 end
 
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
