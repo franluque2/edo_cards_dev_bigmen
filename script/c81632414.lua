@@ -47,6 +47,7 @@ function s.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e5:SetTarget(s.thtg)
 	e5:SetOperation(s.thop)
+	e5:SetCondition(s.tgcon)
 	c:RegisterEffect(e5)
 
 end
@@ -55,8 +56,13 @@ s.listed_names={81632412,81632413}
 function s.thfilter(c)
 	return c:IsArmorCanine() and c:IsMonster() and c:IsAbleToHand()
 end
+
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_EFFECT)
+end
+
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) and chkc:IsReason(REASON_EFFECT) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.thfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectTarget(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
