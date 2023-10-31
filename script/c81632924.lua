@@ -218,7 +218,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 
 		local e5=e2:Clone()
 		e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-		c:RegisterEffect(e5)
+		tc:RegisterEffect(e5)
 
 	
 
@@ -250,7 +250,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 
 		local e6=e4:Clone()
 		e6:SetCode(EVENT_SPSUMMON_SUCCESS)
-		c:RegisterEffect(e6)
+		tc:RegisterEffect(e6)
 
 
 
@@ -314,7 +314,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 		e14:SetOperation(s.operationYggRAll)
 		tc:RegisterEffect(e14)
 
-		local e16=e4:Clone()
+		local e16=e14:Clone()
 		e16:SetCode(EVENT_SPSUMMON_SUCCESS)
 		tc:RegisterEffect(e16)
 
@@ -341,6 +341,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 
 	local e26=Effect.CreateEffect(c)
 	e26:SetCategory(CATEGORY_TODECK)
+	e26:SetProperty(EFFECT_FLAG_DELAY)
 	e26:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e26:SetCode(EVENT_DAMAGE_STEP_END)
 	e26:SetRange(LOCATION_MZONE)
@@ -359,13 +360,13 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return c==Duel.GetAttacker() and c:IsRelateToBattle() and bc:IsRelateToBattle()
+	return c==Duel.GetAttacker() and c:IsRelateToBattle()
 		and (bc:IsAbleToDeck()) and Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 1, nil, 160007019) and e:GetHandler():IsMaximumModeCenter()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	if bc:IsRelateToBattle() and bc:IsFaceup() and bc:IsControler(1-tp) then
+	if bc:IsControler(1-tp) then
 		Duel.SendtoDeck(bc, 1-tp, SEQ_DECKSHUFFLE, REASON_EFFECT)
 	end
 end
@@ -403,6 +404,7 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=seeds:GetFirst()
 		while tc do
 			if cardnumber==1 then
+				Duel.Hint(HINT_CARD, tp, tc:GetCode())
 				local g2=Group.Filter(seeds, Card.IsCode, nil, tc:GetCode())
 				Duel.SendtoDeck(g2, tp, SEQ_DECKSHUFFLE, REASON_RULE)
 			end
@@ -526,17 +528,24 @@ function s.fastfilter(c,e,tp)
 		and (not c:IsSummonPlayer(tp))
 end
 
+function s.fastfilterR(c,e,tp)
+	return c:IsLocation(LOCATION_MZONE) and (not c:IsControler(tp))
+		and (not c:IsSummonPlayer(tp)) and c:IsDefensePos()
+end
+
 function s.targetYggLFast(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return eg:IsContains(chkc) and s.fastfilter(chkc,e,tp) end
-	if chk==0 then return eg:IsExists(s.fastfilter,1,nil,e,tp) and e:GetHandler():IsMaximumMode() and #dg>0 end
+	if chk==0 then
+		 return eg:IsExists(s.fastfilter,1,nil,e,tp) and e:GetHandler():IsMaximumMode() and #eg>0 end
 end
 
 function s.operationYggL(e,tp,eg,ep,ev,re,r,rp)
 	--Requirement
 	if Duel.DiscardDeck(tp,3,REASON_COST)>0 then
 		--Effect
+
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,e:GetHandler())
+
 		if #dg>0 then
 			local sg=dg:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
@@ -563,8 +572,7 @@ function s.targetYggR(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.targetYggRFast(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return eg:IsContains(chkc) and s.fastfilter(chkc,e,tp) end
-	if chk==0 then return eg:IsExists(s.fastfilter,1,nil,e,tp) and e:GetHandler():IsMaximumMode() and #dg>0 end
+	if chk==0 then return eg:IsExists(s.fastfilterR,1,nil,e,tp) and e:GetHandler():IsMaximumMode() and #eg>0 end
 end
 
 function s.operationYggR(e,tp,eg,ep,ev,re,r,rp)
