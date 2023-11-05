@@ -66,7 +66,7 @@ function s.filter3(c)
 end
 
 function s.poscon(e)
-	return Duel.GetTurnPlayer()==1-e:GetHandlerPlayer() and Duel.IsBattlePhase()
+	return Duel.GetTurnPlayer()==1-e:GetHandlerPlayer()
 end
 function s.atklimit(e,c)
 	return c==e:GetHandler()
@@ -74,5 +74,5 @@ end
 
 
 function s.val(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsPosition, tp, LOCATION_MZONE, 0, nil, POS_DEFENSE)*500
+	return Duel.GetMatchingGroupCount(Card.IsPosition, e:GetHandlerPlayer(), LOCATION_MZONE, 0, nil, POS_DEFENSE)*500
 end
