@@ -140,12 +140,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e13:SetTargetRange(LOCATIONS,0)
         e13:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
         e13:SetValue(TYPE_SYNCHRO)
-        Duel.RegisterEffect(e13,tp)
-    
+        Duel.RegisterEffect(e13,tp) 
     
 
 	end
 	e:SetLabel(1)
+end
+
+function s.synval(e,mc,sc) --this effect, this card and the monster to be summoned
+	return sc:IsRace(RACE_EARTH) and sc:IsAttribute(ATTRIBUTE_EARTH)
 end
 
 
@@ -283,6 +286,28 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
+
+	g=Duel.GetMatchingGroup(s.Stygians, tp, LOCATION_ALL, 0, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+			local e1=Effect.CreateEffect(tc)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+			e1:SetCode(EFFECT_SYNCHRO_MAT_FROM_HAND)
+			e1:SetRange(LOCATION_HAND)
+			e1:SetCountLimit(1,id)
+			e1:SetValue(s.synval)
+			tc:RegisterEffect(e1)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	
 
 	
 

@@ -54,7 +54,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetCode(EFFECT_ADD_RACE)
         e5:SetTargetRange(LOCATIONS,0)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e5:SetValue(RACE_ILLUSIONIST)
+        e5:SetValue(RACE_ILLUSION)
         Duel.RegisterEffect(e5,tp)
     
 
