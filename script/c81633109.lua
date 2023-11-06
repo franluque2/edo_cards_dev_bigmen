@@ -121,24 +121,24 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		local e11=Effect.CreateEffect(e:GetHandler())
         e11:SetType(EFFECT_TYPE_FIELD)
         e11:SetCode(EFFECT_ADD_ATTRIBUTE)
-        e11:SetTargetRange(LOCATIONS,0)
-        e11:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
+        e11:SetTargetRange(LOCATION_MZONE,0)
+        e11:SetTarget(aux.TargetBoolFunction(s.Prisoners))
         e11:SetValue(ATTRIBUTE_EARTH)
         Duel.RegisterEffect(e11,tp)
 
 		local e12=Effect.CreateEffect(e:GetHandler())
         e12:SetType(EFFECT_TYPE_FIELD)
         e12:SetCode(EFFECT_ADD_RACE)
-        e12:SetTargetRange(LOCATIONS,0)
-        e12:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
+        e12:SetTargetRange(LOCATION_MZONE,0)
+        e12:SetTarget(aux.TargetBoolFunction(s.Prisoners))
         e12:SetValue(RACE_WARRIOR)
         Duel.RegisterEffect(e12,tp)
     
 		local e13=Effect.CreateEffect(e:GetHandler())
         e13:SetType(EFFECT_TYPE_FIELD)
         e13:SetCode(EFFECT_ADD_TYPE)
-        e13:SetTargetRange(LOCATIONS,0)
-        e13:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
+        e13:SetTargetRange(LOCATION_MZONE,0)
+        e13:SetTarget(aux.TargetBoolFunction(s.Prisoners))
         e13:SetValue(TYPE_SYNCHRO)
         Duel.RegisterEffect(e13,tp) 
     
@@ -268,22 +268,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		--synchro summon
 		Synchro.AddProcedure(tc,nil,1,1,Synchro.NonTuner(nil),1,99)
 		  tc=EndDragons:GetNext()
-		end
-	end
-
-	g=Duel.GetMatchingGroup(s.Prisoners, tp, LOCATION_ALL, LOCATION_ALL, nil)
-
-    if #g>0 then
-		local tc=g:GetFirst()
-		while tc do
-			
-				local e3=Effect.CreateEffect(e:GetHandler())
-				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id+6)
-				tc:RegisterEffect(e3)
-
-
-			tc=g:GetNext()
 		end
 	end
 
