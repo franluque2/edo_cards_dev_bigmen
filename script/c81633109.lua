@@ -1,6 +1,7 @@
 --Righteous Conscription of the Law
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
 
 local s,id=GetID()
 function s.initial_effect(c)
