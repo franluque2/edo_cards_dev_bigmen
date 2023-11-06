@@ -27,7 +27,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.JutteMons(c)
-  return c:IsOriginalSetCard(0x52d)
+  return c:IsOriginalSetCard(0x52d) or c:IsCode(60410769)
 end
 
 function s.VigilMons(c)
