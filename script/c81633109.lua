@@ -148,7 +148,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.synval(e,mc,sc) --this effect, this card and the monster to be summoned
-	return sc:IsRace(RACE_EARTH) and sc:IsAttribute(ATTRIBUTE_EARTH)
+	return sc:IsRace(RACE_WARRIOR) and sc:IsAttribute(ATTRIBUTE_EARTH)
 end
 
 
