@@ -1,6 +1,7 @@
 --Righteous Conscription of the Law
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -27,7 +28,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.JutteMons(c)
-  return c:IsOriginalSetCard(0x52d)
+  return c:IsOriginalSetCard(0x52d) or c:IsCode(60410769)
 end
 
 function s.VigilMons(c)
