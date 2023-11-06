@@ -1,6 +1,10 @@
 --Conscription of the Illusionist's Eye
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
+
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
+
 
 local s,id=GetID()
 function s.initial_effect(c)
