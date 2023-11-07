@@ -30,7 +30,7 @@ function s.Warriors(c)
   return c:IsSetCard(0x66) and c:IsType(TYPE_SYNCHRO)
 end
 
-function s.tfilter(c,lc,stype,tp)
+function s.tfilter(tc,lc,stype,tp)
 	return c:IsSummonCode(lc,stype,tp,63977008) or c:IsHasEffect(20932152)
 end
 
