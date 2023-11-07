@@ -31,7 +31,7 @@ function s.Warriors(c)
 end
 
 function s.tfilter(tc,lc,stype,tp)
-	return tc:IsSummonCode(lc,stype,tp,63977008) or tc:IsHasEffect(20932152)
+	return c:IsSummonCode(lc,stype,tp,63977008) or c:IsHasEffect(20932152)
 end
 
 
