@@ -71,7 +71,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		while tc do
 	  
 		--synchro summon
-		Synchro.AddProcedure(c,s.tfilter,1,1,Synchro.NonTuner(nil),1,99)
+		Synchro.AddProcedure(tc,s.tfilter,1,1,Synchro.NonTuner(nil),1,99)
 		  tc=EndDragons:GetNext()
 		end
 	end
