@@ -65,10 +65,94 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetOperation(s.damop)
 		Duel.RegisterEffect(e7,tp)
 
+        local e8=Effect.CreateEffect(e:GetHandler())
+		e8:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		e8:SetCode(EFFECT_DESTROY_REPLACE)
+		e8:SetTarget(s.desreptg)
+		e8:SetValue(s.desrepval)
+		e8:SetOperation(s.desrepop)
+		Duel.RegisterEffect(e8,tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+		e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e9:SetCode(EVENT_CHAINING)
+		e9:SetCondition(s.drawflagcon)
+		e9:SetOperation(s.drawflagop)
+		Duel.RegisterEffect(e9,tp)
+
+        local e10=Effect.CreateEffect(e:GetHandler())
+		e10:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e10:SetCode(EVENT_PHASE+PHASE_DRAW)
+		e10:SetCondition(s.drawcon)
+		e10:SetOperation(s.drawop)
+        e10:SetCountLimit(1)
+		Duel.RegisterEffect(e10,tp)
+
 
 	end
 	e:SetLabel(1)
 end
+
+function s.drawcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.GetFlagEffect(tp, id+1)>0 and Duel.GetTurnPlayer()~=tp
+end
+function s.drawop(e,tp,eg,ep,ev,re,r,rp)
+    local pl=Duel.GetTurnPlayer()
+    local num=0
+    if Duel.GetFieldGroupCount(pl,LOCATION_HAND,0) < 5 then
+		num=3-Duel.GetFieldGroupCount(pl,LOCATION_HAND,0)
+	end
+    if not (num>0) then return end
+    Duel.Hint(HINT_CARD,tp,id)
+    Duel.Draw(pl, num, REASON_RULE)
+
+end
+
+
+function s.drawflagcon(e,tp,eg,ep,ev,re,r,rp)
+    local ph=Duel.GetCurrentPhase()
+
+	return re:IsActiveType(TYPE_MONSTER)
+		and re:GetHandler():IsCode(160011024) and (Duel.GetFlagEffect(tp,id+1)==0)
+end
+
+function s.drawflagop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,0,0)
+end
+
+function s.repfilter(c,tp)
+	return c:IsControler(tp) and c:IsMonster() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_PSYCHIC) and c:IsLocation(LOCATION_ONFIELD)
+		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+end
+function s.desfilter(c,e,tp)
+	return c:IsEquipSpell() and c:IsDestructable(e)
+		and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
+end
+function s.repdesfilter(c)
+	return c:IsEquipSpell() and c:IsDestructable()
+end
+function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.repdesfilter,tp,LOCATION_ONFIELD,0,nil)
+	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp)
+		and g:IsExists(s.desfilter,1,nil,e,tp) end
+	if Duel.SelectYesNo(tp,aux.Stringid(id, 0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+		local sg=g:FilterSelect(tp,s.desfilter,1,1,nil,e,tp)
+		e:SetLabelObject(sg:GetFirst())
+		Duel.HintSelection(sg)
+		return true
+	else return false end
+end
+function s.desrepval(e,c)
+	return s.repfilter(c,e:GetHandlerPlayer())
+end
+function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_CARD,tp,id)
+	local tc=e:GetLabelObject()
+	Duel.Destroy(tc, REASON_REPLACE)
+end
+
+
 
 function s.cfilter(c,tp)
     if (c:GetReasonEffect()==nil or c:GetReasonEffect():GetHandler()==nil) then return false end
