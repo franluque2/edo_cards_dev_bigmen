@@ -16,6 +16,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
 end
+
+local CARD_PANDEMONIUM=94585852
+local ARCHFIEND_MATADOR=511000009
+local VILEPAWN_ARCHFIEND=73219648
+local MASTERKING_ARCHFIEND=35606858
+
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -114,14 +120,110 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e8:SetValue(35975813)
 	Duel.RegisterEffect(e8,tp)
 
+	local e9=Effect.CreateEffect(e:GetHandler())
+	e9:SetType(EFFECT_TYPE_SINGLE)
+	e9:SetCode(EFFECT_DIRECT_ATTACK)
+	e9:SetRange(LOCATION_MZONE)
+	e9:SetCondition(s.dircon)
+
+	local e11=Effect.CreateEffect(e:GetHandler())
+	e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+	e11:SetTargetRange(LOCATION_MZONE,0)
+	e11:SetTarget(function (_,c) return c:IsCode(VILEPAWN_ARCHFIEND) end)
+	e11:SetLabelObject(e9)
+	Duel.RegisterEffect(e11,tp)
+
+	local e12=Effect.CreateEffect(e:GetHandler())
+	e12:SetType(EFFECT_TYPE_FIELD)
+	e12:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e12:SetCode(EFFECT_SPSUMMON_PROC)
+	e12:SetRange(LOCATION_HAND)
+	e12:SetCondition(s.spcon)
+	e12:SetOperation(s.spop)
+
+	local e13=Effect.CreateEffect(e:GetHandler())
+	e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+	e13:SetTargetRange(LOCATION_HAND,0)
+	e13:SetTarget(function (_,c) return c:IsCode(ARCHFIEND_MATADOR) end)
+	e13:SetLabelObject(e12)
+	Duel.RegisterEffect(e13,tp)
+
+	local e14=Effect.CreateEffect(e:GetHandler())
+	e14:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e14:SetCode(EVENT_TOSS_DICE_NEGATE)
+	e14:SetCondition(s.dicecon)
+	e14:SetOperation(s.diceop)
+	Duel.RegisterEffect(e14,tp)
+
 	end
 	e:SetLabel(1)
 end
 
-local CARD_PANDEMONIUM=94585852
-local ARCHFIEND_MATADOR=511000009
-local VILEPAWN_ARCHFIEND=73219648
-local MASTERKING_ARCHFIEND=35606858
+function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
+	return ep==tp and Duel.GetMatchingGroupCount(s.vilepawnfilter, tp, LOCATION_MZONE, 0, nil, tp)>0
+end
+function s.diceop(e,tp,eg,ep,ev,re,r,rp)
+	local cc=Duel.GetCurrentChain()
+	local cid=Duel.GetChainInfo(cc,CHAININFO_CHAIN_ID)
+	if s[0]~=cid and Duel.SelectYesNo(tp,aux.Stringid(id,7)) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
+		local pawn=Duel.SelectMatchingCard(tp,s.vilepawnfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil,tp)
+		Duel.Release(pawn, REASON_COST)
+		local dc={Duel.GetDiceResult()}
+		local ac=1
+		local ct=(ev&0xff)+(ev>>16)
+		Duel.Hint(HINT_CARD,tp,id)
+		if ct>1 then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,7))
+			local val,idx=Duel.AnnounceNumber(tp,table.unpack(dc,1,ct))
+			ac=idx+1
+		end
+		dc[ac]=7
+		Duel.SetDiceResult(table.unpack(dc))
+		s[0]=cid
+	end
+end
+
+
+function s.getchesspointvalue(c)
+	return Chesspointvalues[c:GetCode()]
+end
+
+function s.spfilter(c)
+	return c:IsSetCard(0x45) and c:IsAbleToGraveAsCost() and s.haschessvalue(c)
+end
+function s.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+	if not c:IsAbleToGraveAsCost() then
+		g:RemoveCard(c)
+	end
+	return g:CheckWithSumGreater(s.getchesspointvalue,6)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=Duel.GetMatchingGroup(s.spfilter,c:GetControler(),LOCATION_HAND+LOCATION_MZONE,0,nil)
+	if not c:IsAbleToGraveAsCost() then
+		g:RemoveCard(c)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local sg=g:SelectWithSumGreater(tp,s.getchesspointvalue,6)
+	Duel.SendtoGrave(sg,REASON_COST)
+	Duel.SpecialSummon(e:GetHandler(), SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
+end
+
+
+
+function s.oppcardfilter(c,p)
+	return c and c:IsControler(1-p) and c:IsType(TYPE_MONSTER)
+end
+
+function s.dircon(e)
+	return e:GetHandler():GetColumnGroup():FilterCount(s.oppcardfilter,nil,e:GetHandlerPlayer())==0
+end
+
+
+
 
 local monsters={}
 monsters[0]=Group.CreateGroup()
@@ -222,16 +324,16 @@ function s.battlecon(e)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,ARCHFIEND_MATADOR),tp,LOCATION_ONFIELD,0,1,nil)
 end
 
-local chesspointvalues={}
-chesspointvalues[73219648]=1
-chesspointvalues[72192100]=5
-chesspointvalues[92039899]=3
-chesspointvalues[9603356]=3
-chesspointvalues[35798491]=3
-chesspointvalues[8581705]=9
-chesspointvalues[35975813]=4
-chesspointvalues[52248570]=9
-chesspointvalues[35606858]=4
+Chesspointvalues={}
+Chesspointvalues[73219648]=1
+Chesspointvalues[72192100]=5
+Chesspointvalues[92039899]=3
+Chesspointvalues[9603356]=3
+Chesspointvalues[35798491]=3
+Chesspointvalues[8581705]=9
+Chesspointvalues[35975813]=4
+Chesspointvalues[52248570]=9
+Chesspointvalues[35606858]=4
 
 local lowerchessvalues={}
 lowerchessvalues[73219648]=nil
@@ -256,7 +358,7 @@ chessvalueindexes[52248570]=8
 chessvalueindexes[35606858]=9
 
 function s.haschessvalue(c)
-    return chesspointvalues[c:GetOriginalCode()]~=nil
+    return Chesspointvalues[c:GetOriginalCode()]~=nil
 end
 
 
@@ -295,6 +397,13 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
     local pandem=Duel.CreateToken(tp, CARD_PANDEMONIUM)
 	Duel.ActivateFieldSpell(pandem,e,tp,eg,ep,ev,re,r,rp)
 	s.filltables()
+
+	local vilepawns=Group.CreateGroup()
+	for i = 1, 5, 1 do
+		local vilepawn=Duel.CreateToken(tp, VILEPAWN_ARCHFIEND)
+		Group.AddCard(vilepawns, vilepawn)
+	end
+	Duel.SpecialSummon(vilepawns, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
 end
 
 
