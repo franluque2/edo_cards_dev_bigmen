@@ -178,7 +178,7 @@ function s.diceop(e,tp,eg,ep,ev,re,r,rp)
 			local val,idx=Duel.AnnounceNumber(tp,table.unpack(dc,1,ct))
 			ac=idx+1
 		end
-		dc[ac]=7
+		dc[ac]=6
 		Duel.SetDiceResult(table.unpack(dc))
 		s[0]=cid
 	end
