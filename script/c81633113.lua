@@ -65,14 +65,14 @@ decks[21] = { {}, {} , {} }
 decks[22] = { {}, {} , {} }
 decks[23] = { {}, {} , {} }
 
-function s.getyearval()
-	return math.ceil(Duel.GetTurnCount()/2)
+function s.getyearval(tp)
+	return math.ceil(Duel.GetTurnCount()/2) + Duel.GetFlagEffect(tp, id)
 end
 
 
 function s.changecon(e,tp,eg,ep,ev,re,r,rp)
     if not Duel.GetTurnPlayer()==tp then return false end
-    return s.getyearval()<=#decks
+    return s.getyearval(tp)<=#decks
 end
 function s.changeop(e,tp,eg,ep,ev,re,r,rp)
 
@@ -103,10 +103,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 			bossmonsters[1]:AddCard(token2)
 		end
 	end
-
-
-
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 function s.bondsunitydiscardfilter(c)
@@ -135,6 +131,10 @@ end
 
 function s.shufflependreplacefilter(c)
     return c:IsMonster() and c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() and c:IsAbleToDeck()
+end
+
+function s.turnspelltrapfdfilter(c)
+	return s.replacespefilter(c) and c:IsFaceup()
 end
 
 
@@ -187,7 +187,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
 	local disc=Duel.SelectMatchingCard(tp, s.bondsunitydiscardfilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
 	if Duel.SendtoGrave(disc, REASON_DISCARD) then
-		local year=s.getyearval()
+		local year=s.getyearval(tp)
 		if year > #bosses then year=#bosses	end
 		local diff=#bosses-year
 
@@ -224,7 +224,7 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
 	local disc=Duel.SelectMatchingCard(tp, s.thousandragondiscardfilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
 	if Duel.SendtoGrave(disc, REASON_DISCARD) then
-		local year=s.getyearval()
+		local year=s.getyearval(tp)
 		local g=Group.CreateGroup()
 		g:AddCard(bossmonsters[tp]:TakeatPos(year))
 		if year>1 then
