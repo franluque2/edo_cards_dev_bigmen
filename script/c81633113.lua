@@ -72,13 +72,26 @@ end
 
 function s.changecon(e,tp,eg,ep,ev,re,r,rp)
     if not Duel.GetTurnPlayer()==tp then return false end
-    return s.getyearval(tp)<=#decks
+    return Duel.GetTurnCount()>2 and (s.getyearval(tp)<=#decks)
 end
 function s.changeop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+
+
 
 end
 
-local bosses={}
+function s.flipdownbackrow(tp)
+
+end
+
+function s.refillextra(tp)
+end
+
+function s.shufflebackpends(tp)
+end
+
+local bosses={48626373,48626373,48626373,48626373,48626373,48626373}
 local bossmonsters={}
 bossmonsters[0]=Group.CreateGroup()
 bossmonsters[1]=Group.CreateGroup()
@@ -182,6 +195,21 @@ local b2=Duel.GetFlagEffect(tp,id+2)==0
 end
 
 
+function s.addxyzmaterial(tp, tc)
+	--ariseheart
+	if tc:IsCode(48626373) then
+		local fenrir=Duel.CreateToken(tp, 32909498)
+		Duel.SendtoGrave(fenrir, REASON_RULE)
+		fenrir:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,fenrir)
+
+		local bigbang=Duel.CreateToken(tp, 33925864)
+		Duel.SendtoGrave(bigbang, REASON_RULE)
+		bigbang:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,bigbang)
+	end
+end
+
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
@@ -212,6 +240,10 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 		if tar then
 			local token=Duel.CreateToken(tp, tar:GetFirst():GetOriginalCode())
 			Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+
+			if token:IsType(TYPE_XYZ) then
+				s.addxyzmaterial(tp,token)
+			end
 			token:RegisterFlagEffect(id, 0, 0, 0)
 		end
 	end
@@ -246,6 +278,9 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 		if tar then
 			local token=Duel.CreateToken(tp, tar:GetFirst():GetOriginalCode())
 			Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+			if token:IsType(TYPE_XYZ) then
+				s.addxyzmaterial(tp,token)
+			end
 			token:RegisterFlagEffect(id, 0, 0, 0)
 
 		end
