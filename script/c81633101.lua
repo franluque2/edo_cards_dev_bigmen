@@ -153,6 +153,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e14:SetCode(EVENT_TOSS_DICE_NEGATE)
 	e14:SetCondition(s.dicecon)
 	e14:SetOperation(s.diceop)
+	e14:SetCountLimit(1)
 	Duel.RegisterEffect(e14,tp)
 
 	end
