@@ -27,10 +27,17 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
 
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_PREDRAW)
+		e2:SetCondition(s.changecon)
+		e2:SetOperation(s.changeop)
+		e2:SetCountLimit(1)
+		Duel.RegisterEffect(e2,tp)
+
 	end
 	e:SetLabel(1)
 end
-
 
 local decks={}
 decks[0] = { {}, {} , {} }
@@ -58,8 +65,23 @@ decks[21] = { {}, {} , {} }
 decks[22] = { {}, {} , {} }
 decks[23] = { {}, {} , {} }
 
-local bosses={}
+function s.getyearval()
+	return math.ceil(Duel.GetTurnCount()/2)
+end
 
+
+function s.changecon(e,tp,eg,ep,ev,re,r,rp)
+    if not Duel.GetTurnPlayer()==tp then return false end
+    return s.getyearval()<=#decks
+end
+function s.changeop(e,tp,eg,ep,ev,re,r,rp)
+
+end
+
+local bosses={}
+local bossmonsters={}
+bossmonsters[0]=Group.CreateGroup()
+bossmonsters[1]=Group.CreateGroup()
 
 
 
@@ -73,12 +95,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	--start of duel effects go here
 
+	if #bossmonsters[0]==0 then
+		for i, v in pairs(bosses) do
+			local token1=Duel.CreateToken(0, v)
+			bossmonsters[0]:AddCard(token1)
+			local token2=Duel.CreateToken(1, v)
+			bossmonsters[1]:AddCard(token2)
+		end
+	end
+
+
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 function s.bondsunitydiscardfilter(c)
-    return c:IsCode(0010000) and c:IsDiscardable(REASON_COST)
+    return c:IsCode(15845914) and c:IsDiscardable(REASON_COST)
 end
 
 function s.thousandragondiscardfilter(c)
@@ -111,11 +143,12 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
 
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.bondsunitydiscardfilter,tp,LOCATION_HAND,0,1,nil)
+						and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+	and Duel.IsExistingMatchingCard(s.thousandragondiscardfilter,tp,LOCATION_HAND,0,1,nil)
+				and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -128,19 +161,19 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 --copy the bxs from above
 
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+local b1=Duel.GetFlagEffect(tp,id+1)==0
+	and Duel.IsExistingMatchingCard(s.bondsunitydiscardfilter,tp,LOCATION_HAND,0,1,nil)
+			and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
+local b2=Duel.GetFlagEffect(tp,id+2)==0
+	and Duel.IsExistingMatchingCard(s.thousandragondiscardfilter,tp,LOCATION_HAND,0,1,nil)
+		and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
 
 --effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,1)},
+								  {b2,aux.Stringid(id,0)})
 	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
-
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	elseif op==1 then
@@ -151,15 +184,71 @@ end
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
+	local disc=Duel.SelectMatchingCard(tp, s.bondsunitydiscardfilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
+	if Duel.SendtoGrave(disc, REASON_DISCARD) then
+		local year=s.getyearval()
+		if year > #bosses then year=#bosses	end
+		local diff=#bosses-year
 
+		local g=Group.CreateGroup()
+		g:AddCard(bossmonsters[tp]:TakeatPos(year))
+		if diff>0 then
+			if diff==1 then
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+1))
+				
+			elseif diff==2 then
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+1))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+2))
+			else
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+1))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+2))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year+3))
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
+			end
+		end
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+		local tar=g:Select(tp, 1,1,false,nil)
+		if tar then
+			local token=Duel.CreateToken(tp, tar:GetFirst():GetOriginalCode())
+			Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+			token:RegisterFlagEffect(id, 0, 0, 0)
+		end
+	end
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
+	local disc=Duel.SelectMatchingCard(tp, s.thousandragondiscardfilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
+	if Duel.SendtoGrave(disc, REASON_DISCARD) then
+		local year=s.getyearval()
+		local g=Group.CreateGroup()
+		g:AddCard(bossmonsters[tp]:TakeatPos(year))
+		if year>1 then
+			if year==2 then
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-1))
+				
+			elseif year==3 then
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-1))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-2))
+			else
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-1))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-2))
+				g:AddCard(bossmonsters[tp]:TakeatPos(year-3))
+
+			end
+		end
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+		local tar=g:Select(tp, 1,1,false,nil)
+		if tar then
+			local token=Duel.CreateToken(tp, tar:GetFirst():GetOriginalCode())
+			Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+			token:RegisterFlagEffect(id, 0, 0, 0)
+
+		end
+	end
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
