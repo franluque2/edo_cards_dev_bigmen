@@ -137,12 +137,14 @@ end
 
 
 function s.changecon(e,tp,eg,ep,ev,re,r,rp)
-    if not Duel.GetTurnPlayer()==tp then return false end
-    return Duel.GetTurnCount()>2 and (s.getyearval(tp)<=#decks)
+    if Duel.GetTurnPlayer()~=tp then return false end
+    return Duel.GetTurnCount()>2 and (s.getyearval(tp)<=#decks[0])
 end
 function s.changeop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
+
+	s.updateyearval(tp)
 	s.flipdownbackrow(tp)
 	s.refillextra(tp)
 	s.shufflebackpends(tp)
@@ -154,6 +156,12 @@ function s.changeop(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
+function s.updateyearval(tp)
+	if Duel.IsExistingMatchingCard(s.nostalgiamonfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and s.getyearval(tp)<(#decks[0]-2) then
+		Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+	end
+end
+
 function s.flipdownbackrow(tp)
 	local g=Duel.GetMatchingGroup(s.turnspelltrapfdfilter, tp, LOCATION_SZONE, 0, nil)
 
@@ -162,7 +170,7 @@ function s.flipdownbackrow(tp)
 			if tc:IsType(TYPE_PENDULUM) then
 				Duel.SendtoHand(tc, tp, REASON_RULE)
 			else 
-				Duel.SSet(tp,tc,tp,false)
+				Duel.ChangePosition(tc,POS_FACEDOWN)
 			end
 		end
 	end
@@ -190,10 +198,12 @@ function s.changemononfield(tp)
 	if g and #g>0 then
 		for tc in g:Iter() do
 			if tc:IsAbleToExtraAsCost() then
+				if #decks[tp][s.getyearval(tp)][2]==0 then return end
 				local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][2])
 				Card.Recreate(tc, decks[tp][s.getyearval(tp)][2][num], nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
 				table.remove(decks[tp][s.getyearval(tp)][2], num)
 			else
+				if #decks[tp][s.getyearval(tp)][1]==0 then return end
 				local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][1])
 				Card.Recreate(tc, decks[tp][s.getyearval(tp)][1][num], nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
 				table.remove(decks[tp][s.getyearval(tp)][1], num)
@@ -207,6 +217,7 @@ function s.changebackrowonfield(tp)
 
 	if g and #g>0 then
 		for tc in g:Iter() do
+			if #decks[tp][s.getyearval(tp)][3]==0 then return end
 			local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][3])
 			Card.Recreate(tc, decks[tp][s.getyearval(tp)][3][num],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
 			table.remove(decks[tp][s.getyearval(tp)][3], num)
@@ -220,6 +231,7 @@ function s.changeextra(tp)
 
 	if g and #g>0 then
 		for tc in g:Iter() do
+			if #decks[tp][s.getyearval(tp)][2]==0 then return end
 			local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][2])
 			Card.Recreate(tc, decks[tp][s.getyearval(tp)][2][num],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
 			table.remove(decks[tp][s.getyearval(tp)][2], num)
@@ -257,7 +269,7 @@ function s.changeallelse(tp)
 	Duel.ShuffleHand(tp)
 end
 
-local bosses={48626373,48626373,48626373,48626373,48626373,48626373}
+local bosses={70781052,511002631,72989439,63519819,9596126,12538374,65192027,44508094,72896720,3429238,42752141,22110647,73964868,83531441,10443957,48905153,5043020,93854893,9464441,96633955,84330567,48626373}
 local bossmonsters={}
 bossmonsters[0]=Group.CreateGroup()
 bossmonsters[1]=Group.CreateGroup()
@@ -378,6 +390,90 @@ function s.addxyzmaterial(tp, tc)
 		bigbang:RegisterFlagEffect(id, 0, 0, 0)
 		Duel.Overlay(tc,bigbang)
 	end
+	--dolkka
+	if tc:IsCode(42752141) then
+		local sabersaurus1=Duel.CreateToken(tp, 37265642)
+		Duel.SendtoGrave(sabersaurus1, REASON_RULE)
+		sabersaurus1:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,sabersaurus1)
+
+		local sabersaurus2=Duel.CreateToken(tp, 37265642)
+		Duel.SendtoGrave(sabersaurus2, REASON_RULE)
+		sabersaurus2:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,sabersaurus2)
+	end
+	--dracossack
+	if tc:IsCode(22110647) then
+		local tempest=Duel.CreateToken(tp, 89399912)
+		Duel.SendtoGrave(tempest, REASON_RULE)
+		tempest:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,tempest)
+
+		local tidal=Duel.CreateToken(tp, 26400609)
+		Duel.SendtoGrave(tidal, REASON_RULE)
+		tidal:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,tidal)
+	end
+	--pleiades
+	if tc:IsCode(73964868) then
+		local scythe=Duel.CreateToken(tp, 20292186)
+		Duel.SendtoGrave(scythe, REASON_RULE)
+		scythe:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,scythe)
+
+		local moraltach=Duel.CreateToken(tp, 85103922)
+		Duel.SendtoGrave(moraltach, REASON_RULE)
+		bigbang:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,moraltach)
+	end
+	--dante
+	if tc:IsCode(83531441) then
+		local cir=Duel.CreateToken(tp, 57143342)
+		Duel.SendtoGrave(cir, REASON_RULE)
+		cir:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,cir)
+
+		local farfa=Duel.CreateToken(tp, 36553319)
+		Duel.SendtoGrave(farfa, REASON_RULE)
+		farfa:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,farfa)
+	end
+	--cdi
+	if tc:IsCode(10443957) then
+		local tricklown=Duel.CreateToken(tp, 67696066)
+		Duel.SendtoGrave(tricklown, REASON_RULE)
+		tricklown:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,tricklown)
+
+		local dmgjugg=Duel.CreateToken(tp, 68819554)
+		Duel.SendtoGrave(dmgjugg, REASON_RULE)
+		dmgjugg:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,dmgjugg)
+	end
+	--drident
+	if tc:IsCode(48905153) then
+		local whiptail=Duel.CreateToken(tp, 31755044)
+		Duel.SendtoGrave(whiptail, REASON_RULE)
+		whiptail:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,whiptail)
+
+		local ramram=Duel.CreateToken(tp, 04145852)
+		Duel.SendtoGrave(ramram, REASON_RULE)
+		ramram:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,ramram)
+	end
+	--dingirsu
+	if tc:IsCode(93854893) then
+		local cymbal=Duel.CreateToken(tp, 21441617)
+		Duel.SendtoGrave(cymbal, REASON_RULE)
+		cymbal:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,cymbal)
+
+		local wwand=Duel.CreateToken(tp, 93920420)
+		Duel.SendtoGrave(wwand, REASON_RULE)
+		wwand:RegisterFlagEffect(id, 0, 0, 0)
+		Duel.Overlay(tc,wwand)
+	end
 end
 
 
@@ -409,7 +505,17 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 		local tar=g:Select(tp, 1,1,false,nil)
 		if tar then
 			local token=Duel.CreateToken(tp, tar:GetFirst():GetOriginalCode())
-			Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+			if token:IsType(TYPE_XYZ) then
+				Duel.SpecialSummon(token, SUMMON_TYPE_XYZ, tp, tp, true, true, POS_FACEUP)
+			elseif token:IsType(TYPE_SYNCHRO) then
+				Duel.SpecialSummon(token, SUMMON_TYPE_SYNCHRO, tp, tp, true, true, POS_FACEUP)
+			elseif token:IsType(TYPE_FUSION) then
+				Duel.SpecialSummon(token, SUMMON_TYPE_FUSION, tp, tp, true, true, POS_FACEUP)
+			elseif token:IsType(TYPE_LINK) then
+				Duel.SpecialSummon(token, SUMMON_TYPE_LINK, tp, tp, true, true, POS_FACEUP)
+			else
+				Duel.SpecialSummon(token, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+			end
 
 			if token:IsType(TYPE_XYZ) then
 				s.addxyzmaterial(tp,token)
@@ -426,14 +532,14 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DISCARD)
 	local disc=Duel.SelectMatchingCard(tp, s.thousandragondiscardfilter, tp, LOCATION_HAND, 0, 1,1,false,nil)
 	if Duel.SendtoGrave(disc, REASON_DISCARD) then
-		local year=s.getyearval(tp)
+		local year=s.getyearval(tp)-1
 		local g=Group.CreateGroup()
 		g:AddCard(bossmonsters[tp]:TakeatPos(year))
-		if year>1 then
-			if year==2 then
+		if year>0 then
+			if year==1 then
 				g:AddCard(bossmonsters[tp]:TakeatPos(year-1))
 				
-			elseif year==3 then
+			elseif year==2 then
 				g:AddCard(bossmonsters[tp]:TakeatPos(year-1))
 				g:AddCard(bossmonsters[tp]:TakeatPos(year-2))
 			else
