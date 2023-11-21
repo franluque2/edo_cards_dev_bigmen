@@ -40,19 +40,27 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 local decks={{},{}}
+for i = 0, 1 do
+    decks[i] = {}
+
+    for j = 0, 23 do
+        decks[i][j] = {}
+    end
+end
+
 
 -- monster, extra monster, backrow
-decks[0][0] = { {}, {} , {} }
-decks[1][0] = { {}, {} , {} }
+decks[0][0] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
+decks[1][0] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
 
-decks[0][1] = { {}, {} , {} }
-decks[1][1] = { {}, {} , {} }
+decks[0][1] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
+decks[1][1] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
 
-decks[0][2] = { {}, {} , {} }
-decks[1][2] = { {}, {} , {} }
+decks[0][2] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
+decks[1][2] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
 
-decks[0][3] = { {}, {} , {} }
-decks[1][3] = { {}, {} , {} }
+decks[0][3] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
+decks[1][3] = { {32909498,32909498,32909498,32909498,32909498}, {84815190,84815190,84815190,84815190} , {55144522,55144522,55144522,55144522,55144522,55144522} }
 
 decks[0][4] = { {}, {} , {} }
 decks[1][4] = { {}, {} , {} }
@@ -143,6 +151,7 @@ function s.changeop(e,tp,eg,ep,ev,re,r,rp)
 	s.changeextra(tp)
 	s.changeallelse(tp)
 
+
 end
 
 function s.flipdownbackrow(tp)
@@ -183,11 +192,11 @@ function s.changemononfield(tp)
 			if tc:IsAbleToExtraAsCost() then
 				local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][2])
 				Card.Recreate(tc, decks[tp][s.getyearval(tp)][2][num], nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-				table.remove(decks[tp][s.getyearval(tp)][2][num])
+				table.remove(decks[tp][s.getyearval(tp)][2], num)
 			else
 				local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][1])
 				Card.Recreate(tc, decks[tp][s.getyearval(tp)][1][num], nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-				table.remove(decks[tp][s.getyearval(tp)][1][num])
+				table.remove(decks[tp][s.getyearval(tp)][1], num)
 			end
 		end
 	end
@@ -200,7 +209,7 @@ function s.changebackrowonfield(tp)
 		for tc in g:Iter() do
 			local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][3])
 			Card.Recreate(tc, decks[tp][s.getyearval(tp)][3][num],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-			table.remove(decks[tp][s.getyearval(tp)][3][num])
+			table.remove(decks[tp][s.getyearval(tp)][3], num)
 		end
 	end
 end
@@ -208,13 +217,15 @@ end
 function s.changeextra(tp)
 	local g=Duel.GetMatchingGroup(s.replacemonfilter, tp, LOCATION_EXTRA, 0, nil)
 
+
 	if g and #g>0 then
 		for tc in g:Iter() do
 			local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][2])
 			Card.Recreate(tc, decks[tp][s.getyearval(tp)][2][num],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-			table.remove(decks[tp][s.getyearval(tp)][2][num])
+			table.remove(decks[tp][s.getyearval(tp)][2], num)
 		end
 	end
+	Duel.ShuffleExtra(tp)
 end
 
 function s.changeallelse(tp)
@@ -239,10 +250,11 @@ function s.changeallelse(tp)
 
 			local num=Duel.GetRandomNumber(1, #decks[tp][s.getyearval(tp)][cardtyp])
 			Card.Recreate(tc, decks[tp][s.getyearval(tp)][cardtyp][num],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-			table.remove(decks[tp][s.getyearval(tp)][cardtyp][num])
+			table.remove(decks[tp][s.getyearval(tp)][cardtyp], num)
 		end
 	end
-
+	Duel.ShuffleDeck(tp)
+	Duel.ShuffleHand(tp)
 end
 
 local bosses={48626373,48626373,48626373,48626373,48626373,48626373}
