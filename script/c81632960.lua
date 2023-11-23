@@ -42,8 +42,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_FIELD)
 		e3:SetCode(EFFECT_ADD_SETCODE)
 		e3:SetTargetRange(LOCATION_GRAVE+LOCATION_MZONE,0)
-		e3:SetTarget(function (_, tc) return tc:IsType(TYPE_MONSTER) end)
-		e3:SetValue(0x152f)
+		e3:SetTarget(function (_, tc) return tc:IsType(TYPE_MONSTER) and tc:IsRace(RACE_FIEND) and tc:IsAttribute(ATTRIBUTE_DARK) end)
+		e3:SetValue(0x52f)
 		Duel.RegisterEffect(e3,tp)
 
         local e4=Effect.CreateEffect(e:GetHandler())
@@ -126,23 +126,20 @@ end
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
+	if Duel.GetFlagEffect(tp,id+1)>0  then return end
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
         and Duel.IsExistingMatchingCard(s.monsterfilter,tp,LOCATION_MZONE,0,1,nil)
 
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_SYNCHRO),tp,LOCATION_MZONE,0,1,nil)
-            and Duel.IsExistingMatchingCard(s.setcardfilter,tp,LOCATION_DECK,0,1,nil)
-            and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
+	
 
 
 
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b1)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
@@ -154,21 +151,13 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 local b1=Duel.GetFlagEffect(tp,id+1)==0
     and Duel.IsExistingMatchingCard(s.monsterfilter,tp,LOCATION_MZONE,0,1,nil)
 
-local b2=Duel.GetFlagEffect(tp,id+2)==0
-    and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_SYNCHRO),tp,LOCATION_MZONE,0,1,nil)
-    and Duel.IsExistingMatchingCard(s.setcardfilter,tp,LOCATION_DECK,0,1,nil)
-    and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
-
 
 --effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)})
 	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
-	elseif op==1 then
-		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
@@ -189,14 +178,3 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 			end
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
-
-
-function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.SelectMatchingCard(tp, s.setcardfilter, tp, LOCATION_DECK, 0, 1,1,nil)
-    if tc then
-        Duel.SSet(tp, tc)
-    end
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
-end
-
