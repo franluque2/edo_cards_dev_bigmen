@@ -28,8 +28,36 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCountLimit(1)
 		Duel.RegisterEffect(e1,tp)
 
+		--unaffected by unlimiter
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_IMMUNE_EFFECT)
+        e7:SetTargetRange(LOCATION_MZONE,0)
+        e7:SetValue(s.efilter)
+        Duel.RegisterEffect(e7, tp)
+
+
+		--halve battle dmg
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+		e3:SetTargetRange(LOCATION_MZONE,0)
+		e3:SetTarget(s.rdtg)
+		e3:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
+		Duel.RegisterEffect(e3,tp)
+
 end
 e:SetLabel(1)
+end
+
+function s.efilter(e,te)
+	return te:GetHandler():IsCode(82377606)
+end
+
+
+function s.rdtg(e,c)
+	return not c:IsOriginalSetCard(0x1)
 end
 
 	function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
