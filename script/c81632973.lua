@@ -50,17 +50,37 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     local e3=Effect.CreateEffect(e:GetHandler())
     e3:SetType(EFFECT_TYPE_FIELD)
     e3:SetCode(EFFECT_ADD_SETCODE)
+	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
     e3:SetTargetRange(LOCATIONS,0)
     e3:SetTarget(aux.TargetBoolFunction(s.archetypefilter))
     e3:SetValue(ARCHETYPE)
     Duel.RegisterEffect(e3,tp)
 
+		-- ice barriers cannot activate
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_CANNOT_TRIGGER)
+		e8:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+        e8:SetTargetRange(LOCATION_MZONE,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e8, tp)
 
 	end
 	e:SetLabel(1)
 end
 
+function s.funarwhalfilter(c)
+	return c:IsCode(06568731) and c:IsFaceup()
+end
 
+function s.discon(e)
+	return Duel.IsExistingMatchingCard(s.funarwhalfilter, e:GetHandlerPlayer(), LOCATION_MZONE, 0, 1, nil)
+end
+
+function s.actfilter(e,c)
+	return c:IsOriginalSetCard(0x2f) and c:IsSummonLocation(LOCATION_EXTRA)
+end
 
 
 
