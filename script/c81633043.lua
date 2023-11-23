@@ -43,12 +43,12 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetTarget(s.actfilter)
         Duel.RegisterEffect(e8, tp)
 
-        local e8=Effect.CreateEffect(e:GetHandler())
-        e8:SetType(EFFECT_TYPE_FIELD)
-        e8:SetCode(EFFECT_DISABLE)
-        e8:SetTargetRange(LOCATION_ONFIELD,0)
-        e8:SetTarget(aux.TargetBoolFunction(Card.IsCode,51522296))
-        Duel.RegisterEffect(e8, tp)
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_DISABLE)
+        e9:SetTargetRange(LOCATION_ONFIELD,0)
+        e9:SetTarget(aux.TargetBoolFunction(Card.IsCode,51522296))
+        Duel.RegisterEffect(e9, tp)
 	end
 	e:SetLabel(1)
 end
