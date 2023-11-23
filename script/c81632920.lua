@@ -30,6 +30,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetOperation(s.flipop3)
 		Duel.RegisterEffect(e2,tp)
 
+
 	end
 	e:SetLabel(1)
 end
@@ -40,6 +41,28 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	s.activate_field(e,tp,eg,ep,ev,re,r,rp)
+
+	local g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil, 41181774)
+	if g and #g>0 then
+		for tc in g:Iter() do
+			if tc:GetFlagEffect(id)==0 then
+				tc:RegisterFlagEffect(id,0,0,0)
+				local eff={tc:GetCardEffect()}
+				for _,teh in ipairs(eff) do
+					if teh:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET~=nil then
+						teh:Reset()
+					end
+				end
+				local e3=Effect.CreateEffect(tc)
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+				e3:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
+				e3:SetRange(LOCATION_MZONE)
+				e3:SetValue(1)
+				tc:RegisterEffect(e3)
+		end
+	end
+end
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 function s.field_filter(c)
@@ -155,10 +178,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 		local g2=Duel.GetMatchingGroup(s.supay_ascator_filter, tp, LOCATION_GRAVE, 0, nil)
 		if #g2>0 then
 			if Duel.SelectYesNo(tp,aux.Stringid(id,5)) then
-				if Duel.SendtoDeck(g2, tp, SEQ_DECKSHUFFLE, REASON_EFFECT) then
-					local walker=Duel.CreateToken(tp,67987302)
-					Duel.SendtoHand(walker, tp, REASON_EFFECT)
-				end
+			 Duel.SendtoDeck(g2, tp, SEQ_DECKSHUFFLE, REASON_EFFECT)
 			end
 		end
 	end
