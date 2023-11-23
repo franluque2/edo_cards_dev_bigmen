@@ -49,7 +49,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterFlagEffect(id,0,0,0)
 				local eff={tc:GetCardEffect()}
 				for _,teh in ipairs(eff) do
-					if teh:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET~=nil then
+					if teh:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET==EFFECT_CANNOT_BE_BATTLE_TARGET then
 						teh:Reset()
 					end
 				end
