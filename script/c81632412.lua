@@ -61,6 +61,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
         Duel.BreakEffect()
-        Duel.DiscardDeck(tp, 3, REASON_EFFECT)
+        Duel.DiscardDeck(tp, 1, REASON_EFFECT)
 	end
 end

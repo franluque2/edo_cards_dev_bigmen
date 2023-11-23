@@ -63,6 +63,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp):GetFirst()
 	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
         Duel.BreakEffect()
-        Duel.DiscardDeck(tp, 3, REASON_EFFECT)
+        Duel.DiscardDeck(tp, 1, REASON_EFFECT)
     end
 end
