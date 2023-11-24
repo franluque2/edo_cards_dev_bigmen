@@ -440,7 +440,7 @@ function s.addxyzmaterial(tp, tc)
 
 		local moraltach=Duel.CreateToken(tp, 85103922)
 		Duel.SendtoGrave(moraltach, REASON_RULE)
-		bigbang:RegisterFlagEffect(id, 0, 0, 0)
+		moraltach:RegisterFlagEffect(id, 0, 0, 0)
 		Duel.Overlay(tc,moraltach)
 	end
 	--dante
