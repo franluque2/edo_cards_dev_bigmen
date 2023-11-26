@@ -46,6 +46,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
 
-	local lamba=Duel.CreateToken(tp, 81632651)
+	local lamba=Duel.CreateToken(tp, 881632651)
 	Duel.SpecialSummon(lamba, 0, tp, tp, false, false, POS_FACEUP)
 end

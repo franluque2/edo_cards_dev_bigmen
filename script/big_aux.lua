@@ -215,25 +215,25 @@ if not kdr then
 
 
 	function kdr.IsQuestDone(tp)
-		return Duel.GetFlagEffect(tp, 81632500)>0
+		return Duel.GetFlagEffect(tp, 881632500)>0
 	end
 
 	function kdr.CompleteQuest(tp,card,e)
-		Duel.RegisterFlagEffect(tp, 81632500, 0, 0, 0)
+		Duel.RegisterFlagEffect(tp, 881632500, 0, 0, 0)
 
-		Duel.RaiseEvent(card, EVENT_CUSTOM+81632500, e, REASON_RULE, tp, tp, 1)
+		Duel.RaiseEvent(card, EVENT_CUSTOM+881632500, e, REASON_RULE, tp, tp, 1)
 	end
 
 	function kdr.GetDex(tp)
-		return Duel.GetFlagEffect(tp, 81632650)
+		return Duel.GetFlagEffect(tp, 881632650)
 	end
 
 	function kdr.GetCon(tp)
-		return Duel.GetFlagEffect(tp, 81632651)
+		return Duel.GetFlagEffect(tp, 881632651)
 	end
 
 	function kdr.GetStr(tp)
-		return Duel.GetFlagEffect(tp, 81632652)
+		return Duel.GetFlagEffect(tp, 881632652)
 	end
 
 
