@@ -121,7 +121,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-	local Wormhole=Duel.CreateToken(tp,511009660)
+	local Wormhole=Duel.CreateToken(tp,81632498)
 			Duel.SSet(tp,Wormhole)
 
 end
