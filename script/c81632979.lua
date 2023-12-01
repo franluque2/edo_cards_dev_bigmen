@@ -25,6 +25,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
 
+		local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e9:SetCode(EVENT_ADJUST)
+		e9:SetCondition(s.removecardccon)
+		e9:SetOperation(s.removecardcop)
+        Duel.RegisterEffect(e9,tp)
+
 
 
 
@@ -33,8 +40,24 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
+function s.remcardfilter(c)
+	return c:GetFlagEffect(id-1000)>0
+end
+
+function s.removecardccon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(s.remcardfilter, tp, LOCATION_GRAVE|LOCATION_REMOVED|LOCATION_DECK, 0, 1, nil)
+end
+function s.removecardcop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.remcardfilter, tp, LOCATION_GRAVE|LOCATION_REMOVED|LOCATION_DECK, 0, nil)
+	Duel.RemoveCards(g)
+end
+
+
 local ChristmasPresentIds={81632309,81632310,81632311,81632312,81632313,
-                            81632314,81632315,81632316,81632317,81632318}
+                            81632314,81632315,81632316,81632317,81632318,
+							81632500,81632501,81632502,81632503,81632504,
+							81632505,81632506,81632507,81632508,81632509,
+							81632510,81632501}
 
 local ChristmasPresents={}
 ChristmasPresents[0]={}
@@ -152,6 +175,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
                 local card2=Duel.CreateToken(1-ep, tc:GetFirst():GetOriginalCode())
                 Duel.SendtoHand(card2, 1-ep, REASON_RULE)
+
+				card:RegisterFlagEffect(id-1000, 0, 0, 0)
+				card2:RegisterFlagEffect(id-1000, 0, 0, 0)
 
             end
 
