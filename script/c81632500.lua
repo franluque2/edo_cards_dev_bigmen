@@ -69,6 +69,13 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     e4:SetValue(tc:GetOriginalLevel())
     e4:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
     c:RegisterEffect(e4)
+
+	local e5=Effect.CreateEffect(c)
+    e5:SetType(EFFECT_TYPE_SINGLE)
+    e5:SetCode(EFFECT_ADD_SETCODE)
+    e5:SetValue(tc:GetCode())
+    e5:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+    c:RegisterEffect(e5)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -105,18 +112,21 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local fid=eg:GetFirst():GetFieldID()
 	e:GetLabelObject():SetLabel(fid)
 end
-function s.thcfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x132) and c:IsControler(tp)
+function s.thcfilter(c,tp,e)
+	if not (c:IsFaceup() and c:IsControler(tp)) then return end
+	local oc=e:GetHandler()
+	local setcards=oc:GetSetCard()
+	return c:IsSetCard(setcards)
+
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.thcfilter,1,nil,tp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.thcfilter,1,nil,tp,e)
 end
 function s.thfilter(c,e)
     if not (c:IsType(TYPE_SPELL|TYPE_TRAP) and c:IsAbleToHand()) then return end
-    local archetypes={e:GetHandler():Setcode()}
-
-
-	return c:IsSetCard(table.unpack(archetypes))
+	local oc=e:GetHandler()
+	local setcards=oc:GetSetCard()
+	return c:IsSetCard(setcards)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e) end
