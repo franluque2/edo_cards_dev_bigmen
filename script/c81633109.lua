@@ -142,6 +142,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e13:SetTarget(aux.TargetBoolFunction(s.Prisoners))
         e13:SetValue(TYPE_SYNCHRO)
         Duel.RegisterEffect(e13,tp) 
+
+		local e14=Effect.CreateEffect(c)
+		e14:SetType(EFFECT_TYPE_FIELD)
+        e14:SetTargetRange(LOCATION_MZONE,0)
+		e14:SetCode(EFFECT_CANNOT_RELEASE)
+		e14:SetTarget(aux.TargetBoolFunction(s.Prisoners))
+		e14:SetValue(1)
+        Duel.RegisterEffect(e14,tp)
     
 
 	end
