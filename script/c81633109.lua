@@ -150,6 +150,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e14:SetTarget(aux.TargetBoolFunction(s.Prisoners))
 		e14:SetValue(1)
         Duel.RegisterEffect(e14,tp)
+
+		local e15=Effect.CreateEffect(e:GetHandler())
+        e15:SetType(EFFECT_TYPE_FIELD)
+        e15:SetCode(EFFECT_ADD_ATTRIBUTE)
+        e15:SetTargetRange(LOCATIONS,0)
+        e15:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
+        e15:SetValue(ATTRIBUTE_EARTH)
+        Duel.RegisterEffect(e15,tp)
+
+		local e16=Effect.CreateEffect(e:GetHandler())
+        e16:SetType(EFFECT_TYPE_FIELD)
+        e16:SetCode(EFFECT_ADD_RACE)
+        e16:SetTargetRange(LOCATIONS,0)
+        e16:SetTarget(function(_,c)  return c:IsHasEffect(id+6) end)
+        e16:SetValue(RACE_WARRIOR)
+        Duel.RegisterEffect(e16,tp)
     
 
 	end
@@ -262,6 +278,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetType(EFFECT_TYPE_SINGLE)
 				e3:SetCode(id+5)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	g=Duel.GetMatchingGroup(s.Sergeants, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+6)
 				tc:RegisterEffect(e3)
 
 
