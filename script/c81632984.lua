@@ -251,11 +251,11 @@ function s.flipop(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.lowlevelgalacfilter(c)
-	return c:IsRace(RACE_GALAXY) and c:IsLevelBelow(4) + c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_GALAXY) and c:IsLevelBelow(4) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
 function s.highlevelgalacfilter(c)
-	return c:IsRace(RACE_GALAXY) and c:IsLevelAbove(7) + c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_GALAXY) and c:IsLevelAbove(7) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
 function s.addfusionprocedures(e, tp, eg, ep, ev, re, r, rp)
