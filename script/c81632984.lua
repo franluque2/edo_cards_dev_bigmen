@@ -77,9 +77,69 @@ function s.op(e, tp, eg, ep, ev, re, r, rp)
 		e4:SetCondition(s.setcon2)
 		e4:SetOperation(s.setop2)
 		Duel.RegisterEffect(e4, tp)
+
+		local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e5:SetCode(EVENT_PREDRAW)
+		e5:SetCondition(s.stackcon)
+		e5:SetOperation(s.stackop)
+		Duel.RegisterEffect(e5,tp)
 	end
 	e:SetLabel(1)
 end
+
+
+function s.abletoaddpiece(c,code)
+    return c:IsCode(code) and c:IsAbleToHand()
+end
+
+function s.otherpiecefinder(c,code)
+    return math.abs(c:GetCode()-code)<4 and not c:IsCode(code)
+end
+
+function s.abletopiece(c)
+    if not c:IsType(TYPE_MAXIMUM) then return false end
+
+    local g=Duel.GetMatchingGroup(s.otherpiecefinder, c:GetOwner(), LOCATION_DECK, 0, nil, c:GetCode())
+    if g:GetClassCount(Card.GetCode)<2 then return false end
+
+    return true
+end
+
+function s.ablereviece(c)
+    if not c:IsType(TYPE_MAXIMUM) then return false end
+
+    local g=Duel.GetMatchingGroup(s.otherpiecefinder, c:GetOwner(), LOCATION_HAND, 0, nil, c:GetCode())
+    if g:GetClassCount(Card.GetCode)<2 then return false end
+
+    return not c:IsPublic()
+end
+
+function s.stackcon(e,tp,eg,ep,ev,re,r,rp)
+    if not ( Duel.GetTurnCount()>2 and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+4)==0 and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)<3) then return false end
+    local g=Duel.GetDecktopGroup(tp, 5-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0))
+    if g:IsExists(s.abletopiece, 1, nil) then return true end
+    return false
+end
+function s.stackop(e,tp,eg,ep,ev,re,r,rp)
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 7)) then
+        local tc=Duel.GetFirstMatchingCard(s.abletopiece, tp, LOCATION_DECK, 0, nil)
+        local pieces=Duel.GetMatchingGroup(s.otherpiecefinder, tp, LOCATION_DECK, 0, nil, tc:GetCode())
+        local tc2=pieces:GetFirst()
+        local filteredpieces=pieces:Filter(s.otherpiecefinder, nil, tc2:GetCode())
+        local tc3=filteredpieces:GetFirst()
+        Duel.DisableShuffleCheck()
+
+        Duel.MoveSequence(tc2,0 )
+        Duel.MoveSequence(tc,0 )
+        Duel.MoveSequence(tc3, 0)
+
+        Duel.DisableShuffleCheck(false)
+
+        Duel.RegisterFlagEffect(tp, id+4, 0, 0, 0)
+    end
+end
+
 
 function s.setcon(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.GetCurrentChain() == 0 and Duel.GetTurnPlayer() == tp and
@@ -207,7 +267,7 @@ function s.galacticaspelltrapfilter(c)
 end
 
 function s.specialsummongalaxyfilter(c, e, tp)
-	return c:IsLevelBelow(4) and c:IsType(TYPE_NORMAL) and c:IsRace(RACE_GALAXY) and
+	return c:IsLevelBelow(4) and c:IsRace(RACE_GALAXY) and
 	c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false)
 end
 
@@ -264,12 +324,21 @@ end
 function s.operation_for_res0(e, tp, eg, ep, ev, re, r, rp)
 	local tar = Duel.SelectMatchingCard(tp, s.highlevelfilter, tp, LOCATION_MZONE, 0, 1, 1, false, nil)
 	if tar then
+		local op = Duel.SelectEffect(tp, { true, aux.Stringid(id, 5) },
+		{ true, aux.Stringid(id, 6) })
+		local cardid
+		if op==1 then
+			cardid=CARD_SEVENS_ROAD_MAGICIAN
+		else
+			cardid=160015003
+		end
+
 		local e1 = Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_CODE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT + RESETS_STANDARD + RESET_PHASE + PHASE_END)
-		e1:SetValue(CARD_SEVENS_ROAD_MAGICIAN)
+		e1:SetValue(cardid)
 		tar:GetFirst():RegisterEffect(e1)
 	end
 
@@ -285,7 +354,7 @@ function s.operation_for_res1(e, tp, eg, ep, ev, re, r, rp)
 	local g2 = g:Filter(s.specialsummongalaxyfilter, nil, e, tp)
 	if #g2 > 0 then
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-		local sum = g2:Select(tp, 0, 2, nil)
+		local sum = g2:Select(tp, 0, 1, nil)
 
 		if #sum > 0 then
 			Duel.SpecialSummon(sum, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
