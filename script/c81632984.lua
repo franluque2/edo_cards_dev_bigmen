@@ -242,8 +242,32 @@ function s.flipop(e, tp, eg, ep, ev, re, r, rp)
 	Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
 	Duel.Hint(HINT_CARD, tp, id)
 
+	s.addfusionprocedures(e, tp, eg, ep, ev, re, r, rp)
+
+
+
 	--start of duel effects go here
 	Duel.RegisterFlagEffect(ep, id, 0, 0, 0)
+end
+
+function s.lowlevelgalacfilter(c)
+	return c:IsRace(RACE_GALAXY) and c:IsLevelBelow(4) + c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+
+function s.highlevelgalacfilter(c)
+	return c:IsRace(RACE_GALAXY) and c:IsLevelAbove(7) + c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+
+function s.addfusionprocedures(e, tp, eg, ep, ev, re, r, rp)
+	local g1=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 160015036)
+	for tc in g1:Iter() do
+		Fusion.AddProcMix(tc,true,true,160009002,aux.FilterBoolFunctionEx(s.lowlevelgalacfilter))
+	end
+
+	local g2=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 160012030)
+	for tc in g2:Iter() do
+		Fusion.AddProcMix(tc,true,true,CARD_TRANSAMU_RAINAC,aux.FilterBoolFunctionEx(s.highlevelgalacfilter))
+	end
 end
 
 function s.futransamufilter(c)
@@ -275,13 +299,13 @@ end
 function s.flipcon2(e, tp, eg, ep, ev, re, r, rp)
 	--OPT check
 	--checks to not let you activate anything if you can't, add every flag effect used for opt/opd here
-	if Duel.GetFlagEffect(tp, id + 1) > 0 and Duel.GetFlagEffect(tp, id + 2) > 0 then return end
+	if Duel.GetFlagEffect(tp, id + 2) > 0 then return end
 	--Boolean checks for the activation condition: b1, b2
 
 	--do bx for the conditions for each effect, and at the end add them to the return
-	local b1 = Duel.GetFlagEffect(tp, id + 1) == 0
-		and Duel.IsExistingMatchingCard(s.futransamufilter, tp, LOCATION_ONFIELD, 0, 1, nil)
-		and Duel.IsExistingMatchingCard(s.highlevelfilter, tp, LOCATION_MZONE, 0, 1, nil)
+	--local b1 = Duel.GetFlagEffect(tp, id + 1) == 0
+	--	and Duel.IsExistingMatchingCard(s.futransamufilter, tp, LOCATION_ONFIELD, 0, 1, nil)
+	--	and Duel.IsExistingMatchingCard(s.highlevelfilter, tp, LOCATION_MZONE, 0, 1, nil)
 
 	local b2 = Duel.GetFlagEffect(tp, id + 2) == 0
 		and Duel.IsExistingMatchingCard(s.galacticafilter, tp, LOCATION_MZONE, 0, 1, nil, tp)
@@ -290,7 +314,7 @@ function s.flipcon2(e, tp, eg, ep, ev, re, r, rp)
 
 
 	--return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b2)
 end
 
 function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
@@ -300,9 +324,9 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 
 	--copy the bxs from above
 
-	local b1 = Duel.GetFlagEffect(tp, id + 1) == 0
-		and Duel.IsExistingMatchingCard(s.futransamufilter, tp, LOCATION_ONFIELD, 0, 1, nil)
-		and Duel.IsExistingMatchingCard(s.highlevelfilter, tp, LOCATION_MZONE, 0, 1, nil)
+	--local b1 = Duel.GetFlagEffect(tp, id + 1) == 0
+	--	and Duel.IsExistingMatchingCard(s.futransamufilter, tp, LOCATION_ONFIELD, 0, 1, nil)
+	--	and Duel.IsExistingMatchingCard(s.highlevelfilter, tp, LOCATION_MZONE, 0, 1, nil)
 
 		local b2 = Duel.GetFlagEffect(tp, id + 2) == 0
 		and Duel.IsExistingMatchingCard(s.galacticafilter, tp, LOCATION_MZONE, 0, 1, nil, tp)
@@ -310,7 +334,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 		and Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) > 2
 
 	--effect selector
-	local op = Duel.SelectEffect(tp, { b1, aux.Stringid(id, 1) },
+	local op = Duel.SelectEffect(tp,
 		{ b2, aux.Stringid(id, 2) })
 	op = op - 1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
 
