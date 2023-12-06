@@ -43,6 +43,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e6:SetValue(RACE_BEAST)
 	Duel.RegisterEffect(e6,tp)
 
+	local e7=Effect.CreateEffect(e:GetHandler())
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_ADD_SETCODE)
+	e7:SetTargetRange(LOCATION_ALL,0)
+	e7:SetCondition(function(_,pl) return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandler():GetControler(), LOCATION_ALL, 0, 1, nil, 15033525) end)
+	e7:SetTarget(function(_,c)  return c:IsRace(RACE_MACHINE) or c:IsRace(RACE_PYRO) end)
+	e7:SetValue(SET_RESCUE_ACE)
+	Duel.RegisterEffect(e7,tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -75,7 +84,8 @@ end
 
 --add the conditions for the archetype swap here
 function s.archetypefilterforbbeast(c)
-  return c:IsSetCard(0x51e) and c:IsType(TYPE_MONSTER)
+  return c:IsSetCard(0x51e) 
+  and c:IsType(TYPE_MONSTER)
 end
 
 
