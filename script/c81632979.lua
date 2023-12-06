@@ -57,7 +57,7 @@ local ChristmasPresentIds={81632309,81632310,81632311,81632312,81632313,
                             81632314,81632315,81632316,81632317,81632318,
 							81632500,81632501,81632502,81632503,81632504,
 							81632505,81632506,81632507,81632508,81632509,
-							81632510,81632501}
+							81632510,81632511}
 
 local ChristmasPresents={}
 ChristmasPresents[0]={}
@@ -184,6 +184,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(g2, ep, -2, REASON_RULE)
 
 			Duel.DisableShuffleCheck(false)
+
+			Duel.ShuffleHand(ep)
+			Duel.ShuffleHand(1-ep)
 
 
         end
