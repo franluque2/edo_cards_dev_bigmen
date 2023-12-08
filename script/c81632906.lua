@@ -59,7 +59,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	eaxel2:SetCode(EFFECT_ADD_SETCODE)
 	eaxel2:SetTargetRange(LOCATION_ALL,0)
 	eaxel2:SetCondition(function(_,pl) return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandler():GetControler(), LOCATION_ALL, 0, 1, nil, 15033525) end)
-	eaxel2:SetTarget(function(_,c)  return c:IsOriginalCode(511000505,511002337,511002338) end)
+	eaxel2:SetTarget(function(_,c)  return c:IsOriginalCode(100304006,511002337,511002338) end)
 	eaxel2:SetValue(SET_RESCUE_ACE)
 	Duel.RegisterEffect(eaxel2,tp)
 
