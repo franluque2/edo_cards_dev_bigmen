@@ -1,6 +1,10 @@
 --Conscription of a Harmonious Bracelet Girl
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
+
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
+
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -63,8 +67,25 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetValue(RACE_FAIRY)
         Duel.RegisterEffect(e6,tp)
 
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_CANNOT_TRIGGER)
+        e8:SetTargetRange(LOCATION_MZONE,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e8, tp)
+
 	end
 	e:SetLabel(1)
+end
+
+
+function s.discon(e)
+	return Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(101204036)
 end
 
 
@@ -112,6 +133,28 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+	g=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_ALL, 0, nil)
+
+	if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_BATTLE_INDES)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetTargetRange(LOCATION_MZONE,0)
+		e1:SetValue(s.batval)
+		tc:RegisterEffect(e1)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
+function s.batval(e,re,c)
+	return Duel.IsExistingMatchingCard(Card.IsCode, re:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil, 40502912) and not re:GetHandler():IsCode(84988419)
+end
