@@ -45,7 +45,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if #g1>0 then
 			Duel.BreakEffect()
 		end
-		local ng=g1:Filter(aux.disfilter1,nil)
+		local ng=g1:Filter(Card.IsNegatableMonster,nil)
 		for nc in aux.Next(ng) do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
