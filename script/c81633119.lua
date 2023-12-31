@@ -162,7 +162,7 @@ function s.subval(e,c)
 end
 
 local cards_to_summon={160205053,160428037,160401006,160428027}
-local cards_to_add={160005039,160005040,160011054,81632429}
+local cards_to_add={160005039,160005040,160011054,81632429,81632512}
 
 local summons={}
 summons[0]=Group.CreateGroup()
