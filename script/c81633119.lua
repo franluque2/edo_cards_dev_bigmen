@@ -99,13 +99,13 @@ function s.recop2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.adjustArtCon(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetLP(tp)<=1000 and Duel.GetFlagEffect(tp, id+5)==0) or (Duel.GetLP(tp)>1000 and Duel.GetFlagEffect(tp, id+5)~=0)
+	return (Duel.GetLP(tp)<=1000 and Duel.GetLP(tp)>0 and Duel.GetFlagEffect(tp, id+5)==0) or (Duel.GetLP(tp)>1000 and Duel.GetFlagEffect(tp, id+5)~=0)
 end
 
 function s.adjustartop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 
-	if (Duel.GetLP(tp)<=1000 and Duel.GetFlagEffect(tp, id+5)==0) then
+	if (Duel.GetLP(tp)<=1000 and Duel.GetLP(tp)>0 and Duel.GetFlagEffect(tp, id+5)==0) then
 		e:GetHandler():Recreate(id+1)
 		Duel.Hint(HINT_SKILL_REMOVE,tp,id)
 		Duel.Hint(HINT_SKILL_FLIP,tp,(id+1)|(1<<32))
@@ -198,7 +198,7 @@ function s.filltables()
 end
 
 function s.getpicture(tp)
-	if Duel.GetLP(tp)>0 then
+	if Duel.GetLP(tp)>1000 then
 		return id
 	else
 		return id+1
