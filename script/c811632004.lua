@@ -108,9 +108,24 @@ function s.resummonmonster(e,tp,eg,ep,ev,re,r,rp, eqc)
     if Card.GetSummonType(eqc)==SUMMON_TYPE_NORMAL then
         Duel.RaiseEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
         Duel.RaiseSingleEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
-    else
-        Duel.RaiseEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
-        Duel.RaiseSingleEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
+    elseif Card.GetSummonType(eqc)==SUMMON_TYPE_LINK then
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_LINK,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_LINK,tp,eqc:GetControler(),ev)
+	elseif Card.GetSummonType(eqc)==SUMMON_TYPE_SYNCHRO then
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_SYNCHRO,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_SYNCHRO,tp,eqc:GetControler(),ev)
+	elseif Card.GetSummonType(eqc)==SUMMON_TYPE_RITUAL then
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_RITUAL,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_RITUAL,tp,eqc:GetControler(),ev)
+	elseif Card.GetSummonType(eqc)==SUMMON_TYPE_XYZ then
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_XYZ,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_XYZ,tp,eqc:GetControler(),ev)
+	elseif Card.GetSummonType(eqc)==SUMMON_TYPE_FUSION then
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_FUSION,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_FUSION,tp,eqc:GetControler(),ev)
+	else
+        Duel.RaiseEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
+        Duel.RaiseSingleEvent(eqc,EVENT_SPSUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
     end
 
 end
