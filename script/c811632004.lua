@@ -104,16 +104,7 @@ function s.doubop(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
-Card.IsSummonType = (function()
-	local oldfunc=Card.IsSummonType
-    return function(c, summontype,...)
-		if not (c and c:GetFlagEffect(id+1)>0) then return oldfunc(c, summontype,...) end
-		if summontype|SUMMON_TYPE_TRIBUTE==SUMMON_TYPE_TRIBUTE then
-			return true
-		end
-		return oldfunc(c, summontype,...)
-	end
-end)()
+
 
 
 
@@ -122,7 +113,6 @@ function s.resummonmonster(e,tp,eg,ep,ev,re,r,rp, eqc)
         Duel.RaiseEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
         Duel.RaiseSingleEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
 	elseif Card.GetSummonType(eqc)==SUMMON_TYPE_TRIBUTE then
-		eqc:RegisterFlagEffect(id+1, 0, 0, 0)
         Duel.RaiseEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
         Duel.RaiseSingleEvent(eqc,EVENT_SUMMON_SUCCESS,e,REASON_EFFECT,tp,eqc:GetControler(),ev)
     elseif Card.GetSummonType(eqc)==SUMMON_TYPE_LINK then
