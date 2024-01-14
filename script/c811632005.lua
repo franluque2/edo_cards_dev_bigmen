@@ -87,7 +87,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.ownedcard(c)
-	return c:GetOwner()==c:GetControler()
+	return c:GetOwner()==c:GetControler() and not (c:IsLocation(LOCATION_EXTRA) and c:IsFacedown())
 end
 
 function s.fupend(c)
