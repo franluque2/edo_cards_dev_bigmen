@@ -143,19 +143,19 @@ end
 
 function s.removemonstertypefilter(c,race)
     return c:IsMonster() and c:IsRace(race) and ((c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()) or
-        c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND))
+        c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED))
 end
 
 function s.removearchetypefilter(c,archetype)
     return c:IsSetCard(archetype) and ((c:IsMonster() and c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()) or
-        c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND))
+        c:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED))
 end
 
 function s.removecards(c, tp)
     local race=nil
     if c:IsMonster() then
         race=c:GetRace()
-        local g2=Duel.GetMatchingGroup(s.removemonstertypefilter, tp, LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_HAND, 0, c,race)
+        local g2=Duel.GetMatchingGroup(s.removemonstertypefilter, tp, LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA, 0, c,race)
         if g2 and #g2>0 then
             Duel.RemoveCards(g2)
         end
@@ -166,7 +166,7 @@ function s.removecards(c, tp)
 
     for key,value in ipairs(archetypes) do
 
-        local g2=Duel.GetMatchingGroup(s.removearchetypefilter, tp, LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_HAND, 0, c,value)
+        local g2=Duel.GetMatchingGroup(s.removearchetypefilter, tp, LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA, 0, c,value)
         if g2 and #g2>0 then
             Duel.RemoveCards(g2)
         end
