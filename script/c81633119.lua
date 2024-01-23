@@ -161,7 +161,7 @@ function s.subval(e,c)
     return not c:ListsCodeAsMaterial(CARD_CAN_D)
 end
 
-local cards_to_summon={160205053,160428037,160401006,160428027}
+local cards_to_summon={160205053,160428037,160401006,160428027, 160016025}
 local cards_to_add={160005039,160005040,160011054,81632429,81632512}
 
 local summons={}
