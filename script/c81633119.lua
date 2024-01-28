@@ -53,6 +53,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e13:SetCode(EFFECT_DESTROY_REPLACE)
 		e13:SetTarget(s.desreptg)
 		e13:SetValue(s.desrepval)
+		e13:SetCountLimit(1)
 		e13:SetOperation(s.desrepop)
 		Duel.RegisterEffect(e13,tp)
 
@@ -79,7 +80,7 @@ end
 
 
 function s.fupsychicfilter(c,tp)
-	return c:IsFaceup() and c:IsRace(RACE_PSYCHIC) and c:IsControler(tp)
+	return c:IsFaceup() and (c:IsRace(RACE_PSYCHIC) or c:IsRace(RACE_OMEGAPSYCHIC)) and c:IsControler(tp)
 end
 
 function s.reccon2(e,tp,eg,ep,ev,re,r,rp)
@@ -161,7 +162,7 @@ function s.subval(e,c)
     return not c:ListsCodeAsMaterial(CARD_CAN_D)
 end
 
-local cards_to_summon={160205053,160428037,160401006,160428027, 160016025}
+local cards_to_summon={160205053,160428037,160428027, 160016025}
 local cards_to_add={160005039,160005040,160011054,81632429,81632512}
 
 local summons={}
@@ -206,16 +207,18 @@ function s.getpicture(tp)
 end
 
 function s.adcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(Card.IsDiscardable, tp, LOCATION_HAND, 0, 1, nil, REASON_COST) and Duel.CheckLPCost(tp, 500)
 end
 
-local candarts={160005002,160401004,160446013}
+local candarts={160005002,160401004,160448002,160446013}
 function s.getcanDArt()
 	return candarts[Duel.GetRandomNumber(1,#candarts)]
 end
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         Duel.Hint(HINT_CARD,tp,s.getpicture(tp))
+		Duel.PayLPCost(tp, 500)
+		Duel.DiscardHand(tp, Card.IsDiscardable, 1, 1, REASON_COST, nil, REASON_COST)
         local cand=Duel.CreateToken(tp,s.getcanDArt())
         Duel.SendtoHand(cand, tp, REASON_RULE)
 		
@@ -283,7 +286,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsPlayerCanDiscardDeckAsCost(tp, 1)
 		and #adds[tp]>0
 
-	local b3=psychcount>9 and Duel.CheckLPCost(tp, psychcount*200)
+	local b3=psychcount>4 and Duel.CheckLPCost(tp, psychcount*200)
 
 
 	return aux.CanActivateSkill(tp) and (b1 or b2 or b3)
@@ -307,7 +310,7 @@ local b2=Duel.GetFlagEffect(tp,id+3)==0
 	and Duel.IsPlayerCanDiscardDeckAsCost(tp, 1)
 	and #adds[tp]>0
 
-local b3=psychcount>9 and Duel.CheckLPCost(tp, psychcount*200)
+local b3=psychcount>4 and Duel.CheckLPCost(tp, psychcount*200)
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,2)},
