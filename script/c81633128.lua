@@ -1,3 +1,4 @@
+--Heroic Bounzer Conscription
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
 
@@ -25,12 +26,16 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
-function s.Gadgets(c)
-  return c:IsSetCard(0x51)
+function s.Bounzers(c)
+  return c:IsOriginalSetCard(0x6b)
 end
 
-function s.DupOffering(c)
-  return c:IsCode(63995093, 76823930)
+function s.Heroics(c)
+  return c:IsOriginalSetCard(0x6f)
+end
+
+function s.XyzMonsters(c)
+    return c:IsType(TYPE_XYZ)
 end
 
 
@@ -49,19 +54,45 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_ADD_CODE)
-        e5:SetTargetRange(LOCATION_HAND,0)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATIONS,0)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e5:SetValue(8310431)
+        e5:SetValue(0x6f)
         Duel.RegisterEffect(e5,tp)
 
         local e6=Effect.CreateEffect(e:GetHandler())
         e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_SETCODE)
-        e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
-        e6:SetValue(0x7)
+        e6:SetCode(EFFECT_CHANGE_LEVEL)
+        e6:SetTargetRange(LOCATION_GY,0)
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e6:SetValue(4)
         Duel.RegisterEffect(e6,tp)
+
+        local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_ADD_SETCODE)
+        e7:SetTargetRange(LOCATIONS,0)
+        e7:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e7:SetValue(0x6b)
+        Duel.RegisterEffect(e7,tp)
+        
+        local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_ADD_SETCODE)
+        e8:SetTargetRange(LOCATIONS,0)
+        e8:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
+        e8:SetValue(0x6b)
+        Duel.RegisterEffect(e8,tp)
+
+        local e9=Effect.CreateEffect(e:GetHandler())
+        e9:SetType(EFFECT_TYPE_FIELD)
+        e9:SetCode(EFFECT_ADD_SETCODE)
+        e9:SetTargetRange(LOCATIONS,0)
+        e9:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
+        e9:SetValue(0x6f)
+        Duel.RegisterEffect(e9,tp)
+
+        
     
 
 	end
@@ -81,7 +112,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(s.Gadgets, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g=Duel.GetMatchingGroup(s.Bounzers, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
@@ -97,7 +128,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
-    g=Duel.GetMatchingGroup(s.DupOffering, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    g=Duel.GetMatchingGroup(s.Heroics, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
@@ -113,5 +144,22 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    g=Duel.GetMatchingGroup(s.XyzMonsters, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+2)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
+

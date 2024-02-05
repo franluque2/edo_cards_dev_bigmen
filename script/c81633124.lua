@@ -59,6 +59,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         --add archetype changing shit here PURPLE
 
+        function s.MainDeckFuckers(c)
+            return  c:IsType(TYPE_MONSTER) and c:IsNotType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+        end
+
+        function s.ExtraDeckFuckers(c)
+            return c:IsType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+        end
+
+
 
         -- LOCATION FOR ARCHETYPE CHANGING SHIT
         local e10=Effect.CreateEffect(e:GetHandler())
@@ -83,6 +92,54 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetTarget(aux.TargetBoolFunction(s.monarchfilter,5))
         e15:SetLabelObject(e12)
 		Duel.RegisterEffect(e15,tp)
+
+        local e16=Effect.CreateEffect(e:GetHandler())
+        e16:SetType(EFFECT_TYPE_FIELD)
+        e16:SetCode(EFFECT_ADD_SETCODE)
+        e16:SetTargetRange(LOCATIONS,0)
+        e16:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e16:SetValue(0x10af)
+        Duel.RegisterEffect(e16,tp)
+
+        local e17=Effect.CreateEffect(e:GetHandler())
+        e17:SetType(EFFECT_TYPE_FIELD)
+        e17:SetCode(EFFECT_ADD_SETCODE)
+        e17:SetTargetRange(LOCATIONS,0)
+        e17:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e17:SetValue(0xa9)
+        Duel.RegisterEffect(e17,tp)
+
+        local e18=Effect.CreateEffect(e:GetHandler())
+        e18:SetType(EFFECT_TYPE_FIELD)
+        e18:SetCode(EFFECT_ADD_SETCODE)
+        e18:SetTargetRange(LOCATIONS,0)
+        e18:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e18:SetValue(0xba)
+        Duel.RegisterEffect(e18,tp)
+
+        local e19=Effect.CreateEffect(e:GetHandler())
+        e19:SetType(EFFECT_TYPE_FIELD)
+        e19:SetCode(EFFECT_ADD_SETCODE)
+        e19:SetTargetRange(LOCATIONS,0)
+        e19:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e19:SetValue(0x10af)
+        Duel.RegisterEffect(e19,tp)
+
+        local e20=Effect.CreateEffect(e:GetHandler())
+        e20:SetType(EFFECT_TYPE_FIELD)
+        e20:SetCode(EFFECT_ADD_SETCODE)
+        e20:SetTargetRange(LOCATIONS,0)
+        e20:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e20:SetValue(0xad)
+        Duel.RegisterEffect(e20,tp)
+
+        local e21=Effect.CreateEffect(e:GetHandler())
+        e21:SetType(EFFECT_TYPE_FIELD)
+        e21:SetCode(EFFECT_ADD_SETCODE)
+        e21:SetTargetRange(LOCATIONS,0)
+        e21:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e21:SetValue(0xba)
+        Duel.RegisterEffect(e21,tp)
 
 
         local e4=Effect.CreateEffect(e:GetHandler())
@@ -144,6 +201,40 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e6,tp)
 
 	end
+
+    g=Duel.GetMatchingGroup(s.MainDeckFuckers, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+    g=Duel.GetMatchingGroup(s.ExtraDeckFuckers, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+1)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+
 end
 
 function s.highlevelddd(c)
