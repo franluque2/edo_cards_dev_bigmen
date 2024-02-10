@@ -69,7 +69,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
     local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CHANGE_DAMAGE)
+	e1:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(0,1)
 	e1:SetValue(s.damval)
@@ -77,9 +77,12 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	
 end
-function s.damval(e,re,val,r,rp,rc)
-	return math.floor(val/2)
+
+function s.damval(e,rc)
+	if not rc:IsCode() then return -1 end
+	return HALF_DAMAGE
 end
+
 
 
 
