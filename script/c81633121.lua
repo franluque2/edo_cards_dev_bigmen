@@ -75,7 +75,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e8=Effect.CreateEffect(e:GetHandler())
         e8:SetType(EFFECT_TYPE_FIELD)
-        e8:SetCode(EFFECT_ADD_SETCARD)
+        e8:SetCode(EFFECT_ADD_SETCODE)
         e8:SetTargetRange(LOCATION_HAND+LOCATION_GRAVE,0)
         e8:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e8:SetValue(0x7)
