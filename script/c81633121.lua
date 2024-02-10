@@ -52,9 +52,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e5=Effect.CreateEffect(e:GetHandler())
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_CODE)
-        e5:SetTargetRange(LOCATION_HAND,0)
+        e5:SetTargetRange(LOCATION_HAND+LOCATION_GRAVE,0)
         e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
-        e5:SetValue(8310431)
+        e5:SetValue(83104731)
         Duel.RegisterEffect(e5,tp)
 
         local e6=Effect.CreateEffect(e:GetHandler())
@@ -72,6 +72,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e7:SetOperation(s.sumop)
         e7:SetCountLimit(1)
 		Duel.RegisterEffect(e7,tp)
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_ADD_SETCARD)
+        e8:SetTargetRange(LOCATION_HAND+LOCATION_GRAVE,0)
+        e8:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e8:SetValue(0x7)
+        Duel.RegisterEffect(e8,tp)
     
 
 	end
