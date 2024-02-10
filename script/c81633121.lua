@@ -1,4 +1,4 @@
---add archetype Template
+--Elite Professor Vintage strats
 Duel.LoadScript("big_aux.lua")
 
 local s,id=GetID()
@@ -64,14 +64,44 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e6:SetValue(0x7)
         Duel.RegisterEffect(e6,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+		e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e7:SetCode(EVENT_CHAINING)
+		e7:SetCondition(s.sumcon)
+		e7:SetOperation(s.sumop)
+        e7:SetCountLimit(1)
+		Duel.RegisterEffect(e7,tp)
     
 
 	end
 	e:SetLabel(1)
 end
-
 local ANCIENT_GEAR_CARD=31557782
 local ANCIENT_GEAR_STATUE=500000006
+
+function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
+	return re:IsActiveType(TYPE_MONSTER)
+		and re:GetHandler():IsOriginalCode(ANCIENT_GEAR_STATUE)
+end
+
+function s.highlevelag(c)
+	return c:IsLevelAbove(6) and c:IsSetCard(0x7)
+end
+function s.sumop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD, tp, id)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(aux.TargetBoolFunction(s.highlevelag))
+	e1:SetValue(3)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+
+
 
 function s.markedfilter(c,e)
     return #c:IsHasEffect(e)>0
@@ -126,7 +156,19 @@ function s.notpublicgear(c)
 end
 
 function s.notancientgear(c)
+	return c:IsFaceup() and not c:IsCode(ANCIENT_GEAR_CARD)
+end
 
+function s.tributeancientgear(c)
+	return c:IsFaceup() and c:IsCode(ANCIENT_GEAR_CARD) and c:IsReleasable()
+end
+
+function s.shufflemachinefilter(c)
+	return c:IsRace(RACE_MACHINE) and c:IsMonster() and c:IsAbleToDeck() and not c:IsCode(ANCIENT_GEAR_CARD)
+end
+
+function s.spsummonfilter(c,e,tp)
+	return (c:IsCode(ANCIENT_GEAR_STATUE) or c:IsSetCard(0x51)) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEUP)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -137,17 +179,20 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.notancientgear,tp,LOCATION_MZONE,0,1,nil)
+						and Duel.IsExistingMatchingCard(s.notpublicgear,tp,LOCATION_HAND,0,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+			and Duel.GetMatchingGroupCount(s.shufflemachinefilter, tp, LOCATION_GRAVE, 0, nil)>2
+			and Duel.IsPlayerCanDraw(tp)
 
 	local b3=Duel.GetFlagEffect(tp,id+3)==0
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1, nil, e, tp)
 
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -159,39 +204,112 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--Boolean check for effect 1:
 
 --copy the bxs from above
-
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
-
+	and Duel.IsExistingMatchingCard(s.notancientgear,tp,LOCATION_MZONE,0,1,nil)
+				and Duel.IsExistingMatchingCard(s.notpublicgear,tp,LOCATION_HAND,0,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+	and Duel.GetMatchingGroupCount(s.shufflemachinefilter, tp, LOCATION_GRAVE, 0, nil)>2
+	and Duel.IsPlayerCanDraw(tp)
+
+	local b3=Duel.GetFlagEffect(tp,id+3)==0
+	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1, nil, e, tp)
+
+	local b4=Duel.GetFlagEffect(tp,id+4)==0
+	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
-	op=op-1 --SelectEffect returns indexes starting at 1, so we decrease the result by 1 to match your "if"s
+								  {b2,aux.Stringid(id,1)},
+								  {b3,aux.Stringid(id,2)},
+								  {b4,aux.Stringid(id,3)})
+	op=op-1
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	elseif op==1 then
 		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==2 then
+		s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
+	elseif op==3 then
+		s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
+	local gear=Duel.SelectMatchingCard(tp, s.notpublicgear, tp, LOCATION_HAND, 0, 1,1,false,nil)
+	if gear and Duel.ConfirmCards(1-tp, gear) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_FACEUP)
+		local newcard=Duel.SelectMatchingCard(tp, s.notancientgear, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+		if newcard then
+			local actualnewcard=newcard:GetFirst()
+			local e1=Effect.CreateEffect(e:GetHandler())
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_ADD_CODE)
+            e1:SetValue(ANCIENT_GEAR_CARD)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+            actualnewcard:RegisterEffect(e1)
+		end
 
+	end
 
---sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RELEASE)
+	local gear=Duel.SelectMatchingCard(tp, s.tributeancientgear, tp, LOCATION_MZONE, 0, 1,1,false,nil)
 
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	if gear and Duel.Release(gear, REASON_RULE) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
+		local machines=Duel.SelectMatchingCard(tp, s.shufflemachinefilter, tp, LOCATION_GRAVE, 0, 3,3,false,nil)
+		if Duel.SendtoDeck(machines, tp, SEQ_DECKSHUFFLE, REASON_RULE) then
+			Duel.Draw(tp, 1, REASON_RULE)
+		end
+
+	end
+
+
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+end
+
+function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
+
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RELEASE)
+	local gear=Duel.SelectMatchingCard(tp, s.tributeancientgear, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+
+	if gear and Duel.Release(gear, REASON_RULE) then
+		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+		local gadget=Duel.SelectMatchingCard(tp, s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil,e,tp)
+		Duel.SpecialSummon(gadget, SUMMON_TYPE_SPECIAL, tp, tp, 0, 0, POS_FACEUP)
+	end
+
+	Duel.RegisterFlagEffect(tp,id+3,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+end
+
+function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
+	local gear=Duel.SelectMatchingCard(tp, s.tributeancientgear, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+	if gear then
+		local geartochange=gear:GetFirst()
+		local code=geartochange:GetCode()
+		--"Gadget" monster, except this card's current name
+		s.announce_filter={0x51,OPCODE_ISSETCARD,code,OPCODE_ISCODE,OPCODE_NOT,OPCODE_AND,TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND}
+		local ac=Duel.AnnounceCard(tp,table.unpack(s.announce_filter))
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
+		e1:SetValue(ac)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		geartochange:RegisterEffect(e1)
+	
+	end
+
+	Duel.RegisterFlagEffect(tp,id+4,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
