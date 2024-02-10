@@ -24,6 +24,13 @@ function s.value(e)
 	return 0x1f<<16*e:GetHandlerPlayer()
 end
 
+function s.MainDeckFuckers(c)
+    return  c:IsType(TYPE_MONSTER) and c:IsNotType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+end
+
+function s.ExtraDeckFuckers(c)
+    return c:IsType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -59,13 +66,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         --add archetype changing shit here PURPLE
 
-        function s.MainDeckFuckers(c)
-            return  c:IsType(TYPE_MONSTER) and c:IsNotType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
-        end
-
-        function s.ExtraDeckFuckers(c)
-            return c:IsType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
-        end
+        
 
 
 

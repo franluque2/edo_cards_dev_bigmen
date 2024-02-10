@@ -92,12 +92,45 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e9:SetValue(0x6f)
         Duel.RegisterEffect(e9,tp)
 
+
+		local e3=Effect.CreateEffect(e:GetHandler())
+        e3:SetDescription(aux.Stringid(id,0))
+        e3:SetType(EFFECT_TYPE_FIELD)
+        e3:SetCode(EFFECT_SUMMON_PROC)
+        e3:SetTargetRange(LOCATION_HAND,0)
+        e3:SetCondition(s.ntcon)
+        e3:SetTarget(aux.FieldSummonProcTg(s.nttg))
+        Duel.RegisterEffect(e3,tp)
         
+
+		local e10=Effect.CreateEffect(e:GetHandler())
+        e10:SetType(EFFECT_TYPE_FIELD)
+        e10:SetCode(EFFECT_XYZ_LEVEL)
+        e10:SetTargetRange(LOCATION_MZONE, 0)
+        e10:SetTarget(function(_,c)  return c:IsMonster() and c:IsCode(70194827) end)
+        e10:SetValue(s.xyzlv)
+        Duel.RegisterEffect(e10,tp)
     
 
 	end
 	e:SetLabel(1)
 end
+
+function s.xyzlv(e,c,rc)
+    if rc:IsRank(6) then
+        return 6 , c:GetLevel()
+    else return c:GetLevel()
+    end
+end
+
+function s.ntcon(e,c,minc)
+	if c==nil then return true end
+	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+end
+function s.nttg(e,c)
+	return c:IsSetCard(0x6b)
+end
+
 
 
 function s.markedfilter(c,e)
