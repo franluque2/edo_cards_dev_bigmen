@@ -251,7 +251,8 @@ end
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONFIRM)
 	local gear=Duel.SelectMatchingCard(tp, s.notpublicgear, tp, LOCATION_HAND, 0, 1,1,false,nil)
-	if gear and Duel.ConfirmCards(1-tp, gear) then
+	if gear then
+		Duel.ConfirmCards(1-tp, gear)
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_FACEUP)
 		local newcard=Duel.SelectMatchingCard(tp, s.notancientgear, tp, LOCATION_MZONE, 0, 1,1,false,nil)
 		if newcard then
