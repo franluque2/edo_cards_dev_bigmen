@@ -65,7 +65,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.goldsarcfilter(c)
-    return c:IsFaceup() and c:IsCode(101204051)
+    return c:IsFaceup() and c:IsCode(79791878)
 end
 
 function s.discon(e)
@@ -88,11 +88,11 @@ end
 
 
 function s.efilter(e,te)
-	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(101204051,101204052)
+	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(79791878,05786513)
 end
 
 function s.efilter2(e,te)
-	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(101204001)
+	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(02333466)
 end
 
 
