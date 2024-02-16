@@ -25,11 +25,11 @@ function s.value(e)
 end
 
 function s.MainDeckFuckers(c)
-    return  c:IsType(TYPE_MONSTER) and c:IsNotType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+    return  c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_FUSION|TYPE_XYZ|TYPE_SYNCHRO|TYPE_LINK)
 end
 
 function s.ExtraDeckFuckers(c)
-    return c:IsType(TYPE_FUSION or TYPE_XYZ or TYPE_SYNCHRO or TYPE_LINK)
+    return c:IsType(TYPE_FUSION|TYPE_XYZ|TYPE_SYNCHRO|TYPE_LINK)
 end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -97,7 +97,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e16=Effect.CreateEffect(e:GetHandler())
         e16:SetType(EFFECT_TYPE_FIELD)
         e16:SetCode(EFFECT_ADD_SETCODE)
-        e16:SetTargetRange(LOCATIONS,0)
+        e16:SetTargetRange(LOCATION_ALL,0)
         e16:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e16:SetValue(0x10af)
         Duel.RegisterEffect(e16,tp)
@@ -105,7 +105,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e17=Effect.CreateEffect(e:GetHandler())
         e17:SetType(EFFECT_TYPE_FIELD)
         e17:SetCode(EFFECT_ADD_SETCODE)
-        e17:SetTargetRange(LOCATIONS,0)
+        e17:SetTargetRange(LOCATION_ALL,0)
         e17:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e17:SetValue(0xa9)
         Duel.RegisterEffect(e17,tp)
@@ -113,7 +113,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e18=Effect.CreateEffect(e:GetHandler())
         e18:SetType(EFFECT_TYPE_FIELD)
         e18:SetCode(EFFECT_ADD_SETCODE)
-        e18:SetTargetRange(LOCATIONS,0)
+        e18:SetTargetRange(LOCATION_ALL,0)
         e18:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
         e18:SetValue(0xba)
         Duel.RegisterEffect(e18,tp)
@@ -121,7 +121,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e19=Effect.CreateEffect(e:GetHandler())
         e19:SetType(EFFECT_TYPE_FIELD)
         e19:SetCode(EFFECT_ADD_SETCODE)
-        e19:SetTargetRange(LOCATIONS,0)
+        e19:SetTargetRange(LOCATION_ALL,0)
         e19:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e19:SetValue(0x10af)
         Duel.RegisterEffect(e19,tp)
@@ -129,7 +129,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e20=Effect.CreateEffect(e:GetHandler())
         e20:SetType(EFFECT_TYPE_FIELD)
         e20:SetCode(EFFECT_ADD_SETCODE)
-        e20:SetTargetRange(LOCATIONS,0)
+        e20:SetTargetRange(LOCATION_ALL,0)
         e20:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e20:SetValue(0xad)
         Duel.RegisterEffect(e20,tp)
@@ -137,7 +137,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e21=Effect.CreateEffect(e:GetHandler())
         e21:SetType(EFFECT_TYPE_FIELD)
         e21:SetCode(EFFECT_ADD_SETCODE)
-        e21:SetTargetRange(LOCATIONS,0)
+        e21:SetTargetRange(LOCATION_ALL,0)
         e21:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
         e21:SetValue(0xba)
         Duel.RegisterEffect(e21,tp)
@@ -203,7 +203,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	end
 
-    g=Duel.GetMatchingGroup(s.MainDeckFuckers, tp, LOCATION_ALL, LOCATION_ALL, nil)
+    local g=Duel.GetMatchingGroup(s.MainDeckFuckers, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
     if #g>0 then
 		local tc=g:GetFirst()
@@ -274,7 +274,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-
+function s.hasoverlay(c)
+    return c:GetOverlayCount()>0
+end
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
@@ -294,6 +296,11 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
     local highlevelddd=Duel.GetMatchingGroup(s.highlevelddd, tp, LOCATION_MZONE, 0, nil)
 
     local to_delete=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_ONFIELD, LOCATION_ONFIELD, highlevelddd)
+    local xyztoremovemats=Group.Filter(to_delete, s.hasoverlay, nil)
+    for card in xyztoremovemats:Iter() do
+        local og1=card:GetOverlayGroup()
+        Duel.SendtoGrave(og1, REASON_RULE)
+    end
     Duel.RemoveCards(to_delete)
 
 
