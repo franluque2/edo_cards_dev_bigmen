@@ -88,7 +88,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e9=Effect.CreateEffect(e:GetHandler())
         e9:SetType(EFFECT_TYPE_FIELD)
-        e9:SetCode(EFFECT_ADD_CODE)
+        e9:SetCode(EFFECT_CHANGE_CODE)
         e9:SetTargetRange(LOCATION_FZONE,0)
         e9:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
         e9:SetValue(57728570)
