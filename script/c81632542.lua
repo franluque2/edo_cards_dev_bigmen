@@ -69,10 +69,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #dg>0 then
 		dg=dg:AddMaximumCheck()
 		Duel.HintSelection(dg,true)
-		if Duel.Destroy(dg,REASON_EFFECT)>0 and dg:GetFirst():IsMonster() and dg:GetFirst():GetLevel()>0 + GetRank()>0 + GetLink()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			local atk=dg:GetFirst():GetLevel()*200 + GetRank()*200 + GetLink()*200
+		if Duel.Destroy(dg,REASON_EFFECT)>0 and dg:GetFirst():IsMonster() and dg:GetFirst():GetLevel()>0 + tc:GetRank()>0 + tc:GetLink()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			local atk=dg:GetFirst():GetLevel()*200 + tc:GetRank()*200 + tc:GetLink()*200
 			if dg:GetFirst():WasMaximumMode() then
-				atk=dg:Filter(Card.WasMaximumModeCenter,nil):GetFirst():GetLevel()*200 + GetRank()*200 + GetLink()*200
+				atk=dg:Filter(Card.WasMaximumModeCenter,nil):GetFirst():GetLevel()*200 + tc:GetRank()*200 + tc:GetLink()*200
 			end
 			local c=e:GetHandler()
 			-- Gain 200 ATK x the level of the destroyed monster
