@@ -24,7 +24,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 end
 function s.desfilter(c)
-	return c:IsFaceup() and (c:IsLevelBelow(6) or c:IsRankBelow(6) or c:IsLinkBelow (3)) and c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsFaceup() and (c:IsLevelBelow(6) or c:IsRankBelow(6) or c:IsLinkBelow (3))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,0,LOCATION_MZONE,1,nil) end
