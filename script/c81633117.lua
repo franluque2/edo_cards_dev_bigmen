@@ -85,7 +85,7 @@ function s.discon(e)
 end
 
 function s.actfilter(e,c)
-	return c:IsCode(101204036)
+	return c:IsCode(101204036, 57594700)
 end
 
 
