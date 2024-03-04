@@ -79,7 +79,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.damval(e,rc)
-	if not rc:IsCode() then return -1 end
+	if not rc:IsCode(00324483) then return -1 end
 	return HALF_DAMAGE
 end
 
