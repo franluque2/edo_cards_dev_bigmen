@@ -119,7 +119,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.damval(e,rc)
-	if not rc:GetLinkedGroup():FilterCount(Card.IsCode,nil,511009503) then return -1 end
+	if not (rc:GetLinkedGroup():FilterCount(Card.IsCode,nil,511009503)>0) then return -1 end
 	return HALF_DAMAGE
 end
 
@@ -149,7 +149,7 @@ end
 function s.discon2(e)
     local ph=Duel.GetCurrentPhase()
 
-	return  (ph==PHASE_DAMAGE or ph==PHASE_DAMAGE_CAL) and Duel.GetFlagEffect(e:GetHandlerPlayer(),id+1)>0
+	return  Duel.IsBattlePhase() and Duel.GetFlagEffect(e:GetHandlerPlayer(),id+1)>0
 end
 
 function s.actfilter(e,c)
@@ -159,9 +159,9 @@ end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
     local ph=Duel.GetCurrentPhase()
 
-	return re:IsActiveType(TYPE_MONSTER)
+	return re:IsActiveType(TYPE_SPELL)
 		and re:GetHandler():IsCode(511030021) and (Duel.GetFlagEffect(tp,id+1)==0)
-        and (ph==PHASE_DAMAGE or ph==PHASE_DAMAGE_CAL)
+        and Duel.IsBattlePhase()
 end
 
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
