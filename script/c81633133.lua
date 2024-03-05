@@ -307,6 +307,15 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.SelectMatchingCard(tp, s.setfieldfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
     if tc then
         Duel.SSet(tp, tc)
+
+        local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetDescription(3300)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+		e2:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		e2:SetValue(LOCATION_REMOVED)
+		tc:GetFirst():RegisterEffect(e2)
     end
 
 	Duel.RegisterFlagEffect(tp,id+4,0,0,0)
