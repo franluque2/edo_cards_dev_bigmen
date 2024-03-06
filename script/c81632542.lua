@@ -1,11 +1,11 @@
 --ダークネス・トランザム・クライシス
 --Darkness Transamu Craisis
---scripted by YoshiDuels
-local s,id=GetID()
+local s,id,alias=GetID()
 function s.initial_effect(c)
+	alias=c:GetOriginalCodeRule()
 	--Summon with 3 tribute
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(alias,0))
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SUMMON_PROC)
@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Destroy 1 card your opponent controls
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(alias,1))
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
@@ -68,8 +68,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #dg>0 then
 		dg=dg:AddMaximumCheck()
 		Duel.HintSelection(dg,true)
-		if Duel.Destroy(dg,REASON_EFFECT)>0 and dg:GetFirst():IsMonster() and dg:GetFirst():GetLevel()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			local atk=dg:GetFirst():GetLevel()*200
+		if Duel.Destroy(dg,REASON_EFFECT)>0 and dg:GetFirst():IsMonster() and Duel.SelectYesNo(tp,aux.Stringid(alias,2)) then
+			local atk=dg:GetFirst():GetLevel()*200+dg:GetFirst():GetRank()*200+dg:GetFirst():GetLink()*200
 			if dg:GetFirst():WasMaximumMode() then
 				atk=dg:Filter(Card.WasMaximumModeCenter,nil):GetFirst():GetLevel()*200
 			end
