@@ -131,8 +131,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
         Duel.ConfirmCards(1-tp,g)
         if Duel.GetLocationCount(1-tp, LOCATION_MZONE)>0 and
-             Duel.IsExistingMatchingCard(s.validfusionfilter, 1-tp, 0, LOCATION_EXTRA, 1, nil, e, tp)
-             and Duel.IsExistingMatchingCard(Card.IsMonster, tp, LOCATION_MZONE|LOCATION_HAND, 0, 1, c) and Duel.SelectYesNo(tp, aux.Stringid(id, 6)) then
+             Duel.IsExistingMatchingCard(s.validfusionfilter, tp, 0, LOCATION_EXTRA, 1, nil, e, tp)
+             and Duel.IsExistingMatchingCard(Card.IsMonster, tp, LOCATION_MZONE|LOCATION_HAND, 0, 1, c) and Duel.SelectYesNo(1-tp, aux.Stringid(id, 6)) then
             
                 Duel.Hint(HINT_SELECTMSG, 1-tp, HINTMSG_TOGRAVE)
                 local g2=Duel.SelectMatchingCard(1-tp, Card.IsMonster, tp, LOCATION_HAND|LOCATION_MZONE, 0, 1,1,false, c)
@@ -144,6 +144,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
                 Duel.SpecialSummon(tar, SUMMON_TYPE_FUSION, 1-tp, 1-tp, false, false, POS_FACEUP)
         else
             Duel.SendtoDeck(c, tp, SEQ_DECKSHUFFLE, REASON_EFFECT)
+            Duel.ShuffleDeck(tp)
             Duel.Draw(tp, 2, REASON_EFFECT)
         end
         Duel.ShuffleHand(tp)
