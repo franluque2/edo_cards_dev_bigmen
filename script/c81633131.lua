@@ -161,8 +161,8 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
         for tc in sg:Iter() do
             local tc2=Duel.CreateToken(tp, tc:GetOriginalCode())
 
-            Duel.SendtoDeck(tc,1-tp,SEQ_DECKBOTTOM,REASON_EFFECT)
-            Duel.SendtoDeck(tc2,1-tp,SEQ_DECKBOTTOM,REASON_EFFECT)
+            Duel.SendtoDeck(tc,1-tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
+            Duel.SendtoDeck(tc2,1-tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
 
             
 
