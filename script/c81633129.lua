@@ -39,16 +39,20 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         local e11=Effect.CreateEffect(e:GetHandler())
         e11:SetType(EFFECT_TYPE_FIELD)
         e11:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-        e11:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-        e11:SetTargetRange(0,1)
+		e11:SetCode(EFFECT_CHANGE_DAMAGE) 
+		e11:SetTargetRange(0,1)
         e11:SetCondition(s.ndcon)
-        e11:SetValue(1)
+        e11:SetValue(s.damval)
         Duel.RegisterEffect(e11,tp)
 
 
         
 	end
 	e:SetLabel(1)
+end
+
+function s.damval(e,re,val,r,rp,rc)
+	if val>1000 then return 1000 else return val end
 end
 
 function s.filter(c)
