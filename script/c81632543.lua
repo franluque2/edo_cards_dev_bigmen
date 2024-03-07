@@ -63,7 +63,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsCode(511001471, 511001467, 511001469, 511001473, 511001472) and c:IsSpellTrap() and c:IsAbleToHand()
+	return c:IsCode(511001471, 511001467, 511001469, 511001473, 511001472, 511001470) and c:IsSpellTrap() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
