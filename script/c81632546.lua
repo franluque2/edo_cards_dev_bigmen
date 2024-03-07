@@ -60,7 +60,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		if Duel.Destroy(tc,REASON_EFFECT)>0 then
         	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tc2=Duel.GetFirstMatchingCard(s.thfilter,tp,LOCATION_DECK,0,nil)
+	local tc2=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if tc2 then
 		Duel.SendtoHand(tc2,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc2)
