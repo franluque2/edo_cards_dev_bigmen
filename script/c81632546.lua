@@ -43,7 +43,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return c:IsCode(511001471, 511001467, 511001469, 511001473, 511001472) and c:IsSpellTrap() and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsCode(511001471, 511001467, 511001469, 511001473, 511001472, 511001470) and c:IsSpellTrap() and c:IsAbleToHand() and not c:IsCode(id)
 end
 function s.desfilter(c)
     return c:IsMonster() and (c:IsAttack(0) or c:IsDefense(0))
