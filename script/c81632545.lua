@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-local g=Duel.GetMatchingGroup(s.cfilter, tp, LOCATION_HAND|LOCATION_ONFIELD, 0, nil)
+local g=Duel.GetMatchingGroup(s.cfilter, tp, LOCATION_HAND|LOCATION_ONFIELD, 0, nil, tp)
 if chk==0 then return Group.GetClassCount(g, Card.GetCode)>3 end
 local sg=aux.SelectUnselectGroup(g,e,tp,4,4,aux.dncheck,1,tp,HINTMSG_TOGRAVE)
 	Duel.SendtoGrave(sg,REASON_COST)
