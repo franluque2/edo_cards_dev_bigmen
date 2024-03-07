@@ -75,6 +75,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     if num==0 then return end
     if Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) then num=1 end
 
+    local zones= Duel.GetLocationCount(tp, LOCATION_MZONE)
+    if num>zones then num=zones end
 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,num,nil,e,tp)
