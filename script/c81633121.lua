@@ -193,13 +193,16 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 			and Duel.GetMatchingGroupCount(s.shufflemachinefilter, tp, LOCATION_GRAVE, 0, nil)>2
+			and Duel.GetFlagEffect(tp,id+5)==0
 			and Duel.IsPlayerCanDraw(tp)
 
 	local b3=Duel.GetFlagEffect(tp,id+3)==0
 		and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.GetFlagEffect(tp,id+5)==0
 		and Duel.IsExistingMatchingCard(s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1, nil, e, tp)
 
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
+		and Duel.GetFlagEffect(tp,id+5)==0
 		and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 
 
@@ -220,13 +223,16 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 	and Duel.GetMatchingGroupCount(s.shufflemachinefilter, tp, LOCATION_GRAVE, 0, nil)>2
 	and Duel.IsPlayerCanDraw(tp)
+	and Duel.GetFlagEffect(tp,id+5)==0
 
 	local b3=Duel.GetFlagEffect(tp,id+3)==0
 	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
 	and Duel.IsExistingMatchingCard(s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1, nil, e, tp)
+	and Duel.GetFlagEffect(tp,id+5)==0
 
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
 	and Duel.IsExistingMatchingCard(s.tributeancientgear,tp,LOCATION_MZONE,0,1,nil)
+	and Duel.GetFlagEffect(tp,id+5)==0
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
@@ -284,8 +290,8 @@ function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
 	end
 
-
-	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
 end
 
 function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
@@ -298,8 +304,9 @@ function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 		local gadget=Duel.SelectMatchingCard(tp, s.spsummonfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil,e,tp)
 		Duel.SpecialSummon(gadget, SUMMON_TYPE_SPECIAL, tp, tp, 0, 0, POS_FACEUP)
 	end
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 
-	Duel.RegisterFlagEffect(tp,id+3,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
 end
 
 function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
@@ -320,5 +327,7 @@ function s.operation_for_res3(e,tp,eg,ep,ev,re,r,rp)
 	
 	end
 
-	Duel.RegisterFlagEffect(tp,id+4,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+
+	Duel.RegisterFlagEffect(tp,id+4,0,0,0)
 end
