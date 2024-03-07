@@ -24,7 +24,7 @@ function s.initial_effect(c)
 end
 s.listed_names={511001465}
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE|LOCATION_ONFIELD,0,1,nil,511001466)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE|LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,511001466)
 end
 function s.filter(c,e,tp)
 	return c:IsCode(511001465) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
