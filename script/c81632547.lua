@@ -56,10 +56,10 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return (chkc:IsLocation(LOCATION_GRAVE)) and chkc:IsControler(tp) and s.tdfilter(chkc) end
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil)
     if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-		and g:GetClassCount(Card.GetCode)>3 end
-        if chk==0 then return aux.SelectUnselectGroup(g,e,tp,4,4,aux.dncheck,0) end
+		and g:GetClassCount(Card.GetCode)>1 end
+        if chk==0 then return aux.SelectUnselectGroup(g,e,tp,1,4,aux.dncheck,0) end
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-        local tg=aux.SelectUnselectGroup(g,e,tp,4,4,aux.dncheck,1,tp,HINTMSG_TARGET)
+        local tg=aux.SelectUnselectGroup(g,e,tp,1,4,aux.dncheck,1,tp,HINTMSG_TARGET)
         Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
