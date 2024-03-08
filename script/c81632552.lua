@@ -14,7 +14,7 @@ function s.initial_effect(c)
     -- Search "Ancient Tome"
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+EFFECT_FLAG_NO_TURN_RESET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
