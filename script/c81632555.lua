@@ -23,18 +23,21 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
+function s.cfilter2(c)
+	return c:IsRace(RACE_Rock)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(1)
-	return true
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return ft>-1 and Duel.CheckReleaseGroupCost(tp,s.cfilter,1,false,aux.ReleaseCheckMMZ,nil) end
+	local rg=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,aux.ReleaseCheckMMZ,nil)
+	Duel.Release(rg,REASON_COST)
 end
+
 function s.cfilter(c,tp)
-	return c:GetDefense()>0 and c:IsRace(RACE_ROCK) and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
+	return c:GetDefense()>0 and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and chkc:IsAttackPos() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
@@ -43,7 +46,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local def=g:GetFirst():GetDefense()
 	Duel.Release(g,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,nil,LOCATION_MZONE,0,1,nil)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetTargetParam(def)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
