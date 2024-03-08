@@ -39,10 +39,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 
-function s.FSpell(c)
-	return c:IsFaceup() and c:IsCode(81632549)
-end
-
 function s.immcon(e)
-	return Duel.IsExistingMatchingCard(s.FSpell,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil,81632549)
 end
