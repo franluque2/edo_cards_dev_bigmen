@@ -140,14 +140,14 @@ end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,s.FieldSpell)
+		and Duel.IsExistingMatchingCard(s.FieldSpell,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,fossil_chk) end
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,s.FieldSpell)
+		and Duel.IsExistingMatchingCard(s.FieldSpell,tp,LOCATION_FZONE,0,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,fossil_chk):GetFirst()
 	if not sc then return end
