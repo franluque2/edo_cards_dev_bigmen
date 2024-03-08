@@ -43,8 +43,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 
-function s.costfilter(c,code,ft)
-	return c:IsFaceup() and c:IsCode(code) and c:IsAbleToGraveAsCost() and (not ft or ft>0 or c:GetSequence()<5) 
+function s.costfilter(c,ft)
+	return c:IsFaceup() and c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsAbleToGraveAsCost() and (not ft or ft>0 or c:GetSequence()<5) 
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
