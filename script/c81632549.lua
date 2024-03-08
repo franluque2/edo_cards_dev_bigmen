@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(s.activate)
+    e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
 
     --Special Summon 1 "Ancient Dragon"
@@ -20,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
+    e2:SetCountLimit(1,{id,2})
 	c:RegisterEffect(e2)
 
     --End Phase Special Summon
@@ -38,6 +40,7 @@ function s.initial_effect(c)
 	e4:SetCondition(s.spcon)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
+    e4:SetCountLimit(1,{id,3})
 	c:RegisterEffect(e4)
 
     --Change all monsters the opponent controls to Defence
@@ -50,6 +53,7 @@ function s.initial_effect(c)
 	e5:SetCondition(s.poscond)
 	e5:SetTarget(s.postg)
 	e5:SetOperation(s.posop)
+    e5:SetCountLimit(1,{id,4})
 	c:RegisterEffect(e5)
 end
 
