@@ -76,7 +76,7 @@ function s.cfilter(c,e,tp)
 		 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.costfilter(c)
-	return c:IsFaceup() and c:GetType(TYPE_SPELL+TYPE_CONINUOUS) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:GetType(TYPE_SPELL+TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,3,nil) end
