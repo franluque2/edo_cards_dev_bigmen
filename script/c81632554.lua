@@ -23,6 +23,33 @@ function s.initial_effect(c)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
+
+    --damage LP
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCategory(CATEGORY_DAMAGE)
+	e3:SetProperty(EFFECT_FLAG_REPEAT+EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetCountLimit(1)
+	e3:SetCondition(s.damcon)
+	e3:SetTarget(s.damtg)
+	e3:SetOperation(s.damop)
+	c:RegisterEffect(e3)
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer() and e:GetHandler():GetAttackedCount()==0
+end
+function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(500)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,500)
+end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Damage(p,d,REASON_EFFECT)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(s.CuntSpells,tp,LOCATION_SZONE,0,1,nil)
