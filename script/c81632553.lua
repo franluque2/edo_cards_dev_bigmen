@@ -131,20 +131,25 @@ function s.defval(e,c)
 end
 
 function s.thfilter(c)
-	return c:IsAbleToHand() and (c:IsRace(RACE_ROCK) or c:IsCode(76232340, 47986555, 32012841))
+	return (c:IsAbleToHand() and (c:IsRace(RACE_ROCK) or c:IsCode(76232340, 47986555, 32012841)))
 end
+
+function s.FieldSpell(e,c)
+	return c:IsFaceup() and c:IsCode(511000122)
+end
+
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,511000122)
+		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,s.FieldSpell)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,fossil_chk) end
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,5110001222)
+		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,s.FieldSpell)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_FZONE,0,1,1,nil,e,tp,fossil_chk):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,fossil_chk):GetFirst()
 	if not sc then return end
 	aux.ToHandOrElse(sc,tp,
 		function(sc)
