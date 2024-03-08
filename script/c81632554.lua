@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTarget(s.AncientMonster)
 	e1:SetCondition(s.indcon)
-	e1:SetValue(aux.indoval)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 end
 function s.AncientMonster(e,c)
