@@ -1,26 +1,21 @@
 --Stone Giant (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-	--Cannot be destroyed by battle or card effects
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-    e1:SetTargetRange(LOCATION_MZONE,0)
-    e1:SetTarget(s.maidenfilter)
-    e1:SetCondition(s.incon)
-    e1:SetValue(1)
-    c:RegisterEffect(e1,tp)
-
+	-- "Therions" monsters protection
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTarget(s.AncientMonster)
+	e1:SetCondition(s.indcon)
+	e1:SetValue(aux.indoval)
+	c:RegisterEffect(e1)
+end
+function s.AncientMonster(e,c)
+	return c:IsFaceup() and c:IsCode(511000126, 511000127, 38520918, 511000128, 76232340, 47986555, 32012841)
 end
 
-function s.incon(e)
-	return  Duel.IsExistingMatchingCard(s.defmaidenfilter, tp, LOCATION_SZONE, 0, 1, nil)
-end
-
-function s.maidenfilter(c,tp)
-	return c:IsCode(511000126, 511000127, 38520918, 511000128, 76232340, 47986555, 32012841) and c:IsFaceup()
-end
-
-function s.defmaidenfilter(c)
-	return c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsFaceup()
+function s.indcon(e)
+	return Duel.IsExistingMatchingCard(Card.IsType,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,TYPE_SPELL+TYPE_CONTINUOUS)
 end
