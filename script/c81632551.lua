@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e3:SetCountLimit(1)
     c:RegisterEffect(e3)
 
-    --Level 5 or higher Dinosaur monsters can be summoned without Tributing
+    --No Tributes
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetType(EFFECT_TYPE_FIELD)
@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cardfilter(c)
-	return c:IsRace(RACE_ROCK) and c:IsLevel(5) and c:IsAbleToHand()
+	return (c:IsRace(RACE_ROCK) and c:IsLevel(5) or c:IsCode(76232340, 479866555, 32012841)) and c:IsAbleToHand()
 end
 
 function s.ntcon(e,c,minc)
