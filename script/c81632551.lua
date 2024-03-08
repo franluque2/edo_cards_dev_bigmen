@@ -10,18 +10,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 
-    --Level 5 or higher Dinosaur monsters can be summoned without Tributing
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SUMMON_PROC)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetTargetRange(LOCATION_HAND,0)
-	e4:SetCondition(s.ntcon)
-	e4:SetTarget(aux.FieldSummonProcTg(s.nttg))
-	c:RegisterEffect(e4)
-
-    -- Search "Ancient Gate"
+    -- Search "Ancient Tome"
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -33,7 +22,6 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
     
-
     -- Effect Damage
     local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DAMAGE)
@@ -44,6 +32,18 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop)
     e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
+    c:RegisterEffect(e3)
+
+    --Level 5 or higher Dinosaur monsters can be summoned without Tributing
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SUMMON_PROC)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetTargetRange(LOCATION_HAND,0)
+	e4:SetCondition(s.ntcon)
+	e4:SetTarget(aux.FieldSummonProcTg(s.nttg))
+	c:RegisterEffect(e4)
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
