@@ -33,18 +33,18 @@ function s.initial_effect(c)
 
     --Recursion
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetCountLimit(1,{id,2})
+	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCountLimit(1,id)
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
-	c:RegisterEffect(e3)
+	c:RegisterEffect(e1,false)
 	local e5=e4:Clone()
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e5)
+	c:RegisterEffect(e4)
 
     --damage
 	local e6=Effect.CreateEffect(c)
