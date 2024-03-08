@@ -15,8 +15,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCost(s.spcon)
-	e2:SetTarget(s.target)
+    e2:SetCondition(s.condition)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 
@@ -49,22 +48,9 @@ end
 function s.spfilter(c)
 	return c:IsFaceup() and c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsAbleToGraveAsCost()
 end
-function s.spcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local g=nil
-	if Duel.IsPlayerAffectedByEffect(tp,54828837) then
-		g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_ONFIELD,0,nil)
-	end
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and #g>2 and aux.SelectUnselectGroup(g,e,tp,3,3,aux.ChkfMMZ(1),0)
-end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
-		e:SetLabel(0)
-		return Duel.IsExistingMatchingCard(s.Dragon,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_SZONE,0,3,nil)
+		and Duel.IsExistingMatchingCard(s.Dragon,tp,LOCATION_DECK|LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
