@@ -78,7 +78,7 @@ end
 function s.costfilter(c)
 	return c:IsFaceup() and c:GetType(TYPE_SPELL+TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.cost(e,c,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_ONFIELD,0,1,1,nil)
