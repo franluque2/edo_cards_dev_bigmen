@@ -39,5 +39,5 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tgcond(e)
-	return Duel.IsExistingMatchingCard(511000122,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil,511000122)
 end
