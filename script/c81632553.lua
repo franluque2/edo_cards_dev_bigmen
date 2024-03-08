@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetCountLimit(1,{id,1})
+	e4:SetCountLimit(1,{id,2})
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e3)
@@ -102,7 +102,7 @@ function s.clear(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(0)
 end
 
-function s.AncientSpells(c)
+function s.AncientSpells(e,c)
 	return c:IsFaceup() and c:IsCode(511000124, 511000125, 511000123)
 end
 
@@ -131,18 +131,20 @@ function s.defval(e,c)
 end
 
 function s.thfilter(c)
-	return c:IsAbleToHand() and (c:IsRace(RACE_ROCK))
+	return c:IsAbleToHand() and (c:IsRace(RACE_ROCK) or c:IsCode(76232340, 47986555, 32012841))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local hasbox=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000122),tp,LOCATION_ONFIELD,0,1,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil,hasbox) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_FZONE,0,1,nil,511000122)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp,fossil_chk) end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local fossil_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_SZONE,0,1,nil,511000122)
+		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,5110001222)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,fossil_chk):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_FZONE,0,1,1,nil,e,tp,fossil_chk):GetFirst()
 	if not sc then return end
 	aux.ToHandOrElse(sc,tp,
 		function(sc)
@@ -154,4 +156,3 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		aux.Stringid(id,2)
 	)
 end
-
