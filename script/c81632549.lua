@@ -13,7 +13,7 @@ function s.initial_effect(c)
     --Special Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_ACTIVATE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCode(EVENT_FREE_CHAIN)
     e2:SetCondition(s.condition)
 	e2:SetOperation(s.spop)
