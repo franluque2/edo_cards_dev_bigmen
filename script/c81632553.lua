@@ -41,10 +41,10 @@ function s.initial_effect(c)
 	e4:SetCountLimit(1,id)
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
-	c:RegisterEffect(e1,false)
+	c:RegisterEffect(e4,false)
 	local e5=e4:Clone()
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e4)
+	c:RegisterEffect(e5)
 
     --damage
 	local e6=Effect.CreateEffect(c)
