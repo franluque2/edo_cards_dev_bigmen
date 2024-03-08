@@ -90,7 +90,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e1:SetTargetRange(1,0)
 		e1:SetLabel(cid)
-		e1:SetValue(s.damval)
+		e1:SetValue(s.rev)
 		e1:SetReset(RESET_CHAIN)
 		Duel.RegisterEffect(e1,tp)
+end
+function s.rev(e,re,r,rp,rc)
+	return (r&REASON_EFFECT)~=0
 end
