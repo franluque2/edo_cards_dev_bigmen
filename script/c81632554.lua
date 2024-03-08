@@ -36,7 +36,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
 	end
 end
-end
+
 function s.AncientMonster(e,c)
 	return c:IsFaceup() and c:IsCode(511000126, 511000127, 38520918, 511000128, 76232340, 47986555, 32012841)
 end
