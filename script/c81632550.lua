@@ -34,6 +34,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc2=dg:Filter(Card.IsCode,nil,tc1:GetCode()):GetFirst()
 		Duel.SpecialSummonStep(tc1,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
 		Duel.SpecialSummonStep(tc2,0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
+        tc1:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
+		tc2:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,fid)
+		Duel.SpecialSummonComplete()
 	end
 end
 function s.spfilter(c,e,tp)
