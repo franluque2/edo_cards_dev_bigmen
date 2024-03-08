@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCost(s.cost)
+	e2:SetCost(s.spcon)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
@@ -43,18 +43,20 @@ end
 function s.thfilter(c)
 	return c:IsCode(511000123, 511000124, 511000125) and c:IsAbleToHand()
 end
-function s.spfilter(c)
-	return c:IsFaceup() and c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsAbleToGraveAsCost()
-end
 function s.Dragon(c)
 	return c:IsCode(511000128)
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_ONFIELD,0,nil)
-	if chk==0 then
-		e:SetLabel(1)
-		return Duel.GetLocationCount(tp,LOCATION_SZONE)>-3 and #tg>=3 and aux.SelectUnselectGroup(tg,e,tp,3,3,aux.ChkfMMZ(1),0)
-    end
+function s.spfilter(c)
+	return c:IsFaceup() and c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsAbleToGraveAsCost()
+end
+function s.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local g=nil
+	if Duel.IsPlayerAffectedByEffect(tp,54828837) then
+		g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_ONFIELD,0,nil)
+	end
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and #g>2 and aux.SelectUnselectGroup(g,e,tp,3,3,aux.ChkfMMZ(1),0)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
