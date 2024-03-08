@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(s.activate)
+    e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
 
     --Special Summon 1 "Ancient Dragon"
@@ -17,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_FZONE)
-	e2:SetCountLimit(1)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
@@ -36,11 +37,24 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetCountLimit(1)
+	e4:SetCountLimit(1,{id,1})
 	e4:SetCondition(s.spcon)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
+
+    --Change all monsters the opponent controls to Defence
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetCategory(CATEGORY_POSITION)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetCountLimit(1,{id,1})
+	e5:SetCondition(s.poscond)
+	e5:SetTarget(s.postg)
+	e5:SetOperation(s.posop)
+	c:RegisterEffect(e5)
 end
 
 function s.costfilter(c,ft)
@@ -118,5 +132,23 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+
+function s.cfilter(c,tp)
+	return c:IsFaceup() and c:IsCode(511000128) and c:IsSummonPlayer(tp)
+end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp)
+end
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
+end
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,nil)
+	if #g>0 then
+		Duel.ChangePosition(g,POS_FACEUP_DEFENSE)
 	end
 end
