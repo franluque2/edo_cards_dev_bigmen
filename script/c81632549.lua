@@ -49,7 +49,7 @@ function s.initial_effect(c)
 	e5:SetCategory(CATEGORY_POSITION)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e5:SetRange(LOCATION_SZONE)
+	e5:SetRange(LOCATION_FZONE)
 	e5:SetCountLimit(1,{id,1})
 	e5:SetCondition(s.poscond)
 	e5:SetTarget(s.postg)
@@ -138,7 +138,7 @@ end
 function s.cfilter(c,tp)
 	return c:IsFaceup() and c:IsCode(511000128) and c:IsSummonPlayer(tp)
 end
-function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+function s.poscond(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk)
