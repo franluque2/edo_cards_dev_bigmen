@@ -119,7 +119,7 @@ function s.atkfilter(c)
 	return c:IsFaceup() and c:IsSpell()
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_MZONE,0,nil)*200
+	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_SZONE,0,nil)*200
 end
 
 function s.thfilter(c)
