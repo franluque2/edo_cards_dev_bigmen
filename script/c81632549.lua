@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCost(s.cost)
-	e2:SetTarget(s.spop)
+	e2:SetTarget(s.target)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 
@@ -55,6 +55,14 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetLabel(1)
 		return Duel.GetLocationCount(tp,LOCATION_SZONE)>-3 and #tg>=3 and aux.SelectUnselectGroup(tg,e,tp,3,3,aux.ChkfMMZ(1),0)
     end
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(s.Dragon,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
