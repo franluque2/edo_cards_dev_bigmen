@@ -1,6 +1,7 @@
 --Ancient Giant (CT)
 local s,id=GetID()
 function s.initial_effect(c)
+	c:SetUniqueOnField(1,0,511000126)
 	--Each Ancient Spell get protected once, each turn
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
