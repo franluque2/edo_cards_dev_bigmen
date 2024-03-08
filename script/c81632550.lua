@@ -42,11 +42,14 @@ end
 function s.filter2(c,g)
 	return g:IsExists(Card.IsCode,1,c,c:GetCode())
 end
+function s.filter3(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD+LOCATION_HAND,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter3,tp,LOCATION_MZONE|LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter3,tp,LOCATION_MZONE|LOCATION_HAND,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.thfilter(c)
