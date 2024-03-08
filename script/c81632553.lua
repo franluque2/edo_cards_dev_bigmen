@@ -134,7 +134,7 @@ function s.thfilter(c,e,tp,field_chk)
     return (c:IsAbleToHand() or (field_chk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)) ) and (c:IsRace(RACE_ROCK) or c:IsCode(76232340, 47986555, 32012841))
 end
 
-function s.FieldSpell(e,c)
+function s.FieldSpell(c)
 	return c:IsFaceup() and c:IsCode(511000122)
 end
 
