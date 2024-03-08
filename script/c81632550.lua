@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	e3:SetCondition(aux.damcon1)
 	e3:SetOperation(s.spop)
     e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1,id)
+	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e3)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
