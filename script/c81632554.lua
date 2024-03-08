@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetValue(aux.indoval)
 	c:RegisterEffect(e1)
 end
-function s.AncientMonster(e,c)
+function s.AncientMonster(c)
 	return c:IsFaceup() and c:IsCode(511000126, 511000127, 38520918, 511000128, 76232340, 47986555, 32012841)
 end
 
