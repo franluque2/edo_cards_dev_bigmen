@@ -9,14 +9,14 @@ function s.initial_effect(c)
     e1:SetTarget(aux.TargetBoolFunction(s.maidenfilter,tp))
     e1:SetCondition(s.incon)
     e1:SetValue(1)
-    Duel.RegisterEffect(e1,tp)
+    Duel.RegisterEffect(e1)
 
 end
 function s.incon(e)
 	return  Duel.IsExistingMatchingCard(s.defmaidenfilter, tp, LOCATION_SZONE, 0, 1, nil)
 end
 
-function s.maidenfilter(c,tp)
+function s.maidenfilter(c)
 	return c:IsCode(511000126, 511000127, 38520918, 511000128, 76232340, 47986555, 32012841) and c:IsFaceup()
 end
 
