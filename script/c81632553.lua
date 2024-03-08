@@ -18,13 +18,13 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(s.AncientMonster)
-	e2:SetValue(s.atkval)
+	e2:SetValue(s.defval)
 	c:RegisterEffect(e2)
     --atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
-	e3:SetRange(LOCATION_SZONE)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(s.AncientMonster)
 	e3:SetValue(s.atkval)
@@ -120,6 +120,13 @@ function s.atkfilter(c)
 end
 function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_SZONE,0,nil)*200
+end
+
+function s.deffilter(c)
+	return c:IsFaceup() and c:IsSpell()
+end
+function s.defval(e,c)
+	return Duel.GetMatchingGroupCount(s.deffilter,c:GetControler(),LOCATION_SZONE,0,nil)*200
 end
 
 function s.thfilter(c)
