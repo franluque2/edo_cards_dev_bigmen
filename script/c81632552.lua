@@ -49,7 +49,7 @@ function s.initial_effect(c)
     --draw
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetRange(LOCATION_GRAVE)
