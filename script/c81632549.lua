@@ -76,10 +76,13 @@ function s.cfilter(c,e,tp)
 		 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.costfilter(c)
-	return c:IsFaceup() and c:IsAbleToGraveAsCost() and c:IsType(TYPE_SPELL+TYPE_CONTINUOUS)
+	return c:IsFaceup() and c:GetType(TYPE_SPELL+TYPE_CONINUOUS) and c:IsAbleToGraveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_SZONE,0,3,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD,0,3,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 
 function s.filter(c,e,tp)
