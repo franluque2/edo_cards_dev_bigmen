@@ -2,15 +2,14 @@
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
-    local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(s.immcon)
-	e1:SetValue(1)
+	e1:SetCondition(s.tgcond)
+	e1:SetValue(aux.tgoval)
 	c:RegisterEffect(e1)
-
     --destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37115575,1))
@@ -39,6 +38,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 
-function s.immcon(e)
-	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil,81632549)
+function s.tgcond(e)
+	return Duel.IsExistingMatchingCard(511000122,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil)
 end
