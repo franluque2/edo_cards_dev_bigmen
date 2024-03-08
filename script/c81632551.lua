@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cardfilter(c)
-	return (c:IsRace(RACE_ROCK) and c:IsLevel(5) or c:IsCode(76232340, 479866555, 32012841)) and c:IsAbleToHand()
+	return (c:IsRace(RACE_ROCK) and c:IsLevel(5) or c:IsCode(76232340, 47986555, 32012841)) and c:IsAbleToHand()
 end
 
 function s.ntcon(e,c,minc)
@@ -64,7 +64,7 @@ function s.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function s.nttg(e,c)
-	return (c:IsRace(RACE_ROCK) and c:IsLevel(5) or c:IsCode(76232340, 479866555, 32012841))
+	return (c:IsRace(RACE_ROCK) and c:IsLevel(5) or c:IsCode(76232340, 47986555, 32012841))
 end
 
 
