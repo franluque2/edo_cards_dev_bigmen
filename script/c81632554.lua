@@ -9,7 +9,7 @@ function s.initial_effect(c)
     e1:SetTarget(aux.TargetBoolFunction(s.maidenfilter))
     e1:SetCondition(s.incon)
     e1:SetValue(1)
-    c.RegisterEffect(e1)
+    c:RegisterEffect(e1)
 
 end
 function s.incon(e)
