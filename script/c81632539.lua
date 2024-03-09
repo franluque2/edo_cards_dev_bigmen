@@ -31,7 +31,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local cost=Duel.SelectMatchingCard(tp, s.sendtogravefilter, tp,LOCATION_HAND,0, 1, 1, false, nil)
     local dg=Duel.GetMatchingGroup(aux.FilterMaximumSideFunctionEx(s.desfilter),tp,0,LOCATION_MZONE,e:GetHandler())
     if #dg==0 then return end
-    if Duel.IsExistingMatchingCard(s.differenttypefilter, tp, LOCATION_MZONE, 0, 1, nil, cost:GetFirst()) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+    if Duel.SendtoGrave(cost, REASON_EFFECT)>0 and Duel.IsExistingMatchingCard(s.differenttypefilter, tp, LOCATION_MZONE, 0, 1, nil, cost:GetFirst()) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         local sg=dg:Select(tp,1,1,nil)
         sg=sg:AddMaximumCheck()
         Duel.HintSelection(sg)
