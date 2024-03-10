@@ -31,7 +31,7 @@ function s.lightcybersefilter(c)
 end
 
 function s.mentionsarmatosfilter(c)
-    return c:IsSpellTrap() and Card.ListsArchetype(c,0x578)
+    return c:IsSpellTrap() and (Card.ListsArchetype(c,0x578) or c:IsCode(511030029))
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -118,8 +118,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
+function s.linkedarrowfilter(c,tc)
+    return c:IsFaceup() and c:IsCode(511009503) and c:GetLinkedGroup():IsContains(tc)
+end
+
+function s.isanarrowcontaining(c,tp)
+    return Duel.IsExistingMatchingCard(s.linkedarrowfilter, tp, LOCATION_SZONE, 0, 1, nil,c)
+end
+
 function s.damval(e,rc)
-	if not (rc:GetLinkedGroup():FilterCount(Card.IsCode,nil,511009503)>0) then return -1 end
+	if not ((rc:GetLinkedGroup():FilterCount(Card.IsCode,nil,511009503)>0) or s.isanarrowcontaining(rc,e:GetHandlerPlayer())) then return -1 end
 	return HALF_DAMAGE
 end
 
