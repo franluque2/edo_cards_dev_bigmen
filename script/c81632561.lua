@@ -102,13 +102,17 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.filter2,1,nil,tp) and #eg==1
 end
 
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,e:GetLabelObject(),1,0,0)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if not eg then return false end
+	local tc=eg:GetFirst()
+	if chkc then return chkc==tc end
+	if chk==0 then return ep~=tp and tc:IsFaceup() and tc:IsOnField() and tc:IsCanChangePosition() end
+	Duel.SetTargetCard(eg)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-    if c:IsRelateToEffect(e) and c:IsPosition(POS_FACEUP_ATTACK) then
-        Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
-    end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
+	end
 end
