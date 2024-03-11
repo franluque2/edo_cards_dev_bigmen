@@ -40,8 +40,8 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,id)
 	e4:SetCondition(s.condition)
-	e4:SetTarget(s.target)
-	e4:SetOperation(s.operation)
+	e4:SetTarget(s.postg)
+	e4:SetOperation(s.posop)
 	c:RegisterEffect(e4)
     local e5=e4:Clone()
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -102,17 +102,17 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.filter2,1,nil,tp) and #eg==1
 end
 
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if not eg then return false end
-	local tc=eg:GetFirst()
-	if chkc then return chkc==tc end
-	if chk==0 then return ep~=tp and tc:IsFaceup() and tc:IsCanChangePosition() and tc:IsOnField() and tc:IsCanBeEffectTarget(e) end
-	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,tc,1,0,0)
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsCanChangePosition() then
-		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,0,POS_FACEUP_ATTACK,0)
 	end
 end
