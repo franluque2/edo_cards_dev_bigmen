@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
+	e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
