@@ -95,8 +95,11 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Recover(p,d,REASON_EFFECT)
 end
 
+function s.filter2(c)
+	return c:IsType(TYPE_MONSTER)
+end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filter,1,nil,tp) and #eg==1
+	return eg:IsExists(s.filter2,1,nil,tp) and #eg==1
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
