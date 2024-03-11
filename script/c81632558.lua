@@ -60,7 +60,7 @@ function s.battg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetTargetPlayer(tp)
     Duel.SetTargetParam(600)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
-    if c:IsPosition(POS_FACEUP_ATTACK) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+    if c:IsRelateToEffect(e) and c:IsPosition(POS_FACEUP_ATTACK) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
         Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
     end
 end
