@@ -3,6 +3,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	aux.AddEquipProcedure(c)
+    --ATKUP
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
     e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -49,7 +50,7 @@ end
 function s.atkval(e)
 	local tp=e:GetHandlerPlayer()
 	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
-	return 200*g
+	return 400*g
 end
 function s.condition2(e)
 	local c=e:GetHandler():GetEquipTarget()
