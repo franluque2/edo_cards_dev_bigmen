@@ -106,13 +106,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not eg then return false end
 	local tc=eg:GetFirst()
 	if chkc then return chkc==tc end
-	if chk==0 then return ep~=tp and tc:IsFaceup() and tc:IsOnField() and tc:IsCanChangePosition() end
+	if chk==0 then return ep~=tp and tc:IsFaceup() and tc:IsCanChangePosition() and tc:IsOnField() and tc:IsCanBeEffectTarget(e) end
 	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,tc,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	local tc=eg:GetFirst()
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsCanChangePosition() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 	end
 end
