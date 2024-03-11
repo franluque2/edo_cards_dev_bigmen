@@ -87,6 +87,7 @@ end
 function s.The300FilerSummon(c,e,tp)
     return s.The300Filter(c) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEUP)
 end
+
 function s.gtfilter(c)
 	return c:IsControlerCanBeChanged() and c:IsFaceup()
 end
@@ -114,7 +115,7 @@ function s.rfilter(c,lv)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local g=Duel.GetMatchingGroup(s.The300Filter,tp,LOCATION_GRAVE,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.The300FilerSummon,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and g:GetClassCount(Card.GetLevel)>=4 end
