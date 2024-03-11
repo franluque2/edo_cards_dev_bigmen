@@ -60,13 +60,14 @@ function s.battg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetTargetPlayer(tp)
     Duel.SetTargetParam(600)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
+end
+function s.batop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+    Duel.Recover(p,d,REASON_EFFECT)
     if c:IsRelateToEffect(e) and c:IsPosition(POS_FACEUP_ATTACK) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
         Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
     end
-end
-function s.batop(e,tp,eg,ep,ev,re,r,rp)
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Recover(p,d,REASON_EFFECT)
 end
 
 function s.valcon(e,re,r,rp)
