@@ -60,7 +60,7 @@ end
 
 function s.atkval(e)
 	local tp=e:GetHandlerPlayer()
-	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE|LOCATION_FIELD,0,nil)
+	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE|LOCATION_FZONE,0,nil)
 	return 300*g
 end
 

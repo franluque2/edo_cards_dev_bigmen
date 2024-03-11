@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(s.activate)
-    e1:SetCountLimit(1,{id,1})
+    e1:SetCountLimit(1,{id,3})
 	c:RegisterEffect(e1)
 
     --Activate 1 "Kabuki Stage" Field Spell from hand or deck
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 
     --No Tributes
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SUMMON_PROC)
 	e3:SetRange(LOCATION_SZONE)
