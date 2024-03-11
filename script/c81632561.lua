@@ -97,8 +97,8 @@ function s.filter2(c)
 	return c:IsType(TYPE_MONSTER)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
 	if chk==0 then return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP_ATTACK) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	Duel.SetTargetCard(eg)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,eg,#eg,0,0)
 end
