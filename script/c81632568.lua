@@ -102,10 +102,10 @@ end
 function s.gtop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		if Duel.GetControl(tc,1-tp,PHASE_END,1)>0 and Duel.IsExistingMatchingCard(s.The300FilerSummon, tp, LOCATION_HAND, 0, 1, nil, e, tp)
+		if Duel.GetControl(tc,1-tp,PHASE_END,1)>0 and Duel.IsExistingMatchingCard(s.The300FilerSummon, tp, LOCATION_HAND|LOCATION_GRAVE, 0, 1, nil, e, tp)
         and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.The300FilerSummon,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.The300FilerSummon,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g==0 then return end
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
