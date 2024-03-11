@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.drop)
 	c:RegisterEffect(e3)
 
-    local e4=Effect.CreatEffect(c)
+    local e4=Effect.CreateEffect(c)
     e4:SetCategory(CATEGORY_RECOVER+CATEGORY_POSITION)
     e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e4:SetCode(EVENT_BATTLE_CONFIRM)
