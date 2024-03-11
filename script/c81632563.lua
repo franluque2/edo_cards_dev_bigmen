@@ -54,7 +54,7 @@ end
 function s.atkval(e)
 	local tp=e:GetHandlerPlayer()
 	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
-	return 500
+	return 200*g
 end
 function s.condition2(e)
 	local c=e:GetHandler():GetEquipTarget()
