@@ -108,5 +108,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filter,1,nil,tp) and #eg==1
+	return eg:IsExists(s.filter2,1,nil,tp) and #eg==1
 end
