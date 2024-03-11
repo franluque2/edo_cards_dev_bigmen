@@ -79,7 +79,7 @@ function s.accost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.filter(c,tp)
-	return c:IsCode(511000716, 511000718, 511000715)
+	return c:IsCode(511000716, 511000718, 511000715) and c:CheckActivateEffect(false,false,false)~=nil
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,tp) end

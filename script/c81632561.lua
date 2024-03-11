@@ -31,19 +31,17 @@ function s.initial_effect(c)
 	e3:SetOperation(s.acop)
 	c:RegisterEffect(e3)
 
-    --Change Position (QE)
+	--Change position
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_POSITION)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetRange(LOCATION_FZONE)
-	e4:SetCountLimit(1,id)
-	e4:SetCondition(s.condition)
-	e4:SetTarget(s.postg)
-	e4:SetOperation(s.posop)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetTarget(s.target)
+	e4:SetOperation(s.operation)
 	c:RegisterEffect(e4)
-    local e5=e4:Clone()
+	local e5=e4:Clone()
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e5)
 
@@ -55,7 +53,7 @@ function s.accost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.filter(c,tp)
-	return c:IsCode(511000716, 511000718, 511000715)
+	return c:IsCode(511000716, 511000718, 511000715) and c:CheckActivateEffect(false,false,false)~=nil
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,tp) end
@@ -98,21 +96,12 @@ end
 function s.filter2(c)
 	return c:IsType(TYPE_MONSTER)
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filter2,1,nil,tp) and #eg==1
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP_ATTACK) end
+	Duel.SetTargetCard(eg)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,eg,#eg,0,0)
 end
-
-function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
-end
-function s.posop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,0,POS_FACEUP_ATTACK,0)
-	end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(Card.IsPosition,nil,POS_FACEUP_ATTACK)
+	Duel.ChangePosition(g,POS_FACEUP_DEFENSE)
 end
