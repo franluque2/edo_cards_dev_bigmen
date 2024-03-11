@@ -68,8 +68,8 @@ end
 function s.battg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
     Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(600)
-    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
+    Duel.SetTargetParam(200)
+    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,200)
 end
 function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
