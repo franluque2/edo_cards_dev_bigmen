@@ -51,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
-        Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
+        Duel.Equip(tp,c,tc,true)
 		Duel.ChangeAttackTarget(g:GetFirst())
 	end
 end
