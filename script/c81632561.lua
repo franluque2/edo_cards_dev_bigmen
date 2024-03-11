@@ -98,6 +98,7 @@ function s.filter2(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(Card.IsPosition,1,nil,POS_FACEUP_ATTACK) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	Duel.SetTargetCard(eg)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,eg,#eg,0,0)
 end
