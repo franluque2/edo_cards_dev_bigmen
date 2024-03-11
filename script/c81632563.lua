@@ -5,9 +5,9 @@ function s.initial_effect(c)
 	aux.AddEquipProcedure(c)
     --ATKUP
     local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetType(EFFECT_TYPE_EQUIP)
     e1:SetCode(EFFECT_UPDATE_ATTACK)
-    e1:SetValue(s.value)
+    e1:SetValue(500)
     c:RegisterEffect(e1)
 	--destroy replace
 	local e2=Effect.CreateEffect(c)
@@ -49,7 +49,7 @@ function s.initial_effect(c)
 end
 function s.atkval(e)
 	local tp=e:GetHandlerPlayer()
-	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_GRAVE|LOCATION_FZONE,0,nil)
 	return 400*g
 end
 function s.condition2(e)
@@ -86,7 +86,4 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,re)
 	return re:IsActiveType(TYPE_TRAP)
-end
-function s.value(c)
-    return 500
 end
