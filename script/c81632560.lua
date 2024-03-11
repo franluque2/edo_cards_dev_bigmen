@@ -11,18 +11,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
     e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
-
-    --Activation Search
-    local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e4:SetDescription(aux.Stringid(id,0))
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetOperation(s.activate)
-    e4:SetCountLimit(1,{id,1})
-	c:RegisterEffect(e4)
-
+    
     --Activate 1 "Kabuki Stage" Field Spell from hand or deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
