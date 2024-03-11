@@ -1,4 +1,4 @@
---Shizuka the Heavenly Dancer (CT)
+--Yoshitsune the Goblin of Beauty (CT)
 local s,id=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -15,23 +15,9 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
 
-    --draw
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetRange(LOCATION_GRAVE)
-	e3:SetHintTiming(0,TIMING_END_PHASE)
-	e3:SetCountLimit(1,id)
-	e3:SetCost(aux.bfgcost)
-	e3:SetTarget(s.drtg)
-	e3:SetOperation(s.drop)
-	c:RegisterEffect(e3)
-
     --Battle
     local e4=Effect.CreateEffect(c)
-    e4:SetCategory(CATEGORY_RECOVER+CATEGORY_POSITION)
+    e4:SetCategory(CATEGORY_DAMAGE+CATEGORY_POSITION)
     e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e4:SetCode(EVENT_BATTLE_CONFIRM)
     e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -58,14 +44,12 @@ end
 
 function s.battg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
-    Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(600)
-    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,600)
 end
 function s.batop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Recover(p,d,REASON_EFFECT)
+    Duel.Damage(1-tp,600,REASON_EFFECT)
     if c:IsRelateToEffect(e) and c:IsPosition(POS_FACEUP_ATTACK) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
         Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
     end
@@ -88,30 +72,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-	end
-end
-
-function s.td2filter(c)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsCode(511001914, 07541475, 511002145, 511002143, 84430950, 511000717, 511001298, 511002146, 511000715, 511000716, 511000718, 511002142) and c:IsAbleToDeck()
-end
-function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.td2filter(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-		and Duel.IsExistingTarget(s.td2filter,tp,LOCATION_GRAVE,0,3,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,s.td2filter,tp,LOCATION_GRAVE,0,3,3,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if #tg<=0 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,2,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct>0 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,2,REASON_EFFECT)
 	end
 end
