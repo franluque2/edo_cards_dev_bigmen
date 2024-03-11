@@ -62,8 +62,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.eqlimit)
 		e1:SetLabelObject(tc)
 		c:RegisterEffect(e1)
-	end
-	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
 		Duel.ChangeAttackTarget(g:GetFirst())
 	end
 end
