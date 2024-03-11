@@ -56,7 +56,7 @@ function s.condition2(e)
 	return c:IsCode(84430950)
 end
 function s.atkfilter(c)
-	return c:IsType(TYPE_FIELD) and c:IsSetCode(511000716, 511000718, 511000715)
+	return c:IsType(TYPE_FIELD) and c:IsCode(511000716, 511000718, 511000715)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetEquipTarget():IsReason(REASON_BATTLE)
