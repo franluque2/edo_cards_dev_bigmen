@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHANGE_POS)
 	e3:SetRange(LOCATION_FZONE)
+    e3:SetTarget(s.battg)
 	e3:SetCondition(s.accon)
 	e3:SetOperation(s.acop)
 	c:RegisterEffect(e3)
@@ -59,14 +60,16 @@ function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cfilter(c)
-    if chk==0 then return true end
-    Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(600)
-    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
 	local np=c:GetPosition()
 	local pp=c:GetPreviousPosition()
 	return not c:IsStatus(STATUS_CONTINUOUS_POS) and ((np<3 and pp>3) or (pp<3 and np>3))
     
+end
+function s.battg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return true end
+    Duel.SetTargetPlayer(tp)
+    Duel.SetTargetParam(600)
+    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
 end
 function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
