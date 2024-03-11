@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	--sp summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
@@ -50,11 +50,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.ChangeAttackTarget(g:GetFirst())
+    if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local c=e:GetHandler()
 		if not c:IsRelateToEffect(e) then return end
-		Duel.Equip(g:GetFirst())
+		Duel.Equip(tp,c,tc,true)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
@@ -62,6 +61,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.eqlimit)
 		e1:SetLabelObject(tc)
 		c:RegisterEffect(e1)
+	end
+	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+		Duel.ChangeAttackTarget(g:GetFirst())
     end
 end
 function s.eqlimit(e,c)
