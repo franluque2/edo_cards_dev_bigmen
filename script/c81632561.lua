@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetRange(LOCATION_FZONE)
+	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1,id)
 	e4:SetCondition(s.condition)
 	e4:SetTarget(s.target)
@@ -102,7 +102,6 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=Duel.GetAttackTarget()
 	if chk==0 then return d:IsDefensePos() and d:IsControler(tp) end
-	Duel.SetTargetCard(d)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
