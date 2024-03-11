@@ -15,6 +15,20 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
 
+    --QE Equip a Spell
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_EQUIP)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E|TIMING_MAIN_END|TIMING_END_PHASE)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetCost(aux.bfgcost)
+	e3:SetTarget(s.eqtg)
+	e3:SetOperation(s.eqop)
+	c:RegisterEffect(e3)
+
     --Battle
     local e4=Effect.CreateEffect(c)
     e4:SetCategory(CATEGORY_DAMAGE+CATEGORY_POSITION)
@@ -35,6 +49,30 @@ function s.initial_effect(c)
 	e5:SetCountLimit(1)
 	e5:SetValue(s.valcon)
 	c:RegisterEffect(e5)
+end
+
+function s.eqtcfilter(c,ec)
+	return c:IsFaceup() and ec:CheckEquipTarget(c)
+end
+function s.eqfilter(c,tp)
+	return c:IsEquipSpell() and c:CheckUniqueOnField(tp) and Duel.IsExistingMatchingCard(s.eqtcfilter,0,0,LOCATION_MZONE,1,nil,c)
+end
+function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.eqfilter(chkc,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingTarget(s.eqfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+	local g=Duel.SelectTarget(tp,s.eqfilter,tp,LOCATION_GRAVE,0,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,tp,0)
+end
+function s.eqop(e,tp,eg,ep,ev,re,r,rp)
+	local ec=Duel.GetFirstTarget()
+	if not ec:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_SZONE)==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local tc=Duel.SelectMatchingCard(tp,s.eqtcfilter,tp,0,LOCATION_MZONE,1,1,nil,ec):GetFirst()
+	if tc then
+		Duel.Equip(tp,ec,tc)
+	end
 end
 
 function s.batcon(e,tp,eg,ep,ev,re,r,rp)
@@ -60,7 +98,7 @@ function s.valcon(e,re,r,rp)
 end
 
 function s.filter(c)
-	return c:IsCode(511000717, 511002142) and c:IsSpellTrap() and c:IsAbleToHand()
+	return c:IsCode(511001298, 511002146) and c:IsSpellTrap() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
