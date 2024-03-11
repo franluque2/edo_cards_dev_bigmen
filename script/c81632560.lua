@@ -97,4 +97,19 @@ function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 								Duel.ActivateFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
 							end,
 							aux.Stringid(id,2))
+							if tc:IsLocation(LOCATION_FZONE) then
+                                local e1=Effect.CreateEffect(e:GetHandler())
+                                e1:SetType(EFFECT_TYPE_FIELD)
+                                e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+                                e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+                                e1:SetTargetRange(1,0)
+                                e1:SetValue(s.aclimit)
+                                e1:SetLabelObject(tc)
+                                e1:SetReset(RESET_PHASE+PHASE_END)
+                                Duel.RegisterEffect(e1,tp)
+end
+function s.aclimit(e,re,tp)
+	local tc=e:GetLabelObject()
+	return re:GetHandler():IsCode(tc:GetCode())
+end
 end
