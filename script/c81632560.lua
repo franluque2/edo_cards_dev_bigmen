@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
     e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
-    
+
     --Activate 1 "Kabuki Stage" Field Spell from hand or deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
