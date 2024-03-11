@@ -78,7 +78,7 @@ function s.accost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.filter(c,tp)
-	return c:IsCode(511000716, 511000718, 511000715) and c:GetActivateEffect():IsActivatable(tp,true,true)
+	return c:IsCode(511000716, 511000718, 511000715)
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,tp) end
