@@ -1,6 +1,12 @@
 --Illegal Summon (CT)
 local s,id=GetID()
 function s.initial_effect(c)
+
+    --Activate
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_ACTIVATE)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e3)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
