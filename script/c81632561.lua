@@ -2,15 +2,10 @@
 Duel.LoadScript("c420.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-
-    --Gain LP
+    --Activate
 	local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_RECOVER)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_CHANGE_POS)
-	e1:SetRange(LOCATION_FZONE)
-	e1:SetCondition(s.accon)
-	e1:SetOperation(s.acop)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 
     --Activate 1 "Kabuki Stage" Field Spell from hand or deck
@@ -24,6 +19,16 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tftg)
 	e2:SetOperation(s.tfop)
 	c:RegisterEffect(e2)
+
+    --Gain LP
+	local e3=Effect.CreateEffect(c)
+    e3:SetCategory(CATEGORY_RECOVER)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHANGE_POS)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetCondition(s.accon)
+	e3:SetOperation(s.acop)
+	c:RegisterEffect(e3)
 
 end
 
@@ -66,7 +71,7 @@ end
 function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
 end
-function s.acopp(e,tp,eg,ep,ev,re,r,rp)
+function s.acop(e,tp,eg,ep,ev,re,r,rp)
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
     Duel.Recover(p,d,REASON_EFFECT)
 end
