@@ -4,11 +4,11 @@ local s,id=GetID()
 function s.initial_effect(c)
 	aux.AddEquipProcedure(c)
     --ATKUP
-    local e8=Effect.CreateEffect(c)
-    e8:SetType(EFFECT_TYPE_SINGLE)
-    e8:SetCode(EFFECT_UPDATE_ATTACK)
-    e8:SetValue(500)
-    c:RegisterEffect(e8)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetValue(s.value)
+    c:RegisterEffect(e1)
 	--destroy replace
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_EQUIP)
@@ -86,4 +86,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,re)
 	return re:IsActiveType(TYPE_TRAP)
+end
+function s.value(c)
+    return 500
 end
