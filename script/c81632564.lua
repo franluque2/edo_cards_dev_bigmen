@@ -54,7 +54,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ChangeAttackTarget(g:GetFirst())
 		local c=e:GetHandler()
 		if not c:IsRelateToEffect(e) then return end
-		Duel.Equip(tp,c,tc,true)
+		Duel.Equip(g:GetFirst())
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
