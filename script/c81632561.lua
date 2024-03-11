@@ -31,6 +31,22 @@ function s.initial_effect(c)
 	e3:SetOperation(s.acop)
 	c:RegisterEffect(e3)
 
+    --Change Position (QE)
+	local e4=Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_POSITION)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
+	e4:SetCode(EVENT_SUMMON_SUCCESS)
+	e4:SetRange(LOCATION_FZONE)
+	e4:SetCountLimit(1,id)
+	e4:SetCondition(s.condition)
+	e4:SetTarget(s.target)
+	e4:SetOperation(s.operation)
+	c:RegisterEffect(e4)
+    local e5=e4:Clone()
+	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e5)
+
 end
 
 function s.accost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -79,3 +95,18 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Recover(p,d,REASON_EFFECT)
 end
 
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.filter,1,nil,tp) and #eg==1
+end
+
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local d=Duel.GetAttackTarget()
+	if chk==0 then return d:IsDefensePos() and d:IsControler(tp) end
+	Duel.SetTargetCard(d)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsDefensePos() then
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,0,POS_FACEUP_ATTACK,0)
+    end
+end
