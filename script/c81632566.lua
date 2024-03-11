@@ -9,7 +9,6 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
     e1:SetCountLimit(1,{id,0})
-    e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e1)
 
     --destroy
