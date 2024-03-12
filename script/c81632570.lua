@@ -19,8 +19,8 @@ function s.initial_effect(c)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCost(s.thcost)
 	e2:SetCondition(s.tdcon)
-	e2:SetTarget(s.target)
-	e2:SetOperation(s.activate)
+	e2:SetTarget(s.tdtg)
+	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -47,24 +47,26 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
         Duel.SendtoGrave(tc,REASON_EFFECT)
 	end
 end
-function s.cfilter(c,tp)
-	return c:IsFaceup() and c:IsCode(511000644) and c:IsControler(tp)
-end
+
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetAttackTarget()==nil
+	return ep~=tp and Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644), c:GetControler(), LOCATION_ONFIELD, 0, 1,nil)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() end
 	Duel.ConfirmCards(1-tp,e:GetHandler())
     Duel.SendtoDeck(e:GetHandler(), tp, SEQ_DECKBOTTOM, REASON_COST)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,c,1,tp,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,1,tp,0)
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+function s.tdop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,SEQ_DECKBOTTOM,REASON_EFFECT)>0
+		and c:IsLocation(LOCATION_DECK) then
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
+	end
 end
