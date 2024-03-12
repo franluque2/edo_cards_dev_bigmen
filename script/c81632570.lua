@@ -51,7 +51,7 @@ function s.cfilter(c,tp)
 	return c:IsFaceup() and c:IsCode(511000644) and c:IsControler(tp)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetAttackTarget()==nil and eg:IsExists(s.cfilter,1,nil,tp)
+	return ep~=tp and Duel.GetAttackTarget()==nil
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() end
