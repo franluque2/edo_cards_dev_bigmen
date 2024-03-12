@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
     --recover
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
