@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCost(s.thcost)
@@ -49,7 +49,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644), c:GetControler(), LOCATION_ONFIELD, 0, 1,nil)
+	return ep~=tp and Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644), c:GetControler(), LOCATION_MZONE, 0, 1,nil)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() end
