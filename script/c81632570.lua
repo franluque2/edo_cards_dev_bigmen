@@ -48,7 +48,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
+function s.tdcon(c,e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644), c:GetControler(), LOCATION_MZONE, 0, 1,nil)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
