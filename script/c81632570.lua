@@ -10,6 +10,18 @@ function s.initial_effect(c)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
 	c:RegisterEffect(e1)
+    --recover
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EVENT_BATTLE_DAMAGE)
+    e2:SetRange(LOCATION_GRAVE)
+    e2:SetCost(s.thcost)
+	e1:SetCondition(s.tdcon)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.activate)
+	c:RegisterEffect(e1)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -33,4 +45,25 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
             Duel.Damage(1-tp,500,REASON_EFFECT)
         end
 	end
+end
+function s.cfilter(c,tp)
+	return c:IsFaceup() and c:IsCode(511000644) and c:IsControler(tp)
+end
+function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and Duel.GetAttackTarget()==nil and eg:IsExists(s.cfilter,1,nil,tp)
+end
+function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeck() end
+	Duel.ConfirmCards(1-tp,e:GetHandler())
+    Duel.SendtoDeck(e:GetHandler(), tp, SEQ_DECKBOTTOM, REASON_COST)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
