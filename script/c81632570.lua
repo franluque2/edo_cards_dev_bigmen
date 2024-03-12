@@ -13,7 +13,7 @@ function s.initial_effect(c)
     --recover
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
     e2:SetRange(LOCATION_GRAVE)
