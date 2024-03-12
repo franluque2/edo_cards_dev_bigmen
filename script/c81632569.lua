@@ -51,9 +51,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-		Duel.BreakEffect()
-		Duel.Draw(1-tp,1,REASON_EFFECT)
 	end
 end
 function s.BallFilter(c,e,tp)
@@ -77,5 +74,5 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.atkcon(e)
-	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,s.BallFilter2)
+	return Duel.IsExistingMatchingCard(s.BallFilter2,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end

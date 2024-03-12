@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
     --recover
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_TRIGGER_O)
 	e2:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
@@ -25,10 +25,10 @@ function s.initial_effect(c)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
 	Duel.SetTargetCard(g)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
@@ -44,6 +44,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
         if (op~=4 and tc:IsCode(92595545, 84813516, 21817254, 39552864)) then
             Duel.Damage(1-tp,500,REASON_EFFECT)
         end
+        Duel.SendtoGrave(tc,REASON_EFFECT)
 	end
 end
 function s.cfilter(c,tp)
