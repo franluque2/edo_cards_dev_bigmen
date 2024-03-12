@@ -135,17 +135,4 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		sg=sg:Select(tp,ft,ft,nil)
 	end
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-	Duel.BreakEffect()
-	if Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)~=ct then return end
-	for tc in mg:Iter() do
-		--Banish them when it leaves the field
-		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(3300)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetReset(RESET_EVENT|RESETS_REDIRECT)
-		e1:SetValue(LOCATION_REMOVED)
-		tc:RegisterEffect(e1,true)
-end
 end
