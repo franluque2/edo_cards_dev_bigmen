@@ -45,6 +45,16 @@ function s.initial_effect(c)
 	e6:SetCondition(s.sdescon)
 	e6:SetOperation(s.sdesop)
 	c:RegisterEffect(e6)
+    --Time Bomb
+    local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e7:SetOperation(s.op)
+	c:RegisterEffect(e7)
+    local e8=e7:Clone()
+	e8:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e8)
 end
 local CARD_PANDEMONIUM=94585852
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
