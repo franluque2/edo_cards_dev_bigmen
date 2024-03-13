@@ -73,7 +73,7 @@ function s.battlecon(e)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.sfilter(c)
-	return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousCodeOnField()==94585852 and c:IsPreviousLocation(LOCATION_ONFIELD)
+	return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousCodeOnField()==94585852 and c:IsPreviousLocation(LOCATION_FZONE)
 end
 function s.desfilter(c,tp)
 	return c:IsCode(94585852) and c:IsPreviousPosition(POS_FACEUP)
