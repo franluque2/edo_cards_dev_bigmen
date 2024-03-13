@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
+    e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
     --recover
 	local e2=Effect.CreateEffect(c)
@@ -50,7 +51,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.GetAttackTarget()==nil
-    and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644),tp,LOCATION_MZONE,0,1,e:GetHandler()) 
+    and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644),tp,LOCATION_MZONE,0,1,e:GetHandler())
+    and aux.exccon(e) 
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end

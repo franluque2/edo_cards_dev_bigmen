@@ -52,6 +52,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
+		Duel.BreakEffect()
+		Duel.Draw(1-tp,1,REASON_EFFECT)
 	end
 end
 function s.BallFilter(c,e,tp)

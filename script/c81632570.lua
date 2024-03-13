@@ -40,7 +40,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 		Duel.ShuffleHand(tp)
 		if (op~=0 and tc:IsMonster()) or (op~=1 and tc:IsSpell()) or (op~=2 and tc:IsTrap()) then
-			Duel.Damage(1-tp,1500,REASON_EFFECT)
+			Duel.Damage(1-tp,1000,REASON_EFFECT)
 		end
         if (op~=4 and tc:IsCode(92595545, 84813516, 21817254, 39552864)) then
             Duel.Damage(1-tp,500,REASON_EFFECT)
@@ -51,7 +51,8 @@ end
 
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.GetAttackTarget()==nil
-    and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644),tp,LOCATION_MZONE,0,1,e:GetHandler()) 
+    and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644),tp,LOCATION_MZONE,0,1,e:GetHandler())
+    and aux.exccon(e)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end
