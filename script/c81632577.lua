@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 
     --destroy replace

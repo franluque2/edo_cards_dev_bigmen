@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 
     	--spsummon
@@ -22,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
+	e2:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e2)
 end
 s.toss_coin=true
