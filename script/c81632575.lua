@@ -106,5 +106,5 @@ function s.ctfilterAce(c)
     return c:IsCode(511001098, 511000546, 511001477, 26259179, 37812118) and c:IsAbleToHand()
 end
 function s.ctfilterSpellTrap(c)
-return c:IsSpellTrap() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGrave() or c:IsAbleToHand()
+return c:IsSpellTrap() and c:IsType(TYPE_CONTINUOUS) and (c:IsAbleToGrave() or c:IsAbleToHand())
 end
