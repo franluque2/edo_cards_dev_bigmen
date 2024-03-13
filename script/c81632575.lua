@@ -108,5 +108,5 @@ function s.ctfilterAce(c)
     return c:IsCard(511001098, 511000546, 511001477, 26259179, 37812118) and c:IsAbleToHand()
 end
 function s.ctfilterSpellTrap(c)
-    return c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS and c:IsAbleToGrave() or c:IsAbleToHand()
+    return (c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS or c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS) and c:IsAbleToGrave() or c:IsAbleToHand()
 end
