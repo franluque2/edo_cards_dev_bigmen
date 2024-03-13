@@ -68,26 +68,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
-            --Cannot be destroyed by battle or card effect
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetDescription(3008)
-            e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-            e1:SetValue(1)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
-            g:GetFirst():RegisterEffect(e1)
-            local e2=Effect.CreateEffect(e:GetHandler())
-            e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-            e2:SetValue(1)
-            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
-            g:GetFirst():RegisterEffect(e2)
-            g:GetFirst():RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,2,0,aux.Stringid(id,0))
-        end
-        if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-            Duel.SendtoHand(tc,tp,REASON_EFFECT)
-        end
+	    Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
     end
 end
