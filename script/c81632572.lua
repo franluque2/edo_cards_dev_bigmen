@@ -130,8 +130,8 @@ function s.descfilter(c)
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,e)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.descfilter,1,true,aux.ReleaseCheckTarget,e:GetHandler(),dg) end
-	local g=Duel.SelectReleaseGroupCost(tp,s.descfilter,1,1,true,aux.ReleaseCheckTarget,e:GetHandler(),dg)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.descfilter,1,false,aux.ReleaseCheckTarget,e:GetHandler(),dg) end
+	local g=Duel.SelectReleaseGroupCost(tp,s.descfilter,1,1,false,aux.ReleaseCheckTarget,e:GetHandler(),dg)
 	Duel.Release(g,REASON_COST)
 end
 function s.desfilter(c,e)
