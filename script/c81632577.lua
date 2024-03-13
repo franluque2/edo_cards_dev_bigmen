@@ -45,7 +45,7 @@ end
 
 function s.repfilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_MZONE)
-		and c:IsControler(tp) and c:GetReasonEffect():GetHandler():GetOwner()~=p and not c:IsReason(REASON_REPLACE)
+		and c:IsControler(tp) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(s.repfilter,1,nil,tp) end
