@@ -46,7 +46,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.cfilter,nil,eg)
 	local p=g:GetFirst():GetControler()
-	local sum=g:GetSum(Card.GetAttack)/2
+	local sum=g:GetSum(Card.GetAttack)
 	local res=Duel.TossCoin(tp,1)
 	if res==COIN_HEADS then
 		Duel.Recover(p,sum,REASON_EFFECT)
