@@ -42,7 +42,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		if (op~=0 and tc:IsMonster()) or (op~=1 and tc:IsSpell()) or (op~=2 and tc:IsTrap()) then
 			Duel.Damage(1-tp,1000,REASON_EFFECT)
 		end
-        if (op~=4 and tc:IsCode(92595545, 84813516, 21817254, 39552864)) then
+        if (op~=4 and tc:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966, 66768175, 67934141, 95614612, 94230224, 09402966)) then
             Duel.Damage(1-tp,500,REASON_EFFECT)
         end
         Duel.SendtoGrave(tc,REASON_EFFECT)

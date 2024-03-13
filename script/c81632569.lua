@@ -57,10 +57,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.BallFilter(c,e,tp)
-	return c:IsCode(92595545, 84813516, 21817254, 39552864) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.BallFilter2(c)
-	return c:IsCode(92595545, 84813516, 21817254, 39552864)
+	return c:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

@@ -126,7 +126,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)
 end
 function s.descfilter(c)
-	return c:IsCode(92595545, 84813516, 21817254, 39552864)
+	return c:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966)
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_ONFIELD,nil,e)

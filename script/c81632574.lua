@@ -55,10 +55,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsCode(92595545, 84813516, 21817254, 39552864) and c:IsMonster()
+	return c:IsLocation(LOCATION_GRAVE) and c:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966) and c:IsMonster()
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(92595545, 84813516, 21817254, 39552864) and c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966) and c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.GetAttackTarget()==nil

@@ -36,7 +36,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetFirst():IsMonster() then
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
 	end
-    if g:GetFirst():IsCode(92595545, 84813516, 21817254, 39552864) then
+    if g:GetFirst():IsCode(92595545, 84813516, 21817254, 39552864, 66768175, 67934141, 95614612, 94230224, 09402966) then
 		Duel.Damage(1-tp,500,REASON_EFFECT)
 	end
     if g:GetFirst():IsSpellTrap() and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
