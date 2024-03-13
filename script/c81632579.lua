@@ -107,15 +107,13 @@ function s.reg(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,0,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function s.filter(c,tp)
 	return not c:IsLocation(LOCATION_MZONE) and c:GetOwner()==tp
 end
 function s.desop2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
-		local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,0,nil)
-		Duel.Destroy(sg,REASON_EFFECT)
-		end
+	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 end
+
+
