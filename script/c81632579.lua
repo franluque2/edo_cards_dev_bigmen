@@ -35,7 +35,7 @@ function s.initial_effect(c)
     e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e5:SetTargetRange(0,1)
     e5:SetCondition(s.battlecon)
-    Duel.RegisterEffect(e5,tp)
+    Duel.RegisterEffect(e5)
     --Send Itself
     local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
