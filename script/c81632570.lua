@@ -17,7 +17,6 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP,EFFECT_FLAG2_CHECK_SIMULTANEOUS)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
     e2:SetRange(LOCATION_GRAVE)
-    e2:SetCost(s.thcost)
 	e2:SetCondition(s.tdcon)
 	e2:SetTarget(s.tdtg)
 	e2:SetOperation(s.tdop)
@@ -51,11 +50,6 @@ end
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.GetAttackTarget()==nil
     and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000644),tp,LOCATION_MZONE,0,1,e:GetHandler()) 
-end
-function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToDeck() end
-	Duel.ConfirmCards(1-tp,e:GetHandler())
-    Duel.SendtoDeck(e:GetHandler(), tp, SEQ_DECKBOTTOM, REASON_COST)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end
