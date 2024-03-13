@@ -37,18 +37,6 @@ function s.initial_effect(c)
 	e5:SetTargetRange(0,1)
     e5:SetCondition(s.battlecon)
 	c:RegisterEffect(e5)
-    --Send Itself
-    local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e6:SetCode(EVENT_SUMMON_SUCCESS+EVENT_PHASE+PHASE_END)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetCondition(s.sdescon)
-	e6:SetOperation(s.sdesop)
-	c:RegisterEffect(e6)
-    local e7=e6:Clone()
-	e7:SetCode(EVENT_SPSUMMON_SUCCESS+EVENT_PHASE+PHASE_END)
-	c:RegisterEffect(e7)
 end
 local CARD_PANDEMONIUM=94585852
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -66,15 +54,31 @@ function s.battlecon(e)
 	local tp=e:GetHandlerPlayer()
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_PANDEMONIUM),tp,LOCATION_ONFIELD,0,1,nil)
 end
+
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetCondition(s.sdescon)
+	e1:SetOperation(s.sdesop)
+	if Duel.GetTurnPlayer()~=tp then
+		e1:SetLabel(1)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_OPPO_TURN,3)
+	else
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_OPPO_TURN,2)
+	end
+	e:GetHandler():RegisterEffect(e1)
+end
 function s.sdescon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+	return Duel.GetTurnPlayer()~=tp
 end
 function s.sdesop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local ct=c:GetTurnCounter()
-	ct=ct+1
-	c:SetTurnCounter(ct)
-	if ct==2 then
-		Duel.Destroy(c,REASON_RULE)
+	if e:GetLabel()==0 then
+		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+	else
+		e:SetLabel(0)
 	end
 end
