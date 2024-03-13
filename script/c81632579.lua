@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)
     --Dark Arena Effect
-    local e5=Effect.CreateEffect(e:GetHandler())
+    local e5=Effect.CreateEffect(c)
     e5:SetType(EFFECT_TYPE_FIELD)
     e5:SetCode(EFFECT_PATRICIAN_OF_DARKNESS)
     e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
