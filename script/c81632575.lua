@@ -47,7 +47,7 @@ function s.GamblerCon(e)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,02196767, 50593156),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.bravecon(e))
+	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.GamblerCon(e))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
