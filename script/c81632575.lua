@@ -93,10 +93,8 @@ function s.ctactivate(e,tp,eg,ep,ev,re,r,rp)
         if #g>0 then
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
-		Duel.Recover(tp,500,REASON_EFFECT)
     end
 	elseif res==COIN_TAILS then
-        Duel.Recover(1-tp,500,REASON_EFFECT)
         Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
         local sc=Duel.SelectMatchingCard(tp,s.ctfilterSpellTrap,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
         if sc then
