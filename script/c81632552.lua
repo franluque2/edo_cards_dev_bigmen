@@ -164,7 +164,7 @@ function s.rev(e,re,r,rp,rc)
 end
 
 function s.td2filter(c)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsCode(511000123, 511000124, 511000125, 511000122, 51100127, 511000126, 38520918, 76232340, 47986555, 32012841, 10667321) and c:IsAbleToDeck()
+	return c:IsLocation(LOCATION_GRAVE) and c:IsCode(511000123, 511000124, 511000125, 511000122, 511000127, 511000126, 38520918, 76232340, 47986555, 32012841, 10667321) and c:IsAbleToDeck()
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.td2filter(chkc) end
