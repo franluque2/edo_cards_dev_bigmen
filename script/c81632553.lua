@@ -3,13 +3,15 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,511000126)
 	--Each Ancient Spell get protected once, each turn
-	local e1=Effect.CreateEffect(c)
+    local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetTargetRange(LOCATION_SZONE,0)
+	e1:SetTargetRange(LOCATION_ONFIELD,0)
 	e1:SetTarget(s.AncientSpells)
-	e1:SetValue(s.indct)
+	e1:SetValue(1)
+	e1:SetCountLimit(1)
 	c:RegisterEffect(e1)
 
     --def
