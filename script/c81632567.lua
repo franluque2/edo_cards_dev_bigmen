@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e3:SetCondition(s.condition)
 	e3:SetCost(s.cost)
 	e3:SetOperation(s.operation)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e3)
 
     --atk up
 	local e4=Effect.CreateEffect(c)
