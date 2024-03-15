@@ -20,13 +20,9 @@ end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PREDRAW)
-		e1:SetCondition(s.flipcon)
-		e1:SetOperation(s.flipop)
-		e1:SetCountLimit(1)
-		Duel.RegisterEffect(e1,tp)
+		if Duel.GetFlagEffect(tp, id-100)==0 then
+
+		s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 		--unaffected by unlimiter
 
@@ -39,16 +35,26 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 
 		--halve battle dmg
-		local e3=Effect.CreateEffect(c)
+		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_FIELD)
 		e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
 		e3:SetTargetRange(LOCATION_MZONE,0)
 		e3:SetTarget(s.rdtg)
+		e3:SetCondition(s.halvecon)
 		e3:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
 		Duel.RegisterEffect(e3,tp)
+	end
 
+	end
+	e:SetLabel(1)
 end
-e:SetLabel(1)
+
+function s.fuaojfilter(c)
+	return c:IsFaceup() and c:IsOriginalSetCard(0x1)
+end
+
+function s.halvecon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(s.fuaojfilter, tp, LOCATION_MZONE, 0, 1, nil)
 end
 
 function s.efilter(e,te)
@@ -60,13 +66,12 @@ function s.rdtg(e,c)
 	return not c:IsOriginalSetCard(0x1)
 end
 
-	function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-		return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
-	end
-
 	function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetFlagEffect(tp, id-100)==0 then
 		Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 		Duel.Hint(HINT_CARD,tp,id)
+		Duel.RegisterFlagEffect(tp, id-100, 0, 0, 0)
+		--s.copyskill(e,tp,eg,ep,ev,re,r,rp)
 		s.copydeck(e,tp,eg,ep,ev,re,r,rp)
 		s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		s.copyextra(e,tp,eg,ep,ev,re,r,rp)
@@ -76,9 +81,47 @@ end
 		s.morpharchetypes(e,tp,eg,ep,ev,re,r,rp)
 
 		Duel.ShuffleDeck(tp)
-		Duel.Draw(tp, 5, REASON_EFFECT)
+		end
 	end
 
+	function s.copyskill(e,tp,eg,ep,ev,re,r,rp)
+		local skillcopied=false
+		local oppskills=Duel.GetMatchingGroup(Card.IsType, tp, 0, LOCATION_DECK, nil, TYPE_SKILL)
+		if #oppskills>0 then
+			skillcopied=true
+			local skilltocopy=Duel.CreateToken(tp, oppskills:GetFirst():GetOriginalCode())
+			Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+			Duel.RaiseEvent(skilltocopy, EVENT_STARTUP, re, r, rp, ep, ev)
+		end
+
+		if not skillcopied then
+			local skill=nil
+			local possibleskills=Duel.GetPlayerEffect(1-tp)
+			if possibleskills then
+				for key,testskill in ipairs{possibleskills} do
+					if Effect.GetType(testskill)&(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)~=nil then
+						skill=testskill
+						break
+					end
+				end
+			end
+			if skill then
+				local card=Effect.GetOwner(skill)
+				Debug.Message(card)
+				Debug.Message(card:GetOriginalCode())
+
+				if card then
+					skillcopied=true
+					local skilltocopy=Duel.CreateToken(tp, card:GetOriginalCode())
+					Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+					Duel.RaiseEvent(skilltocopy, EVENT_STARTUP, re, r, rp, ep, ev)
+
+						end
+			end
+
+		end
+
+end
 
 function s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_HAND
