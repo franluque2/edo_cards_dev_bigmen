@@ -113,7 +113,7 @@ function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp, id-1, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp, id+9, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 
 
@@ -270,7 +270,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.IsExistingMatchingCard(s.tributecheckfilter,tp,LOCATION_MZONE,0,1,nil,511002422)
 
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.GetFlagEffect(tp, id-1)>0
+			and Duel.GetFlagEffect(tp, id+9)>0
 			and Duel.IsExistingMatchingCard(s.addvaccinationfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil)
 	local b5=Duel.GetFlagEffect(tp,id+5)==0
 			and Duel.IsExistingMatchingCard(s.destroymanticorefilter,tp,LOCATION_ONFIELD,0,1,nil,e)
@@ -297,7 +297,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.IsExistingMatchingCard(s.tributecheckfilter,tp,LOCATION_MZONE,0,1,nil,511002422)
 
 	local b4=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.GetFlagEffect(tp, id-1)>0
+			and Duel.GetFlagEffect(tp, id+9)>0
 			and Duel.IsExistingMatchingCard(s.addvaccinationfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil)
 	local b5=Duel.GetFlagEffect(tp,id+5)==0
 			and Duel.IsExistingMatchingCard(s.destroymanticorefilter,tp,LOCATION_ONFIELD,0,1,nil,e)
