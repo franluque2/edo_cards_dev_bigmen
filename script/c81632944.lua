@@ -1,6 +1,6 @@
 --Eradication Protocols
+Duel.LoadScript ("big_aux.lua")
 local s,id=GetID()
-
 
 function s.initial_effect(c)
 	--Activate Skill
@@ -16,6 +16,7 @@ function s.initial_effect(c)
 
 	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
 end
+
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -43,11 +44,29 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCondition(s.halvecon)
 		e3:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
 		Duel.RegisterEffect(e3,tp)
+
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+		e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e8:SetCode(EVENT_PHASE+PHASE_MAIN1)
+		e8:SetCondition(s.flipcon3)
+		e8:SetOperation(s.flipop3)
+		e8:SetCountLimit(1)
+		Duel.RegisterEffect(e8,tp)
 	end
 
 	end
 	e:SetLabel(1)
 end
+
+function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
+end
+function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
+end
+
+
 
 function s.fuaojfilter(c)
 	return c:IsFaceup() and c:IsOriginalSetCard(0x1)
@@ -71,7 +90,6 @@ end
 		Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 		Duel.Hint(HINT_CARD,tp,id)
 		Duel.RegisterFlagEffect(tp, id-100, 0, 0, 0)
-		--s.copyskill(e,tp,eg,ep,ev,re,r,rp)
 		s.copydeck(e,tp,eg,ep,ev,re,r,rp)
 		s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		s.copyextra(e,tp,eg,ep,ev,re,r,rp)
@@ -81,6 +99,8 @@ end
 		s.morpharchetypes(e,tp,eg,ep,ev,re,r,rp)
 
 		Duel.ShuffleDeck(tp)
+		s.copyskill(e,tp,eg,ep,ev,re,r,rp)
+
 		end
 	end
 
@@ -95,28 +115,12 @@ end
 		end
 
 		if not skillcopied then
-			local skill=nil
-			local possibleskills=Duel.GetPlayerEffect(1-tp)
-			if possibleskills then
-				for key,testskill in ipairs{possibleskills} do
-					if Effect.GetType(testskill)&(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)~=nil then
-						skill=testskill
-						break
-					end
-				end
-			end
-			if skill then
-				local card=Effect.GetOwner(skill)
-				Debug.Message(card)
-				Debug.Message(card:GetOriginalCode())
-
-				if card then
+			local skill=Skills.getSkill()
+			if skill~=nil then
 					skillcopied=true
-					local skilltocopy=Duel.CreateToken(tp, card:GetOriginalCode())
-					Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+					local skilltocopy=Duel.CreateToken(tp, skill)
+					Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKTOP, REASON_RULE)
 					Duel.RaiseEvent(skilltocopy, EVENT_STARTUP, re, r, rp, ep, ev)
-
-						end
 			end
 
 		end
@@ -170,10 +174,14 @@ function s.copyextra(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
+function s.notskillfilter(c)
+	return not c:IsType(TYPE_SKILL)
+end
+
 
 function s.copydeck(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_DECK
-		local to_limbo=Duel.GetMatchingGroup(aux.TRUE, tp, location, 0, nil)
+		local to_limbo=Duel.GetMatchingGroup(s.notskillfilter, tp, location, 0, nil)
 		Duel.DisableShuffleCheck(true)
 		Duel.RemoveCards(to_limbo)
 

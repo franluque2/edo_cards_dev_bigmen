@@ -41,8 +41,25 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetTarget(aux.TRUE)
 		e3:SetLabelObject(e2)
 		Duel.RegisterEffect(e3,tp)
+
+		
+
+		local e8=Effect.CreateEffect(e:GetHandler())
+		e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e8:SetCode(EVENT_PHASE+PHASE_MAIN1)
+		e8:SetCondition(s.flipcon3)
+		e8:SetOperation(s.flipop3)
+		e8:SetCountLimit(1)
+		Duel.RegisterEffect(e8,tp)
 end
 e:SetLabel(1)
+end
+
+function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
+end
+function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 end
 
 	function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -55,6 +72,8 @@ end
 		s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		s.copyextra(e,tp,eg,ep,ev,re,r,rp)
 		s.copydeck(e,tp,eg,ep,ev,re,r,rp)
+		s.copyskill(e,tp,eg,ep,ev,re,r,rp)
+
 	end
 
 
@@ -62,6 +81,27 @@ end
 		return c:IsCode(e:GetHandler():GetCode())
 	end
 
+	function s.copyskill(e,tp,eg,ep,ev,re,r,rp)
+		local skillcopied=false
+		local oppskills=Duel.GetMatchingGroup(Card.IsType, tp, 0, LOCATION_DECK, nil, TYPE_SKILL)
+		if #oppskills>0 then
+			skillcopied=true
+			local skilltocopy=Duel.CreateToken(tp, oppskills:GetFirst():GetOriginalCode())
+			Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+			Duel.RaiseEvent(skilltocopy, EVENT_STARTUP, re, r, rp, ep, ev)
+		end
+
+		if not skillcopied then
+			local skill=Skills.getSkill()
+			if skill~=nil then
+					skillcopied=true
+					local skilltocopy=Duel.CreateToken(tp, skill)
+					Duel.SendtoDeck(skilltocopy, tp, SEQ_DECKTOP, REASON_RULE)
+					Duel.RaiseEvent(skilltocopy, EVENT_STARTUP, re, r, rp, ep, ev)
+			end
+
+		end
+	end
 
 function s.copyhand(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_HAND
@@ -110,10 +150,14 @@ function s.copyextra(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
+function s.notskillfilter(c)
+	return not c:IsType(TYPE_SKILL)
+end
+
 
 function s.copydeck(e,tp,eg,ep,ev,re,r,rp)
 		local location=LOCATION_DECK
-		local to_limbo=Duel.GetMatchingGroup(aux.TRUE, tp, location, 0, nil)
+		local to_limbo=Duel.GetMatchingGroup(s.notskillfilter, tp, location, 0, nil)
 		Duel.DisableShuffleCheck(true)
 		Duel.RemoveCards(to_limbo)
 

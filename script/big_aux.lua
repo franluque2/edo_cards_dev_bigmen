@@ -254,3 +254,42 @@ if not kdr then
 
 
 end
+
+if not Skills then
+  Skills={}
+  Skills[0]=nil
+  Skills[1]=nil
+
+  local notcopyskills={81632944,81632943,81632987,881632757}
+
+  function Skills.getSkill()
+    return Skills[0]
+  end
+
+  function Skills.checkValidSkill(val)
+    for index, value in ipairs(notcopyskills) do
+      if val==value then return false end
+    end
+    return true
+  end
+
+  function Skills.setSkill(val)
+    if Skills.checkValidSkill(val) then
+      Skills[0]=val
+    end
+  end
+
+  aux.AddSkillProcedure = (function()
+    local oldfunc = aux.AddSkillProcedure
+    return function(c,coverNum,drawless,skillcon,skillop,countlimit)
+		if Skills.getSkill()==nil then
+			Skills.setSkill(c:GetOriginalCode())
+		end
+        local res=oldfunc(c,coverNum,drawless,skillcon,skillop,countlimit)
+        return res
+    end
+end)()
+end
+
+
+
