@@ -46,7 +46,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		local e8=Effect.CreateEffect(e:GetHandler())
 		e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e8:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e8:SetCode(EVENT_PHASE+PHASE_END)
 		e8:SetCondition(s.flipcon3)
 		e8:SetOperation(s.flipop3)
 		e8:SetCountLimit(1)
