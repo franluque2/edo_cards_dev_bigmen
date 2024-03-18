@@ -73,6 +73,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetValue(53129443)
         Duel.RegisterEffect(e7,tp)
 
+		local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_DISABLE)
+        e8:SetTargetRange(LOCATION_ONFIELD,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(aux.TargetBoolFunction(Card.IsCode,72880377))
+        Duel.RegisterEffect(e8, tp)
+
 	end
 	e:SetLabel(1)
 end
@@ -82,6 +90,12 @@ function s.markedfilter(c,e)
     return #c:IsHasEffect(e)>0
 end
 
+function s.lokifilter(c)
+    return c:IsFaceup() and c:IsCode(511000479)
+end
+function s.discon(e)
+	return not Duel.IsExistingMatchingCard(s.lokifilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
+end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
