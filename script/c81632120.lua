@@ -91,7 +91,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
 function s.filter(c,e,tp)
-	return c:IsCode(511001235) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(511001235) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -117,7 +117,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 
 	local g=Duel.GetMatchingGroup(s.bdragonfilter,tp,LOCATION_MZONE,0,nil)
 	if #g>0 then
