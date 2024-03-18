@@ -31,8 +31,7 @@ function s.initial_effect(c)
 
     local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetCategory(CATEGORY_TOHAND)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,{id,2})
     e3:SetCondition(aux.exccon)
@@ -83,7 +82,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter(c,tp)
-	return c:IsCode(511000479)
+	return c:IsCode(511000479) and c:CheckActivateEffect(false,false,false)~=nil
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,tp) end
