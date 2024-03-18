@@ -22,14 +22,15 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 
 
---protect relav field
+	--Prevent damage
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_FZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(s.relavfilter))
-	e3:SetValue(1)
+	e3:SetCondition(s.damcon)
+	e3:SetCost(s.damcost)
+	e3:SetOperation(s.damop)
 	c:RegisterEffect(e3)
 
 
@@ -82,4 +83,30 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local a=Duel.GetAttacker()
+	local at=Duel.GetAttackTarget()
+	return Duel.GetBattleDamage(tp)>0
+		and ((a:IsControler(tp) or (at and at:IsControler(tp))))
+end
+function s.dfilter(c)
+	return c:IsCode(0x1034) and c:IsMonster(511001235, 511000156, 511001232) and c:IsAbleToGraveAsCost()
+end
+function s.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_DECK,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
+end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
 end
