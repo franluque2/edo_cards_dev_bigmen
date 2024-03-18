@@ -31,11 +31,12 @@ function s.initial_effect(c)
 
     local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
-	e3:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,{id,2})
     e3:SetCondition(aux.exccon)
 	e3:SetCost(aux.bfgcost)
+    e3:SetCategory(CATEGORY_SEARCH)
 	e3:SetTarget(s.tftg)
 	e3:SetOperation(s.tfop)
 	c:RegisterEffect(e3)
@@ -82,7 +83,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter(c,tp)
-	return c:IsCode(511000479) and c:CheckActivateEffect(false,false,false)~=nil
+	return c:IsCode(511000479) and (c:IsAbleToHand() or c:GetActivateEffect():IsActivatable(tp,true,true))
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,tp) end
@@ -100,15 +101,4 @@ function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 								Duel.ActivateFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
 							end,
 							aux.Stringid(id,2))
-							if tc:IsLocation(LOCATION_FZONE) then
-                                local e1=Effect.CreateEffect(e:GetHandler())
-                                e1:SetType(EFFECT_TYPE_FIELD)
-                                e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-                                e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-                                e1:SetTargetRange(1,0)
-                                e1:SetValue(s.aclimit)
-                                e1:SetLabelObject(tc)
-                                e1:SetReset(RESET_PHASE+PHASE_END)
-                                Duel.RegisterEffect(e1,tp)
-end
 end
