@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e3:SetCountLimit(1,{id,2})
     e3:SetCondition(aux.exccon)
 	e3:SetCost(aux.bfgcost)
-	e3:SetTarget(s.tfop)
+	e3:SetTarget(s.tftg)
 	e3:SetOperation(s.tfop)
 	c:RegisterEffect(e3)
 end
