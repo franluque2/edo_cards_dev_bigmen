@@ -118,18 +118,4 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
 	Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
-
-	local g=Duel.GetMatchingGroup(s.bdragonfilter,tp,LOCATION_MZONE,0,nil)
-	if #g>0 then
-		local sc=g:GetFirst()
-		local atk=1000
-		for sc in aux.Next(g) do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			e1:SetValue(atk)
-			sc:RegisterEffect(e1)
-		end
-	end
 end

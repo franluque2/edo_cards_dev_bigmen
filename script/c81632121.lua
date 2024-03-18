@@ -75,15 +75,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 				if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 					local g=Duel.SelectMatchingCard(tp, s.fucontspellfilter, tp, LOCATION_ONFIELD, 0, 1, 1,false,nil)
 						if #g>0 then
-							if Duel.SendtoGrave(g, REASON_EFFECT) then
-								Duel.Draw(tp, 1, REASON_EFFECT)
-							end
-						end
+							Duel.SendtoGrave(g, REASON_EFFECT)
+					    end
 				end
 		end
 	end
-
 end
+
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
