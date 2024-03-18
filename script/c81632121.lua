@@ -88,7 +88,7 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
 	return Duel.GetBattleDamage(tp)>0
-		and (a:IsControler(tp) and a:IsMonster())
+		and ((a:IsControler(tp) and a:IsCode(511001235, 511000156, 511001232)) or (at and at:IsControler(tp) and a:IsCode(511001235, 511000156, 511001232)))
 end
 function s.dfilter(c)
 	return c:IsCode(511001235, 511000156, 511001232) and c:IsMonster() and c:IsAbleToGraveAsCost()
