@@ -88,10 +88,10 @@ function s.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
 	return Duel.GetBattleDamage(tp)>0
-		and ((a:IsControler(tp) or (at and at:IsControler(tp))))
+		and (a:IsControler(tp) and a:IsMonster())
 end
 function s.dfilter(c)
-	return c:IsCode(0x1034) and c:IsMonster(511001235, 511000156, 511001232) and c:IsAbleToGraveAsCost()
+	return c:IsCode(511001235, 511000156, 511001232) and c:IsMonster() and c:IsAbleToGraveAsCost()
 end
 function s.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil) end
