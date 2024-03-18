@@ -91,7 +91,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
 function s.filter(c,e,tp)
-	return c:IsCode(511001235) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsCode(511001235, 72880377) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -110,7 +110,7 @@ function s.relavfieldfilter(c)
 end
 
 function s.bdragonfilter(c)
-	return c:IsCode(511001235) and c:IsFaceup()
+	return c:IsRace(RACE_DRAGON) and c:IsFaceup()
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -127,7 +127,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			e1:SetValue(atk)
 			sc:RegisterEffect(e1)
 		end
