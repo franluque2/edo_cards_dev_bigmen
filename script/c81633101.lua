@@ -42,7 +42,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
         e3:SetTargetRange(0,1)
         e3:SetCondition(s.battlecon)
-		Duel.RegisterEffect(e3,tp)
+		--Duel.RegisterEffect(e3,tp)
 
         local e2=Effect.CreateEffect(e:GetHandler())
         e2:SetType(EFFECT_TYPE_FIELD)
@@ -86,7 +86,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e10:SetTarget(function(_,c) return c:IsCode(CARD_PANDEMONIUM) and c:IsFaceup() end)
 	e10:SetValue(1)
 	e10:SetCountLimit(1)
-	Duel.RegisterEffect(e10,tp)
+	--Duel.RegisterEffect(e10,tp)
 
     local e5=Effect.CreateEffect(e:GetHandler())
 		e5:SetCategory(CATEGORY_RECOVER)
@@ -112,6 +112,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e7:SetValue(RACE_FIEND)
 	Duel.RegisterEffect(e7,tp)
 
+	local e17=Effect.CreateEffect(e:GetHandler())
+	e17:SetType(EFFECT_TYPE_FIELD)
+	e17:SetCode(EFFECT_ADD_ATTRIBUTE)
+	e17:SetTargetRange(LOCATION_ALL-LOCATION_OVERLAY,0)
+	e17:SetTarget(function (_,c) return c:IsSetCard(0x45) end)
+	e17:SetValue(ATTRIBUTE_DARK)
+	Duel.RegisterEffect(e17,tp)
+
 	local e8=Effect.CreateEffect(e:GetHandler())
 	e8:SetType(EFFECT_TYPE_FIELD)
 	e8:SetCode(EFFECT_ADD_CODE)
@@ -126,12 +134,24 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e9:SetRange(LOCATION_MZONE)
 	e9:SetCondition(s.dircon)
 
+	local e21=Effect.CreateEffect(e:GetHandler())
+	e21:SetType(EFFECT_TYPE_SINGLE)
+	e21:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+	e21:SetCondition(s.rdcon)
+	e21:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
+
+
 	local e11=Effect.CreateEffect(e:GetHandler())
 	e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
 	e11:SetTargetRange(LOCATION_MZONE,0)
 	e11:SetTarget(function (_,c) return c:IsCode(VILEPAWN_ARCHFIEND) end)
 	e11:SetLabelObject(e9)
 	Duel.RegisterEffect(e11,tp)
+
+	local e22=e11:Clone()
+	e22:SetLabel(e21)
+	Duel.RegisterEffect(e22,tp)
+
 
 	local e12=Effect.CreateEffect(e:GetHandler())
 	e12:SetType(EFFECT_TYPE_FIELD)
@@ -146,7 +166,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e13:SetTargetRange(LOCATION_HAND,0)
 	e13:SetTarget(function (_,c) return c:IsCode(ARCHFIEND_MATADOR) end)
 	e13:SetLabelObject(e12)
-	Duel.RegisterEffect(e13,tp)
+	--Duel.RegisterEffect(e13,tp)
 
 	local e14=Effect.CreateEffect(e:GetHandler())
 	e14:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -158,6 +178,12 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 	end
 	e:SetLabel(1)
+end
+
+function s.rdcon(e)
+	local c,tp=e:GetHandler(),e:GetHandlerPlayer()
+	return Duel.GetAttackTarget()==nil and c:GetEffectCount(EFFECT_DIRECT_ATTACK)<2
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 
 function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
@@ -238,7 +264,7 @@ function s.reccon2(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.recop2(e,tp,eg,ep,ev,re,r,rp)
     local tc=eg:Filter(s.vilepawnfilter, nil, tp):GetFirst()
-    if tc and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+    if tc and Duel.GetFlagEffect(tp, id+3)==0 and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
         Duel.Hint(HINT_CARD,tp,id)
         if Duel.SendtoGrave(tc, REASON_RULE) then
             Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
@@ -256,6 +282,7 @@ function s.recop2(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
 				archfiend:RegisterEffect(e1)
             end
+			Duel.RegisterFlagEffect(tp, id+3, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
         end
     end
 end
@@ -400,7 +427,7 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 	s.filltables()
 
 	local vilepawns=Group.CreateGroup()
-	for i = 1, 5, 1 do
+	for i = 1, 2, 1 do
 		local vilepawn=Duel.CreateToken(tp, VILEPAWN_ARCHFIEND)
 		Group.AddCard(vilepawns, vilepawn)
 	end
@@ -428,21 +455,20 @@ end
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
-	if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+	if Duel.GetFlagEffect(tp,id+2)>0  then return end --Duel.GetFlagEffect(tp,id+1)>0 and
+	--local b1=Duel.GetFlagEffect(tp,id+1)==0 and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.centerarchfiendfilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
 
-	return aux.CanActivateSkill(tp) and (b1 or b2)
+	return aux.CanActivateSkill(tp) and (b2)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
-if Duel.GetFlagEffect(tp,id+1)>0 and Duel.GetFlagEffect(tp,id+2)>0  then return end
-local b1=Duel.GetFlagEffect(tp,id+1)==0
-		and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+if Duel.GetFlagEffect(tp,id+2)>0  then return end --Duel.GetFlagEffect(tp,id+1)>0 and
+--local b1=Duel.GetFlagEffect(tp,id+1)==0 and Duel.IsExistingMatchingCard(s.summonarchfiendhandfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+local b1=false
 
 local b2=Duel.GetFlagEffect(tp,id+2)==0
 		and Duel.IsExistingMatchingCard(s.centerarchfiendfilter,tp,LOCATION_MZONE,0,1,nil,e,tp)
