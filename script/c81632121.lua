@@ -22,15 +22,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 
 
-	--Prevent damage
+	--Destruction replacemente
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_DESTROY_REPLACE)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCondition(s.damcon)
-	e3:SetCost(s.damcost)
-	e3:SetOperation(s.damop)
+	e3:SetTarget(s.reptg)
+	e3:SetValue(s.repval)
+	e3:SetOperation(s.repop)
 	c:RegisterEffect(e3)
 
 
@@ -81,30 +80,17 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-
-function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local at=Duel.GetAttackTarget()
-	return Duel.GetBattleDamage(tp)>0
-		and ((a:IsControler(tp) and a:IsCode(511001235, 511000156, 511001232, 41386308, 72880377)) or (at and at:IsControler(tp) and a:IsCode(511001235, 511000156, 511001232, 41386308, 72880377)))
+function s.repfilter(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_FZONE)
+		and c:IsCode(511000479) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
-function s.dfilter(c)
-	return c:IsCode(511001235, 511000156, 511001232) and c:IsMonster() and c:IsAbleToGraveAsCost()
+function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp) end
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
-function s.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+function s.repval(e,c)
+	return s.repfilter(c,e:GetHandlerPlayer())
 end
-function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
+function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT)
 end
