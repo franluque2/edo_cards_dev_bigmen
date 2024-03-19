@@ -75,11 +75,11 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ct=Duel.GetFieldGroupCount(tp,nil,0xc)
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*300)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,1-tp,ct*300)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	local ct=Duel.GetFieldGroupCount(tp,nil,0xc)
+	local ct=Duel.GetFieldGroupCount(tp,0,0xc)
 	Duel.Damage(p,ct*300,REASON_EFFECT)
 end
 function s.setfilter(c)
