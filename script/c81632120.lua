@@ -99,7 +99,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetLabel(0)
 		return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
+	if Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK) and Duel.IsExistingMatchingCard(s.relavfieldfilter, tp, LOCATION_FZONE, 0, 1, nil) then
+	Duel.Damage(1-tp,500,REASON_EFFECT)
+end
 end
 
 --then if you control "Relativity Field", all "Brain Dragon" you control
