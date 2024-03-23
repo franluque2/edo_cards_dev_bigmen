@@ -47,10 +47,10 @@ function s.chk(c,sg,g,code,...)
 	return res
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(1)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsCode,2,nil,s.spcheck,nil,s.Nyanfilter,s.nuhuhfilter) end
-	local sg=Duel.SelectReleaseGroupCost(tp,Card.IsCode,2,2,nil,s.spcheck,nil,s.Nyanfilter,s.nuhuhfilter)
-	Duel.Release(sg,REASON_COST)
+    e:SetLabel(1)
+    if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsMonster,2,nil,s.spcheck,nil) end
+    local sg=Duel.SelectReleaseGroupCost(tp,Card.IsMonster,2,2,nil,s.spcheck,nil)
+    Duel.Release(sg,REASON_COST)
 end
 function s.filter(c,e,tp)
 	return c:IsCode(810000093) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
