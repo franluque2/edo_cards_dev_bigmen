@@ -34,8 +34,8 @@ end
 function s.spcheck(sg,tp)
 	return aux.ReleaseCheckMMZ(sg,tp) and sg:IsExists(s.chk,1,nil,sg,Group.CreateGroup(),s.Nyanfilter,s.nuhuhfilter)
 end
-function s.chk(c,sg,g,code,...)
-	if not c:IsCode(code) then return false end
+function s.chk(c,sg,g,func,...)
+    if not func(c) then return false end
 	local res
 	if ... then
 		g:AddCard(c)
