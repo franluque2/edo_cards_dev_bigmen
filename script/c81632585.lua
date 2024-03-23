@@ -45,10 +45,10 @@ function s.filter2(c)
 	return c:IsDestructable()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and s.filter2(chkc) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(s.filter2,tp,nil,LOCATION_ONFIELD,1,e:GetHandler()) end
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.filter2,tp,nil,LOCATION_ONFIELD,1,1,e:GetHandler())
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
