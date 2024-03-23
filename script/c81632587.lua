@@ -31,25 +31,12 @@ function s.Nyanfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsCode(70797118, 810000091)
 end
 
-function s.spcheck(sg,tp)
-	return aux.ReleaseCheckMMZ(sg,tp) and sg:IsExists(s.chk,1,nil,sg,Group.CreateGroup(),s.Nyanfilter,s.nuhuhfilter)
-end
-function s.chk(c,sg,g,func,...)
-    if not func(c) then return false end
-	local res
-	if ... then
-		g:AddCard(c)
-		res=sg:IsExists(s.chk,1,g,sg,g,...)
-		g:RemoveCard(c)
-	else
-		res=true
-	end
-	return res
-end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     e:SetLabel(1)
-    if chk==0 then return Duel.CheckReleaseGroupCost(tp,Card.IsMonster,2,nil,s.spcheck,nil) end
-    local sg=Duel.SelectReleaseGroupCost(tp,Card.IsMonster,2,2,nil,s.spcheck,nil)
+    if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.nuhuhfilter,1,false,nil,nil) and Duel.CheckReleaseGroupCost(tp,s.Nyanfilter,1,false,nil,nil) end
+    local sg=Duel.SelectReleaseGroupCost(tp,s.Nyanfilter,1,1,false,nil,nil)
+	local sg2=Duel.SelectReleaseGroupCost(tp,s.nuhuhfilter,1,1,false,nil,nil)
+	sg:Merge(sg2)
     Duel.Release(sg,REASON_COST)
 end
 function s.filter(c,e,tp)
