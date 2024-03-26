@@ -64,7 +64,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	else
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Damage(p,d,REASON_EFFECT)
-		if Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingMatchingCard(s.DLfilter, tp, LOCATION_MZONE, 0, 1, nil)
+		if Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingMatchingCard(s.DLfilter, tp, LOCATION_MZONE, 0, 1, nil) then
 			Duel.Draw(tp,1,REASON_EFFECT)
 		end
 	end
