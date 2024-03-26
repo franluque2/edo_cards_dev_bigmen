@@ -9,6 +9,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,{id,1})
 	c:RegisterEffect(e1)
 
     --shuffle and draw
@@ -20,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.drtg)
 	e2:SetOperation(s.drop)
+	e2:SetCountLimit(1,{id,2})
 	c:RegisterEffect(e2)
 end
 
