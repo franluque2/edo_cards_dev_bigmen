@@ -50,25 +50,22 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(1000)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
-        if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
-            Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-        end
 	else
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(1000)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
-        if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
-            Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-        end
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tid=Duel.GetTurnCount()
 	if Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,tid) and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_GRAVE+LOCATION_REMOVED,1,nil,e,tp,tid) then
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
-		Duel.Damage(tp,1000,REASON_EFFECT)
+		Duel.Damage(1-tp,1000,REASON_EFFECT)
 	else
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Damage(p,d,REASON_EFFECT)
+        if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
+            Duel.Draw(tp,1,REASON_EFFECT)
+        end
 	end
 end
