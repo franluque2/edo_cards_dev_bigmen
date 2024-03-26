@@ -50,14 +50,17 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(1000)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
+        if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
+            Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+        end
 	else
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetTargetParam(1000)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
+        if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
+            Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+        end
 	end
-    if Duel.IsExistingMatchingCard(810000093, tp, LOCATION_ONFIELD, 0, 1, nil) then
-        Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-    end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tid=Duel.GetTurnCount()
