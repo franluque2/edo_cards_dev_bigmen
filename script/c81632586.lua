@@ -69,7 +69,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsCode(11321183, 810000092, 511001578, 511000269, 511000272, 511009203) and c:IsAbleToHand()
+	return c:IsCode(11321183, 18165869, 57784563, 810000092, 511001578, 511000269, 511000272, 511009203) and c:IsAbleToHand()
 end
 function s.sptarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
