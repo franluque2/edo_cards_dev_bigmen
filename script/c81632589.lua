@@ -60,7 +60,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tid=Duel.GetTurnCount()
 	if Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,tid) and Duel.IsExistingTarget(s.filter,tp,0,LOCATION_GRAVE+LOCATION_REMOVED,1,nil,e,tp,tid) then
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
-		Duel.Damage(1-tp,1000,REASON_EFFECT)
 	else
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Damage(p,d,REASON_EFFECT)
