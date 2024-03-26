@@ -44,7 +44,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.BPFilter(c)
-    return c:IsRace(RACE_WARRIOR) and c:GetEquipCount()>0
+    return c:IsCode(810000093, 810000091, 11321183, 84814897, 18165869, 57784563, 47415292, 86805855) and c:GetEquipCount()>0
 end
 function s.filter(c,tp)
 	return c:IsType(TYPE_UNION) and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_MZONE,0,1,nil,c)
