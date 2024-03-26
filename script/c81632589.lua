@@ -70,5 +70,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.DLfilter(c)
-	return c:IsOriginalCode(81632585) and c:IsFaceup()
+	return c:IsCode(81632585) and c:IsFaceup()
 end
