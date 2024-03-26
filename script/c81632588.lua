@@ -34,7 +34,7 @@ function s.tgfilter(c)
 	return c:IsRace(RACE_DRAGON) and c:IsAbleToGrave()
 end
 function s.tgfilter2(c)
-	return c:IsCode(810000093, 810000091, 11321183, 84814897, 18165869, 57784563, 47415292, 86805855)
+	return c:IsCode(81632585, 810000091, 11321183, 84814897, 18165869, 57784563, 47415292, 86805855)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
