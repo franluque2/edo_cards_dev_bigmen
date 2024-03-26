@@ -51,8 +51,11 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop2)
     c:RegisterEffect(e4)
 end
+function s.bravecon(e,tp)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,RACE_WARRIOR),tp,LOCATION_ONFIELD,0,1,nil)
+end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or Duel.IsExistingMatchingCard(aux.FaceupFilter(TYPE_WARRIOR),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil))
+	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.bravecon(e,tp))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
