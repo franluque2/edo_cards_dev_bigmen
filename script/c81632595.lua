@@ -78,7 +78,7 @@ function s.WhiteMefist(c)
 end
 
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_SZONE,LOCATION_SZONE,nil)*300
+	return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_SZONE,LOCATION_SZONE,nil)*200
 end
 
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
