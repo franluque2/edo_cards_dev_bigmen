@@ -79,7 +79,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.WhiteMefist(c)
-    return c:IsCode(511001977, 511001978, 511001980, 511001979)
+    return c:IsCode(511001977, 511001978, 511001980, 511001979) or c:IsRace(RACE_FAIRY)
 end
 
 function s.atkval(e,c)

@@ -104,7 +104,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.etarget(e,c)
-	return c:IsCode(511001977, 511001978, 511001980, 511001979)
+	return c:IsCode(511001977, 511001978, 511001980, 511001979, 30757396)
 end
 function s.evalue(e,re,rp)
 	return re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
