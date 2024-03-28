@@ -102,7 +102,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.atktg(c)
-	return c:IsFaceup() and c:IsCode(511001977, 511001980, 511001979) and not c:IsCode(id)
+	return c:IsFaceup() and c:IsCode(511001977, 511001980, 511001979)
 end
 
 function s.repfilter(c,tp)
