@@ -1,6 +1,7 @@
 --Sacred Arrow (CT)
 local s,id=GetID()
 function s.initial_effect(c)
+c:SetUniqueOnField(1,0,511001266)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -49,12 +50,12 @@ function s.initial_effect(c)
 
 	--
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_PHASE+PHASE_END)
-	e2:SetCountLimit(1,{id,3})
+	e2:SetCountLimit(1)
 	e2:SetTarget(s.damtg)
 	e2:SetOperation(s.damop)
 	c:RegisterEffect(e2)
@@ -104,6 +105,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(1-tp,s[1]*200,REASON_EFFECT,true)
 	Duel.RDComplete()
 end
+
 
 function s.etarget(e,c)
 	return c:IsCode(511001977, 511001978, 511001980, 511001979, 30757396)
