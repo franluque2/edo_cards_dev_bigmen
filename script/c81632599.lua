@@ -33,7 +33,7 @@ function s.synfil(c,tp)
 	return c:IsFaceup() and c:IsPreviousLocation(LOCATION_EXTRA) and c:IsControler(tp)
 end
 function s.thfilter(c)
-	return c:IsCode(511001977, 511001978, 511001980, 511001979, 30757396) or c:IsRace(RACE_FAIRY) and c:IsFaceup()
+	return (c:IsCode(511001977, 511001978, 511001980, 511001979, 30757396) or c:IsRace(RACE_FAIRY)) and c:IsFaceup()
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.synfil,1,nil,1-tp) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_MZONE,0,1,nil)
