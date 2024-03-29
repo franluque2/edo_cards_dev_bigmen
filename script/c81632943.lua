@@ -1,5 +1,6 @@
 --Mimicry Protocols
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 
 
 function s.initial_effect(c)
