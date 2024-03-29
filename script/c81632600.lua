@@ -37,6 +37,7 @@ c:SetUniqueOnField(1,0,511000584)
 
     --ATK Reduce
     local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,2))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_DAMAGE)
 	e5:SetRange(LOCATION_SZONE)
