@@ -39,10 +39,10 @@ function s.initial_effect(c)
     --cannot be battle target
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(0,LOCATION_MZONE)
-	e4:SetValue(s.atktg)
+	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e4:SetValue(s.imtg)
 	c:RegisterEffect(e4)
 
     --Destruction replacement
@@ -101,8 +101,8 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.atktg(e,c)
-	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and not c:IsCode(id)
+function s.imtg(e,c)
+	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and not c:IsCode(511001978)
 end
 
 function s.repfilter(c,tp)
