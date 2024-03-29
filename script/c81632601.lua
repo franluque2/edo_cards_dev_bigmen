@@ -38,9 +38,9 @@ function s.initial_effect(c)
 	e5:SetCategory(CATEGORY_LEAVE_GRAVE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_DESTROYED)
-	e5:SetRange(LOCATION_GRAVE)
 	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e5:SetCountLimit(1,{id,2})
+	e5:SetCondition(s.erascon)
 	e5:SetTarget(s.eptg)
 	e5:SetOperation(s.epop)
 	c:RegisterEffect(e5)
@@ -159,4 +159,7 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.setfilter(c)
 	return c:IsSpellTrap() and c:IsSSetable()
+end
+function s.erascon(e)
+	return e:GetHandler():IsReason(REASON_DESTROY)
 end

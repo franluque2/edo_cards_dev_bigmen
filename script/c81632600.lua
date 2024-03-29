@@ -31,6 +31,7 @@ c:SetUniqueOnField(1,0,511000584)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCountLimit(1,{id,2})
+	e4:SetCondition(s.erascon)
 	e4:SetTarget(s.eptg)
 	e4:SetOperation(s.epop)
 	c:RegisterEffect(e4)
@@ -200,4 +201,7 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.setfilter(c)
 	return c:IsSpellTrap() and c:IsSSetable()
+end
+function s.erascon(e)
+	return e:GetHandler():IsReason(REASON_DESTROY)
 end
