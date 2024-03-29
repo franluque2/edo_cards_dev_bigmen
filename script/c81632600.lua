@@ -48,7 +48,7 @@ c:SetUniqueOnField(1,0,511000584)
 end
 
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return r&REASON_EFFECT~=0 and ep~=tp
+	return ep~=tp and (r&REASON_EFFECT)~=0
 end
 function s.spfilter(c)
 	return c:IsCode(511001977, 511001978, 511001980, 511001979) and c:IsMonster() and c:IsAbleToRemoveAsCost()
