@@ -102,7 +102,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.atktg(e,c)
-	return c:GetCode()~=id and c:IsFaceup() and c:IsRace(RACE_FAIRY)
+	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and not c:IsCode(id)
 end
 
 function s.repfilter(c,tp)
