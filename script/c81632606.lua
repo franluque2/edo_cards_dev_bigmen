@@ -1,8 +1,8 @@
 --Tomatopult (CT)
 local s,id=GetID()
 Duel.LoadScript("c420.lua")
-c:SetUniqueOnField(1,0,511000105)
 function s.initial_effect(c)
+    c:SetUniqueOnField(1,0,511000105)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
