@@ -47,9 +47,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		Duel.SpecialSummonComplete()
 	end
-    if tc:IsLevelBelow(3) then
-        Duel.Draw(tp,1,REASON_EFFECT)
-    end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
