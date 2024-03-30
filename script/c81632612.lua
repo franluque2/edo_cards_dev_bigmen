@@ -102,7 +102,7 @@ function s.filter2(c)
 end
 
 function s.condition3(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and aux.exccon
+	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetAttackTarget()==nil and aux.exccon
 end
 function s.filter3(c,e,tp)
 	return (c:IsLevelBelow(4) and c:IsSetCard(0x529)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
