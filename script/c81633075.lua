@@ -74,24 +74,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetTarget(function(_,c)  return c:IsHasEffect(id+3) end)
         e8:SetValue(0x529)
         Duel.RegisterEffect(e8,tp)
-
-        --Stuff becomes Outrigger Expansion
-        local e6=Effect.CreateEffect(e:GetHandler())
-        e6:SetType(EFFECT_TYPE_FIELD)
-        e6:SetCode(EFFECT_ADD_CODE)
-        e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
-        e6:SetValue(96462121)
-        Duel.RegisterEffect(e6,tp)
-        
-        --Stuff become Spin Turn
-        local e7=Effect.CreateEffect(e:GetHandler())
-        e7:SetType(EFFECT_TYPE_FIELD)
-        e7:SetCode(EFFECT_ADD_CODE)
-        e7:SetTargetRange(LOCATIONS,0)
-        e7:SetTarget(function(_,c)  return c:IsHasEffect(id+2) end)
-        e7:SetValue(22866836)
-        Duel.RegisterEffect(e7,tp)
     
 
 	end
