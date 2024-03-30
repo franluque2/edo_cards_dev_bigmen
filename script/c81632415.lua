@@ -28,7 +28,7 @@ function s.initial_effect(c)
 end
 
 function s.filter2(c)
-	return c:IsFaceup() and c:HasLevel() and c:IsHeavyIndustry()
+	return c:IsFaceup() and c:HasLevel() and (c:IsAttribute(ATTRIBUTE_EARTH) and c:IsRace(RACE_MACHINE))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_MZONE,0,2,nil) end
