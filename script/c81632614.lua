@@ -45,7 +45,7 @@ function s.initial_effect(c)
 end
 
 function s.atkcon(e)
-	return Duel.IsExistingMatchingCard(s.TokenMonster,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.TokenMonster,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 
 function s.thfilter(c)
