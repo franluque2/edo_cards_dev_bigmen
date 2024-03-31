@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_BEAST),4,2)
 	c:EnableReviveLimit()
 
-    --Search 1 "Goblin" monster
+    --Search 1 "Dogking"
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -18,6 +18,16 @@ function s.initial_effect(c)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
+
+    --Cannot be battle target
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+	e2:SetCondition(s.atkcon)
+	e2:SetValue(aux.imval2)
+	c:RegisterEffect(e2)
 
 	--negate
 	local e3=Effect.CreateEffect(c)
@@ -32,6 +42,10 @@ function s.initial_effect(c)
 	e3:SetTarget(s.distg)
 	e3:SetOperation(s.disop)
 	c:RegisterEffect(e3,false,REGISTER_FLAG_DETACH_XMAT)
+end
+
+function s.atkcon(e)
+	return Duel.IsExistingMatchingCard(s.TokenMonster,tp,LOCATION_MZONE,0,1,nil)
 end
 
 function s.thfilter(c)
