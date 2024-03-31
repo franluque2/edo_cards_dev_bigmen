@@ -1,5 +1,6 @@
 --Tribulldog (CT)
 local s,id=GetID()
+Duel.LoadScript("c420.lua")
 function s.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)

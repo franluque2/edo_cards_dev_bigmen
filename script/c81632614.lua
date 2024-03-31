@@ -1,6 +1,8 @@
 --Sumo King Dog (CT)
 local s,id=GetID()
+Duel.LoadScript("c420.lua")
 function s.initial_effect(c)
+c:SetUniqueOnField(1,0,100000498)
 
 	--xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_BEAST),4,2)
