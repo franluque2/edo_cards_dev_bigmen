@@ -7,10 +7,23 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,{id,1})
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+
+	--Excavate the top card of your Deck
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_DRAW+CATEGORY_DECKDES)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetCountLimit(1,{id,2})
+	e2:SetTarget(s.target2)
+	e2:SetOperation(s.operation2)
+	c:RegisterEffect(e2)
 end
 s.listed_names={100000540}
 
@@ -49,4 +62,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			end
 	end
 end
+end
+function s.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
+end
+function s.operation2(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
+	Duel.ConfirmDecktop(tp,1)
+	local g=Duel.GetDecktopGroup(tp,1)
+	local tc=g:GetFirst()
+	if tc:IsSetCard(0x516) then
+		Duel.DisableShuffleCheck()
+		Duel.SendtoHand(tc,REASON_EFFECT|REASON_EXCAVATE)
+		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+	else
+		Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
+	end
 end
