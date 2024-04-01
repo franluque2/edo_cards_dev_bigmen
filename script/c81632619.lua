@@ -52,7 +52,7 @@ end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	return g and g:IsExists(s.negfilter,1,nil,tp) and Duel.IsChainNegatable(ev)
+	return g and g:IsExists(s.negfilter,1,nil,tp) and Duel.IsChainNegatable(ev) and Duel.IsExistingMatchingCard(s.TokenMonster,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -60,4 +60,7 @@ function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateActivation(ev)
+end
+function s.TokenMonster(c)
+    return c:IsType(TYPE_TOKEN) and c:IsFaceup()
 end
