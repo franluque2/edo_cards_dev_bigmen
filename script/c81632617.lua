@@ -108,7 +108,7 @@ function s.counterfilter(c)
 end
 
 function s.thfilter2(c)
-	return c:IsCode(100000541) and c:IsAbleToHand()
+	return c:IsCode(100000541, 81632613) and c:IsAbleToHand()
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil) end
