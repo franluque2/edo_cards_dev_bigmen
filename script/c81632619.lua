@@ -28,13 +28,17 @@ end
 function s.ecfilter(c)
 	return c:IsType(TYPE_EQUIP) and c:IsFaceup() and c:IsDestructable()
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ecfilter,tp,LOCATION_SZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,s.ecfilter,tp,LOCATION_SZONE,0,1,1,nil)
-	Duel.Destroy(g,REASON_COST)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_SZONE) and s.ecfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.ecfilter,tp,LOCATION_SZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+	local g=Duel.SelectTarget(tp,s.ecfilter,tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+	Duel.Destroy(tc,REASON_EFFECT)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -42,6 +46,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.atkval)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+end
 end
 function s.atkval(e,c)
 	return c:GetBaseAttack()
