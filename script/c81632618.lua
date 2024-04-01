@@ -48,7 +48,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.counterfilter(c)
-	return c:IsType(TYPE_XYZ) or not c:IsSummonLocation(LOCATION_EXTRA)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsType(TYPE_XYZ)
 end
 
 function s.spfilter(c,e,tp)
