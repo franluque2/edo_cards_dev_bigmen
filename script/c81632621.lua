@@ -40,14 +40,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 
     --Take no battle damage
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_QUICK_O)
-	e5:SetRange(LOCATION_GRAVE)
-	e5:SetCode(EVENT_PRE_DAMAGE_CALCULATE+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e5:SetCondition(s.condition)
-	e5:SetCost(aux.bfgcost)
-	e5:SetOperation(s.operation2)
-	c:RegisterEffect(e5)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e2:SetCondition(s.condition)
+	e2:SetCost(aux.bfgcost)
+	e2:SetOperation(s.operation2)
+	c:RegisterEffect(e2)
 
     --lvup
 	local e6=Effect.CreateEffect(c)
