@@ -12,7 +12,7 @@ function s.initial_effect(c)
     e1:SetCondition(s.condition)
     e1:SetHintTiming(0,TIMING_END_PHASE)
 	c:RegisterEffect(e1)
-    Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 
     --Search
 	local e4=Effect.CreateEffect(c)
@@ -83,7 +83,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(tg,REASON_EFFECT)
 end
 function s.counterfilter(c)
-	return c:IsType(TYPE_XYZ) or not c:IsSummonLocation(LOCATION_EXTRA)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsType(TYPE_XYZ)
 end
 
 function s.thfilter2(c)
