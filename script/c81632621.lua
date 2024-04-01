@@ -25,25 +25,29 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 
-	--Extra Link Material
+    --special summon
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetRange(LOCATION_HAND)
-	e4:SetCode(EFFECT_EXTRA_MATERIAL)
-	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e4:SetTargetRange(1,0)
-	e4:SetOperation(s.extracon)
-	e4:SetValue(s.extraval)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,id)
+    e4:SetCost(s.spcost2)
+	e4:SetCondition(s.spcon2)
+	e4:SetTarget(s.sptg2)
+	e4:SetOperation(s.spop2)
+	c:RegisterEffect(e4)
+
+    --Take no battle damage
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetTargetRange(LOCATION_HAND,0)
-	e5:SetTarget(s.eftg)
-	e5:SetLabelObject(e4)
+	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetRange(LOCATION_GRAVE)
+	e5:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e5:SetCondition(s.condition)
+	e5:SetCost(aux.bfgcost)
+	e5:SetOperation(s.operation2)
 	c:RegisterEffect(e5)
-    aux.GlobalCheck(s,function()
-		s.flagmap={}
-	end)
 
     --lvup
 	local e6=Effect.CreateEffect(c)
@@ -84,39 +88,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.eftg(e,c)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeLinkMaterial()
-end
-function s.extrafilter(c,tp)
-	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
-end
-function s.extracon(c,e,tp,sg,mg,lc,og,chk)
-	local ct=sg:FilterCount(Card.HasFlagEffect,nil,id)
-	return ct==0 or ((sg+mg):Filter(s.extrafilter,nil,e:GetHandlerPlayer()):IsExists(Card.IsCode,1,og,id) and ct<2)
-end
-function s.extraval(chk,summon_type,e,...)
-	local c=e:GetHandler()
-	if chk==0 then
-		local tp,sc=...
-		if summon_type~=SUMMON_TYPE_LINK or not sc:IsCode(64966519) or Duel.GetFlagEffect(tp,id)>0 then
-			return Group.CreateGroup()
-		else
-			s.flagmap[c]=c:RegisterFlagEffect(id,0,0,1)
-			return Group.FromCards(c)
-		end
-	elseif chk==1 then
-		local sg,sc,tp=...
-		if summon_type&SUMMON_TYPE_LINK==SUMMON_TYPE_LINK and #sg>0 and Duel.GetFlagEffect(tp,id)==0 then
-			Duel.Hint(HINT_CARD,tp,id)
-			Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,0,1)
-		end
-	elseif chk==2 then
-		if s.flagmap[c] then
-			s.flagmap[c]:Reset()
-			s.flagmap[c]=nil
-		end
-	end
-end
+
 function s.lvcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and e:GetHandler():GetLevel()<12
 end
@@ -130,4 +102,44 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 	c:RegisterEffect(e1)
 	Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
+end
+
+function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,nil)
+end
+
+function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetAttackedCount()>0 and Duel.GetCurrentPhase()==PHASE_MAIN2
+end
+
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(0x101) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+end
+function s.cfilter(c)
+	return c:IsRace(RACE_CYBERSE) and c:IsLinkMonster()
+end
+function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+end
+function s.spop2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+        Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
+end
+
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetBattleMonster(tp)
+	return Duel.GetBattleDamage(tp)>0 and tc and tc:IsCode(64966519)
+end
+function s.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
 end
