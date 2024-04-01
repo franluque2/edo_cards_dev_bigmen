@@ -36,6 +36,17 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.BeastDog,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
 	if #g>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) then
+			local g=Duel.GetMatchingGroup(s.BeastDog,tp,LOCATION_MZONE,0,nil)
+			local lc=g:GetFirst()
+			for lc in aux.Next(g) do
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CHANGE_LEVEL_FINAL)
+				e1:SetValue(4)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				lc:RegisterEffect(e1)
+			end
 	end
+end
 end
