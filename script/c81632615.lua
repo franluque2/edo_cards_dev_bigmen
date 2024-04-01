@@ -73,7 +73,7 @@ function s.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc:IsSetCard(0x516) then
 		Duel.DisableShuffleCheck()
-		Duel.SendtoHand(tc,REASON_EFFECT|REASON_EXCAVATE)
+		Duel.SendtoHand(tc,nil,REASON_EFFECT|REASON_EXCAVATE)
 		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
 	else
 		Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
