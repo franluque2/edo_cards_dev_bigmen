@@ -41,6 +41,9 @@ function s.initial_effect(c)
 	e5:SetTarget(s.eftg)
 	e5:SetLabelObject(e4)
 	c:RegisterEffect(e5)
+    aux.GlobalCheck(s,function()
+		s.flagmap={}
+	end)
 
     --lvup
 	local e6=Effect.CreateEffect(c)
