@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
     e1:SetCondition(s.condition)
+    e1:SetHintTiming(0,TIMING_END_PHASE)
 	c:RegisterEffect(e1)
     Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 
