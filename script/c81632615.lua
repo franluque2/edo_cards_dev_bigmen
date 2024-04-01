@@ -74,7 +74,8 @@ function s.operation2(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsSetCard(0x516) then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT|REASON_EXCAVATE)
-		Duel.SendtoDeck(e:GetHandler(),nil,SEQ_DECKBOTTOM,REASON_EFFECT)
+		Duel.DisableShuffleCheck(false)
+		Duel.SendtoDeck(e:GetHandler(),nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	else
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 	end
