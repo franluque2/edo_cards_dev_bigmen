@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
+    e4:SetCondition(s.condition)
     e4:SetCountLimit(1,{id,1})
 	e4:SetTarget(s.stg)
 	e4:SetOperation(s.sop)
@@ -33,7 +34,9 @@ function s.initial_effect(c)
 	e5:SetOperation(s.desop)
 	c:RegisterEffect(e5)
 end
-
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return rp~=tp and e:GetHandler():IsPreviousControler(tp)
+end
 function s.value(e,c)
 	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsRace,RACE_BEAST),e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)*300
 end
