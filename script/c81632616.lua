@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return rp==1-tp and e:GetHandler():IsPreviousControler(tp)
+	return e:GetHandler():IsReason(REASON_EFFECT)
 end
 function s.value(e,c)
 	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsRace,RACE_BEAST),e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)*300
