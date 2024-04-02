@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e5:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
 	e5:SetRange(LOCATION_GRAVE)
     e5:SetCost(aux.bfgcost)
-	e5:SetCondition(s.condition)
+	e5:SetCondition(function(_,tp) return Duel.IsTurnPlayer(1-tp) end)
 	e5:SetTarget(s.sptg)
 	e5:SetOperation(s.spop)
 	c:RegisterEffect(e5)
@@ -88,7 +88,4 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
         end
 	end
-end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
 end
