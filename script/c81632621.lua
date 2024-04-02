@@ -134,7 +134,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
         Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
 end
 
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
+function s.condition(c)
 	return Duel.IsExistingMatchingCard(s.Paparazzi,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function s.operation2(e,tp,eg,ep,ev,re,r,rp)
