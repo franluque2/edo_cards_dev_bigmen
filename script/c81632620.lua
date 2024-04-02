@@ -76,10 +76,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-
+function s.costfilter(c,tp)
+	return c:IsAbleToGraveAsCost() and Duel.GetMZoneCount(tp,c)>0
+end
 function s.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil,tp)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function s.lvfilter(c)
 	return c:IsFaceup() and c:HasLevel() and not c:IsLevel(8)

@@ -57,14 +57,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetValue(0x26)
         Duel.RegisterEffect(e5,tp)
 
-        local e11=Effect.CreateEffect(e:GetHandler())
-		e11:SetType(EFFECT_TYPE_FIELD)
-		e11:SetCode(EFFECT_XYZ_LEVEL)
-		e11:SetTargetRange(LOCATION_MZONE, 0)
-		e11:SetTarget(function (_,c) return c:IsHasEffect(id) end)
-		e11:SetValue(s.xyzlv)
-        Duel.RegisterEffect(e11,tp)
-    
 
 	end
 	e:SetLabel(1)
@@ -75,12 +67,6 @@ function s.markedfilter(c,e)
     return #c:IsHasEffect(e)>0
 end
 
-function s.xyzlv(e,c,rc)
-	if rc:IsCode(64554883) then
-		return 6,c:GetLevel()
-	else return c:GetLevel()
-	end
-end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
@@ -89,21 +75,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local g=Duel.GetMatchingGroup(s.XyzTargets, tp, LOCATION_ALL, LOCATION_ALL, nil)
-
-    if #g>0 then
-		local tc=g:GetFirst()
-		while tc do
-			
-				local e3=Effect.CreateEffect(e:GetHandler())
-				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id)
-				tc:RegisterEffect(e3)
-
-
-			tc=g:GetNext()
-		end
-	end
 
     g=Duel.GetMatchingGroup(s.MorphTargets, tp, LOCATION_ALL, LOCATION_ALL, nil)
 
