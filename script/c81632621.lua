@@ -41,10 +41,10 @@ function s.initial_effect(c)
 
     --Take no battle damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_QUICK_O+EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCode(EVENT_DAMAGE_CALCULATING)
 	e2:SetCondition(s.condition)
+	e2:SetTarget(s.dmgtarget)
 	e2:SetCost(aux.bfgcost)
 	e2:SetOperation(s.operation2)
 	c:RegisterEffect(e2)
@@ -133,15 +133,28 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetBattleMonster(tp)
-	return Duel.GetBattleDamage(tp)>0 and tc and tc:IsCode(64966519)
+	return Duel.IsExistingMatchingCard(s.Paparazzi,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function s.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+        --Halve battle damage involving this card
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+		e2:SetValue(aux.ChangeBattleDamage(0,HALF_DAMAGE))
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e2)
+    end
+end
+
+function s.dmgtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.Paparazzi(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.Paparazzi,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,s.Paparazzi,tp,LOCATION_MZONE,0,1,1,nil)
+end
+
+function s.Paparazzi(c)
+	return c:IsCode(64966519) and c:IsFaceup()
 end
