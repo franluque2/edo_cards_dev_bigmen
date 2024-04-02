@@ -41,8 +41,10 @@ function s.initial_effect(c)
 
     --Take no battle damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O+EFFECT_FLAG_DELAY)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCondition(s.condition)
 	e2:SetTarget(s.dmgtarget)
 	e2:SetCost(aux.bfgcost)
