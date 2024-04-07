@@ -70,7 +70,7 @@ end
 function s.popoperation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
-		local atk=tc:GetAttack()
+		local atk=tc:GetOriginalAttack()
 		if atk<0 or tc:IsFacedown() then atk=0 end
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			Duel.Damage(1-tp,atk/2,REASON_EFFECT)
