@@ -7,74 +7,51 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
+	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-	--
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_POSITION+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(s.con)
-    e2:SetCountLimit(1)
-	e2:SetTarget(s.tg)
-	e2:SetOperation(s.op)
-	c:RegisterEffect(e2)
 
-    local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	--Change battle position
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_POSITION)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetTarget(s.postg)
+	e2:SetOperation(s.posop)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetTarget(s.thtg)
-	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
 
-    --Search
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)
-    e4:SetCountLimit(1,id)
-	e4:SetCost(aux.bfgcost)
-	e4:SetTarget(s.thtg2)
-	e4:SetOperation(s.thop2)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetCategory(CATEGORY_POSITION)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCondition(s.poscon)
+	e4:SetTarget(s.postg)
+	e4:SetOperation(s.posop)
 	c:RegisterEffect(e4)
 
-end
-
-function s.thfilter2(c)
-	return c:IsCode(511001669) and c:IsAbleToHand()
-end
-function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function s.thop2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
-end
-
-
-function s.thfilter(c)
-	return c:IsCode(511001669,100000544) and c:IsAbleToHand()
-end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+	--Add this card from GY to hand
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetCategory(CATEGORY_TOHAND)
+	e5:SetType(EFFECT_TYPE_IGNITION)
+	e5:SetRange(LOCATION_GRAVE)
+	e5:SetCountLimit(1,{id,2})
+	e5:SetCondition(s.thcon)
+	e5:SetCost(s.thcost)
+	e5:SetTarget(s.thtg)
+	e5:SetOperation(s.thop)
+	c:RegisterEffect(e5)
+	
 end
 
 
@@ -97,33 +74,48 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 	g:DeleteGroup()
 end
-function s.cfilter(c)
-	return c:IsFaceup() and c:IsLevel(10)
+function s.posfilter(c)
+	return c:IsAttackPos() and c:IsCanChangePosition()
 end
-function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter, tp, LOCATION_MZONE, 0, 1, e:GetHandler())
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.posfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
+	local g=Duel.SelectTarget(tp,s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
 end
-function s.filter(c)
-	return c:IsFaceup() and c:IsAttackPos()
-end
-function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
-	local sg=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,sg,#sg,0,0)
-end
-
-function s.icebergfilter(c)
-    return c:IsCode(100000248) and c:IsAbleToHand()
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE)
+	end
 end
 
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
-	if Duel.ChangePosition(sg,POS_FACEUP_DEFENSE) and Duel.IsExistingMatchingCard(s.icebergfilter, tp, LOCATION_DECK, 0, 1,nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-        Duel.BreakEffect()
-        local tc=Duel.GetFirstMatchingCard(s.icebergfilter, tp, LOCATION_DECK, 0, nil)
-        if tc then
-            Duel.SendtoHand(tc, tp, REASON_EFFECT)
-            Duel.ConfirmCards(1-tp, tc)
-        end
-    end
+function s.spconfilter(c,tp)
+	return c:IsLevelAbove(10) and c:IsControler(tp) and c:IsFaceup()
+end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.spconfilter,1,nil,tp)
+end
+
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.Tokenfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,LOCATION_GRAVE)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SendtoHand(c,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,c)
+	end
+end
+function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function s.Tokenfilter(c)
+	return c:IsCode(511001670, 81632628) and c:IsCanChangePosition()
 end
