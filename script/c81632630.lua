@@ -37,7 +37,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		end
 		Duel.SpecialSummonComplete()
-        if Duel.IsExistingMatchingCard(s.cosmicfilter, tp, LOCATION_MZONE, 0, 1, nil) and Duel.IsExistingMatchingCard(s.fieldfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        if Duel.IsExistingMatchingCard(s.cosmicfilter, tp, LOCATION_FZONE, 0, 1, nil) and Duel.IsExistingMatchingCard(s.fieldfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 			local tc=Duel.SelectMatchingCard(tp, s.fieldfilter, tp, LOCATION_DECK,0, 1,1,false,nil)
 			if #tc>0 then
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
