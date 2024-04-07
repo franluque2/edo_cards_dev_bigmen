@@ -35,7 +35,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_FIELD)
 		e3:SetCode(EFFECT_ADD_SETCODE)
 		e3:SetTargetRange(LOCATION_MZONE,0)
-		e3:SetTarget(function (_, tc) return tc:IsRace(RACE_SPELLCASTER) end)
+		e3:SetTarget(function (_, tc) return tc:IsAttribute(ATTRIBUTE_LIGHT) end)
 		e3:SetValue(0x53f)
 		Duel.RegisterEffect(e3,tp)
 
@@ -136,7 +136,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--Boolean checks for the activation condition: b1, b2
 
 --do bx for the conditions for each effect, and at the end add them to the return
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
+	local b1=false and Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.paddfilter,tp,LOCATION_DECK,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.remfilter,tp,LOCATION_DECK,0,1,nil)
 
@@ -155,7 +155,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 --copy the bxs from above
 
-local b1=Duel.GetFlagEffect(tp,id+1)==0
+local b1=false and Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.paddfilter,tp,LOCATION_DECK,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.remfilter,tp,LOCATION_DECK,0,1,nil)
 

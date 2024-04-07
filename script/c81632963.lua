@@ -122,12 +122,12 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local val=0
         if tc:GetControler()==tp then
 			if (Duel.GetFlagEffect(tp,id+3)==0) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
-				val=1000
+				val=500
 				Duel.RegisterFlagEffect(tp, id+3, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
 			end
         else
 			if (Duel.GetFlagEffect(tp,id+4)==0) and Duel.SelectYesNo(tp, aux.Stringid(id, 4)) then
-				val=-1000
+				val=-500
 				Duel.RegisterFlagEffect(tp, id+4, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
 			end
         end
