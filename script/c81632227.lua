@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetCondition(s.poscon)
+	e4:SetCondition(s.drcon)
 	e4:SetTarget(s.postg)
 	e4:SetOperation(s.posop)
 	c:RegisterEffect(e4)
@@ -91,11 +91,11 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.spconfilter(c,tp)
-	return (c:IsLevelAbove(10) and c:IsFaceup()) and c:IsControler(tp)
+function s.cfilter(c,tp)
+	return c:IsFaceup() and c:IsLevelAbove(10) and c:IsControler(tp)
 end
-function s.poscon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.spconfilter,1,nil,tp)
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.cfilter,1,nil,tp)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
