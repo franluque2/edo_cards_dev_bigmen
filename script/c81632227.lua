@@ -92,7 +92,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spconfilter(c,tp)
-	return c:IsLevelAbove(10) and c:IsControler(tp) and c:IsFaceup()
+	return (c:IsLevelAbove(10) and c:IsFaceup()) and c:IsControler(tp)
 end
 function s.poscon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spconfilter,1,nil,tp)
