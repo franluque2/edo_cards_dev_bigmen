@@ -72,7 +72,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_XYZ),tp,LOCATION_MZONE,0,1,nil)
 end
 
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
