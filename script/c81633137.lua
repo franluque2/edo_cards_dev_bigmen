@@ -50,7 +50,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
         local e3=Effect.CreateEffect(e:GetHandler())
-        e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e3:SetType(EFFECT_TYPE_FIELD)
         e3:SetCode(EFFECT_SUMMON_PROC)
         e3:SetTargetRange(LOCATION_HAND,0)
         e3:SetCondition(s.ntcon)
