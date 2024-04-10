@@ -58,7 +58,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(e3,tp)
 
 
-        local e2=Effect.CreateEffect(c)
+        local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_CHAIN_SOLVING)
 		e2:SetCondition(s.discon)
