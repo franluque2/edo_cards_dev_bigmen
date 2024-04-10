@@ -182,7 +182,7 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
-	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+1,0,0,0)
 end
 
 --op=1, Once per turn, You can target 1 monster you control, and declare a level from 1-11,

@@ -32,6 +32,30 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	s.activate_field(e,tp,eg,ep,ev,re,r,rp)
+
+	local g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil, 46263076)
+	if g and #g>0 then
+		for tc in g:Iter() do
+			if tc:GetFlagEffect(id)==0 then
+				tc:RegisterFlagEffect(id,0,0,0)
+				local eff={tc:GetCardEffect()}
+				for _,teh in ipairs(eff) do
+					if teh:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET==EFFECT_CANNOT_BE_BATTLE_TARGET then
+						teh:Reset()
+					end
+				end
+				local e3=Effect.CreateEffect(tc)
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+				e3:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
+				e3:SetRange(LOCATION_MZONE)
+				e3:SetValue(1)
+				tc:RegisterEffect(e3)
+		end
+	end
+	end
+
+	
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 function s.field_filter(c)

@@ -40,6 +40,30 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	s.activate_field(e,tp,eg,ep,ev,re,r,rp)
+
+	local g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil, 33537328)
+	if g and #g>0 then
+		for tc in g:Iter() do
+			if tc:GetFlagEffect(id)==0 then
+				tc:RegisterFlagEffect(id,0,0,0)
+				local eff={tc:GetCardEffect()}
+				for _,teh in ipairs(eff) do
+					if teh:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET==EFFECT_CANNOT_BE_BATTLE_TARGET then
+						teh:Reset()
+					end
+				end
+				local e3=Effect.CreateEffect(tc)
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+				e3:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
+				e3:SetRange(LOCATION_MZONE)
+				e3:SetValue(1)
+				tc:RegisterEffect(e3)
+		end
+	end
+	end
+
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 function s.field_filter(c)
@@ -193,7 +217,7 @@ function s.operation_for_res2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp, s.primineral_baboon_filter, tp, LOCATION_DECK, 0, 1, 1, nil):GetFirst()
 	Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,tc)
-	Duel.RegisterFlagEffect(tp,id+3,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
 end
 
 --op=3 set 1 "Contaminated Earth" from outside the duel to your Spell/Trap Zone.
