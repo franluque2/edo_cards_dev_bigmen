@@ -193,7 +193,7 @@ function s.high_level_filter(c)
 end
 
 function s.fucontspellfilter(c)
-    return c:IsFaceup() and c:IsSpell() and c:IsType(TYPE_CONTINUOUS)
+    return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_CONTINUOUS)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
