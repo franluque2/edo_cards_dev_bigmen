@@ -118,7 +118,7 @@ function s.fuimmortalfilter(c)
 end
 
 function s.discon(e)
-	return not Duel.IsExistingMatchingCard(f, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
+	return not Duel.IsExistingMatchingCard(s.fuimmortalfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
 end
 
 function s.actfilter(e,c)
