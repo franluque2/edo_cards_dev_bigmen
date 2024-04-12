@@ -193,7 +193,7 @@ function s.high_level_filter(c)
 end
 
 function s.fucontspellfilter(c)
-    return c:IsFaceup() and c:IsType(TYPE_SPELL)
+    return c:IsFaceup() and c:IsType(TYPE_SPELL) and not c:IsType(TYPE_FIELD)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
