@@ -193,7 +193,7 @@ function s.high_level_filter(c)
 end
 
 function s.fucontspellfilter(c)
-    return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_CONTINUOUS)
+    return c:IsFaceup() and c:IsType(TYPE_SPELL)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -205,7 +205,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
     and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 
     local b2=Duel.GetFlagEffect(tp, id+2)==0
-    and Duel.GetMatchingGroupCount(s.fucontspellfilter, tp, LOCATION_ONFIELD, 0, nil)>2
+    and Duel.GetMatchingGroupCount(s.fucontspellfilter, tp, LOCATION_SZONE, 0, nil)>2
 
 	return aux.CanActivateSkill(tp) and (b1 or b2)
 end
@@ -218,7 +218,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
     and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 
     local b2=Duel.GetFlagEffect(tp, id+2)==0
-    and Duel.GetMatchingGroupCount(s.fucontspellfilter, tp, LOCATION_ONFIELD, 0, nil)>2
+    and Duel.GetMatchingGroupCount(s.fucontspellfilter, tp, LOCATION_SZONE, 0, nil)>2
 
 
 
