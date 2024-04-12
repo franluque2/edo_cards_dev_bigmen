@@ -123,8 +123,20 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e2:SetTarget(s.immtar)
         e2:SetValue(s.value)
         Duel.RegisterEffect(e2,tp)
+
+        local e13=Effect.CreateEffect(e:GetHandler())
+        e13:SetType(EFFECT_TYPE_FIELD)
+        e13:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+        e13:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+        e13:SetTargetRange(0,1)
+        e13:SetValue(s.damval)
+        Duel.RegisterEffect(e13,tp)
 	end
 	e:SetLabel(1)
+end
+function s.damval(e,rc)
+	if ((rc:GetEquipGroup():FilterCount(Card.IsCode,nil,6205579)>0) or c:IsCode(511009344)) then return -1 end
+	return HALF_DAMAGE
 end
 
 function s.value(e,re,rp)
@@ -206,12 +218,39 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
-    local BloomPrima=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 24672164)
-    if #BloomPrima>0 then
-	local tc=BloomPrima:GetFirst()
+    local bacha=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 56208713)
+    if #bacha>0 then
+	local tc=bacha:GetFirst()
 		while tc do
+      if tc:GetFlagEffect(id)==0 then
+				tc:RegisterFlagEffect(id,0,0,0)
+				local eff={tc:GetCardEffect()}
+				for _,teh in ipairs(eff) do
+					if teh:GetCode()&EFFECT_FUSION_MATERIAL==EFFECT_FUSION_MATERIAL then
+						teh:Reset()
+					end
+        end
+      end
       Fusion.AddProcMixRep(tc,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x9b),1,1,511009324)
-			tc=BloomPrima:GetNext()
+			tc=bacha:GetNext()
+		end
+    end
+
+    local sabre=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 88753594)
+    if #sabre>0 then
+	local tc=sabre:GetFirst()
+		while tc do
+      if tc:GetFlagEffect(id)==0 then
+				tc:RegisterFlagEffect(id,0,0,0)
+				local eff={tc:GetCardEffect()}
+				for _,teh in ipairs(eff) do
+					if teh:GetCode()&EFFECT_FUSION_MATERIAL==EFFECT_FUSION_MATERIAL then
+						teh:Reset()
+					end
+        end
+      end
+      Fusion.AddProcMixN(tc,true,true,51777272,1,aux.FilterBoolFunctionEx(Card.IsSetCard,0xdf),2)
+			tc=sabre:GetNext()
 		end
     end
 
