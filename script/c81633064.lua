@@ -135,7 +135,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 function s.damval(e,rc)
-	if ((rc:GetEquipGroup():FilterCount(Card.IsCode,nil,6205579)>0) or c:IsCode(511009344)) then return -1 end
+	if ((rc:GetEquipGroup():FilterCount(Card.IsCode,nil,6205579)>0) or rc:IsCode(511009344)) then return -1 end
 	return HALF_DAMAGE
 end
 
