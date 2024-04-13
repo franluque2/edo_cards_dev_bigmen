@@ -80,13 +80,21 @@ function s.flipop(e, tp, eg, ep, ev, re, r, rp)
 end
 
 local dtuners = {}
+dtuners[0]=Group.CreateGroup()
+dtuners[1]=Group.CreateGroup()
 
 local dtunerstoadd = { 100000140, 100000141, 100000142, 100000143, 100000144, 100000145, 100000146 }
 
 function s.generatedtuners(e, tp, eg, ep, ev, re, r, rp)
+	if #dtuners[0]~=0 then
+		return
+	end
 	for key, value in ipairs(dtunerstoadd) do
-		local newcard = Duel.CreateToken(tp, value)
-		table.insert(dtuners, newcard)
+		local newcard = Duel.CreateToken(0, value)
+		dtuners[0]:AddCard(newcard)
+
+		local newcard2 = Duel.CreateToken(1, value)
+		dtuners[1]:AddCard(newcard2)
 	end
 end
 
@@ -147,6 +155,10 @@ function s.flipcon2(e, tp, eg, ep, ev, re, r, rp)
 	return aux.CanActivateSkill(tp) and (b1 or b2 or b3 or b4)
 end
 
+function s.notcardiscode(c, code)
+	return not c:IsCode(code)
+end
+
 function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 	Duel.Hint(HINT_CARD, tp, id)
 	local g3=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil)
@@ -199,12 +211,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 		if #g > 0 then
 			Duel.SendtoDeck(g, tp, SEQ_DECKBOTTOM, REASON_EFFECT)
 
-			local ng = Group.CreateGroup()
-			for i, v, remove in ripairs(dtuners) do
-				if not v:IsCode(g:GetFirst():GetCode()) then
-					Group.AddCard(ng, v)
-				end
-			end
+			local ng = Group.Filter(dtuners[tp], s.notcardiscode, nil, g:GetFirst():GetCode())
 			Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
 			local sg = ng:Select(tp, 1, 1, nil)
 			
