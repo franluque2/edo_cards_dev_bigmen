@@ -105,7 +105,7 @@ function s.blizzardfilter(c)
 end
 
 function s.spsumdtunerfilter(c,e,tp)
-	return c:IsMonster() and c:IsSetCard(setname) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false, POS_FACEUP)
+	return c:IsMonster() and c:IsSetCard(0x600) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false, POS_FACEUP)
 end
 
 
