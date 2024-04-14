@@ -25,11 +25,12 @@ function s.initial_effect(c)
 
     local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
-	e4:SetType(EFFECT_TYPE_TRIGGER_O)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e4:SetRange(LOCATION_GRAVE)
     e4:SetCode(EVENT_PHASE+PHASE_END)
     e4:SetCountLimit(1,{id,1})
+    e4:SetCondition(s.spcond2)
 	e4:SetTarget(s.destarget)
 	e4:SetOperation(s.desactivate)
 	c:RegisterEffect(e4)
@@ -54,8 +55,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+function s.spcond2(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
 end
 
 function s.desfilter(c)
