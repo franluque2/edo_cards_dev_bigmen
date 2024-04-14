@@ -25,7 +25,7 @@ function s.initial_effect(c)
 
     local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
-	e4:SetType(EFFECT_TYPE_TRIGGER_O)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e4:SetRange(LOCATION_GRAVE)
     e4:SetCode(EVENT_PHASE+PHASE_END)
