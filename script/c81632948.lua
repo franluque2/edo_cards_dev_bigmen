@@ -38,7 +38,7 @@ function s.op(e, tp, eg, ep, ev, re, r, rp)
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_SETCODE)
         e5:SetTargetRange(LOCATION_DECK,0)
-        e5:SetTarget(function(_,c)  return c:IsSetCard(0x600) end)
+        e5:SetTarget(aux.TargetBoolFunction(Card.IsOriginalSetCard, 0x600))
         e5:SetValue(0x1017)
         Duel.RegisterEffect(e5,tp)
 
@@ -59,6 +59,8 @@ function s.op(e, tp, eg, ep, ev, re, r, rp)
 	end
 	e:SetLabel(1)
 end
+
+
 
 function s.changcon(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.IsExistingMatchingCard(s.fudarkflattopfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
@@ -251,7 +253,7 @@ function s.adcon(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.GetTurnPlayer() == tp
 end
 
-local table_dsynchro = { 100000151, 100000152, 100000154, 100000155, 81632324 } --og Dark Diviner: 100000156 -- Frozen Fitgerald: 100000155
+local table_dsynchro = { 100000151, 100000152, 100000154, 81632324 } --og Dark Diviner: 100000156 -- Frozen Fitgerald: 100000155
 function s.getcard()
 	return table_dsynchro[Duel.GetRandomNumber(1, #table_dsynchro)]
 end
