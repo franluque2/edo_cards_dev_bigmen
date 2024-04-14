@@ -54,7 +54,7 @@ function s.initial_effect(c)
 end
 
 function s.filter(c)
-	return c:IsCode(69492187, 100000158) and c:IsSpellTrap() and c:IsAbleToHand()
+	return c:IsCode(69492187, 100000158, 26099457) and c:IsSpellTrap() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
