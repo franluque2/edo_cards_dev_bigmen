@@ -224,7 +224,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 	elseif op == 3 then
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp, s.darkmirrorshufflefilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
-		local g2=aux.SelectUnselectGroup(g3,e,tp,2,2,s.spcheck,0)
+		local g2=aux.SelectUnselectGroup(g3,e,tp,2,2,s.spcheck,1, tp, HINTMSG_TODECK, nil, nil, false)
 
 		Group.Merge(g, g2)
 
