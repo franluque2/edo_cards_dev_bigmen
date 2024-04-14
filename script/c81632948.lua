@@ -85,7 +85,7 @@ local dtuners = {}
 dtuners[0]=Group.CreateGroup()
 dtuners[1]=Group.CreateGroup()
 
-local dtunerstoadd = { 100000140, 100000141, 100000142, 100000143, 100000144, 100000145, 100000146 }
+local dtunerstoadd = { 81632644, 81632645, 81632646, 81632647, 81632648, 81632649, 81632650 }
 
 function s.generatedtuners(e, tp, eg, ep, ev, re, r, rp)
 	if #dtuners[0]~=0 then
