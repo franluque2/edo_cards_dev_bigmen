@@ -63,7 +63,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return (c:IsLevel(3) and c:IsType(TYPE_PLANT)) and not c:IsCode(100000547)
+	return ((c:IsRace(RACE_PLANT) and c:IsLevel(3)) and not c:IsCode(100000547)) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.filter(c)
 	return c:IsCode(511001533, 100000227, 511001534) and c:IsAbleToHand()
