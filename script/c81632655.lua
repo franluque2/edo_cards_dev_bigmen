@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCondition(s.dmgcon)
 	e1:SetOperation(s.damop)
     e1:SetTarget(s.damtg)
-	c:RegisterEffect(e4)
+	c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
