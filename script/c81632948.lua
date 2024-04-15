@@ -112,7 +112,7 @@ end
 
 
 function s.dtunerfilter(c)
-	return c:IsCode(81632644, 81632645, 81632646, 81632647, 81632648, 81632649, 81632650) and not c:IsPublic() and c:IsAbleToDeck()
+	return c:IsSetCard(0x600) and not c:IsPublic() and c:IsAbleToDeck()
 end
 
 function s.addwaterfilter(c)
