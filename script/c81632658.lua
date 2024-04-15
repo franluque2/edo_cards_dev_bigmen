@@ -42,7 +42,6 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_DECK,0,1,1,nil)
-    if #g==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then return end
 	local tc=g:GetFirst()
 	if tc then
 		Duel.ShuffleDeck(tp)
