@@ -51,7 +51,7 @@ end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	if Duel.Damage(p,d,REASON_EFFECT) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	if Duel.Damage(p,d,REASON_EFFECT) then
 		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.thfilter),tp,LOCATION_GRAVE,0,nil)
 		if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.BreakEffect()
