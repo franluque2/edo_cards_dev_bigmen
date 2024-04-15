@@ -37,8 +37,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.dmgcon(e,tp,eg,ep,ev,re,r,rp)
-	local at=Duel.GetAttackTarget()
-	return at:IsFaceup() and at:IsControler(tp) and at:IsRace(RACE_PLANT)
+	local d=Duel.GetAttackTarget()
+	return d and d:IsControler(tp) and d:IsFaceup() and d:IsRace(RACE_PLANT)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
