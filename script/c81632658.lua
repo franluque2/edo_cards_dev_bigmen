@@ -40,14 +40,17 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>1 end
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
-	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_DECK,0,nil)
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+    Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local tc=g:GetFirst()
 	if tc then
+        Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_DECK,0,1,1,nil)
 		Duel.ShuffleDeck(tp)
 		Duel.MoveSequence(tc,0)
 		Duel.ConfirmDecktop(tp,1)
 	end
+end
 end
 
 function s.filter5(c)
