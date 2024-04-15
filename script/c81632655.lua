@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(44789585,0))
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_BE_BATTLE_TARGET)
     e1:SetCountLimit(1,{id,0})
     e1:SetCondition(s.dmgcon)
@@ -58,7 +58,7 @@ function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return (c:IsLevel(3) and c:IsType(TYPE_PLANT)) and c:IsAbleToHand() and not c:IsCode(100000547)
+	return (c:IsLevel(3) and c:IsType(TYPE_PLANT)) and not c:IsCode(100000547)
 end
 function s.filter(c)
 	return c:IsCode(511001533, 100000227, 511001534) and c:IsAbleToHand()
