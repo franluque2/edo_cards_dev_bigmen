@@ -72,7 +72,7 @@ function s.lvop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thspfilter(c,e,tp,ft)
-	return ((c:IsRace(RACE_PLANT) and c:IsLevel(3)) and not c:IsCode(id)) and c:IsFaceup() and (c:IsAbleToHand()
+	return ((c:IsRace(RACE_PLANT) and c:IsLevel(3)) and not c:IsCode(100000546)) and c:IsFaceup() and (c:IsAbleToHand()
 		or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
 end
 function s.thsptg(e,tp,eg,ep,ev,re,r,rp,chk)
