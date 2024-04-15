@@ -128,7 +128,7 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and c:IsCode(40424929)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():IsCode(40424929)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
