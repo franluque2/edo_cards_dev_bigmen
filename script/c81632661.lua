@@ -31,9 +31,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.GetAttacker()
-    if tc:IsControler(tp) then tc=Duel.GetAttackTarget() end
-    Debug.Message(tc)
-    if tc:IsAbletoHand() then
+    if tc then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
