@@ -49,6 +49,7 @@ function s.initial_effect(c)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
 	e5:SetCountLimit(1)
+	e5:SetCondition(s.spcon)
 	e5:SetTarget(s.sptg)
 	e5:SetOperation(s.spop)
 	c:RegisterEffect(e5)
@@ -124,4 +125,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
 		Duel.Recover(p,d,REASON_EFFECT)
 	end
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_ONFIELD,0,1,nil)
+end
+
+function s.spfilter2(c)
+	return c:IsFaceup() and c:IsCode(14152862, 41147577)
 end
