@@ -38,7 +38,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
 	if Duel.IsExistingMatchingCard(s.NoritoFilter,tp,LOCATION_ONFIELD,0,1,nil) and tc:IsAbleToHand()
-		and (not tc:IsCanChangePosition() or Duel.SelectYesNo(tp,aux.Stringid(id,2))) then
+		and (not tc:IsCanChangePosition() or Duel.SelectYesNo(tp,aux.Stringid(id,0))) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	else
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
