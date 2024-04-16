@@ -9,7 +9,6 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e1:SetOperation(s.activate)
-	e1:SetCost(s.bdcost)
 	c:RegisterEffect(e1)
 
 	--Set 1 card from your Deck
@@ -65,18 +64,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
+		if Duel.ConfirmCards(1-tp,sg) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+		end
 	end
 end
 function s.cfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost()
-end
-function s.bdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 
 function s.setfilter(c)
@@ -118,8 +114,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(ct*500)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,0,0,tp,ct*500)
+	Duel.SetTargetParam(500)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,0,0,tp,500)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
