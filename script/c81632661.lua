@@ -32,7 +32,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.GetAttacker()
     if tc:IsControler(tp) then tc=Duel.GetAttackTarget() end
-	if tc:IsRelateToEffect(e) then
+    if tc:IsAbletoHand() then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
