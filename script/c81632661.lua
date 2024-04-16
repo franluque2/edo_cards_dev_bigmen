@@ -30,7 +30,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tc and tc:IsControler(tp) and tc:IsCode(14152862, 41147577) and tc:IsRelateToBattle() and Duel.GetAttackTarget()~=nil
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
+    local tc= e:GetLabelObject()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
