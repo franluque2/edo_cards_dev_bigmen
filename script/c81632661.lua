@@ -24,10 +24,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
-	e:SetLabelObject(tc)
-	return tc and tc:IsControler(tp) and tc:IsCode(14152862, 41147577) and tc:IsRelateToBattle() and Duel.GetAttackTarget()~=nil
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if not a:IsControler(tp) then a=Duel.GetAttackTarget() d=Duel.GetAttacker() end
+	if chkc then return chkc==Duel.GetAttacker() end
+	if chk==0 then return a and d and a:IsCode(14152862, 41147577) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
