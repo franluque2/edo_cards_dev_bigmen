@@ -18,7 +18,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCountLimit(1,{id,1})
+	e2:SetCountLimit(1,{id,0})
 	e2:SetTarget(s.tg)
 	e2:SetOperation(s.op)
 	c:RegisterEffect(e2)
@@ -26,12 +26,27 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 
+	--search
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,2))
+	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e5:SetProperty(EFFECT_FLAG_DELAY)
+	e5:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e5:SetCode(EVENT_SUMMON_SUCCESS)
+	e5:SetCountLimit(1,{id,0})
+	e5:SetTarget(s.tg2)
+	e5:SetOperation(s.op2)
+	c:RegisterEffect(e5)
+	local e6=e5:Clone()
+	e6:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e6)
+
     --Banish 1 monster from deck
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,0))
 	e4:SetCategory(CATEGORY_REMOVE)
 	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetCountLimit(1,id)
+	e4:SetCountLimit(1,{id,1})
     e4:SetRange(LOCATION_GRAVE)
 	e4:SetCost(aux.bfgcost)
     e4:SetCondition(aux.exccon)
@@ -83,4 +98,28 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=g:GetFirst()
 	if tg==nil then return end
 	Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
+end
+
+function s.filter2(c)
+	return (c:IsCode(511009124) and c:IsAbleToHand()) and c:IsFaceup()
+end
+function s.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
+end
+function s.op2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local tc=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_REMOVED,0,1,1,nil):GetFirst()
+	if tc then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
+	end
+end
+
+function s.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_ONFIELD,0,1,nil)
+end
+
+function s.spfilter2(c)
+	return c:IsFaceup() and c:IsCode(100000226)
 end
