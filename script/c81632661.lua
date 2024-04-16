@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e4:SetCategory(CATEGORY_HANDES)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
-	e4:SetCode(EVENT_CHAINING+EVENT_PHASE+PHASE_STANDBY)
+	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_GRAVE)
     e4:SetCost(aux.bfgcost)
 	e4:SetCondition(s.drcon)
@@ -31,7 +31,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsControler(1-tp) and tc:IsRelateToBattle() then
+	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
