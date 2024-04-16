@@ -117,12 +117,13 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(500)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,0,0,tp,500)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,500)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
+		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Recover(p,d,REASON_EFFECT)
 	end
 end
