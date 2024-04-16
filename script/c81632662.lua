@@ -64,10 +64,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		if Duel.ConfirmCards(1-tp,sg) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) then
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+		Duel.ConfirmCards(1-tp,sg)
+		if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	    local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
+	    Duel.Remove(g,POS_FACEUP,REASON_COST)
 		end
 	end
 end
