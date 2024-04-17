@@ -27,7 +27,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
 	e:SetLabelObject(tc)
-	return (tc and tc:IsControler(tp) and tc:IsCode(14152862, 41147577) and tc:IsRelateToBattle() and Duel.GetAttackTarget()~=nil) and Duel.GetTurnPlayer()~=tp
+	return tc and tc:IsControler(tp) and tc:IsCode(14152862, 41147577) and tc:IsRelateToBattle() and Duel.GetAttackTarget()~=nil
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.GetAttacker()
@@ -39,7 +39,7 @@ end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local code1,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)
-	return ep==tp and (code1==16227556 or code2==16227556)
+	return ep==tp and (code1==16227556 or code2==16227556) and Duel.GetTurnPlayer()~=tp
 end
 
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
