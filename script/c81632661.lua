@@ -39,8 +39,10 @@ end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local code1,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)
+	Debug.Message(code2)
 	return ep==tp and (code1==16227556 or code2==16227556)
 end
+
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
 		and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,nil) end
