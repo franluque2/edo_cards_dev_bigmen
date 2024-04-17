@@ -166,10 +166,31 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,1-tp,1)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
+
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetCondition(s.tgcon)
+	e1:SetOperation(s.tgop)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)>0
+end
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0)
+	if #g==0 then return end
+	local sg=g:RandomSelect(1-tp,1)
+	Duel.SendtoGrave(sg,REASON_EFFECT)
 end
 
 function s.atkcon(e)
