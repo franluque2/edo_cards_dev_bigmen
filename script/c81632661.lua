@@ -39,7 +39,6 @@ end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local code1,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)
-	Debug.Message(code2)
 	return ep==tp and (code1==16227556 or code2==16227556)
 end
 
