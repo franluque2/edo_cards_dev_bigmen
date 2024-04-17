@@ -43,7 +43,8 @@ function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
+		and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	s.announce_filter={TYPE_EXTRA,OPCODE_ISTYPE,TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND,OPCODE_NOT}
 	local ac=Duel.AnnounceCard(tp,table.unpack(s.announce_filter))
@@ -56,6 +57,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
 	else
-		Duel.Damage(tp,500,REASON_EFFECT)
+		local sg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+		local dg=sg:RandomSelect(tp,1)
+		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
 	end
 end
