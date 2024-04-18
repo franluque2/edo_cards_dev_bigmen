@@ -85,6 +85,17 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				spc=sg:GetNext()
 			end
 			Duel.SpecialSummonComplete()
+    --Destroy them during the End Phase
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetCountLimit(1)
+	e3:SetLabel(fid)
+	e3:SetLabelObject(sg)
+	e3:SetCondition(s.descon)
+	e3:SetOperation(s.desop)
+	Duel.RegisterEffect(e3,tp)
 		else
 			Duel.Damage(1-tp,400,REASON_EFFECT)
 		end
@@ -185,4 +196,21 @@ end
 
 function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+end
+
+function s.desfilter(c,fid)
+	return c:GetFlagEffectLabel(id)==fid
+end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local g=e:GetLabelObject()
+	if not g:IsExists(s.desfilter,1,nil,e:GetLabel()) then
+		g:DeleteGroup()
+		e:Reset()
+		return false
+	else return true end
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local g=e:GetLabelObject()
+	local tg=g:Filter(s.desfilter,nil,e:GetLabel())
+	Duel.Destroy(tg,REASON_EFFECT)
 end
