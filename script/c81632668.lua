@@ -81,7 +81,7 @@ function s.atcon2(e,tp,eg,ev,ep,re,r,rp)
 	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
 	local ct=#g
 	local tg=g:GetFirst()
-	return Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase() and ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and tg:IsSetCard(0x511))
+	return (Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase()) and ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and tg:IsSetCard(0x511))
 end
 function s.attg2(e,tp,eg,ev,ep,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
