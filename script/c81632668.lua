@@ -40,7 +40,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.thfilter(c)
-	return c:IsCode(511002153, 511002697, 511003223, 51100984, 511002580) and c:IsAbleToHand()
+	return c:IsCode(511002153, 511002697, 511003223, 511000984, 511002580) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
@@ -78,7 +78,10 @@ function s.condition(e)
 end
 
 function s.atcon2(e,tp,eg,ev,ep,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase()
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
+	local ct=#g
+	local tg=g:GetFirst()
+	return Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase() and ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and tg:IsSetCard(0x511))
 end
 function s.attg2(e,tp,eg,ev,ep,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
