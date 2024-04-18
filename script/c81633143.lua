@@ -42,9 +42,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e2:SetTarget(function (_,c) return not (c:IsSetCard(SET_EARTHBOUND_IMMORTAL) and c:IsMonster() and c:IsFaceup()) end)
 		e2:SetValue(s.efilter)
 		Duel.RegisterEffect(e2,tp)
+
+		local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_DISABLE)
+        e7:SetTargetRange(LOCATION_ONFIELD,0)
+        e7:SetCondition(s.discon)
+        e7:SetTarget(aux.TargetBoolFunction(Card.IsCode,70252926))
+        Duel.RegisterEffect(e7, tp)
 	end
 	e:SetLabel(1)
 end
+
+function s.discon(e)
+	return not Duel.IsExistingMatchingCard(aux.TRUE, e:GetHandlerPlayer(), LOCATION_FZONE, 0, 1, nil)
+end
+
 
 function s.flipopextra(e,tp,eg,ep,ev,re,r,rp)
 	local light=Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_DECK, 0, nil, 34471458)
@@ -104,6 +117,7 @@ end
 function s.activate_field(e,tp,eg,ep,ev,re,r,rp)
 	local field=Duel.SelectMatchingCard(tp,s.field_filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil)
 	if #field>0 then
+		Duel.SSet(tp, field:GetFirst())
 		Duel.ActivateFieldSpell(field:GetFirst(),e,tp,eg,ep,ev,re,r,rp)
 	end
 end
