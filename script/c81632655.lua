@@ -10,7 +10,6 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_BE_BATTLE_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,{id,0})
-	e1:SetCondition(s.dmgcon)
 	e1:SetOperation(s.damop)
     e1:SetTarget(s.damtg)
 	c:RegisterEffect(e1)
@@ -36,10 +35,6 @@ function s.initial_effect(c)
 	e5:SetCondition(s.efcon)
 	e5:SetOperation(s.efop)
 	c:RegisterEffect(e5)
-end
-function s.dmgcon(e,tp,eg,ep,ev,re,r,rp)
-	local d=Duel.GetAttackTarget()
-	return d and d:IsControler(tp) and d:IsFaceup() and d:IsRace(RACE_PLANT)
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
