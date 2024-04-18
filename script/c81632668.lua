@@ -72,9 +72,11 @@ end
 function s.desval(e,c)
 	return c:IsFaceup() and c:IsOnField() and c:IsReason(REASON_EFFECT) and c:IsComicsHero() and c:GetOverlayCount()~=0
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp,chk)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==1
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	local ct=#g
+	local tg=g:GetFirst()
+	return ct==1 and tg:IsFaceup() and tg:IsSetCard(0x511)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x511)
