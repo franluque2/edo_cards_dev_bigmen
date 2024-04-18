@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 	--destroy replace
 	local e4=Effect.CreateEffect(c)
