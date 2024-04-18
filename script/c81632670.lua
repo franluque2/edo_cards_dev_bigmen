@@ -85,7 +85,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ShuffleHand(tp)
 		Duel.ShuffleDeck(tp)
 		Duel.BreakEffect()
-		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+		Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)
 	end
 end
 
