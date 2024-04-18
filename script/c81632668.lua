@@ -15,6 +15,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
 	e4:SetRange(LOCATION_FZONE)
+	e4:SetCountLimit(1)
 	e4:SetTarget(s.destg)
 	e4:SetValue(s.desval)
 	c:RegisterEffect(e4)
@@ -72,12 +73,12 @@ function s.desval(e,c)
 	return c:IsFaceup() and c:IsOnField() and c:IsReason(REASON_EFFECT) and c:IsComicsHero() and c:GetOverlayCount()~=0
 end
 function s.condition(e)
-	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
-	local ct=#g
-	local tg=g:GetFirst()
-	return ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and tg:IsSetCard(0x511))
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==1
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
-
+function s.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x511)
+end
 function s.atcon2(e,tp,eg,ev,ep,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase() and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x511),tp,LOCATION_MZONE,0,1,nil)
 end
