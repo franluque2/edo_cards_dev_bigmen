@@ -32,6 +32,8 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetRange(LOCATION_FZONE)
+	e5:SetHintTiming(TIMING_BATTLE_START+TIMING_BATTLE_PHASE)
+	e5:SetCountLimit(1)
 	e5:SetCondition(s.atcon2)
 	e5:SetTarget(s.attg2)
 	e5:SetOperation(s.atop2)
@@ -72,7 +74,7 @@ function s.condition(e)
 	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
 	local ct=#g
 	local tg=g:GetFirst()
-	return ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and c:IsSetCard(0x511))
+	return ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and tg:IsSetCard(0x511))
 end
 
 function s.atcon2(e,tp,eg,ev,ep,re,r,rp)
