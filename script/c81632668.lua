@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
-	e4:SetRange(LOCATION_SZONE)
+	e4:SetRange(LOCATION_FZONE)
 	e4:SetTarget(s.destg)
 	e4:SetValue(s.desval)
 	c:RegisterEffect(e4)
@@ -21,22 +21,21 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_EXTRA_ATTACK)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetCondition(s.condition)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
-    --Attach 1 "Purrely" Quick-Play Spell to 1 "Purrely" Xyz Monster on the field
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_PHASE+PHASE_END)
-	e3:SetRange(LOCATION_FZONE)
-	e3:SetCountLimit(1)
-	e3:SetTarget(s.attachtg)
-	e3:SetOperation(s.attachop)
-	c:RegisterEffect(e3)
+	--attack
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,2))
+	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetCode(EVENT_FREE_CHAIN)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetCondition(s.atcon2)
+	e5:SetTarget(s.attg2)
+	e5:SetOperation(s.atop2)
+	c:RegisterEffect(e5)
 end
 function s.thfilter(c)
 	return c:IsCode(511002153, 511002697, 511003223, 51100984, 511002580) and c:IsAbleToHand()
@@ -75,25 +74,25 @@ function s.condition(e)
 	local tg=g:GetFirst()
 	return ct==1 and tg:IsFaceup() and (tg:IsType(TYPE_XYZ) and c:IsSetCard(0x511))
 end
-function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x511) and c:IsType(TYPE_XYZ)
+
+function s.atcon2(e,tp,eg,ev,ep,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsBattlePhase()
 end
-function s.atchfilter(c)
-	return c:IsRace(RACE_WARRIOR)
+function s.attg2(e,tp,eg,ev,ep,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil) end
 end
-function s.attachtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.cfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(s.atchfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-end
-function s.attachop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_XYZ) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.atchfilter),tp,LOCATION_GRAVE,0,1,1,nil)
-		if #g==0 then return end
-		Duel.Overlay(tc,g)
+function s.atop2(e,tp,eg,ev,ep,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
+	for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_MUST_ATTACK)
+		e1:SetReset(RESET_PHASE|PHASE_BATTLE)
+		tc:RegisterEffect(e1)
 	end
+end
+
+function s.filter(c)
+	return c:IsFaceup() and not c:IsHasEffect(EFFECT_CANNOT_ATTACK) and not c:IsHasEffect(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+		and (c:IsAttackPos() or c:IsHasEffect(EFFECT_DEFENSE_ATTACK))
 end
