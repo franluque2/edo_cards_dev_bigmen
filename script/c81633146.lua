@@ -34,7 +34,7 @@ xyzmats[100000498]={81632613, 81632613} --TBA
 local fusmats={}
 -- same as xyzmats
 
-local mons={}
+local mons={100000498, 73887236,73887236,19369609,64554883,01992816,49121795,51960178,60645181,56910167,18963306,100000498,100000498}
 --fill in the monsters for this side here
 
 local monstosummon={}
@@ -79,7 +79,6 @@ function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
 	Duel.SendtoDeck(e:GetHandler(), tp, -2, REASON_EFFECT)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
 		Duel.Draw(tp, 1, REASON_EFFECT)
@@ -92,7 +91,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPD check
 	if Duel.GetFlagEffect(tp,id)>0  then return end
 
-	local b1=Duel.IsPlayerCanDraw(tp) and Duel.CheckLPCost(tp, 2000)
+	local b1=Duel.CheckLPCost(tp, 2000)
 
 	return aux.CanActivateSkill(tp) and b1
 end
@@ -123,7 +122,8 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
         if xyzmats[tar:GetOriginalCode()]~=nil then
             for i, val in ipairs(xyzmats[tar:GetOriginalCode()]) do
                 local mat=Duel.CreateToken(tp, val)
-                Duel.Overlay(mat, tar)
+                Duel.SendtoGrave(mat, REASON_RULE)
+                Duel.Overlay(tar, mat)
             end
         end
     
