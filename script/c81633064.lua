@@ -1,6 +1,8 @@
 --Parasite Conscription
 --add archetype Template
 Duel.LoadScript("big_aux.lua")
+Duel.LoadScript("c420.lua")
+
 
 local s,id=GetID()
 function s.initial_effect(c)
@@ -31,7 +33,7 @@ function s.ParaQueen(c)
 end
 
 function s.Backrow(c)
-  return c:IsCode(511009326, 511009345, 511009341, 511009324, 511009339, 511009347)
+  return c:IsCode(511009326, 511009345, 511009341, 511009324, 511009339, 511009347) or c:IsParasite()
 end
 
 function s.Tear(c)
