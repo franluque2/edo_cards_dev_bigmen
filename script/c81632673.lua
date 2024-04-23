@@ -77,7 +77,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc2=g:GetNext()
 	if tc2 then lv2=tc2:GetLevel() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
-	local lv=Duel.AnnounceLevel(tp,5,8,lv1,lv2)
+	local lv=Duel.AnnounceLevel(tp,1,4,lv1,lv2)
 	Duel.SetTargetParam(lv)
 end
 function s.lvfilter(c,e)
