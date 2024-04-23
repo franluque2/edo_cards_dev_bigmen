@@ -63,7 +63,7 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND,0,1,1,nil)
 	if #g>0 then
-		Duel.SummonOrSet(tp,tc,true,nil)
+		Duel.SummonOrSet(tp,g:GetFirst(),true,nil)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
