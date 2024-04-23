@@ -39,6 +39,14 @@ function s.initial_effect(c)
 	e4:SetTarget(s.sptg)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
+
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_PHASE+PHASE_END)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCountLimit(1)
+	e5:SetCondition(s.poscon)
+	e5:SetOperation(s.posop)
+	c:RegisterEffect(e5)
 end
 function s.atcon(e,c)
 	return e:GetHandler():IsAttackPos() 
@@ -87,4 +95,21 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end
+end
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsAttackPos() then
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
+	end
+	--Cannot change its battle position
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(3313)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,3)
+	c:RegisterEffect(e1)
+end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsTurnPlayer(tp) and e:GetHandler():GetBattledGroupCount()==0
 end
