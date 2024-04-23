@@ -33,7 +33,7 @@ xyzmats[16195942]={77462146, 77462146} --Yuto
 local fusmats={}
 -- same as xyzmats
 
-local mons={100000498, 73887236,19369609,64554883,01992816,88120966,39139935,60645181,56910167,29515122,20343502,16195942}
+local mons={100000498,73887236,19369609,64554883,01992816,88120966,100000179,56910167,60181553,20343502,16195942}
 --fill in the monsters for this side here
 
 local monstosummon={}
@@ -77,6 +77,7 @@ function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SKILL_FLIP, tp, id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 	Duel.SendtoDeck(e:GetHandler(), tp, -2, REASON_EFFECT)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
