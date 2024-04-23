@@ -73,7 +73,7 @@ function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.lfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.lfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,s.lfilter,tp,LOCATION_MZONE,0,1,2,nil)
+	local g=Duel.SelectTarget(tp,s.lfilter,tp,LOCATION_MZONE,0,1,3,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
 	local lv=Duel.AnnounceLevel(tp,1,4)
 	Duel.SetTargetParam(lv)
