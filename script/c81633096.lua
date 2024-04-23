@@ -164,7 +164,7 @@ end
 function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     --jet iron
-	local g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,15574615)
+	local g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_ALL,0,nil,15574615)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
@@ -201,7 +201,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 	end
 
     --Galaxy Queen
-	g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,48928529)
+	g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_ALL,0,nil,48928529)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
