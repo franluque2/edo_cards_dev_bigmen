@@ -50,7 +50,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e0=Effect.CreateEffect(e:GetHandler())
         e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e0:SetCode(EVENT_ADJUST)
+        e0:SetCode(EVENT_STARTUP)
         e0:SetRange(0x5f)
         e0:SetOperation(s.makequickop)
         Duel.RegisterEffect(e0,tp)
