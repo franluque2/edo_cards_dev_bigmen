@@ -43,13 +43,16 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 then
 		Duel.Damage(1-tp,ct*400,REASON_EFFECT)
 	end
-	if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then
-		--Gains 200 ATK for each destroyed monster
+	local c=e:GetHandler()
+	if ct>0 and c:IsFaceup() and c:IsRelateToEffect(e) then
+		--Increase ATK
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(ct*200)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
+		e1:SetValue(ct*400)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e1)
 	end
 end
