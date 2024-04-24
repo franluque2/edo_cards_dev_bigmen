@@ -42,8 +42,8 @@ function s.initial_effect(c)
     e5:SetCountLimit(1)
 	c:RegisterEffect(e5)
 end
-function s.tg(c)
-	return c:IsSetCard(0x150e) or c:IsSetCard(0x1538)
+function s.tg(e,c)
+	return c:IsFaceup() and (c:IsSetCard(0x150e) or c:IsSetCard(0x1538))
 end
 function s.val(e,c)
 	return c:GetBaseAttack()
