@@ -54,7 +54,7 @@ function s.val2(e,c)
 	return c:GetBaseDefense()
 end
 function s.thfilter(c)
-	return c:IsSetCard(0x50e) and c:IsAbleToHand()
+	return (c:IsSetCard(0x50e) and c:IsSpell()) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
