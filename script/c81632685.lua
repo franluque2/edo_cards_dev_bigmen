@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.tg(c)
-	return c:IsFaceup() and (c:IsSetCard(0x150e) or c:IsSetCard(0x1538))
+	return c:IsSetCard(0x150e) or c:IsSetCard(0x1538)
 end
 function s.val(e,c)
 	return c:GetBaseAttack()
