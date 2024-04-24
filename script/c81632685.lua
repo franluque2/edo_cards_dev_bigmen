@@ -36,6 +36,7 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_IGNITION)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetRange(LOCATION_FZONE)
+	e5:SetCondition(s.spcon)
 	e5:SetTarget(s.postg)
 	e5:SetOperation(s.posop)
     e5:SetCountLimit(1)
@@ -80,4 +81,7 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.posfilter(c)
 	return c:IsAttackPos() and c:IsCanChangePosition()
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.tg,tp,LOCATION_MZONE,0,1,nil)
 end
