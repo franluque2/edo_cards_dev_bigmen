@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.lvfilter(c)
-	return c:IsFaceup() and c:HasLevel() and (c:IsSetCard(0x1538) and c:IsSetCard(0x150e))
+	return c:IsFaceup() and c:HasLevel() and (c:IsSetCard(0x1538) or c:IsSetCard(0x150e))
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
