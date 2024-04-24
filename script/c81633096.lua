@@ -50,7 +50,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e0=Effect.CreateEffect(e:GetHandler())
         e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e0:SetCode(EVENT_ADJUST)
+        e0:SetCode(EVENT_STARTUP)
         e0:SetRange(0x5f)
         e0:SetOperation(s.makequickop)
         Duel.RegisterEffect(e0,tp)
@@ -87,7 +87,7 @@ function s.epcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_GRAVE, 0, 1, nil, 80208158) and
         not Duel.IsExistingMatchingCard(s.fusparrowfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
         and Duel.IsExistingMatchingCard(s.setsparrowforeverfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil)
-		and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+8)
+		and Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp, id+8)==0
 end
 function s.epop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp, LOCATION_SZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
@@ -164,7 +164,7 @@ end
 function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     --jet iron
-	local g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,15574615)
+	local g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_ALL,0,nil,15574615)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
@@ -201,7 +201,7 @@ function s.makequickop(e,tp,eg,ep,ev,re,r,rp)
 	end
 
     --Galaxy Queen
-	g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_MZONE,0,nil,48928529)
+	g=Duel.GetMatchingGroup(Card.IsOriginalCode,tp,LOCATION_ALL,0,nil,48928529)
 	for tc in g:Iter() do
         if tc:GetFlagEffect(id)==0 then
 		tc:RegisterFlagEffect(id,0,0,0)
