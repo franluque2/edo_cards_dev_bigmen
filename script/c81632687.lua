@@ -29,8 +29,8 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	if (phase~=PHASE_DAMAGE and phase~=PHASE_DAMAGE_CAL) or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return (d~=nil and a:GetControler()==tp and a:IsRace(RACE_BEAST) and a:IsRelateToBattle())
-		or (d~=nil and d:GetControler()==tp and d:IsFaceup() and d:IsRace(RACE_BEAST) and d:IsRelateToBattle())
+	return (d~=nil and a:GetControler()==tp and (a:IsSetCard(0x1538) and a:IsSetCard(0x150e)) and a:IsRelateToBattle())
+		or (d~=nil and d:GetControler()==tp and d:IsFaceup() and (d:IsSetCard(0x1538) and d:IsSetCard(0x150e)) and d:IsRelateToBattle())
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
