@@ -30,7 +30,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return rc:IsCode(100000170,100000176)
 end
 function s.defilter(c)
-	return c:IsFaceup() and not c:IsPreviousLocation(LOCATION_EXTRA)
+	return c:IsFaceup() and c:IsLevelBelow(4)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

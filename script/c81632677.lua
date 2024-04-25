@@ -83,15 +83,15 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
 	if chk==0 then return ft>1 and not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
-		and Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,2,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_HAND+LOCATION_GRAVE)
+		and Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
 	local g=Duel.GetMatchingGroup(s.spfilter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
-	if #g>=2 then
+	if #g>=1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=g:Select(tp,2,2,nil)
+		local sg=g:Select(tp,1,1,nil)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
 end
