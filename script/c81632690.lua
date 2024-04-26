@@ -70,3 +70,6 @@ function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.SelectReleaseGroupCost(tp,s.rfilter,1,1,false,nil,nil,ft,tp)
 	Duel.Release(sg,REASON_COST)
 end
+function s.rfilter(c,ft,tp)
+	return (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
+end
