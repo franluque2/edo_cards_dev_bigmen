@@ -61,11 +61,8 @@ end
 function s.spfilter2(c)
 	return c:IsFaceup() and c:IsCTLamp()
 end
-function s.spcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_MZONE,0,1,nil)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
