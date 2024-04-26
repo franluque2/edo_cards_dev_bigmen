@@ -154,8 +154,7 @@ end
 
 function s.filterfu(c,e,tp)
 	return c:IsType(TYPE_FUSION) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and (c:IsCTLamp() or 
-		c:IsCode(19066538) or c:IsCode(72869010) or c:IsCode(81997228))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and (c:IsCode(19066538) or c:IsCode(72869010))
 end
 
 function s.etar(e,tp,eg,ep,ev,re,r,rp,chk)
