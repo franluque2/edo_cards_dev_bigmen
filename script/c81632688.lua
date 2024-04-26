@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return (c:IsCTLamp() and not c:IsCode(id)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	return (c:IsCTLamp() and c:IsLevelBelow(4) and not c:IsCode(id)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
