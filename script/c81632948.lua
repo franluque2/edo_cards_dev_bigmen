@@ -217,7 +217,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 			Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
 			local sg = ng:Select(tp, 1, 1, nil)
 			
-			local newcard=Duel.CreateToken(tp, sg:GetFirst():GetCode())
+			local newcard=Duel.CreateToken(tp, sg:GetFirst():GetOriginalCode())
 			Duel.SendtoHand(newcard, tp, REASON_RULE)
 		end
 		Duel.RegisterFlagEffect(tp, id + 4, RESET_EVENT + RESETS_STANDARD + RESET_PHASE + PHASE_END, 0, 0)
