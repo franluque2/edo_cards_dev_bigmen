@@ -74,7 +74,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Release(g,REASON_EFFECT)==0 then return end
 	local og=Duel.GetOperatedGroup()
 	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SpecialSummon(c,0,sump,sump,false,false,POS_FACEUP)>0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SpecialSummon(c,0,sump,sump,false,false,POS_FACEUP_ATTACK)>0
 		and Duel.GetMZoneCount(1-sump,nil,sump)>0 then
 		local atk=og:GetSum(s.operationvalueatk)
 		local def=og:GetSum(s.operationvaluedef)
