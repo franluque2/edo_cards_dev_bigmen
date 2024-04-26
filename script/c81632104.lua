@@ -55,17 +55,17 @@ function s.initial_effect(c)
 	e4:SetOperation(s.activate)
 	c:RegisterEffect(e4)
 
-	--shuffle and draw
+	--Activate
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,2))
-	e5:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e5:SetType(EFFECT_TYPE_IGNITION)
-	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetType(EFFECT_TYPE_TRIGGER_O)
+	e5:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
+	e5:SetCode(EVENT_DESTROYED)
+	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 	e5:SetRange(LOCATION_GRAVE)
-	e5:SetCountLimit(1,{id,3})
 	e5:SetCost(aux.bfgcost)
-	e5:SetTarget(s.drtg)
-	e5:SetOperation(s.drop)
+	e5:SetCondition(s.condition2)
+	e5:SetTarget(s.target2)
+	e5:SetOperation(s.activate2)
 	c:RegisterEffect(e5)
 	
 
@@ -174,3 +174,24 @@ function s.ecop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 
+function s.cfilter2(c,tp)
+	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsCTLAMP() and c:IsMonster() 
+		and c:IsControler(tp) and c:IsPreviousControler(tp)
+end
+function s.condition2(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(s.cfilter,nil,tp)
+	return #g==1
+end
+function s.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tc=eg:Filter(s.cfilter,nil,tp):GetFirst()
+	if chk==0 then return tc:IsCanBeEffectTarget(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetTargetCard(tc)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
+end
+function s.activate2(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
