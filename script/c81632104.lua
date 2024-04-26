@@ -175,8 +175,8 @@ end
 end
 
 function s.cfilter2(c,tp)
-	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsCTLAMP() and c:IsMonster() 
-		and c:IsControler(tp) and c:IsPreviousControler(tp)
+	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsCTLAMP()
+		and c:IsControler(tp))
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(s.cfilter,nil,tp)
