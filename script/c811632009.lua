@@ -67,7 +67,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetFlagEffect(0, id)>=5 then
 		Duel.Hint(HINT_CARD, ep, 27204311)
 
-	local sump=Duel.GetTurnPlayer()
+	local sump=1-Duel.GetTurnPlayer()
     
     local c=Duel.CreateToken(sump, 27204311)
 	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsReleasableByEffect),sump,LOCATION_MZONE,LOCATION_MZONE,nil)
