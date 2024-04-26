@@ -70,34 +70,36 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local sump=1-Duel.GetTurnPlayer()
     
     local c=Duel.CreateToken(sump, 27204311)
-	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsReleasableByEffect),sump,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if Duel.Release(g,REASON_EFFECT)==0 then return end
-	local og=Duel.GetOperatedGroup()
-	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SpecialSummon(c,0,sump,sump,false,false,POS_FACEUP_ATTACK)>0
-		and Duel.GetMZoneCount(1-sump,nil,sump)>0 then
-		local atk=og:GetSum(s.operationvalueatk)
-		local def=og:GetSum(s.operationvaluedef)
-		if not Duel.IsPlayerCanSpecialSummonMonster(1-sump,27204311+1,0,TYPES_TOKEN,atk,def,11,RACE_ROCK,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK,1-sump) then return end
-		Duel.BreakEffect()
-		local token=Duel.CreateToken(sump,27204311+1)
-		Duel.SpecialSummonStep(token,0,sump,1-sump,false,false,POS_FACEUP_ATTACK)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK)
-		e1:SetValue(atk)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
-		token:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_SET_DEFENSE)
-		e2:SetValue(def)
-		e2:SetReset(RESET_EVENT|RESETS_STANDARD)
-		token:RegisterEffect(e2)
-		Duel.SpecialSummonComplete()
-		token:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
+	if c:IsCanBeSpecialSummoned(e,0,sump,false,false) then 
+		local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsReleasableByEffect),sump,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if Duel.Release(g,REASON_EFFECT)==0 then return end
+		local og=Duel.GetOperatedGroup()
+		c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SpecialSummon(c,0,sump,sump,false,false,POS_FACEUP_ATTACK)>0
+			and Duel.GetMZoneCount(1-sump,nil,sump)>0 then
+			local atk=og:GetSum(s.operationvalueatk)
+			local def=og:GetSum(s.operationvaluedef)
+			if not Duel.IsPlayerCanSpecialSummonMonster(1-sump,27204311+1,0,TYPES_TOKEN,atk,def,11,RACE_ROCK,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK,1-sump) then return end
+			Duel.BreakEffect()
+			local token=Duel.CreateToken(sump,27204311+1)
+			Duel.SpecialSummonStep(token,0,sump,1-sump,false,false,POS_FACEUP_ATTACK)
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK)
+			e1:SetValue(atk)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+			token:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_SET_DEFENSE)
+			e2:SetValue(def)
+			e2:SetReset(RESET_EVENT|RESETS_STANDARD)
+			token:RegisterEffect(e2)
+			Duel.SpecialSummonComplete()
+			token:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
 
-	end
+		end
+		end
 
 		Duel.ResetFlagEffect(0, id)
     end
