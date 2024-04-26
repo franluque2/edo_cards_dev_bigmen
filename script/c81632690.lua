@@ -19,11 +19,12 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCondition(s.spcon)
 	e2:SetCost(s.spcost2)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e2)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
