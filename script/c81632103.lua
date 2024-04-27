@@ -60,7 +60,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if 	Duel.Damage(1-tp,600,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0  then
+	if 	Duel.Damage(1-tp,600,REASON_EFFECT)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 
 	if Duel.IsExistingMatchingCard(s.spfilter, tp, LOCATION_HAND, 0, 1, nil, e, tp) then
 		Duel.BreakEffect()
