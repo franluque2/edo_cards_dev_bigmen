@@ -57,7 +57,7 @@ function s.initial_effect(c)
 
 	--Activate
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_TRIGGER_O)
+	e5:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
 	e5:SetCode(EVENT_DESTROYED)
 	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
