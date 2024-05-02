@@ -127,7 +127,7 @@ end
 
 
 function s.efilter(e,re,rp)
-	return e:GetHandlerPlayer()==rp
+	return (e:GetHandlerPlayer()==rp) and (re:GetHandler() and not re:GetHandler():IsCode(17000165))
 end
 
 
