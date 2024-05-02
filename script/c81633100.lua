@@ -41,6 +41,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e6=Effect.CreateEffect(e:GetHandler())
         e6:SetType(EFFECT_TYPE_FIELD)
+		e6:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
         e6:SetCode(EFFECT_CANNOT_TRIGGER)
         e6:SetTargetRange(LOCATION_MZONE,0)
         e6:SetCondition(s.discon2)
@@ -119,8 +120,8 @@ function s.discon3(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-function s.discon2(e)
-	return Duel.GetFlagEffect(tp,id+1)>0
+function s.discon2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(e:GetHandlerPlayer(),id+1)>0
 end
 
 function s.actfilter(e,c)
@@ -135,7 +136,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+	Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,0)
 end
 
 
