@@ -1,13 +1,6 @@
 --Shackles of the Black Flame
 local s,id=GetID()
 function s.initial_effect(c)
-	local e0=Effect.CreateEffect(c)
-    e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e0:SetCode(EVENT_STARTUP)
-    e0:SetCountLimit(1)
-    e0:SetRange(0x5f)
-    e0:SetOperation(s.flipopextra)
-    c:RegisterEffect(e0)
 	--Activate Skill
 	aux.AddSkillProcedure(c,2,false,nil,nil)
 	local e1=Effect.CreateEffect(c)
@@ -19,62 +12,6 @@ function s.initial_effect(c)
 	e1:SetLabel(0)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-end
-
-function s.starterfilter(c)
-	return c:IsOriginalCode(16528181, 26984177, 01490690) or c:IsOriginalCode(84941194, 73628505, 01490690)
-end
-
-function s.topstarterfilter(c)
-	return s.starterfilter(c) and c:GetSequence()>=30
-end
-
-function s.bottomofdeckfilter(c)
-	return c:GetSequence()<=30 and (not s.starterfilter(c)) and (not c:IsType(TYPE_SKILL))
-end
-
-
-
-function s.flipopextra(e,tp,eg,ep,ev,re,r,rp)
-	local starters=Duel.GetMatchingGroup(s.topstarterfilter, tp, LOCATION_DECK, 0, nil)
-	local bottomcards=Duel.GetMatchingGroup(s.bottomofdeckfilter, tp, LOCATION_DECK, 0, nil)
-
-	Duel.DisableShuffleCheck()
-
-
-	if starters then
-		local prevnum=-1
-		while (#starters>0) do
-
-			local cardtotake=starters:GetFirst()
-			local cardtoreplace=bottomcards:GetFirst()
-
-			if cardtotake and cardtoreplace then
-				Group.RemoveCard(bottomcards, cardtoreplace)
-				Group.RemoveCard(starters, cardtotake)
-
-				local starterid=cardtotake:GetOriginalCode()
-				local replacedid=cardtoreplace:GetOriginalCode()
-
-
-				Card.Recreate(cardtotake, replacedid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-				Card.Recreate(cardtoreplace, starterid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-
-			end
-			if not ((#bottomcards)>0) then
-				break
-			end
-			if (#starters==1) then
-				if #starters==prevnum then
-					break
-				end
-
-				prevnum=#starters
-			end
-		end
-	end
-	Duel.DisableShuffleCheck(false)
-
 end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
