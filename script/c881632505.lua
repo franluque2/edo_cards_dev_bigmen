@@ -115,10 +115,17 @@ function s.drawop(e,tp,eg,ep,ev,re,r,rp)
 			token:RegisterEffect(e4)
 
 			Duel.SpecialSummonComplete()
+
+			aux.DelayedOperation(token,PHASE_END,id,e,tp,function(ag) Duel.Destroy(ag,REASON_EFFECT) end,nil,0)
+
 			end
 			Duel.ShuffleHand(tp)
 		end
 	end
+end
+
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 end
 
 
