@@ -1,6 +1,4 @@
 --Balanced Beginnings
-Duel.LoadScript("big_aux.lua")
-
 local s,id=GetID()
 function s.initial_effect(c)
 
