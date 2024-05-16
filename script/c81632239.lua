@@ -35,6 +35,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
+s.listed_names={CARD_CLEAR_WORLD}
 
 function s.spfilter(c,e,tp)
 	return c:IsClear() and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
