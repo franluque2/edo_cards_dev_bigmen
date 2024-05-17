@@ -35,7 +35,7 @@ function s.initial_effect(c)
     --level
 	local e4=Effect.CreateEffect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_IGNITION)
+	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetCode(EVENT_FREE_CHAIN)
     e4:SetRange(LOCATION_MZONE)
     e4:SetCountLimit(1,{id,1})
