@@ -28,14 +28,14 @@ function s.initial_effect(c)
 end
 
 function s.cfilter(c,p)
-	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(p) and c:IsReason(REASON_EFFECT)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(p) and c:IsReason(REASON_EFFECT) and c:GetReasonEffect():GetHandler():IsOwner(1-p)
 end
 
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	for p=0,1 do
 		local tg=eg:Filter(s.cfilter,nil,p)
 		for tc in aux.Next(tg) do
-			Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(1-p,id+1,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
