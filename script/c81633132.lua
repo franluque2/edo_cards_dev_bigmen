@@ -28,7 +28,7 @@ function s.initial_effect(c)
 end
 
 function s.cfilter(c,p)
-	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(p) and c:IsReason(REASON_EFFECT) and c:GetReasonEffect():GetHandler():GetOwner()~=p
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousControler(p) and c:IsReason(REASON_EFFECT)
 end
 
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
