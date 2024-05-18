@@ -38,7 +38,7 @@ end
 s.listed_names={CARD_CLEAR_WORLD}
 
 function s.spfilter(c,e,tp)
-	return c:IsClear() and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsClear() or c:ListsCode(CARD_CLEAR_WORLD)) and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp) end
@@ -58,7 +58,7 @@ end
 
 
 function s.ssfilter(c,e,tp)
-	return c:IsClear() and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
+	return (c:IsClear() or c:ListsCode(CARD_CLEAR_WORLD)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
 end
 function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.ssfilter(chkc,e,tp) end
