@@ -111,12 +111,12 @@ end
 
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsMonster() then
+	if rc:IsMonster() and rc:GetOwner()~=tp then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
 function s.chainlm(e,rp,tp)
-	return tp~=rp and not e:GetHandler():IsCode(100302002)
+	return not e:GetHandler():IsCode(48486809)
 end
 
 function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
