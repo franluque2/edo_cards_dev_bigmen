@@ -77,9 +77,9 @@ function s.acop(e, tp, eg, ep, ev, re, r, rp)
                 Duel.Hint(HINT_CARD,tp,id)
                 Duel.TagSwap(tp)
             elseif op==2 then
-                Duel.RegisterFlagEffect(tp, ID_END_OF_PHASE, RESET_EVENT+Duel.GetCurrentPhase(), 0, 0)
+                Duel.RegisterFlagEffect(tp, ID_END_OF_PHASE, RESET_EVENT+RESET_PHASE+Duel.GetCurrentPhase(), 0, 0)
             elseif op==3 then
-                Duel.RegisterFlagEffect(tp, ID_END_OF_TURN, RESET_EVENT+PHASE_END, 0, 0)
+                Duel.RegisterFlagEffect(tp, ID_END_OF_TURN, RESET_EVENT+RESET_PHASE+PHASE_END, 0, 0)
             elseif op==4 then
                 Duel.RegisterFlagEffect(tp, ID_TURN_BACK_ON, 0, 0, 0)
             end
