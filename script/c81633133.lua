@@ -191,7 +191,7 @@ end
 function s.epop(e,tp,eg,ep,ev,re,r,rp)
 
         local gloria=Duel.GetMatchingGroup(s.fugloriafilter, tp, LOCATION_ONFIELD, 0, nil)
-        if #gloria>0 and not Duel.IsExistingMatchingCard(s.highlevelarmatosfilter, tp, LOCATION_MZONE, 0, 1, nil) then
+        if #gloria>0 then
             Duel.Hint(HINT_CARD,tp,id)
             Duel.SendtoGrave(gloria, REASON_RULE)
 
@@ -229,33 +229,17 @@ end
 
 
 
-function s.sendarmatosfilter(c)
-    return c:IsSetCard(0x578) and c:IsMonster() and c:IsAbleToGraveAsCost()
+function s.colosseumfilter(c, tp)
+    return c:IsCode(511030025) and c:GetActivateEffect():IsActivatable(tp,true,true)
 end
 
-function s.summonoraddarmatosfilter(c,e,tp)
-    return c:IsSetCard(0x578) and c:IsMonster() and (c:IsAbleToHand() or c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEUP))
-end
 
-function s.banisharmatosfilter(c)
-    return c:IsSetCard(0x578) and c:IsMonster() and c:IsAbleToRemoveAsCost()
-end
-
-function s.setfieldfilter(c)
-    return c:IsCode(511030025) and c:IsSSetable()
-end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,id+3)>0 and Duel.GetFlagEffect(tp,id+4)>0  then return end
+	if Duel.GetFlagEffect(tp,id+3)>0 then return end
 	local b1=Duel.GetFlagEffect(tp,id+3)==0
-			and Duel.IsExistingMatchingCard(s.sendarmatosfilter,tp,LOCATION_MZONE|LOCATION_HAND,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.summonoraddarmatosfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
-
-	local b2=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.IsExistingMatchingCard(s.banisharmatosfilter,tp,LOCATION_GRAVE,0,2,nil)
-            and (not Duel.IsExistingMatchingCard(aux.TRUE, tp, LOCATION_FZONE, 0, 1, nil))
-            and Duel.IsExistingMatchingCard(s.setfieldfilter,tp,LOCATION_GRAVE,0,1,nil)
-
+                        and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,2,nil)
+						and Duel.IsExistingMatchingCard(s.colosseumfilter,tp,LOCATION_DECK,0,1,nil, tp)
 
 	return aux.CanActivateSkill(tp) and (b1 or b2)
 end
@@ -264,67 +248,30 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 
 	local b1=Duel.GetFlagEffect(tp,id+3)==0
-			and Duel.IsExistingMatchingCard(s.sendarmatosfilter,tp,LOCATION_MZONE|LOCATION_HAND,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.summonoraddarmatosfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
+                        and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,2,nil)
+						and Duel.IsExistingMatchingCard(s.colosseumfilter,tp,LOCATION_DECK,0,1,nil, tp)
 
-	local b2=Duel.GetFlagEffect(tp,id+4)==0
-			and Duel.IsExistingMatchingCard(s.banisharmatosfilter,tp,LOCATION_GRAVE,0,2,nil)
-            and (not Duel.IsExistingMatchingCard(aux.TRUE, tp, LOCATION_FZONE, 0, 1, nil))
-            and Duel.IsExistingMatchingCard(s.setfieldfilter,tp,LOCATION_GRAVE,0,1,nil)
-
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,2)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)})
 	op=op-1
 
 	if op==0 then
 		s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
-	elseif op==1 then
-		s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
 
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
-    local send=Duel.SelectMatchingCard(tp, s.sendarmatosfilter, tp, LOCATION_MZONE|LOCATION_HAND, 0, 1,1,false,nil)
-    if send and Duel.SendtoGrave(send, REASON_COST) then
-        local toaddsum=Duel.SelectMatchingCard(tp, s.summonoraddarmatosfilter, tp, LOCATION_DECK, 0, 1,1,false,nil,e,tp)
-        if toaddsum then
-            if Card.IsAbleToHand(toaddsum:GetFirst()) and (not toaddsum:GetFirst():IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEUP)) or not Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-                Duel.SendtoHand(toaddsum, tp, REASON_RULE)
-                Duel.ConfirmCards(1-tp, toaddsum)
-            else
-                Duel.SpecialSummon(toaddsum, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
-            end
+	if Duel.DiscardHand(tp,Card.IsDiscardable,2,2,REASON_COST+REASON_DISCARD) then
+        local colosseum=Duel.GetFirstMatchingCard(s.colosseumfilter, tp, LOCATION_DECK, 0, nil, tp)
+        if colosseum then
+            Duel.ActivateFieldSpell(colosseum,e,tp,eg,ep,ev,re,r,rp)
+
         end
+ 
     end
+
 
 
 	Duel.RegisterFlagEffect(tp,id+3,0,0,0)
-end
-
-function s.thfilter(c)
-	return c:IsSetCard(0x578) and c:IsMonster() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
-end
-
-function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,2,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-
-    local tc=Duel.SelectMatchingCard(tp, s.setfieldfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
-    if tc then
-        Duel.SSet(tp, tc)
-
-        local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetDescription(3300)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-		e2:SetReset(RESET_EVENT+RESETS_REDIRECT)
-		e2:SetValue(LOCATION_REMOVED)
-		tc:GetFirst():RegisterEffect(e2)
-    end
-
-	Duel.RegisterFlagEffect(tp,id+4,0,0,0)
 end
