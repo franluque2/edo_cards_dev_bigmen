@@ -47,6 +47,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetFlagEffect(tp, id)==1
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
     Duel.Hint(HINT_CARD,tp,id)
 
     local d=Duel.TossDice(tp,1)
@@ -107,6 +108,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
+end
 end
 
 
