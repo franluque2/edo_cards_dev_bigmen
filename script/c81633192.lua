@@ -66,6 +66,7 @@ function s.batadd(e,tp,eg,ep,ev,re,r,rp)
         if g then
             local tc=g:RandomSelect(tp, 1, nil)
             Duel.SendtoHand(tc, tp, REASON_EFFECT)
+            Duel.ConfirmCards(1-tp, tc)
         end
     end
     e:SetLabel(num)
