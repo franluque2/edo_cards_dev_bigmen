@@ -91,8 +91,21 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 
 
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CHANGE_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(0,1)
+	e1:SetValue(s.damval)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+
 
 	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
 
     end
+end
+
+function s.damval(e,re,val,r,rp,rc)
+	return math.floor(val/2)
 end
