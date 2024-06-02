@@ -26,13 +26,32 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 
-
+        local e2=Effect.CreateEffect(e:GetHandler())
+        e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+        e2:SetCode(EVENT_DESTROYED)
+        e2:SetCondition(s.gycon)
+        e2:SetOperation(s.gyop)
+		Duel.RegisterEffect(e2,tp)
 
 
 	end
 	e:SetLabel(1)
 end
 
+function s.cfilter(c,tp)
+	return c:IsOwner()~=tp
+end
+function s.gycon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp) and (#eg==1) and rp==tp and Duel.GetFlagEffect(tp, id)==1
+end
+function s.gyop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+        Duel.Hint(HINT_CARD, tp, id)
+        Duel.SendtoHand(eg, tp, REASON_EFFECT)
+        Duel.RegisterFlagEffect(tp,id,0,0,0)
+    end
+end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,0),nil)
