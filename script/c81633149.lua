@@ -114,10 +114,11 @@ end
 function s.desfilter(c,e,tp)
 	return c:IsAbleToDeckAsCost()
 		and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
-        and not c:IsCode(CARD_DESTINY_BOARD)
+        and c:IsSetCard(0x1c)
+
 end
 function s.cfilter(c)
-	return c:IsAbleToDeckAsCost() and not c:IsCode(CARD_DESTINY_BOARD)
+	return c:IsAbleToDeckAsCost() and c:IsSetCard(0x1c)
 end
 function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,0,nil)
