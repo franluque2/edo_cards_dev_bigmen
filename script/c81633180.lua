@@ -67,7 +67,8 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(s.negatablemon, tp, 0, LOCATION_MZONE, nil)
 
     for tc in g:Iter() do
-		tc:NegateEffects(c)
+		
+		tc:NegateEffects(e:GetHandler())
 	end
 
 
