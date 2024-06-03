@@ -1,4 +1,4 @@
---The Millennium Rod
+--Kartumata
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -46,38 +46,45 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.adspellfilter(c)
-    return c:IsSpell() and c:IsAbleToHand()
-end
+
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 	--OPD check
 	if Duel.GetFlagEffect(tp,id)>1  then return end
 
-	return aux.CanActivateSkill(tp) and Duel.IsExistingMatchingCard(s.adspellfilter, tp, 0, LOCATION_DECK, 1, nil)
+	return aux.CanActivateSkill(tp) and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)<5 and Duel.IsPlayerCanDraw(tp,1) and not (Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 
+function s.sumfilter(c,e,tp)
+    return c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+end
 
 
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
     if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-		
         
 	Duel.Hint(HINT_CARD,tp,id)
-	if Duel.GetFlagEffect(1-tp, 81633193)>0 then
-		Duel.Hint(HINT_CARD,tp,81633193)
-		Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
 
-		return
-	end
+    local drawnum=5-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+    Duel.Draw(tp, drawnum, REASON_RULE)
 
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local spell=Duel.SelectMatchingCard(tp, s.adspellfilter, tp, 0, LOCATION_DECK, 1,1,false,nil)
-    if spell then
-        Duel.SendtoHand(spell, tp, REASON_RULE)
-        Duel.ConfirmCards(1-tp, spell)
+    local g=Duel.GetMatchingGroup(s.sumfilter, tp, LOCATION_HAND, 0, nil, e,tp)
+    if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+        local g2=g1:Select(tp, 1,3,nil)
+        if g2 then
+            Duel.SpecialSummon(g2, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
+            for tc in g2:Iter() do
+                local e1=Effect.CreateEffect(e:GetHandler())
+                e1:SetType(EFFECT_TYPE_SINGLE)
+                e1:SetCode(EFFECT_SET_BASE_ATTACK)
+                e1:SetValue(1000)
+                e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+                tc:RegisterEffect(e1)
+            end
+        end
     end
+
 
 
 	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)

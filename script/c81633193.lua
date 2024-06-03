@@ -1,4 +1,4 @@
---The Millennium Rod
+--The Millennium Necklace
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -11,8 +11,6 @@ function s.initial_effect(c)
 	e1:SetLabel(0)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-
-    aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
 
 end
 
@@ -27,10 +25,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
 
+
+
+
+
 	end
 	e:SetLabel(1)
 end
-
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -46,41 +47,3 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.adspellfilter(c)
-    return c:IsSpell() and c:IsAbleToHand()
-end
-
-function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-
-	--OPD check
-	if Duel.GetFlagEffect(tp,id)>1  then return end
-
-	return aux.CanActivateSkill(tp) and Duel.IsExistingMatchingCard(s.adspellfilter, tp, 0, LOCATION_DECK, 1, nil)
-end
-
-
-
-function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-		
-        
-	Duel.Hint(HINT_CARD,tp,id)
-	if Duel.GetFlagEffect(1-tp, 81633193)>0 then
-		Duel.Hint(HINT_CARD,tp,81633193)
-		Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
-
-		return
-	end
-
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local spell=Duel.SelectMatchingCard(tp, s.adspellfilter, tp, 0, LOCATION_DECK, 1,1,false,nil)
-    if spell then
-        Duel.SendtoHand(spell, tp, REASON_RULE)
-        Duel.ConfirmCards(1-tp, spell)
-    end
-
-
-	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
-
-    end
-end

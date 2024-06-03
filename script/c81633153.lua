@@ -60,8 +60,16 @@ end
 
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
     if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+
+		
         
 	Duel.Hint(HINT_CARD,tp,id)
+	if Duel.GetFlagEffect(1-tp, 81633193)>0 then
+		Duel.Hint(HINT_CARD,tp,81633193)
+		Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+
+		return
+	end
 	local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
     Duel.ConfirmCards(tp, g)
 
