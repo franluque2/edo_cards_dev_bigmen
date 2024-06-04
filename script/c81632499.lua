@@ -71,13 +71,6 @@ function s.posop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetCondition(s.relcon)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetCode(EFFECT_CHANGE_RACE)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e2:SetValue(RACE_INSECT)
-		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_DISABLE)
@@ -131,16 +124,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009659,(0x3e|0x537),TYPES_TOKEN,0,0,1,RACE_INSECT,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp) then return end
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-	if ft~=1 then
-		local ct = {}
-		for i=1,math.min(ft,2) do
-			ct[#ct+1]=i
-		end
-		ft=Duel.AnnounceNumber(tp,table.unpack(ct))
-	end
-	for i=1,ft do
-		local token=Duel.CreateToken(tp,511009659)
-		Duel.SpecialSummon(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
-	end
+	local token=Duel.CreateToken(tp,511009659)
+	Duel.SpecialSummon(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
 end

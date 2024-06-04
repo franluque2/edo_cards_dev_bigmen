@@ -53,7 +53,7 @@ function s.remmonfilter(c)
 end
 
 function s.spsumfilter(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, true,POS_FACEUP)
+    return c:IsMonster() and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, true,POS_FACEUP)
  end
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
