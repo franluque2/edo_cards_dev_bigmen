@@ -44,7 +44,7 @@ function s.initial_effect(c)
 	e3:SetCondition(s.negcon)
 	e3:SetTarget(s.negtg)
 	e3:SetOperation(s.negop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e3)
 
 end
 s.listed_series={0x3013}
