@@ -36,7 +36,7 @@ function s.initial_effect(c)
 end
 s.listed_names={100000171}
 function s.filter(c,e,tp)
-	return c:IsSetCard(0x150e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x150e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:HasLevel()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
