@@ -56,6 +56,8 @@ end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.posfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.posfilter,tp,0,LOCATION_MZONE,1,nil) end
+	local g=eg:Filter(s.cfilter, nil, tp)
+	Duel.Release(g, REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUPDEFENSE)
 	local sg=Duel.SelectTarget(tp,s.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
 end
