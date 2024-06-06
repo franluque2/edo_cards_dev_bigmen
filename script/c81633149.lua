@@ -139,7 +139,7 @@ function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,tp,id)
 
 	local tc=e:GetLabelObject()
-	Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_REPLACE)
+	Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_COST+REASON_REPLACE)
 end
 
 
