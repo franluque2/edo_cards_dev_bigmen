@@ -126,6 +126,10 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 end
 
+function s.fuwmdeffilter(c)
+	return c:IsCode(511009660) and c:IsFaceup()
+end
+
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -139,6 +143,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 			and Duel.IsExistingMatchingCard(s.WormHoleSetFilter,tp,LOCATION_GRAVE,0,1,nil)
 						and Duel.IsExistingMatchingCard(s.WormTokenDestroyFilter,tp,LOCATION_ONFIELD,0,1,nil)
                         and Duel.GetLocationCount(tp, LOCATION_SZONE) > 0
+						and not Duel.IsExistingMatchingCard(s.fuwmdeffilter, tp, LOCATION_ONFIELD, 0, 1, nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
