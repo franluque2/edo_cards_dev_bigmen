@@ -43,6 +43,12 @@ function s.initial_effect(c)
 	e4:SetTarget(s.tdtg)
 	e4:SetOperation(s.tdop)
 	c:RegisterEffect(e4)
+
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+	e5:SetValue(aux.ChangeBattleDamage(0,HALF_DAMAGE))
+	c:RegisterEffect(e5)
 end
 function s.costfilter(c,tp)
 	return c:IsSetCard(0x1538)
