@@ -38,7 +38,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id-500)==0 
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()>1 and Duel.GetFlagEffect(tp, id-500)==0 
     and Duel.GetDrawCount(tp)>0 and Duel.GetMatchingGroupCount(aux.TRUE, 1-tp, LOCATION_MZONE, 0, nil)>2 and Duel.GetMatchingGroupCount(aux.TRUE, 1-tp, 0, LOCATION_MZONE, nil)==0
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
