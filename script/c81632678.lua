@@ -48,6 +48,13 @@ function s.initial_effect(c)
 	e4:SetTarget(s.deftg)
 	e4:SetOperation(s.defop)
 	c:RegisterEffect(e4)
+
+	
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_ADD_SETCODE)
+	e2:SetValue(0x150e)
+	c:RegisterEffect(e2)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
