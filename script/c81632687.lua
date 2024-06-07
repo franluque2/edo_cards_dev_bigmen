@@ -23,6 +23,12 @@ function s.initial_effect(c)
 	e3:SetTarget(s.lvtg)
 	e3:SetOperation(s.lvop)
 	c:RegisterEffect(e3)
+
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_ADD_SETCODE)
+	e0:SetValue(0x50e)
+	c:RegisterEffect(e0)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local phase=Duel.GetCurrentPhase()

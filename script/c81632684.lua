@@ -28,6 +28,12 @@ function s.initial_effect(c)
 	e5:SetTarget(s.destg)
 	e5:SetOperation(s.desop)
 	c:RegisterEffect(e5)
+
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_ADD_SETCODE)
+	e0:SetValue(0x50e)
+	c:RegisterEffect(e0)
 end
 function s.filter(c)
 	return (c:IsSetCard(0x150e) or c:IsSetCard(0x1538))

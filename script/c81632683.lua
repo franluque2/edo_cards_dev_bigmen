@@ -39,6 +39,12 @@ function s.initial_effect(c)
     e4:SetCondition(function(_,tp) return Duel.IsTurnPlayer(tp) end)
 	c:RegisterEffect(e4)
 
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_ADD_SETCODE)
+	e0:SetValue(0x50e)
+	c:RegisterEffect(e0)
+
 end
 function s.thfilter(c)
 	return c:IsCode(100000170) and c:IsMonster() and c:IsAbleToHand()

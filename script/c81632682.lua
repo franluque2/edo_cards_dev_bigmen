@@ -25,6 +25,12 @@ function s.initial_effect(c)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.activate)
 	c:RegisterEffect(e2)
+
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_ADD_SETCODE)
+	e0:SetValue(0x50e)
+	c:RegisterEffect(e0)
 end
 function s.cfilter(c,tp)
 	return c:IsPreviousControler(tp) and (c:IsTrap() or c:IsSpell() or c:IsMonster())

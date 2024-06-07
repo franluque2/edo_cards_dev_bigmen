@@ -24,6 +24,12 @@ function s.initial_effect(c)
 	e2:SetTarget(s.postg1)
 	e2:SetOperation(s.posop1)
 	c:RegisterEffect(e2)
+
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_ADD_SETCODE)
+	e0:SetValue(0x50e)
+	c:RegisterEffect(e0)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer() and Duel.IsExistingMatchingCard(s.CatFilter,tp,LOCATION_MZONE,0,1,nil)

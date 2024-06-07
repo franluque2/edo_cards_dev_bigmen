@@ -24,6 +24,12 @@ function s.initial_effect(c)
 	e3:SetTarget(s.lvtg)
 	e3:SetOperation(s.lvop)
 	c:RegisterEffect(e3)
+
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_ADD_SETCODE)
+	e2:SetValue(0x50e)
+	c:RegisterEffect(e2)
 end
 s.listed_series={0x70}
 

@@ -10,6 +10,13 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_ADD_SETCODE)
+	e2:SetValue(0x50e)
+	c:RegisterEffect(e2)
+
 end
 function s.filter(c)
 	return (((c:IsSetCard(0x150e) or c:IsSetCard(0x1538)) and c:IsMonster()) or c:IsSetCard(0x50e)) and c:IsAbleToHand()
