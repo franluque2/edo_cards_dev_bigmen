@@ -43,7 +43,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.higherlevelfilter(c,lv)
-    return c:IsFaceup() and c:IsLevelAbove(lv)
+    return c:IsFaceup() and c:IsLevelAbove(lv+1)
 end
 
 function s.repfilter(c,tp)
