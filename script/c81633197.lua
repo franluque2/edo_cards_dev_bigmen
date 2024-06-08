@@ -38,12 +38,10 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()>1 and Duel.GetFlagEffect(tp, id-500)==0 and Duel.GetDrawCount(tp)>0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()>1 and Duel.GetFlagEffect(tp, id-500)==0 and Duel.GetDrawCount(tp)>0 and Duel.GetTurnPlayer()==tp
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
-	Duel.Hint(HINT_CARD,tp,id)
-	Duel.RegisterFlagEffect(tp,id-500,0,0,0)
 
     if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
 		if Duel.GetFlagEffect(1-tp, 81633193)>0 then
@@ -51,6 +49,8 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			return
 		end
         Duel.Hint(HINT_CARD,tp,id)
+		Duel.RegisterFlagEffect(tp,id-500,0,0,0)
+	
         local dt=Duel.GetDrawCount(tp)
         if dt~=0 then
             _replace_count=0
