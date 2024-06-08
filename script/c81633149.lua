@@ -85,8 +85,72 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetCode(EFFECT_SEND_REPLACE)
         e8:SetTarget(s.banreptg)
 		Duel.RegisterEffect(e8,tp)
+
+		local e0=Effect.CreateEffect(e:GetHandler())
+        e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e0:SetCode(EVENT_ADJUST)
+        e0:SetRange(0x5f)
+		e0:SetCondition(s.rewritedboardcon)
+        e0:SetOperation(s.rewritedboardop)
+        Duel.RegisterEffect(e0,tp)
 	end
 	e:SetLabel(1)
+end
+
+function s.dboardrewritefilter(c)
+	return c:IsOriginalCode(CARD_DESTINY_BOARD) and c:GetFlagEffect(id)==0
+end
+
+function s.rewritedboardcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.dboardrewritefilter, tp, LOCATION_ALL, 0, 1, nil)
+end
+
+function s.rewritedboardop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(s.dboardrewritefilter,tp,LOCATION_ALL,0,nil)
+	for tc in g:Iter() do
+        if tc:GetFlagEffect(id)==0 then
+		tc:RegisterFlagEffect(id,0,0,0)
+		local eff={tc:GetCardEffect()}
+        for _,teh in ipairs(eff) do
+
+            if (teh:GetCode()&EVENT_LEAVE_FIELD~=0) and (Effect.GetType(teh)&(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)~=0) then
+            	teh:Reset()
+			end
+        end
+		
+		
+		local e3=Effect.CreateEffect(tc)
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetRange(LOCATION_SZONE)
+		e3:SetCode(EVENT_LEAVE_FIELD)
+		e3:SetCondition(s.tgcon)
+		e3:SetOperation(s.tgop)
+		tc:RegisterEffect(e3)
+		local e4=Effect.CreateEffect(tc)
+		e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e4:SetCode(EVENT_LEAVE_FIELD)
+		e4:SetOperation(s.tgop)
+		tc:RegisterEffect(e4)
+		tc:RegisterFlagEffect(id,0,0,0)
+
+    end
+	end
+
+end
+
+function s.cfilter1(c,tp)
+	return c:IsControler(tp) and (c:IsCode(id) or c:IsSetCard(0x1c)) and not (c:IsReason(REASON_COST+REASON_REPLACE))
+end
+function s.cfilter2(c)
+	return c:IsFaceup() and (c:IsCode(id) or c:IsSetCard(0x1c))
+end
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter1,1,nil,tp)
+end
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_ONFIELD,0,nil)
+	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 
 function s.repfilterban(c,tp)
@@ -112,9 +176,14 @@ function s.repfilter(c,tp)
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function s.desfilter(c,e,tp)
-	return c:IsAbleToDeckAsCost()
+	if not (c:IsAbleToDeckAsCost()
 		and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
-        and c:IsSetCard(0x1c)
+        and c:IsSetCard(0x1c))
+		then return false end
+	local dboard=Duel.GetFirstMatchingCard(Card.IsOriginalCode, tp, LOCATION_ONFIELD, 0, nil, CARD_DESTINY_BOARD)
+	if not dboard then return false end
+	local num=dboard:GetFlagEffect(CARD_DESTINY_BOARD)
+	return c:IsCode(CARDS_SPIRIT_MESSAGE[num])
 
 end
 function s.cfilter(c)
@@ -139,7 +208,17 @@ function s.desrepop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,tp,id)
 
 	local tc=e:GetLabelObject()
-	Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_COST+REASON_REPLACE)
+	if Duel.SendtoDeck(tc, tp, SEQ_DECKSHUFFLE, REASON_COST+REASON_REPLACE) then
+
+	local dboard=Duel.GetMatchingGroup(Card.IsOriginalCode, tp, LOCATION_ONFIELD, 0, nil, CARD_DESTINY_BOARD):GetFirst()
+	local num=dboard:GetFlagEffect(CARD_DESTINY_BOARD)
+	num=num-1
+	dboard:ResetFlagEffect(CARD_DESTINY_BOARD)
+	for i = 1, num, 1 do
+		dboard:RegisterFlagEffect(CARD_DESTINY_BOARD,RESET_EVENT+RESETS_STANDARD,0,0)
+	end
+end
+
 end
 
 
