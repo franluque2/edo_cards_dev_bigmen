@@ -242,6 +242,8 @@ function s.operation_for_res4(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(TYPE_SYNCHRO)
 		g:RegisterEffect(e1)
 	end
+	Duel.RegisterFlagEffect(tp,id+5,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+
 end
 
 function s.operation_for_res5(e,tp,eg,ep,ev,re,r,rp)
