@@ -21,7 +21,7 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsChainNegatable(ev) then return false end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and (tc+tg:FilterCount(s.cfilter,nil,tp)-#tg>0) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x3013),tp,LOCATION_MZONE,0,1,nil)
+	return ex and tg~=nil and rp~=tp and (tc+tg:FilterCount(s.cfilter,nil,tp)-#tg>0) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x3013),tp,LOCATION_MZONE,0,1,nil)
 end
 function s.costfilter1(c)
 	return c:IsRace(RACE_MACHINE) and c:IsFaceup() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
