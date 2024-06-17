@@ -52,7 +52,7 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
         Duel.Hint(HINT_CARD, tp, id)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-        local toadd=Duel.SelectMatchingCard(tp, s.adfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
+        local toadd=Duel.SelectMatchingCard(tp, s.adfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
         if toadd then
             Duel.SendtoHand(toadd, tp, REASON_EFFECT)
             Duel.ConfirmCards(1-tp, toadd)
