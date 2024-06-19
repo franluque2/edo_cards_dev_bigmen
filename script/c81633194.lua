@@ -13,9 +13,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 
     aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
-    Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,nil)
-
-
 end
 
 
@@ -60,7 +57,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--OPD check
 	if Duel.GetFlagEffect(tp,id)>1  then return end
 
-	return aux.CanActivateSkill(tp) and Duel.IsExistingMatchingCard(s.remmonfilter, tp, LOCATION_GRAVE, 0, 5, nil) and Duel.IsExistingMatchingCard(s.spsumfilter, tp, LOCATION_DECK|LOCATION_EXTRA, 0, 1, nil,e,tp)  and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0
+	return aux.CanActivateSkill(tp) and Duel.IsExistingMatchingCard(s.remmonfilter, tp, LOCATION_GRAVE, 0, 5, nil) and Duel.IsExistingMatchingCard(s.spsumfilter, tp, LOCATION_DECK|LOCATION_EXTRA, 0, 1, nil,e,tp)  and Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==0
 end
 
 
