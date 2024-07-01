@@ -102,5 +102,6 @@ function s.operation(e,tp,eg,ev,ep,re,r,rp)
         e1:SetValue(totalatk)
         e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE-RESET_TOFIELD)
         c:RegisterEffect(e1)
+        c:CompleteProcedure()
 	end
 end
