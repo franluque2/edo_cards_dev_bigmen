@@ -12,6 +12,16 @@ function s.initial_effect(c)
 	e1:SetLabel(0)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
+
+	aux.GlobalCheck(s,function()
+		s.name_list={}
+		s.name_list[0]={}
+		s.name_list[1]={}
+		aux.AddValuesReset(function()
+			s.name_list[0]={}
+			s.name_list[1]={}
+		end)
+	end)
 end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -56,7 +66,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e8:SetCode(EFFECT_DISABLE)
         e8:SetTargetRange(LOCATION_ONFIELD,0)
 		e8:SetCondition(s.discon3)
-        e8:SetTarget(aux.TargetBoolFunction(Card.IsOriginalCode,CARD_PHARAONIC_SARCOPHAGUS))
+        e8:SetTarget(aux.TargetBoolFunction(Card.IsOriginalCode,CARD_KING_SARCOPHAGUS))
         Duel.RegisterEffect(e8, tp)
 
 		--cannot activate cards when a card is destroyed
@@ -73,9 +83,61 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetOperation(s.limop2)
         Duel.RegisterEffect(e4, tp)
 
+		-- sp summon the little horuses
 
+		local e11=Effect.CreateEffect(e:GetHandler())
+		e11:SetDescription(aux.Stringid(84941194,0))
+		e11:SetType(EFFECT_TYPE_FIELD)
+		e11:SetCode(EFFECT_SPSUMMON_PROC)
+		e11:SetRange(LOCATION_GRAVE)
+		e11:SetCountLimit(1)
+		e11:SetCondition(s.spcon)
+
+		local e12=Effect.CreateEffect(e:GetHandler())
+		e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+		e12:SetTargetRange(LOCATION_GRAVE,0)
+		e12:SetTarget(function(e,c) return c:IsCode(11224103,75830094) end)
+		e12:SetLabelObject(e11)
+		Duel.RegisterEffect(e12,tp)
+
+		local e22=Effect.CreateEffect(e:GetHandler())
+		e22:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e22:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e22:SetCondition(s.repcon)
+		e22:SetOperation(s.repop)
+		Duel.RegisterEffect(e22,tp)
 	end
 	e:SetLabel(1)
+end
+
+function s.littlehorusfilter(c)
+	return c:IsCode(11224103,75830094) and c:GetPreviousLocation()==LOCATION_GRAVE and not (c:GetReasonEffect():IsActiveType(EFFECT_TYPE_ACTIVATE))
+end
+
+function s.repcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.littlehorusfilter, 1, nil)
+end
+
+function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	if not rp==tp then return end
+	local g=Group.Filter(eg, s.littlehorusfilter, nil)
+	for c in g:Iter() do
+		s.name_list[e:GetHandlerPlayer()][c:GetCode()]=true
+	end
+end
+
+
+function s.spcon(e,c)
+	if c==nil then return true end
+	if s.name_list[e:GetHandlerPlayer()][c:GetCode()]==true then return false end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_KING_SARCOPHAGUS),tp,LOCATION_ONFIELD,0,1,nil)
 end
 
 function s.limfilter(c,tp)
