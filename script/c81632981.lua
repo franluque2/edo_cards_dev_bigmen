@@ -53,12 +53,27 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e3:SetValue(ARCHETYPE)
     Duel.RegisterEffect(e3,tp)
 
+	local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_CANNOT_TRIGGER)
+        e8:SetTargetRange(LOCATION_MZONE,0)
+        e8:SetCondition(s.discon)
+        e8:SetTarget(s.actfilter)
+        Duel.RegisterEffect(e8, tp)
+
 
 	end
 	e:SetLabel(1)
 end
 
 
+function s.discon(e)
+	return (Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()) or not Duel.IsMainPhase()
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(20248754)
+end
 
 
 
