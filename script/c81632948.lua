@@ -1,6 +1,13 @@
 --Gift of the Marked
 local s, id = GetID()
 function s.initial_effect(c)
+	local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e0:SetCode(EVENT_STARTUP)
+    e0:SetCountLimit(1)
+    e0:SetRange(0x5f)
+    e0:SetOperation(s.flipopextra)
+    c:RegisterEffect(e0)
 	--Activate Skill
 	aux.AddSkillProcedure(c, 1, false, nil, nil)
 	local e1 = Effect.CreateEffect(c)
@@ -11,8 +18,28 @@ function s.initial_effect(c)
 	e1:SetRange(0x5f)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-	aux.AddSkillProcedure(c, 1, false, s.flipcon2, s.flipop2)
+	aux.AddSkillProcedure(c, 1, true, s.flipcon2, s.flipop2)
 end
+
+
+function s.blizzlizzfilter(c)
+	return c:IsCode(100000157)
+end
+
+
+function s.flipopextra(e,tp,eg,ep,ev,re,r,rp)
+	local blizzlizz=Duel.GetFirstMatchingCard(s.blizzlizzfilter, tp, LOCATION_DECK, 0, nil)
+
+    Duel.DisableShuffleCheck()
+
+	if blizzlizz then
+		Duel.MoveSequence(blizzlizz,0)
+	end
+
+    Duel.DisableShuffleCheck(false)
+
+end
+
 
 function s.op(e, tp, eg, ep, ev, re, r, rp)
 	if e:GetLabel() == 0 then
@@ -135,11 +162,11 @@ function s.flipcon2(e, tp, eg, ep, ev, re, r, rp)
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil)
 
 	--OPT check
-	if Duel.GetFlagEffect(tp, id + 2) > 0 and Duel.GetFlagEffect(tp, id + 6) > 0 and Duel.GetFlagEffect(tp, id + 4) > 0
+	if Duel.GetFlagEffect(tp, id + 6) > 0 and Duel.GetFlagEffect(tp, id + 4) > 0
 		and Duel.GetFlagEffect(tp, id + 5) > 0 then
 		return
 	end
-	local b1 = Duel.GetFlagEffect(tp, id + 2) == 0
+	local b1 = false and Duel.GetFlagEffect(tp, id + 2) == 0
 	 and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.addwaterfilter, tp, LOCATION_DECK, 0, 1, nil)
 
@@ -165,7 +192,7 @@ function s.flipop2(e, tp, eg, ep, ev, re, r, rp)
 	Duel.Hint(HINT_CARD, tp, id)
 	local g3=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil)
 
-	local b1 = Duel.GetFlagEffect(tp, id + 2) == 0
+	local b1 = false and Duel.GetFlagEffect(tp, id + 2) == 0
 	 and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.addwaterfilter, tp, LOCATION_DECK, 0, 1, nil)
 
