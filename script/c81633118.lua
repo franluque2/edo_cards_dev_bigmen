@@ -32,6 +32,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetTarget(s.distg)
 		Duel.RegisterEffect(e3,tp)
 
+		local e4=Effect.CreateEffect(e:GetHandler())
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SET_ATTACK_FINAL)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetTarget(function (_, c) return c:GetBaseAttack()>0 end)
+	e4:SetValue(500)
+	Duel.RegisterEffect(e4,tp)
+
        
 	end
 	e:SetLabel(1)
