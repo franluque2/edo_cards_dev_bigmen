@@ -114,7 +114,7 @@ function s.rmfilter(c,e,tp)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk, chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.rmfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsAbleToHand), tp, 0, LOCATION_MZONE, 1, nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) and Duel.IsExistingMatchingCard(Card.IsAbleToHand, tp, 0, LOCATION_MZONE, 1, nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 	Duel.HintSelection(g)
@@ -125,7 +125,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and Duel.Remove(tc, POS_FACEUP, REASON_EFFECT)
 		and tc:IsLocation(LOCATION_REMOVED) then
-		local thg=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsAbleToHand),tp,0,LOCATION_MZONE,nil)
+		local thg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,0,LOCATION_MZONE,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 		local sg=thg:Select(tp,1,#Duel.GetOperatedGroup(),nil)
 		Duel.HintSelection(sg,true)
