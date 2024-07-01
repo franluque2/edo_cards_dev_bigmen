@@ -114,9 +114,68 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetValue(s.damval)
         Duel.RegisterEffect(e11,tp)
 
+        local e8=Effect.CreateEffect(e:GetHandler())
+        e8:SetType(EFFECT_TYPE_FIELD)
+        e8:SetCode(EFFECT_CANNOT_TRIGGER)
+        e8:SetTargetRange(LOCATION_MZONE,0)
+        e8:SetCondition(s.discon5)
+        e8:SetTarget(s.actfilter5)
+        Duel.RegisterEffect(e8, tp)
+
+        local e13=Effect.CreateEffect(e:GetHandler())
+		e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e13:SetOperation(s.limop)
+        Duel.RegisterEffect(e13, tp)
+		local e14=Effect.CreateEffect(e:GetHandler())
+		e14:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e14:SetCode(EVENT_CHAIN_END)
+		e14:SetOperation(s.limop2)
+        Duel.RegisterEffect(e14, tp)
+
 	end
 	e:SetLabel(1)
 end
+
+function s.limop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetCurrentChain()==0 then
+		Duel.SetChainLimitTillChainEnd(s.chainlm)
+	elseif Duel.GetCurrentChain()==1 then
+		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_CHAINING)
+		e1:SetOperation(s.resetop)
+		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EVENT_BREAK_EFFECT)
+		e2:SetReset(RESET_CHAIN)
+		Duel.RegisterEffect(e2,tp)
+	end
+end
+function s.resetop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():ResetFlagEffect(id)
+	e:Reset()
+end
+function s.limop2(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():GetFlagEffect(id)>0 then
+		Duel.SetChainLimitTillChainEnd(s.chainlm)
+	end
+	e:GetHandler():ResetFlagEffect(id)
+end
+
+function s.chainlm(e,rp,tp)
+	return (tp~=rp) and not e:GetHandler():IsCode(511030011)
+end
+
+function s.discon5(e)
+	return (Duel.GetTurnPlayer()==e:GetHandlerPlayer())
+end
+
+function s.actfilter5(e,c)
+	return c:IsCode(511030011)
+end
+
 
 function s.linkedarrowfilter(c,tc)
     return c:IsFaceup() and c:IsCode(511009503) and c:GetLinkedGroup():IsContains(tc)
