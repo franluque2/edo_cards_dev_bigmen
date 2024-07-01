@@ -45,11 +45,38 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetValue(s.damval)
         Duel.RegisterEffect(e11,tp)
 
-
+        local e13=Effect.CreateEffect(e:GetHandler())
+		e13:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e13:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e13:SetCondition(s.limcon)
+		e13:SetOperation(s.limop)
+		e13:SetCountLimit(1)
+        Duel.RegisterEffect(e13, tp)
         
 	end
 	e:SetLabel(1)
 end
+
+
+function s.limcon(e,tp,eg,ep,ev,re,r,rp)
+	return rp==tp
+end
+
+function s.limop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e1:SetTargetRange(1,0)
+	e1:SetLabel(CARD_MILLENNIUM_CROSS)
+	e1:SetValue(s.aclimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.aclimit(e,re,tp)
+	return re:GetHandler():IsOriginalCode(e:GetLabel())
+end
+
 
 function s.damval(e,re,val,r,rp,rc)
 	if val>1000 then return 1000 else return val end
