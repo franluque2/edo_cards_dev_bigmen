@@ -7,6 +7,15 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
 	aux.AddSkillProcedure(c,2,false,nil,nil)
+
+	local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e0:SetCode(EVENT_STARTUP)
+    e0:SetCountLimit(1)
+    e0:SetRange(0x5f)
+    e0:SetOperation(s.flipopextra)
+    c:RegisterEffect(e0)
+
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -16,8 +25,29 @@ function s.initial_effect(c)
 	e1:SetLabel(0)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-	aux.AddSkillProcedure(c,2,false,s.flipcon2,s.flipop2)
+	aux.AddSkillProcedure(c,2,true,s.flipcon2,s.flipop2)
 end
+
+function s.wholedefensefilter(c)
+	return c:IsCode(511009660)
+end
+
+
+function s.flipopextra(e,tp,eg,ep,ev,re,r,rp)
+	local wholedefense=Duel.GetFirstMatchingCard(s.wholedefensefilter, tp, LOCATION_DECK, 0, nil)
+
+    Duel.DisableShuffleCheck()
+
+	if wholedefense then
+		Duel.MoveSequence(wholedefense,0)
+	end
+
+    Duel.DisableShuffleCheck(false)
+
+end
+
+
+
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -115,15 +145,8 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 
 	--start of duel effects go here
 
-	s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
-end
-
-function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-	local Wormhole=Duel.CreateToken(tp,81632498)
-			Duel.SSet(tp,Wormhole)
-
 end
 
 function s.fuwmdeffilter(c)
@@ -145,9 +168,10 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
                         and Duel.GetLocationCount(tp, LOCATION_SZONE) > 0
 						and not Duel.IsExistingMatchingCard(s.fuwmdeffilter, tp, LOCATION_ONFIELD, 0, 1, nil)
 
+	return false
 
 --return the b1 or b2 or .... in parenthesis at the end
-	return aux.CanActivateSkill(tp) and (b1)
+
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--"pop" the skill card
