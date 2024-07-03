@@ -102,10 +102,28 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e10:SetOperation(s.spendop)
         Duel.RegisterEffect(e10,tp)
 
+        local e11=Effect.CreateEffect(c)
+        e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e11:SetCode(EVENT_ADJUST)
+        e11:SetCondition(s.wincon)
+        e11:SetOperation(s.winop)
+        Duel.RegisterEffect(e11,tp)
+
 
 	end
 	e:SetLabel(1)
 end
+
+function s.wincon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsPhase(PHASE_DRAW) and Duel.GetTurnPlayer()==tp
+end
+
+
+function s.winop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_CARD, tp, id)
+    Duel.Win(tp, 0x1681)
+end
+
 
 function s.spendcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)==0) and (Duel.GetFlagEffect(tp, id+1)==0) and Duel.IsPlayerCanSpecialSummonMonster(1-tp, 73915052, 0,TYPES_TOKEN,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH)
