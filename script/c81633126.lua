@@ -108,7 +108,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spendcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)) and (Duel.GetFlagEffect(tp, id+1)==0) and Duel.IsPlayerCanSpecialSummonMonster(1-tp, 73915052, 0,TYPES_TOKEN,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH)
+	return Duel.GetTurnPlayer()~=tp and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)==0) and (Duel.GetFlagEffect(tp, id+1)==0) and Duel.IsPlayerCanSpecialSummonMonster(1-tp, 73915052, 0,TYPES_TOKEN,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH)
 end
 
 
