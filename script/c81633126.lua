@@ -148,7 +148,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         Duel.BreakEffect()
 
         local token_to_summ=Duel.CreateToken(tp, s.getrandomxyz(lv))
-        Duel.SpecialSummon(token_to_summ, SUMMON_TYPE_SPECIAL, tp, tp, true, false, POS_FACEUP, zone)
+        Duel.SpecialSummon(token_to_summ, SUMMON_TYPE_XYZ, tp, tp, true, false, POS_FACEUP, zone)
+        Card.CompleteProcedure(token_to_summ)
 
         for i = 1, token_to_summ.minxyzct, 1 do
             local toxyzmat=Duel.CreateToken(tp, zonemarkers[lv])
