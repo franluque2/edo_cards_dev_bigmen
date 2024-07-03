@@ -115,7 +115,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.wincon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsPhase(PHASE_DRAW) and Duel.GetTurnPlayer()==tp
+	return Duel.IsPhase(PHASE_DRAW) and Duel.GetTurnPlayer()==tp and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0
 end
 
 
