@@ -109,13 +109,17 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e11:SetOperation(s.winop)
         Duel.RegisterEffect(e11,tp)
 
+        local e12=e11:Clone()
+        e12:SetCode(EVENT_PREDRAW)
+        Duel.RegisterEffect(e12, tp)
+
 
 	end
 	e:SetLabel(1)
 end
 
 function s.wincon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsPhase(PHASE_DRAW) and Duel.GetTurnPlayer()==tp and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0
+	return Duel.IsPhase(PHASE_DRAW) and Duel.GetTurnPlayer()==tp and (Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0)
 end
 
 
