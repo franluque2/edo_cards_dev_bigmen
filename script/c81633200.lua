@@ -48,7 +48,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
         e6:SetTargetRange(0,1)
         e6:SetDescription(aux.Stringid(id,0))    
-        e6:SetDescription(desc)
 		e6:SetValue(s.effectfilter)
         e6:SetReset(RESET_PHASE|PHASE_END)
 		Duel.RegisterEffect(e6,1-tp)
@@ -57,8 +56,7 @@ end
 function s.effectfilter(e,ct)
 	local p=e:GetHandlerPlayer()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	local tc=te:GetHandler()
-	return p==(1-tp) and tc~=e:GetHandler()
+	return p==(1-tp)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return rp==tp
