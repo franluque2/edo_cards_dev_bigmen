@@ -75,7 +75,7 @@ function s.funarwhalfilter(c)
 end
 
 function s.discon(e)
-	return Duel.IsExistingMatchingCard(s.funarwhalfilter, e:GetHandlerPlayer(), LOCATION_MZONE, 0, 1, nil)
+	return not Duel.IsExistingMatchingCard(s.funarwhalfilter, e:GetHandlerPlayer(), LOCATION_MZONE, 0, 1, nil)
 end
 
 function s.actfilter(e,c)
