@@ -99,7 +99,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e9:SetCode(EVENT_TO_HAND)
 		e9:SetCondition(s.scon2)
 		e9:SetOperation(s.sop2)
-        e9:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
 		Duel.RegisterEffect(e9,tp)
 	end
 	e:SetLabel(1)
