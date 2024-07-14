@@ -24,31 +24,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.Robos,tp,LOCATION_MZONE,0,nil)
+	local atk=#g*200
 	local c=e:GetHandler()
 	local tc=g:GetFirst()
-	while tc do
+	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		if Duel.GetTurnPlayer()==tp then
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
-		else
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN)
-		end
 		e1:SetValue(1000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		tc=g:GetNext()
-        local c=e:GetHandler()
-        --"Allure Queen" monsters you control cannot be destroyed by card effects for the rest of this turn
-        local e1=Effect.CreateEffect(c)
-        e1:SetType(EFFECT_TYPE_FIELD)
-        e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-        e1:SetTargetRange(LOCATION_MZONE,0)
-        e1:SetTarget(s.Robos)
-        e1:SetValue(1)
-        e1:SetReset(RESET_PHASE|PHASE_END)
-        Duel.RegisterEffect(e1,tp)
-        aux.RegisterClientHint(c,nil,tp,1,0,aux.Stringid(id,2))
 	end
 end
 function s.Robos(c)
