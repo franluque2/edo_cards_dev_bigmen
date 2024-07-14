@@ -34,7 +34,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
+        
 	end
+    local c=e:GetHandler()
+	--"Allure Queen" monsters you control cannot be destroyed by card effects for the rest of this turn
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(s.Robos)
+	e1:SetValue(1)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	aux.RegisterClientHint(c,nil,tp,1,0,aux.Stringid(id,2))
 end
 function s.Robos(c)
     return c:IsCode(01412158, 75923050) and c:IsFaceup()
