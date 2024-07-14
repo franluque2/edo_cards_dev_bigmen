@@ -176,6 +176,7 @@ function s.drawcon(e,tp,eg,ep,ev,re,r,rp)
 
     if not eg then return end
     if not eg:GetFirst():GetReasonEffect() then return end
+    if ep~=tp then return end
 	return eg and Card.GetReasonEffect(eg:GetFirst()):GetHandler():IsCode(19162134)
         and Duel.IsPlayerCanDraw(tp)
 end
