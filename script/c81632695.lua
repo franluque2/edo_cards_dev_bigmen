@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	-- "Cyber Falcon" + "Cyber Falcon"
-	Fusion.AddProcMix(c,true,true,30655537,30655537)
+	Fusion.AddProcMix(c,true,true,30655537,aux.FilterBoolFunctionEx(Card.IsRace,RACE_MACHINE))
 	-- Gain LP
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
