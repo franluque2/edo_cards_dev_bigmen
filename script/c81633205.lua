@@ -222,6 +222,11 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Fusion.AddProcMix(tc, true, true, 08471389, aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE))
 	end
 
+	local Bugroth=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 40173854)
+	for tc in Bugroth:Iter() do
+		Fusion.AddProcMix(tc, true, true, 58314394, aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE))
+	end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
