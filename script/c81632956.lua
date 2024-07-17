@@ -74,7 +74,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
-	local AllurePalace=Duel.CreateToken(tp, 100305028)
+	local AllurePalace=Duel.CreateToken(tp, 31322640)
 	Duel.ActivateFieldSpell(AllurePalace,e,tp,eg,ep,ev,re,r,rp)
 
 end
