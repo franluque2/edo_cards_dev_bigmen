@@ -6,7 +6,8 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e1:SetValue(s.efilter)
+	e1:SetCondition(s.incon)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 
 	local e2=Effect.CreateEffect(c)
@@ -32,8 +33,8 @@ function s.initial_effect(c)
 
 end
 
-function s.efilter(e,re)
-	return re:GetOwner():IsCode(100000323)
+function s.incon(e)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,100000323),e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
 end
 
 
@@ -52,7 +53,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tdfilter(c)
-	return c:IsCode(100000320) and c:IsAbleToDeck()
+	return c:IsCode(100000323, 100000320, 511002458, 511000722) and c:IsAbleToDeck()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return s.tdfilter(chkc) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) end

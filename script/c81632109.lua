@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
+	e2:SetCondition(s.spcon)
 	c:RegisterEffect(e2)
 
 
@@ -33,7 +34,7 @@ function s.initial_effect(c)
 end
 
 function s.dizzyfilter(c)
-return (c:IsSetCard(0x515) or c:IsCode(511000719)) and c:IsFaceup()
+return c:IsCode(100000321, 100000322, 511000720, 511000719, 511000721) and c:IsFaceup()
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.dizzyfilter,tp,LOCATION_ONFIELD,0,1,nil)
@@ -56,6 +57,16 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local rg=tg:Filter(Card.IsRelateToEffect,nil,e)
 	local ct=Duel.Destroy(rg,REASON_EFFECT)
+		--Any battle damage your opponent takes becomes halved for the rest of this turn
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,3))
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+		e1:SetTargetRange(0,1)
+		e1:SetValue(HALF_DAMAGE)
+		e1:SetReset(RESET_PHASE|PHASE_END)
+		Duel.RegisterEffect(e1,tp)
 end
 
 
@@ -69,10 +80,20 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
-		Duel.SSet(tp,tc)
+		Duel.SendtoHand(tp,tc)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 
 function s.filter(c)
-	return c:IsCode(100000320) and c:IsType(TYPE_SPELL) and c:IsSSetable()
+	return c:IsCode(100000320, 511002458, 511000722) and c:IsAbleToHand()
+end
+function s.filter2(c)
+	return c:GetSequence()<5
+end
+function s.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.filter2,tp,0,LOCATION_ONFIELD,2,nil)
 end
