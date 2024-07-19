@@ -50,7 +50,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
-		and (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_HAND)) and not eg:IsContains(c) end
+		and (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_HAND)) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,c:GetLocation())
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
