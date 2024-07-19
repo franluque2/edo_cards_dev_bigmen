@@ -17,7 +17,6 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
-	e2:SetCondition(s.spcon)
 	c:RegisterEffect(e2)
 
 
@@ -87,13 +86,4 @@ end
 
 function s.filter(c)
 	return c:IsCode(100000320, 511002458, 511000722) and c:IsAbleToHand()
-end
-function s.filter2(c)
-	return c:GetSequence()<5
-end
-function s.spcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.filter2,tp,0,LOCATION_ONFIELD,2,nil)
 end
