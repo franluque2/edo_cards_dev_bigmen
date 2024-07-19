@@ -54,10 +54,6 @@ function s.flipfliter(c)
 	return c:IsCode(100000323) and c:IsFaceup()
 end
 
-function s.fliter(c)
-	return c:IsCode(100000321, 100000322, 511000720, 511000719, 511000721)
-end
-
 function s.fliter2(c)
 	return c:IsCode(100000321, 100000322, 511000720, 511000721)
 end
@@ -87,7 +83,7 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-	e1:SetTarget(s.fliter)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_MONSTER))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
