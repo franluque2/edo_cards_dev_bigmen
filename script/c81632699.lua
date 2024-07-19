@@ -98,5 +98,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.fliter2(c)
-	return c:IsCode(100000320, 511002458, 511000722, 100000323)
+	return c:IsCode(100000320, 511002458, 100000323)
 end
