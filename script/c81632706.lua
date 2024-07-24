@@ -3,8 +3,12 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,{id,2})
+	e1:SetTarget(s.target2)
+	e1:SetOperation(s.activate2)
 	c:RegisterEffect(e1)
 	--draw
 	local e2=Effect.CreateEffect(c)
@@ -27,7 +31,28 @@ function s.initial_effect(c)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
 end
-
+function s.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function s.filter2(c)
+	return c:IsCode(511001234, 511000478, 511000479, 41386308, 72880377, 511001235, 511000156, 511001232) and c:IsAbleToHand()
+end
+function s.activate2(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return end
+	local g=Duel.GetDecktopGroup(tp,3)
+	Duel.ConfirmCards(tp,g)
+	if g:IsExists(s.filter2,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local sg=g:FilterSelect(tp,s.filter2,1,1,nil)
+		Duel.DisableShuffleCheck()
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg)
+		Duel.ShuffleHand(tp)
+		Duel.SortDecktop(tp,tp,2)
+	else Duel.SortDecktop(tp,tp,3) end
+end
 function s.relavfieldfilter(c)
     return c.IsCode(c, 511000479) and c:IsFaceup()
 end
