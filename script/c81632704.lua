@@ -96,7 +96,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return c:IsCode(41386308, 72880377, 511001235, 511000156, 511001232) and c:IsAbleToHand()
+	return c:IsCode(41386308, 72880377, 511001235, 511000156, 32484853) and c:IsAbleToHand()
 end
 function s.repfilter(c)
 	return c:IsCode(53129443) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
@@ -117,7 +117,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
 end
 function s.thfilter2(c)
-	return c:IsCode(511001234, 511000478, 511001231, 41386308, 72880377, 511001235, 511000156, 511001232) and c:IsAbleToHand()
+	return c:IsCode(511001234, 511000478, 511001231, 41386308, 72880377, 511001235, 511000156, 32484853) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.thfilter2(chkc) end

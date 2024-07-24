@@ -36,7 +36,7 @@ function s.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.filter2(c)
-	return c:IsCode(511001234, 511000478, 511000479, 41386308, 72880377, 511001235, 511000156, 511001232) and c:IsAbleToHand()
+	return c:IsCode(511001234, 511000478, 511000479, 41386308, 72880377, 511001235, 511000156, 32484853) and c:IsAbleToHand()
 end
 function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
