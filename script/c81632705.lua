@@ -148,15 +148,18 @@
         local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
         if #g>0 then
             Duel.SendtoGrave(g,REASON_EFFECT)
-                    Duel.SSet(tp,c)
-                    -- Banish it if it leaves the field
-                    local e1=Effect.CreateEffect(c)
-                    e1:SetDescription(3300)
-                    e1:SetType(EFFECT_TYPE_SINGLE)
-                    e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-                    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-                    e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
-                    e1:SetValue(LOCATION_REMOVED)
-                    c:RegisterEffect(e1)
+            local c=e:GetHandler()
+            if c:IsRelateToEffect(e) and c:IsSSetable() then
+                Duel.SSet(tp,c)
+                --Banish it if it leaves the field
+                local e1=Effect.CreateEffect(c)
+                e1:SetDescription(3300)
+                e1:SetType(EFFECT_TYPE_SINGLE)
+                e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+                e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+                e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+                e1:SetValue(LOCATION_REMOVED)
+                c:RegisterEffect(e1)
+            end
         end
     end
