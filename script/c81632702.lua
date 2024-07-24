@@ -20,13 +20,20 @@ function s.initial_effect(c)
 	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_DAMAGE)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,id)
 	e3:SetCost(s.spcost)
+	e3:SetCondition(s.sumcon)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 
+end
+
+function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
+	return r&REASON_EFFECT~=0 and ep~=tp
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
