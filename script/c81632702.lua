@@ -9,31 +9,24 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCode(EVENT_PHASE+PHASE_DRAW)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetCondition(s.drcon)
 	e1:SetTarget(s.drtg)
 	e1:SetOperation(s.drop)
 	c:RegisterEffect(e1)
 
-    --Normal Summon 1 "Mathematician" monster from your hand
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetCost(s.nscost)
-	e2:SetTarget(s.nstg)
-	e2:SetOperation(s.nsop)
-	c:RegisterEffect(e2)
-
-    --indes
+	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e3:SetCondition(s.indcon)
-	e3:SetValue(1)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,id)
+	e3:SetCost(s.spcost)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
+
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
@@ -67,6 +60,27 @@ function s.nsop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Summon(tp,g:GetFirst(),true,nil)
 	end
 end
-function s.indcon(e)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000479),e:GetOwnerPlayer(),LOCATION_FZONE,0,1,nil)
+
+function s.tgfilter(c)
+	return c:GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP) and c:IsAbleToGraveAsCost()
+end
+function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+	if g:GetClassCount(Card.GetCode)<2 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local tg1=g:Select(tp,1,1,nil)
+	g:Remove(Card.IsCode,nil,tg1:GetFirst():GetCode())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local tg2=g:Select(tp,1,1,nil)
+	tg1:Merge(tg2)
+	Duel.SendtoGrave(tg1,REASON_EFFECT)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+	end
 end

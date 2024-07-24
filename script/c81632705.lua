@@ -137,7 +137,7 @@
         return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
     end
     function s.tgfilter(c)
-        return (c:IsCode(53129443, 72880377) or ((c:IsType(TYPE_CONTINUOUS) and c:IsSpellTrap()) and not c:IsType(TYPE_FIELD)) and c:IsAbleToGrave())
+        return (c:IsCode(53129443, 72880377) or (c:IsType(TYPE_CONTINUOUS)) and c:IsAbleToGrave())
     end
     function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
         if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
