@@ -147,8 +147,7 @@
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
         local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
         if #g>0 then
-            if Duel.SendtoGrave(g,REASON_EFFECT)
-                and c:IsRelateToEffect(e) and c:IsSSetable() then
+            Duel.SendtoGrave(g,REASON_EFFECT)
                     Duel.SSet(tp,c)
                     -- Banish it if it leaves the field
                     local e1=Effect.CreateEffect(c)
@@ -161,4 +160,3 @@
                     c:RegisterEffect(e1)
         end
     end
-end
