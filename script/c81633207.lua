@@ -48,9 +48,7 @@ end
 
 function s.registerguardianstar(c,e, starval)
     if not (c:IsOnField() and c:IsFaceup()) then return end
-    if c:GetFlagEffect(id)~=0 then
-        c:ResetFlagEffect(id)
-    end
+    c:ResetFlagEffect(id)
     c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD, EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,starval))
     c:SetFlagEffectLabel(id, starval)
 end
@@ -59,6 +57,9 @@ function s.isguardianstardisadv(c, starval)
     return c:IsOnField() and c:IsFaceup() and guardianStarsDisadv[s.getguardianstar(c)]==starval
 end
 
+function s.isguardianstaradv(c, starval)
+    return c:IsOnField() and c:IsFaceup() and guardianStarsDisadv[starval]==s.getguardianstar(c)
+end
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -137,8 +138,101 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetTargetRange(LOCATION_MZONE,0)
         Duel.RegisterEffect(e6, tp)
 
+        local e2=Effect.CreateEffect(e:GetHandler())
+        e2:SetType(EFFECT_TYPE_FIELD)
+        e2:SetCode(EFFECT_IMMUNE_EFFECT)
+        e2:SetTargetRange(LOCATION_MZONE,0)
+        e2:SetValue(s.efilter)
+        Duel.RegisterEffect(e2, tp)
+
+        local e13=Effect.CreateEffect(e:GetHandler())
+        e13:SetType(EFFECT_TYPE_FIELD)
+        e13:SetCode(EFFECT_UPDATE_ATTACK)
+        e13:SetTargetRange(LOCATION_MZONE,0)
+        e13:SetCondition(s.atkcon)
+        e13:SetValue(s.atkval)
+        Duel.RegisterEffect(e13, tp)
+
+        local e14=e13:Clone()
+        e14:SetCode(EFFECT_UPDATE_DEFENSE)
+        Duel.RegisterEffect(e14,tp)
+
+        local e15=Effect.CreateEffect(e:GetHandler())
+        e15:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e15:SetCode(EVENT_BATTLED)
+        e15:SetCondition(s.racon)
+        e15:SetOperation(s.raop)
+        Duel.RegisterEffect(e15, tp)
+
 	end
 	e:SetLabel(1)
+end
+
+
+function s.racon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttackTarget()
+end
+function s.raop(e,tp,eg,ep,ev,re,r,rp)
+	local d=Duel.GetAttackTarget()
+    local atk=Duel.GetAttacker()
+    if not atk:IsControler(e:GetHandlerPlayer()) then
+        atk=Duel.GetAttackTarget()
+        d=Duel.GetAttacker()
+    end
+	if not d:IsRelateToBattle() or d:IsFacedown() then return end
+    local val=0
+    if atk:IsPosition(POS_FACEUP_ATTACK) then
+        val=atk:GetAttack()
+    else
+        val=atk:GetDefense()
+    end
+    if d:IsPosition(POS_FACEUP_ATTACK) then
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_UPDATE_ATTACK)
+        e1:SetValue(-val)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+        d:RegisterEffect(e1)
+    else
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_UPDATE_DEFENSE)
+        e1:SetValue(-val)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+        d:RegisterEffect(e1)
+    end
+    if Card.IsAttack(d, 0) or Card.IsDefense(d, 0) then
+        Duel.Destroy(d, REASON_RULE)
+    end
+end
+
+function s.atkcon(e)
+	s[0]=false
+    s[1]=false
+	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL and Duel.GetAttackTarget()
+end
+
+function s.atkval(e,c)
+	local d=Duel.GetAttackTarget()
+    local atk=Duel.GetAttacker()
+    if not atk:IsControler(e:GetHandlerPlayer()) then
+        atk=Duel.GetAttackTarget()
+        d=Duel.GetAttacker()
+    end
+	if s[0] or s.isguardianstardisadv(d, s.getguardianstar(atk)) then
+		s[0]=true
+		return 1000
+    elseif s[1] or s.isguardianstardisadv(atk, s.getguardianstar(d)) then
+        s[1]=true
+        return -1000
+
+    else return 0 end
+end
+
+
+function s.efilter(e,re, c)
+	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and re:IsActiveType(TYPE_MONSTER)
+		and re:IsActivated() and re:GetOwner():IsOnField() and s.isguardianstardisadv(re:GetOwner(), s.getguardianstar(c))
 end
 
 function s.ntcon(e,c,minc)
@@ -267,6 +361,17 @@ function s.spcon3(e,c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
+function s.furitualfilter(c)
+    return c:IsMonster() and c:IsType(TYPE_RITUAL) and c:IsFaceup()
+end
+
+function s.advfusion(c, guardianstar)
+    return c:IsType(TYPE_FUSION) and s.isguardianstaradv(c,guardianstar)
+end
+
+function s.atfusdisadv(c)
+    return c:IsFaceup() and Duel.IsExistingMatchingCard(s.advfusion, c:GetControler(), 0, LOCATION_MZONE, 1, nil, s.getguardianstar(c))
+end
 
 --effects to activate during the main phase go here
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
@@ -277,11 +382,11 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.furitualfilter,tp,LOCATION_MZONE,0,1,nil)
+						and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
+			and Duel.IsExistingMatchingCard(s.atfusdisadv,tp,0,LOCATION_MZONE,1,nil)
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -294,13 +399,13 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 --copy the bxs from above
 
-	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.icustomfilter,tp,LOCATION_ONFIELD,0,1,nil)
-						and Duel.IsExistingMatchingCard(s.conttrapfiler,tp,LOCATION_DECK,0,1,nil)
+    local b1=Duel.GetFlagEffect(tp,id+1)==0
+    and Duel.IsExistingMatchingCard(s.furitualfilter,tp,LOCATION_MZONE,0,1,nil)
+                and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 
+    local b2=Duel.GetFlagEffect(tp,id+2)==0
+    and Duel.IsExistingMatchingCard(s.atfusdisadv,tp,0,LOCATION_MZONE,1,nil)
 
-	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,tp)
 
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
@@ -318,6 +423,17 @@ end
 
 function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 
+    local tc=Duel.SelectMatchingCard(tp, Card.IsFaceup, tp, 0, LOCATION_MZONE, 1,1,false,nil):GetFirst()
+    if tc then
+        local optionstable={}
+        for index, value in ipairs(guardianStars) do
+            optionstable[index]={true, aux.Stringid(id, value)}
+        end
+
+        local pickedstarval=Duel.SelectEffect(tp, table.unpack(optionstable))
+        s.registerguardianstar(tc,e,guardianStars[pickedstarval])
+    end
+
 
 --sets the opt (replace RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END with 0 to make it an opd)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
@@ -326,6 +442,10 @@ end
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
 
+    local tc=Duel.SelectMatchingCard(tp, s.atfusdisadv, tp, 0, LOCATION_MZONE, 1,1,false,nil)
+    if tc then
+        Duel.Destroy(tc, REASON_RULE)
+    end
 	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,0,0,0)
+	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
