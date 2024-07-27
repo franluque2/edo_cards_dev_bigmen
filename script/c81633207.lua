@@ -164,6 +164,15 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e15:SetOperation(s.raop)
         Duel.RegisterEffect(e15, tp)
 
+        --give infinite hand size
+        local e27=Effect.CreateEffect(e:GetHandler())
+        e27:SetType(EFFECT_TYPE_FIELD)
+        e27:SetCode(EFFECT_HAND_LIMIT)
+        e27:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+        e27:SetTargetRange(1,0)
+        e27:SetValue(100)
+        Duel.RegisterEffect(e27,tp)
+
 	end
 	e:SetLabel(1)
 end
