@@ -118,15 +118,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e3:SetTargetRange(1,0)
         e3:SetValue(s.getcarddraw)
         Duel.RegisterEffect(e3,tp)
-    
-        --Give almost infinite normal summons
-        local e4=Effect.CreateEffect(e:GetHandler())
-        e4:SetType(EFFECT_TYPE_FIELD)
-        e4:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
-        e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-        e4:SetTargetRange(1,0)
-        e4:SetValue(999999999)
-        Duel.RegisterEffect(e4,tp)
 
         local e17=e7:Clone()
         e17:SetCondition(s.spcon2)
@@ -404,6 +395,14 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
         e1:SetCondition(s.spcon3)
         e1:SetValue(1)
         tc:RegisterEffect(e1)
+
+        local e2=Effect.CreateEffect(tc)
+        e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+        e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+        e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_DELAY)
+        e2:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1) end)
+        e2:SetOperation(s.sumop)
+        tc:RegisterEffect(e2)
     end
 
     s.filltables()
