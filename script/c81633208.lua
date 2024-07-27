@@ -42,6 +42,26 @@ guardianStarsDisadv[URANUS]=SATURN
 guardianStarsDisadv[NEPTUNE]=PLUTO
 guardianStarsDisadv[PLUTO]=URANUS
 
+--FILL THIS TABLE PURPLE
+local EQSPELLS_TO_GENERATE={40619825,40619825,40619825,40619825,40619825,40619825,40619825}
+-- JUST THE THING ABOVE
+
+local eqspells={}
+eqspells[0]=Group.CreateGroup()
+eqspells[1]=Group.CreateGroup()
+function s.filltables()
+    if #eqspells[0]==0 then
+        for i, v in pairs(EQSPELLS_TO_GENERATE) do
+            local token1=Duel.CreateToken(0, v)
+            eqspells[0]:AddCard(token1)
+            local token2=Duel.CreateToken(1, v)
+            eqspells[1]:AddCard(token2)
+
+
+        end
+    end
+end
+
 function s.getguardianstar(c)
     return c:GetFlagEffectLabel(id)
 end
@@ -309,6 +329,10 @@ end
 
 
 
+function s.cannotsummonfilter(c)
+    return c:IsMonster() and not c:IsSummonableCard()
+end
+
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
@@ -338,6 +362,15 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
         e1:SetCondition(s.spcon3)
         e1:SetValue(1)
         tc:RegisterEffect(e1)
+
+        local e2=Effect.CreateEffect(tc)
+        e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+        e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+        e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_DELAY)
+        e2:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1) end)
+        e2:SetOperation(s.sumop)
+        tc:RegisterEffect(e2)
+
             
 
         end
@@ -350,6 +383,39 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
         Fusion.AddContactProc(tc,function(tp) return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,nil) end,function(g) Duel.SendtoGrave(g,REASON_COST|REASON_MATERIAL) end,true)
 
     end
+
+    local nomis=Duel.GetMatchingGroup(s.cannotsummonfilter, tp, LOCATION_HAND|LOCATION_DECK, 0, nil)
+    for tc in nomis:Iter() do
+        local e1=Effect.CreateEffect(tc)
+        e1:SetType(EFFECT_TYPE_FIELD)
+        e1:SetCode(EFFECT_SPSUMMON_PROC)
+        e1:SetProperty(EFFECT_FLAG_SPSUM_PARAM+EFFECT_FLAG_UNCOPYABLE)
+        e1:SetTargetRange(POS_FACEUP_ATTACK,0)
+        e1:SetRange(LOCATION_HAND)
+        e1:SetCondition(s.spcon3)
+        e1:SetValue(1)
+        tc:RegisterEffect(e1)
+    end
+
+    s.filltables()
+end
+
+function s.sumop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_CANNOT_MSET)
+	Duel.RegisterEffect(e2,tp)
+    local e3=e1:Clone()
+    e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e3:SetTarget(function(e,c) return c:IsType(TYPE_RITUAL) end)
+    Duel.RegisterEffect(e3,tp)
+
 end
 
 function s.sharesmatfilter(c,fc,sumtype,tp)
@@ -361,8 +427,8 @@ function s.spcon3(e,c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
-function s.furitualfilter(c)
-    return c:IsMonster() and c:IsType(TYPE_RITUAL) and c:IsFaceup()
+function s.fueqspellfilter(c)
+    return c:IsSpell() and c:IsType(TYPE_EQUIP) and c:IsFaceup()
 end
 
 function s.advfusion(c, guardianstar)
@@ -371,6 +437,14 @@ end
 
 function s.atfusdisadv(c)
     return c:IsFaceup() and Duel.IsExistingMatchingCard(s.advfusion, c:GetControler(), 0, LOCATION_MZONE, 1, nil, s.getguardianstar(c))
+end
+
+function s.discardspellfilter(c)
+    return c:IsSpellTrap() and c:IsDiscardable(REASON_COST)
+end
+
+function s.discardmonfilter(c)
+    return c:IsMonster() and c:IsDiscardable(REASON_COST)
 end
 
 --effects to activate during the main phase go here
@@ -382,11 +456,13 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 --do bx for the conditions for each effect, and at the end add them to the return
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
-			and Duel.IsExistingMatchingCard(s.furitualfilter,tp,LOCATION_MZONE,0,1,nil)
+			and Duel.IsExistingMatchingCard(s.fueqspellfilter,tp,LOCATION_SZONE,0,1,nil)
 						and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 
 	local b2=Duel.GetFlagEffect(tp,id+2)==0
-			and Duel.IsExistingMatchingCard(s.atfusdisadv,tp,0,LOCATION_MZONE,1,nil)
+			and Duel.IsExistingMatchingCard(s.discardspellfilter,tp,LOCATION_HAND,0,1,nil)
+            and Duel.IsExistingMatchingCard(s.discardmonfilter,tp,LOCATION_HAND,0,1,nil)
+
 
 
 --return the b1 or b2 or .... in parenthesis at the end
@@ -400,16 +476,17 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 --copy the bxs from above
 
     local b1=Duel.GetFlagEffect(tp,id+1)==0
-    and Duel.IsExistingMatchingCard(s.furitualfilter,tp,LOCATION_MZONE,0,1,nil)
+    and Duel.IsExistingMatchingCard(s.fueqspellfilter,tp,LOCATION_SZONE,0,1,nil)
                 and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 
     local b2=Duel.GetFlagEffect(tp,id+2)==0
-    and Duel.IsExistingMatchingCard(s.atfusdisadv,tp,0,LOCATION_MZONE,1,nil)
-
+    and Duel.IsExistingMatchingCard(s.discardspellfilter,tp,LOCATION_HAND,0,1,nil)
+    and Duel.IsExistingMatchingCard(s.discardmonfilter,tp,LOCATION_HAND,0,1,nil)
+    
 
 --effect selector
-	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
-								  {b2,aux.Stringid(id,1)})
+	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,1)},
+								  {b2,aux.Stringid(id,0)})
 	op=op-1
 
 	if op==0 then
@@ -441,11 +518,43 @@ end
 
 
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
+    local tc1=Duel.SelectMatchingCard(tp, s.discardmonfilter, tp, LOCATION_HAND, 0,1,1,false,nil)
+    local tc2=Duel.SelectMatchingCard(tp, s.discardspellfilter, tp, LOCATION_HAND, 0,1,1,false,nil)
+    local g=Group.CreateGroup()
+    g:AddCard(tc1)
+    g:AddCard(tc2)
+    Duel.SendtoGrave(g, REASON_COST)
 
-    local tc=Duel.SelectMatchingCard(tp, s.atfusdisadv, tp, 0, LOCATION_MZONE, 1,1,false,nil)
-    if tc then
-        Duel.Destroy(tc, REASON_RULE)
+    local numval1=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    local numval2=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    while numval2==numval1 do
+        numval2=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
     end
-	--sets the opd
-	Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
+    local numval3=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    while (numval3==numval1) or (numval3==numval2) do
+        numval3=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    end
+    local numval4=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    while (numval4==numval1) or (numval4==numval2) or (numval4==numval3) do
+        numval4=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    end
+    local numval5=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    while (numval5==numval1) or (numval5==numval2) or (numval5==numval3) or (numval5==numval4) do
+        numval5=Duel.GetRandomNumber(1, #EQSPELLS_TO_GENERATE)
+    end
+
+    local pickg=Group.CreateGroup()
+    pickg:AddCard(Group.TakeatPos(eqspells[tp], numval1-1))
+    pickg:AddCard(Group.TakeatPos(eqspells[tp], numval2-1))
+    pickg:AddCard(Group.TakeatPos(eqspells[tp], numval3-1))
+    pickg:AddCard(Group.TakeatPos(eqspells[tp], numval4-1))
+    pickg:AddCard(Group.TakeatPos(eqspells[tp], numval5-1))
+
+    local tc=pickg:Select(tp, 1,1,nil):GetFirst()
+    if tc then
+        local token=Duel.CreateToken(tp, tc:GetOriginalCode())
+        Duel.SendtoHand(token, tp, REASON_RULE)
+        Duel.ConfirmCards(1-tp, token)
+    end
+	--Duel.RegisterFlagEffect(tp,id+2,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end

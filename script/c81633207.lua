@@ -324,6 +324,10 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
+function s.cannotsummonfilter(c)
+    return c:IsMonster() and not c:IsSummonableCard()
+end
+
 function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
 
     local rituals=Duel.GetMatchingGroup(Card.IsType, tp, LOCATION_ALL, 0, nil, TYPE_RITUAL)
@@ -339,6 +343,13 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
         e1:SetValue(1)
         tc:RegisterEffect(e1)
             
+        local e2=Effect.CreateEffect(tc)
+        e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+        e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+        e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_DELAY)
+        e2:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1) end)
+        e2:SetOperation(s.sumop)
+        tc:RegisterEffect(e2)
 
         end
 
@@ -350,6 +361,37 @@ function s.startofdueleff(e,tp,eg,ep,ev,re,r,rp)
         Fusion.AddContactProc(tc,function(tp) return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,nil) end,function(g) Duel.SendtoGrave(g,REASON_COST|REASON_MATERIAL) end,true)
 
     end
+
+    local nomis=Duel.GetMatchingGroup(s.cannotsummonfilter, tp, LOCATION_HAND|LOCATION_DECK, 0, nil)
+    for tc in nomis:Iter() do
+        local e1=Effect.CreateEffect(tc)
+        e1:SetType(EFFECT_TYPE_FIELD)
+        e1:SetCode(EFFECT_SPSUMMON_PROC)
+        e1:SetProperty(EFFECT_FLAG_SPSUM_PARAM+EFFECT_FLAG_UNCOPYABLE)
+        e1:SetTargetRange(POS_FACEUP_ATTACK,0)
+        e1:SetRange(LOCATION_HAND)
+        e1:SetCondition(s.spcon3)
+        e1:SetValue(1)
+        tc:RegisterEffect(e1)
+    end
+end
+
+function s.sumop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_CANNOT_MSET)
+	Duel.RegisterEffect(e2,tp)
+    local e3=e1:Clone()
+    e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e3:SetTarget(function(e,c) return c:IsType(TYPE_RITUAL) end)
+    Duel.RegisterEffect(e3,tp)
+
 end
 
 function s.sharesmatfilter(c,fc,sumtype,tp)
@@ -358,7 +400,7 @@ end
 
 function s.spcon3(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.GetActivityCount(e:GetHandlerPlayer(),ACTIVITY_NORMALSUMMON)==0
 end
 
 function s.furitualfilter(c)
