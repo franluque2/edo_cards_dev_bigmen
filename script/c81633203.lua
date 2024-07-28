@@ -84,7 +84,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.nonxyzfilter,tp,0,LOCATION_MZONE,1,nil)
 
-	local b2=Duel.GetFlagEffect(tp,id+1)==0
+	local b2=false and Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.nonuniquecardfilter,tp,0,LOCATION_MZONE,1,nil)
 
 
@@ -97,7 +97,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.nonxyzfilter,tp,0,LOCATION_MZONE,1,nil)
 
-	local b2=Duel.GetFlagEffect(tp,id+1)==0
+	local b2=false and Duel.GetFlagEffect(tp,id+1)==0
 			and Duel.IsExistingMatchingCard(s.nonuniquecardfilter,tp,0,LOCATION_MZONE,1,nil)
 --effect selector
 	local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,1)},

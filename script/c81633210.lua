@@ -10,7 +10,7 @@ function s.initial_effect(c)
     e0:SetCountLimit(1)
     e0:SetRange(0x5f)
     e0:SetOperation(s.flipopextra)
-    c:RegisterEffect(e0)
+    --c:RegisterEffect(e0)
 
 	aux.AddSkillProcedure(c,2,false,nil,nil)
 	local e1=Effect.CreateEffect(c)
@@ -101,8 +101,59 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e9:SetCondition(s.scon2)
 		e9:SetOperation(s.sop2)
 		Duel.RegisterEffect(e9,tp)
+
+        local e11=Effect.CreateEffect(e:GetHandler())
+	e11:SetType(EFFECT_TYPE_FIELD)
+	e11:SetCode(EFFECT_SPSUMMON_PROC)
+    e11:SetDescription(aux.Stringid(id, 1))
+	e11:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e11:SetRange(LOCATION_GRAVE|LOCATION_HAND)
+	e11:SetCondition(s.spcon)
+	e11:SetTarget(s.sptg)
+	e11:SetOperation(s.spop)
+    e11:SetCountLimit(1, id)
+
+    local e12=Effect.CreateEffect(e:GetHandler())
+	e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+	e12:SetTargetRange(LOCATION_GRAVE|LOCATION_HAND,0)
+	e12:SetTarget(function(e,c) return c:IsCode(36527535) end)
+	e12:SetLabelObject(e11)
+	Duel.RegisterEffect(e12,tp)
 	end
 	e:SetLabel(1)
+end
+
+function s.spfilter(c,tp)
+	return c:IsAbleToHandAsCost()
+end
+function s.spcon(e,c)
+	if c==nil then return true end
+	local tp=e:GetHandlerPlayer()
+	local rg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_ONFIELD,0,nil)
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if (not op or op(e,c)) and c:IsLocation(LOCATION_GRAVE) then return false end
+	end
+	local tp=c:GetControler()
+	return aux.SelectUnselectGroup(rg,e,tp,1,1,aux.ChkfMMZ(1),0)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,c)
+	local c=e:GetHandler()
+	local rg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_ONFIELD,0,nil)
+	local g=aux.SelectUnselectGroup(rg,e,tp,1,1,aux.ChkfMMZ(1),1,tp,HINTMSG_RTOHAND,nil,nil,true)
+	if #g>0 then
+		g:KeepAlive()
+		e:SetLabelObject(g)
+		return true
+	end
+	return false
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
+	if not g then return end
+	Duel.SendtoHand(g,nil,REASON_COST)
+	g:DeleteGroup()
 end
 
 function s.cfilter(c,tp)
@@ -119,7 +170,7 @@ end
 
 function s.scon2(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetCurrentPhase()==PHASE_DRAW then return false end
-	if not rp==tp then return false end
+	if not (rp==tp and ep==tp) then return false end
     return eg:IsExists(s.cfilter,1,nil,tp) and Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 1, nil) and
     Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
     and Duel.GetFlagEffect(tp, id+1)==0
@@ -158,17 +209,17 @@ function s.sop0(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-function s.adbackfilter(c)
-    return c:IsCode(CARD_PAPER_DOLL) and c:IsAbleToHand()
+function s.adbackfilter(c, tp)
+    return c:IsCode(CARD_PAPER_DOLL) and c:IsAbleToHand() and c:IsOwner(tp)
 end
 
 function s.adcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.adbackfilter, 1, nil)
+	return eg:IsExists(s.adbackfilter, 1, nil, tp)
 end
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local doll=eg:Filter(s.adbackfilter, nil)
+    local doll=eg:Filter(s.adbackfilter, nil, tp)
     Duel.SendtoHand(doll, tp, REASON_RULE)
 
 end
@@ -219,6 +270,8 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	local Dueltaining=Duel.CreateToken(tp, 19162134)
 	Duel.ActivateFieldSpell(Dueltaining,e,tp,eg,ep,ev,re,r,rp)
 
+    local pdoll=Duel.CreateToken(tp, CARD_PAPER_DOLL)
+    Duel.SendtoHand(pdoll, tp, REASON_RULE)
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
