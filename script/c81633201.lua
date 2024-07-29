@@ -25,6 +25,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetCondition(s.flipcon)
 		e1:SetOperation(s.flipop)
+		e1:SetCountLimit(1)
 		Duel.RegisterEffect(e1,tp)
 
 		--other passive duel effects go here    
@@ -86,6 +87,10 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
+	if Duel.GetFlagEffect(tp, id)>0 then
+		Duel.ResetFlagEffect(tp, id)
+		return
+	end
 	if (Duel.GetRandomNumber(0,10)<5) then
         Duel.Hint(HINT_CARD, tp, id)
         if Duel.NegateEffect(ev) then
@@ -93,6 +98,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
             local sg=Group.RandomSelect(g, tp, 1, nil)
             Duel.SendtoHand(sg, tp, REASON_RULE)
             Duel.ConfirmCards(1-tp, sg)
+			Duel.RegisterFlagEffect(tp,id,0,0,0)
         end
 
 	end
@@ -109,7 +115,7 @@ end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
@@ -120,5 +126,4 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
         tc:SetUniqueOnField(1,0,100305022)
     end
 
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
