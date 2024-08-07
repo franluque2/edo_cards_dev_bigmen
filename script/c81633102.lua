@@ -22,6 +22,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetCondition(s.flipcon)
+		e1:SetCountLimit(1)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
 
@@ -43,9 +44,39 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetOperation(s.revop)
 		Duel.RegisterEffect(e5,tp)
 
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e2:SetCondition(s.repcon)
+		e2:SetOperation(s.repop)
+		Duel.RegisterEffect(e2,tp)
+
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e3:SetTargetRange(1,0)
+		e3:SetTarget(s.limittg)
+		Duel.RegisterEffect(e3,tp)
+
 	end
 	e:SetLabel(1)
 end
+
+function s.limittg(e,c,tp)
+	return Duel.IsBattlePhase() and (Duel.GetFlagEffect(tp, id)>=3)
+end
+
+function s.repcon(e,tp,eg,ep,ev,re,r,rp)
+	return (rp==tp) and Duel.IsBattlePhase()
+end
+
+function s.repop(e,tp,eg,ep,ev,re,r,rp)
+	for tc in eg:Iter() do
+		Duel.RegisterFlagEffect(tp, id, RESET_PHASE+PHASE_END, 0, 0)
+	end
+end
+
 
 function s.actfilter(e,c)
 	return c:IsCode(88581108)
@@ -75,7 +106,7 @@ end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
@@ -101,7 +132,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
     end
 
 
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 
