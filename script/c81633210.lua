@@ -195,7 +195,7 @@ end
 function s.scon0(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetCurrentPhase()==PHASE_DRAW then return false end
     if eg and Card.IsReason(eg:GetFirst(), REASON_RULE) then return false end
-	if not rp==tp then return false end
+	if not (rp==tp and ep==tp) then return false end
     local num=Duel.GetRandomNumber(0,100)
     return num>50
 end
