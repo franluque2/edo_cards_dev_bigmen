@@ -1,7 +1,6 @@
 --Friendship Magician Girl (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
 	--Set 1 "Metalmorph" Trap from your Deck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -53,6 +52,7 @@ function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
