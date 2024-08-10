@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.setcost)
 	e1:SetTarget(s.settg)
 	e1:SetOperation(s.setop)
+    e1:SetCondition(s.spcon)
 	c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
@@ -32,6 +33,10 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop)
     e3:SetCondition(s.condition)
 	c:RegisterEffect(e3)
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -63,7 +68,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.val(e,c)
-	return Duel.GetMatchingGroupCount(s.filter2,c:GetControler(),LOCATION_GRAVE,0,nil)*300
+	return Duel.GetMatchingGroupCount(s.filter2,c:GetControler(),LOCATION_GRAVE,0,nil)*200
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
