@@ -23,10 +23,27 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(800)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
+    local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+    and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
+local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+if chk==0 then return b1 or b2 end
+local op=Duel.SelectEffect(tp,
+    {b1,aux.Stringid(id,1)},
+    {b2,aux.Stringid(id,2)})
+e:SetLabel(op)
+if op==1 then
+    e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+elseif op==2 then
+    e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if Duel.Damage(p,d,REASON_EFFECT) then
+        local op=e:GetLabel()
+        if op==1 then
     	--Special Summon 2 vanillas monster from your Deck
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -50,4 +67,5 @@ function s.spfilter(c,e,tp)
 end
 function s.thfilter(c)
 	return c:IsCode(82085619, 81632708, 81632710, 81632709, 81632711, 81632713, 81632714, 81632715, 81632716, 02295831, 81332143) and c:IsAbleToHand()
+end
 end
