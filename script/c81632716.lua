@@ -13,9 +13,18 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(s.efilter)
+	e2:SetTarget(s.efilter2)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
+
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetTargetRange(LOCATION_MZONE,0)
+	e5:SetTarget(s.efilter2)
+	e5:SetValue(1)
+	c:RegisterEffect(e5)
 
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
@@ -47,6 +56,10 @@ function s.indval(e,re,tp)
 end
 
 function s.efilter(e,c)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+
+function s.efilter2(e,c)
 	return c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
@@ -64,6 +77,15 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+	--Reduce damage
+	local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetTarget(s.efilter)
+	e2:SetValue(HALF_DAMAGE)
+	Duel.RegisterEffect(e2,tp)
 end
 
 function s.setfilter(c)
