@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCountLimit(1,{id,1})
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
@@ -26,10 +26,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,2,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,nil)
-	local rg=g:RandomSelect(tp,2)
-	Duel.SendtoGrave(rg,POS_FACEUP,REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,2,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,2,2,REASON_COST+REASON_DISCARD)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
