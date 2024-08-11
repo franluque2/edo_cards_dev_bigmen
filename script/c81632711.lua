@@ -1,5 +1,6 @@
 --Magician of Faith and Friendship (CT)
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 function s.initial_effect(c)
 	--Add 1 Spell from your GY to your hand
 	local e1=Effect.CreateEffect(c)

@@ -1,5 +1,6 @@
 --Friendship Magician Girl (CT)
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 function s.initial_effect(c)
 	--Set 1 "Metalmorph" Trap from your Deck
 	local e1=Effect.CreateEffect(c)

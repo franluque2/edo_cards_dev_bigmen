@@ -107,6 +107,10 @@ CustomArchetype.CTLamp={
 }
 Card.IsCTLamp=MakeCheck({0xbc},CustomArchetype.CTLamp)
 
+CustomArchetype.CTFriendship={
+  82085619, 02295831, 81332143, 511001802
+}
+Card.IsCTFriendship=MakeCheck({0x259c},CustomArchetype.CTFriendship) 
 
 CustomArchetype.CTDarkness={
   18967507,79266769,31571902,22586618,

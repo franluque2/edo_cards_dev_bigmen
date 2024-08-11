@@ -1,5 +1,6 @@
 --Sorcerer of Burning Friendship (CT)
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 function s.initial_effect(c)
 	--flip
 	local e1=Effect.CreateEffect(c)
@@ -72,13 +73,13 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+end
 
-function s.spfilter(c)
-	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_NORMAL))))
+function s.spfilter(c,e,tp)
+	return c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.thfilter(c)
-	return c:IsCode(82085619, 81632708, 81632710, 81632709, 81632711, 81632713, 81632714, 81632715, 81632716, 02295831, 81332143) and c:IsAbleToHand()
-end
+	return c:IsCTFriendship() and c:IsAbleToHand()
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -1,5 +1,6 @@
 --Angel of Shining Friendship (CT)
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 function s.initial_effect(c)
 	--Special Summon
 	local e1=Effect.CreateEffect(c)

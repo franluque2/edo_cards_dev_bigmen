@@ -1,5 +1,6 @@
 --Fairy's Friendship (CT)
 local s,id=GetID()
+Duel.LoadScript ("big_aux.lua")
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
