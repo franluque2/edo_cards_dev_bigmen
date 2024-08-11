@@ -89,5 +89,5 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetLP(tp)<=3000 and Duel.GetTurnPlayer()~=tp
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetLP(tp)<=3000
 end
