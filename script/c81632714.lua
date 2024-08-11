@@ -45,13 +45,16 @@ end
 function s.filter(c,e,tp)
 	return c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
+function s.filter2(c,e,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
 
 function s.gytarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) end
-	local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_MZONE,0,1,nil) end
+	local sg=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,#sg,0,0)
 end
 function s.gyactivate(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
+	local sg=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_MZONE,0,nil)
 	Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end
