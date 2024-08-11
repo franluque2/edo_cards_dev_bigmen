@@ -22,6 +22,7 @@ function s.initial_effect(c)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCountLimit(1,{id,0})
     e2:SetCost(aux.bfgcost)
+	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.gytarget)
 	e2:SetOperation(s.gyactivate)
 	c:RegisterEffect(e2)
@@ -43,10 +44,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then Duel.Destroy(g,REASON_EFFECT) end
 end
 function s.filter(c,e,tp)
-	return c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsFaceup()
 end
 function s.filter2(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
 end
 
 function s.gytarget(e,tp,eg,ep,ev,re,r,rp,chk)
