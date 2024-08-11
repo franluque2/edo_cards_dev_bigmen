@@ -13,14 +13,16 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(s.filter)
-	e2:SetValue(s.indval)
+	e2:SetTarget(s.efilter)
+	e2:SetValue(1)
 	c:RegisterEffect(e2)
 
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_SZONE)
+	e3:SetTargetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,{id,1})
 	e3:SetCost(s.accost)
 	e3:SetOperation(s.pop)
@@ -44,7 +46,7 @@ function s.indval(e,re,tp)
 	return e:GetHandlerPlayer()==1-tp
 end
 
-function s.filter(c,e,tp)
+function s.efilter(e,c)
 	return c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
