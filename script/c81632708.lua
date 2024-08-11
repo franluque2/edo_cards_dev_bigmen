@@ -69,7 +69,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.val(e,c)
-	return Duel.GetMatchingGroupCount(s.filter2,c:GetControler(),LOCATION_GRAVE,0,nil)*200
+	return Duel.GetMatchingGroupCount(s.filter2,c:GetControler(),LOCATION_GRAVE,0,nil)*300
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
