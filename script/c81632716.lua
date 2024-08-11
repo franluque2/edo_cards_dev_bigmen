@@ -90,7 +90,7 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.setfilter(c)
-	return ((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or c:IsCode(02295831) and c:IsAbleToDeck()
+	return (((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or c:IsCTFriendship() and c:IsAbleToDeck()) and not c:IsCode(id)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end
@@ -102,6 +102,6 @@ end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		Duel.MoveToDeckBottom(tc,nil,0,REASON_EFFECT)
+		Duel.SendtoDeck(eg,nil,2,REASON_EFFECT)
 	end
 end
