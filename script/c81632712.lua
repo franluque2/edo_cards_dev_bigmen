@@ -35,9 +35,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(800)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
+    local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
+    local g2=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
     local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-    and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,2,nil,e,tp)
-local b2=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
+    and #g>=2 and aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,0)
+local b2=#g2>=2 and aux.SelectUnselectGroup(g2,e,tp,2,2,aux.dncheck,0)
 if chk==0 then return b1 or b2 end
 local op=Duel.SelectEffect(tp,
     {b1,aux.Stringid(id,1)},
@@ -57,19 +59,22 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         local op=e:GetLabel()
         if op==1 then
     	--Special Summon 2 vanillas monster from your Deck
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,2,2,nil,e,tp)
-		if #g>0 then
-			Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
+		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
+        if #g<2 then return end
+        local thg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
+		if #thg>0 then
+			Duel.SpecialSummon(thg,0,tp,tp,true,false,POS_FACEUP)
 		end
 	elseif op==2 then
 		--Search 1 "Toon" Spell/Trap
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,2,2,nil)
-		if #g>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
+		local g2=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+        if #g2<2 then return end
+        local thg=aux.SelectUnselectGroup(g2,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_ATOHAND)
+		if #thg>0 then
+			Duel.SendtoHand(thg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,thg)
 		end
 	end
 end
