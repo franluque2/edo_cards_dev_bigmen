@@ -43,7 +43,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetLP(tp)<=3000 and Duel.GetTurnPlayer()~=tp
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetLP(tp)<=3000 and Duel.GetTurnPlayer()~=tp
 end
 function s.tdfilter(c)
 	return c:IsCode(02295831) and c:IsAbleToDeck()
@@ -56,7 +56,8 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	if tc:IsRelateToEffect(e) then
-	Duel.SendtoDeck(tc,nil,SEQ_DECKTOP,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)
 	end
 end
