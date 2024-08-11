@@ -85,7 +85,7 @@ function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.thfilter(c)
-	return c:IsCTFriendship() and c:IsAbleToHand()
+	return c:IsCTFriendship() and c:IsAbleToHand() and not c:IsCode(id)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
