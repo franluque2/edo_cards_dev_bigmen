@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TODECK)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_PHASE+PHASE_END)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
@@ -43,6 +43,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	Debug.Message(Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetLP(tp)<=3000 and Duel.GetTurnPlayer()~=tp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.GetLP(tp)<=3000 and Duel.GetTurnPlayer()~=tp
 end
 function s.tdfilter(c)
