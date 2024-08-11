@@ -85,6 +85,7 @@ function s.pop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetTarget(s.efilter)
 	e2:SetValue(HALF_DAMAGE)
+	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
 
