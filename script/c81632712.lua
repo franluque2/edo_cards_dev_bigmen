@@ -1,4 +1,53 @@
 --Sorcerer of Burning Friendship (CT)
-function c81632712.initial_effect(c)
-	
+local s,id=GetID()
+function s.initial_effect(c)
+	--flip
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	e1:SetCost(s.cost)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.operation)
+	c:RegisterEffect(e1)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,2,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,nil)
+	local rg=g:RandomSelect(tp,2)
+	Duel.SendtoGrave(rg,POS_FACEUP,REASON_COST)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(800)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	if Duel.Damage(p,d,REASON_EFFECT) then
+    	--Special Summon 2 vanillas monster from your Deck
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,2,2,nil,e,tp)
+		if #g>0 then
+			Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+		end
+	elseif op==2 then
+		--Search 1 "Toon" Spell/Trap
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,2,2,nil)
+		if #g>0 then
+			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g)
+		end
+	end
+end
+
+function s.spfilter(c,e,tp)
+	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL))) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+end
+function s.thfilter(c)
+	return c:IsCode(82085619, 81632708, 81632710, 81632709, 81632711, 81632713, 81632714, 81632715, 81632716, 02295831, 81332143) and c:IsAbleToHand()
 end
