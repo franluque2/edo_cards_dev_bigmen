@@ -45,7 +45,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e5:SetCode(511002793)
 	e5:SetTargetRange(LOCATION_GRAVE,0)
 	e5:SetTarget(s.eftg)
-    e5:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e5,tp)
 
 	local e4=Effect.CreateEffect(c)
