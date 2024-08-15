@@ -15,6 +15,39 @@ function s.initial_effect(c)
 end
 local graveyardpend={}
 
+local fusions_that_crash={73360025,47705572,72291412,3659803,6077601,12071500,36484016,45906428,54283059,71490127,80033124,32104431}
+
+
+Duel.GetFusionMaterial=(function()
+	local oldfunc=Duel.GetFusionMaterial
+	return function(tp)
+		local res=oldfunc(tp)
+		local g=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_REMOVED,0,nil,EFFECT_EXTRA_FUSION_MATERIAL)
+		if #g>0 then
+			res:Merge(g)
+		end
+		return res
+	end
+end)()
+
+
+ function s.AuxHandling(e,tc,tp,sg)
+		local rg=sg:Filter(Card.IsFacedown,nil)
+		if #rg>0 then Duel.ConfirmCards(1-tp,rg) end
+		local sg1=sg:Filter(Card.IsLocation,nil,LOCATION_REMOVED)
+		Duel.SendtoDeck(sg1,nil,2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+
+		Group.Sub(sg, sg1)
+		sg1:Clear()
+
+		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+		sg:Clear()
+
+end
+
+Fusion.BanishMaterial=s.AuxHandling
+Fusion.ShuffleMaterial=s.AuxHandling
+
 local gPend=graveyardpend
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -86,12 +119,24 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     e21:SetType(EFFECT_TYPE_FIELD)
     e21:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
     e21:SetTargetRange(LOCATION_GRAVE+LOCATION_REMOVED,0)
-    e21:SetTarget(function(e,c) return c:IsAbleToDeck() and c:IsMonster() end)
-    e21:SetOperation(Fusion.ShuffleMaterial)
+	e21:SetTarget(aux.TargetBoolFunction(s.extrafil_repl_filter))
+	e21:SetOperation(s.AuxHandling)
+	e21:SetLabelObject({s.extrafil_replacement,s.extramat})
     e21:SetValue(1)
     Duel.RegisterEffect(e21,tp)
     end
 end
+
+function s.extrafil_repl_filter(c)
+    return c:IsMonster() and ((c:IsAbleToDeck() and c:IsLocation(LOCATION_REMOVED)) or (c:IsAbleToRemove() and c:IsLocation(LOCATION_GRAVE)))
+end
+function s.extrafil_replacement(e,tp,mg)
+    return Duel.GetMatchingGroup(aux.NecroValleyFilter(s.extrafil_repl_filter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+end
+function s.extramat(c,e,tp)
+    return c:IsControler(tp) and not e:GetHandler():IsOriginalCode(table.unpack(fusions_that_crash))
+end
+
 
 function s.mttg(e,c)
 	local g=Duel.GetMatchingGroup(nil,e:GetHandlerPlayer(),LOCATION_EXTRA,0,nil)
