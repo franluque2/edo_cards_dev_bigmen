@@ -38,9 +38,23 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         --e5:SetTarget(function(_,c) return c:IsRace(RACE_ILLUSIONIST) end)
         --e5:SetLabelObject(e2)
         --Duel.RegisterEffect(e5,tp)
+
+		local e11=Effect.CreateEffect(e:GetHandler())
+		e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e11:SetCode(EVENT_CHAINING)
+		e11:SetOperation(s.chainop)
+		Duel.RegisterEffect(e11,tp)
         
 	end
 	e:SetLabel(1)
+end
+
+function s.chainop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	Duel.SetChainLimit(s.chainlm)
+end
+function s.chainlm(e,rp,tp)
+	return rp==tp and not e:GetHandler():IsRace(RACE_ILLUSION)
 end
 
 
