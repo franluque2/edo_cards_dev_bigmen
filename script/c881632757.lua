@@ -25,6 +25,31 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
             Duel.Draw(tp, 1, REASON_EFFECT)
         end
 
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCondition(s.flipcon)
+		e1:SetOperation(s.flipop)
+        e1:SetCountLimit(1,id)
+		Duel.RegisterEffect(e1,tp)
+
 	end
 	e:SetLabel(1)
+end
+
+function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(Card.IsType, tp, LOCATION_ALL, 0, 1, nil, TYPE_SKILL)
+end
+function s.flipop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsType, tp, LOCATION_ALL, 0, nil, TYPE_SKILL)
+	local cardsinhand=g:Filter(Card.IsLocation, nil, LOCATION_HAND)
+	local num=0
+	if cardsinhand then
+		num=#cardsinhand
+	end
+	if g then
+		Duel.RemoveCards(g)
+	end
+	Duel.Draw(tp, num, REASON_RULE)
+
 end
