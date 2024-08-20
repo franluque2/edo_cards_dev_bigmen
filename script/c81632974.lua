@@ -247,8 +247,8 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id+1,0,0,0)
 end
 
-local normalnumbers={3790062,56051086,93568288,90126061,97403510,2407234}
-local numbercs={69757518,20563387,32446630,49195710,47017574,511002866}
+local normalnumbers={84013238,56051086,93568288,90126061,97403510,2407234} -- Disabled 3790062 Djinn Buster
+local numbercs={69757518,20563387,32446630,66970002,47017574,511002866} --Disabled 49195710 King Overfiend
 function s.operation_for_res1(e,tp,eg,ep,ev,re,r,rp)
     local cfield=Duel.CreateToken(tp, 111011002)
 	Duel.ActivateFieldSpell(cfield,e,tp,eg,ep,ev,re,r,rp)
