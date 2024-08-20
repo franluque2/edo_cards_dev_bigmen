@@ -52,9 +52,41 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e13:SetOperation(s.limop)
 		e13:SetCountLimit(1)
         Duel.RegisterEffect(e13, tp)
+
+		local e14=Effect.CreateEffect(e:GetHandler())
+		e14:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e14:SetCode(EVENT_ADJUST)
+		e14:SetCondition(s.exodcon)
+		e14:SetOperation(s.exodop)
+        Duel.RegisterEffect(e14, tp)
+
+
         
 	end
 	e:SetLabel(1)
+end
+
+function s.fuexodfilter(c)
+	return c:IsCode(83257450) and c:IsFaceup() and c:GetAttack()>5000
+end
+
+function s.exodcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.fuexodfilter, tp, LOCATION_MZONE, 0, 1, nil)
+end
+
+function s.exodop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.fuexodfilter, tp, LOCATION_MZONE, 0, nil)
+	for tc in g:Iter() do
+			
+		local e4=Effect.CreateEffect(tc)
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+		e4:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e4:SetValue(5000)
+		e4:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e4)
+
+end
 end
 
 
