@@ -43,7 +43,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e9:SetCode(EFFECT_DISABLE)
         e9:SetTargetRange(LOCATION_ONFIELD,0)
         e9:SetCondition(s.discon)
-        e9:SetTarget(aux.TargetBoolFunction(Card.IsCode,100305024))
+        e9:SetTarget(aux.TargetBoolFunction(Card.IsCode,06659193))
         Duel.RegisterEffect(e9, tp)
 
 
@@ -108,7 +108,7 @@ end
 
 
 function s.efilter(e,te)
-	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(100305022)
+	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(33206889)
 end
 
 
@@ -121,9 +121,9 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
-    local witches=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil, 100305022)
+    local witches=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_ALL, 0, nil, 33206889)
     for tc in witches:Iter() do
-        tc:SetUniqueOnField(1,0,100305022)
+        tc:SetUniqueOnField(1,0,33206889)
     end
 
 end
