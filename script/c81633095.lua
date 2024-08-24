@@ -112,7 +112,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-local kuribotids={160001017,160202004,160204019,160416005,160416006,160416007}
+local kuribotids={160001017,160202004,160204019,160202004,160416005,160416006,160416007}
 
 function s.getrandomkuribotid()
     return kuribotids[Duel.GetRandomNumber(1,#kuribotids)]
