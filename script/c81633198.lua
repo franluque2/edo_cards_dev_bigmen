@@ -54,9 +54,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-local CARD_CLEAR_WALL=100305010
-local CARD_CLEAR_GOLEM=100305007
-local CARD_CLEAR_VKNIGHT=100305009
+local CARD_CLEAR_WALL=06089145
+local CARD_CLEAR_GOLEM=07102732
+local CARD_CLEAR_VKNIGHT=70095046
 
 function s.discon2(e,tp,eg,ep,ev,re,r,rp)
     local ph=Duel.GetCurrentPhase()
