@@ -23,6 +23,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetCondition(s.flipcon)
 		e1:SetOperation(s.flipop)
+        e1:SetCountLimit(1)
 		Duel.RegisterEffect(e1,tp)
 
 		--other passive duel effects go here    
@@ -31,17 +32,12 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-
-
-
-
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(tp, id)==0
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
 
 
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
