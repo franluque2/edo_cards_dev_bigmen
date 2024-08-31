@@ -28,22 +28,12 @@ function s.initial_effect(c)
     e4:SetRange(LOCATION_SZONE)
     c:RegisterEffect(e4)
 
-    aux.GlobalCheck(s,function()
-        local ge=Effect.CreateEffect(c)
-        ge:SetType(EFFECT_TYPE_FIELD)
-        ge:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
-        ge:SetTargetRange(LOCATION_SZONE,LOCATION_SZONE)
-        ge:SetTarget(function(e,cc) return cc:IsType(TYPE_SPELL) and c:IsOriginalCode(id) end)
-        ge:SetOperation(s.AuxHandling)
-        ge:SetValue(aux.TRUE())
-        Duel.RegisterEffect(ge,0)
 
-    end)
+
+
     end
 
-function s.AuxHandling(e,tc,tp,sg)
-    sg:RemoveCard(e:GetHandler())
-end
+
 
 
 

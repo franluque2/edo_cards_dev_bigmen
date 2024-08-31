@@ -26,9 +26,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 		--other passive duel effects go here    
 
+		local ge=Effect.CreateEffect(e:GetHandler())
+		ge:SetType(EFFECT_TYPE_FIELD)
+		ge:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
+		ge:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		ge:SetTargetRange(LOCATION_SZONE,0)
+		ge:SetTarget(function(e,cc) return cc:IsType(TYPE_SPELL) and cc:IsOriginalCode(id+1) end)
+		ge:SetOperation(s.AuxHandling)
+		ge:SetValue(aux.TRUE())
+		Duel.RegisterEffect(ge,tp)
             
             end
 	e:SetLabel(1)
+end
+
+function s.AuxHandling(e,tc,tp,sg)
+    sg:RemoveCard(e:GetHandler())
 end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
