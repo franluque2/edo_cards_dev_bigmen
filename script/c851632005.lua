@@ -28,7 +28,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_HANDES,nil,0,tp,2)
 
         --Cannot Special Summon from the Extra Deck, except DARK Monsters
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -53,12 +53,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SendtoHand(g,nil,REASON_EFFECT) then
             Duel.ConfirmCards(1-tp,g)
 
-            if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
+            if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,2,nil)
             and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
             and WbAux.CanPlayerSummonDredge(tp)
             and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             Duel.BreakEffect()
-            if Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil)>0 then
+            if Duel.DiscardHand(tp,Card.IsDiscardable,2,2,REASON_EFFECT+REASON_DISCARD,nil)>0 then
                 Duel.BreakEffect()
                 WbAux.SpecialSummonDredge(tp)
             end
