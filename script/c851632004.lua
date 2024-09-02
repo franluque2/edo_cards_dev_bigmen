@@ -76,12 +76,12 @@ function s.gspop(e,tp,eg,ep,ev,re,r,rp)
 	WbAux.SpecialSummonDredge(tp)
 end
 
-function s.fuabyssals(c)
-    return c:IsFaceup() and c:IsCode(CARD_ABYSSAL_DREDGE)
+function s.mentionsabyssal(c)
+    return c:IsFaceup() and (c:IsCode(CARD_ABYSSAL_DREDGE) or c:IsListsCode(CARD_ABYSSAL_DREDGE))
 end
 
 function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(s.fuabyssals, tp, LOCATION_ONFIELD, 0, nil)>2
+	return Duel.GetMatchingGroupCount(s.mentionsabyssal, tp, LOCATION_ONFIELD, 0, nil)>2
 end
 
 function s.descostfilter(c,tp)

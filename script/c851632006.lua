@@ -20,13 +20,16 @@ function s.desfilter(c)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_MZONE,0,1,nil) and not Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) and WbAux.CanPlayerSummonDredge(tp) end
+	if chk==0 then return WbAux.CanPlayerSummonDredge(tp) end
 	local sg=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,#sg+1,tp,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)
+	if sg and #sg>0 then
+		
+	
 	if Duel.Destroy(sg,REASON_EFFECT) then
         if not (not Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) and WbAux.CanPlayerSummonDredge(tp)) then return end
         Duel.BreakEffect()
@@ -37,5 +40,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         end
         Duel.SpecialSummonComplete()
     end
+	else
+	WbAux.SpecialSummonDredge(tp)
+	end
 end
 
