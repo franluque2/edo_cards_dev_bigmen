@@ -8,6 +8,13 @@ function s.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetValue(s.xyzlimit)
 	c:RegisterEffect(e0)
+	local e01=Effect.CreateEffect(c)
+	e01:SetType(EFFECT_TYPE_SINGLE)
+	e01:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e01:SetValue(1)
+	c:RegisterEffect(e01)
+
 
     --Cannot attack
 	local e1=Effect.CreateEffect(c)

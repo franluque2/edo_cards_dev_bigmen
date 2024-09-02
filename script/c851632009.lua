@@ -4,6 +4,9 @@ local s,id=GetID()
 function s.initial_effect(c)
     Fusion.AddProcMixRep(c,true,true,CARD_ABYSSAL_DREDGE,10,99)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
+
+	c:SetUniqueOnField(1,0,id)
+
     --spcon
     local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)

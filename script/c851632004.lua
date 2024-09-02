@@ -65,7 +65,7 @@ function s.gspconfilter(c,tp)
 	return c:IsFaceup() and c:IsCode(CARD_ABYSSAL_DREDGE) and c:IsSummonPlayer(tp)
 end
 function s.gspcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.gspconfilter,1,nil,tp) and #eg==1
+	return eg:IsExists(s.gspconfilter,1,nil,tp) and #eg==1 and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.gsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
