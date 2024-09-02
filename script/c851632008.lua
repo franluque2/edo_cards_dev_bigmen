@@ -2,7 +2,7 @@
 Duel.LoadScript ("wb_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-    Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),4,2)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),4,2,nil,nil,7)
 	c:EnableReviveLimit()
 
     local e1=Effect.CreateEffect(c)
