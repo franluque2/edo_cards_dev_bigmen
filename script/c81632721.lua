@@ -91,8 +91,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
 function s.operation(c,e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
 	if not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
+	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(c,POS_FACEUP_ATTACK)
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
