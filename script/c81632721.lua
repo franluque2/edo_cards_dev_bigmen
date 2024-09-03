@@ -85,16 +85,20 @@ end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
-	if chk==0 then return e:GetHandler():IsRace(RACE_ZOMBIE) end
+	if chk==0 then return e:GetHandler():IsRace(RACE_ZOMBIE) and e:GetHandler():IsPosition(POS_FACEUP_DEFENSE) and Card.IsCanChangePosition(e:GetHandler())
+		and Duel.IsExistingTarget(Card.IsAbleToHand, tp, 0, LOCATION_MZONE, 1,nil)
+	 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
-function s.operation(c,e,tp,eg,ep,ev,re,r,rp)
-    if not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+    if not c:IsRace(RACE_ZOMBIE) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		Duel.ChangePosition(c,POS_FACEUP_ATTACK)
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		if Duel.ChangePosition(c,POS_FACEUP_ATTACK)>0 then
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		end
 	end
 end
