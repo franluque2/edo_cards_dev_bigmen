@@ -88,5 +88,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 		e1:SetValue(RACE_ZOMBIE)
 		tc:RegisterEffect(e1)
+        local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_SET_DEFENSE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
+		e2:SetValue(0)
+		tc:RegisterEffect(e2)
 	end
 end
