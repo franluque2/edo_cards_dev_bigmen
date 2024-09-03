@@ -62,7 +62,7 @@ function s.tnop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tgfilter(c)
-	return c:IsCode(81632717, 81632718, 81632720, 81632721, 81632722) and c:IsAbleToGrave()
+	return c:IsCode(81632717, 81632718, 81632720, 81632721) and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end

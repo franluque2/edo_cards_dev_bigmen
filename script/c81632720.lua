@@ -68,7 +68,7 @@ function s.tnop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thfilter(c)
-	return c:IsCode(81632717, 81632718, 81632719, 81632721, 81632722) and c:IsAbleToHand()
+	return c:IsCode(81632717, 81632718, 81632719, 81632721) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
