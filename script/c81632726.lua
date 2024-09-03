@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632723) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.atlimit(e,c)
 	return c:IsFaceup() and c:IsRace(RACE_ZOMBIE) and c:IsLevel(6)
@@ -73,7 +73,7 @@ function s.thfilter(c)
 	return c:IsCode(97077563, 81632724) and c:IsAbleToHand()
 end
 function s.desfilter(c)
-	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) or c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726))
+	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) or c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726, 81632723))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
@@ -86,7 +86,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not (tc:IsRelateToEffect(e) and tc:IsFaceup() and (tc:IsRace(RACE_ZOMBIE) or tc:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726)) and Duel.Destroy(tc,REASON_EFFECT)>0) then return end
+	if not (tc:IsRelateToEffect(e) and tc:IsFaceup() and (tc:IsRace(RACE_ZOMBIE) or tc:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726, 81632723)) and Duel.Destroy(tc,REASON_EFFECT)>0) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil)
 	if #g>0 then

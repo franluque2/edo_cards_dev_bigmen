@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsCode(81632717, 81632719, 81632720, 81632721) and c:IsDiscardable()
+	return c:IsCode(81632717, 81632719, 81632720, 81632721, 81632723) and c:IsDiscardable()
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable()

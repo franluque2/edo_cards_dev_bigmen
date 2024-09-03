@@ -54,7 +54,7 @@ function s.initial_effect(c)
 end
 
  function s.fil(c,e,tp)
-	return c:IsCode(81632718, 81632719, 81632720, 81632721) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(81632718, 81632719, 81632720, 81632721, 81632723) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
  end
  function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true

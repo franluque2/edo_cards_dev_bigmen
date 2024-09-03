@@ -54,7 +54,7 @@ function s.thfilter(c)
 	return c:IsCode(97077563, 81632724) and c:IsAbleToHand()
 end
 function s.desfilter(c)
-	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) or c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726))
+	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) or c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632726, 81632723))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end

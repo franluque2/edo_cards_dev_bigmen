@@ -60,7 +60,7 @@ function s.tnop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thfilter(c)
-	return c:IsCode(81632717, 81632719, 81632720, 81632718) and c:IsAbleToHand()
+	return c:IsCode(81632717, 81632719, 81632720, 81632718, 81632723) and c:IsAbleToHand()
 end
 	--Activation legality
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

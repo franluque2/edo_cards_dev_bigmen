@@ -23,10 +23,10 @@ function s.initial_effect(c)
 end
 s.listed_series={0x2e}
 function s.thfilter(c)
-	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721) and c:IsMonster() and c:IsAbleToHand()
+	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632723) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.nsfilter(c)
-	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721) and c:IsAbleToGrave()
+	return c:IsCode(81632717, 81632718, 81632719, 81632720, 81632721, 81632723) and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
