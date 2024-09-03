@@ -78,7 +78,7 @@ end
 
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return e:GetHandler()==Duel.GetAttacker()
+	return e:GetHandler()==Duel.GetAttacker() and d and d:IsFaceup()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRace(RACE_ZOMBIE) end
