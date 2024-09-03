@@ -92,7 +92,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(c,e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not c:IsRelateToEffect(e) or Duel.ChangePosition(c,POS_FACEUP_ATTACK)==0 or e:GetHandler():IsRace(RACE_ZOMBIE) then return end
+	if Duel.ChangePosition(c,POS_FACEUP_ATTACK)==0 and not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
