@@ -42,7 +42,6 @@ function s.initial_effect(c)
     e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e5:SetTargetRange(LOCATION_ONFIELD,0)
 	e5:SetTarget(s.HauntedFilter)
-	e5:SetCondition(s.tgcon)
 	e5:SetValue(1)
 	c:RegisterEffect(e5)
 end
