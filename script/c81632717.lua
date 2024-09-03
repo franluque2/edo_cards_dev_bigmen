@@ -31,6 +31,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e4:SetProperty(EFFECT_FLAG_REPEAT)
+    e4:SetRange(LOCATION_MZONE)
 	e4:SetOperation(s.atkop)
 	c:RegisterEffect(e4)
 
