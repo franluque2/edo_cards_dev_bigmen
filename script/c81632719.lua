@@ -87,7 +87,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
     if not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
     local d=Duel.GetAttackTarget()
-	if d:IsRelateToBattle() and d:GetDefense()>e:GetHandler():GetAttack() then
+	if d:IsRelateToBattle() then
 		Duel.Destroy(d,REASON_EFFECT)
 	end
 end
