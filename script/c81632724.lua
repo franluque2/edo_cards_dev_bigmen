@@ -42,8 +42,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 end
 function s.filter(c,tid,e,tp)
-	return c:IsReason(REASON_DESTROY) and c:IsType(TYPE_XYZ) and c:GetTurnID()==tid
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsPreviousControler(tp)
+	return c:IsReason(REASON_DESTROY) and c:GetTurnID()==tid
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsPreviousControler(tp) and not c:IsOriginalRace(RACE_ZOMBIE)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil,Duel.GetTurnCount(),e,tp)
