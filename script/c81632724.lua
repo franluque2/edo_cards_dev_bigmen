@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e3a:SetDescription(aux.Stringid(id,1))
 	e3a:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3a:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3a:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3a:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3a:SetCode(EVENT_CUSTOM+id)
 	e3a:SetRange(LOCATION_FZONE)
 	e3a:SetCountLimit(1,id)
@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e3b:SetLabelObject(e3a)
 	e3b:SetOperation(s.regop)
 	c:RegisterEffect(e3b)
-	
+
  end
 
  function s.regop(e,tp,eg,ep,ev,re,r,rp)
