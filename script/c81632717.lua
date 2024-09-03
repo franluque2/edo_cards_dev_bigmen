@@ -34,7 +34,8 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
     e4:SetRange(LOCATION_MZONE)
     e4:SetCountLimit(1,{id,1})
-	e4:SetOperation(s.atkop)
+	e4:SetOperation(s.atkop2)
+    e4:SetCondition(s.atkcon)
 	c:RegisterEffect(e4)
 
     --cannot be target/battle indestructable
@@ -53,6 +54,9 @@ function s.HauntedFilter(c)
 end
 function s.atkfilter(c)
 	return c:IsRace(RACE_ZOMBIE)
+end
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil)
