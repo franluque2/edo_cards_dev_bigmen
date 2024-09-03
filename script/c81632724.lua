@@ -10,17 +10,31 @@ function s.initial_effect(c)
 	e1:SetOperation(s.setop)
     e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
-	--Activate
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetTarget(s.target)
-	e2:SetOperation(s.activate)
-	c:RegisterEffect(e2)
-
+	--draw
+	local e3a=Effect.CreateEffect(c)
+	e3a:SetDescription(aux.Stringid(id,1))
+	e3a:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3a:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3a:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3a:SetCode(EVENT_CUSTOM+id)
+	e3a:SetRange(LOCATION_FZONE)
+	e3a:SetCountLimit(1,id)
+	e3a:SetTarget(s.sptg)
+	e3a:SetOperation(s.spop)
+	c:RegisterEffect(e3a)
+	local g=Group.CreateGroup()
+	g:KeepAlive()
+	e3a:SetLabelObject(g)
+	--Register the destuction of monsters
+	local e3b=Effect.CreateEffect(c)
+	e3b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3b:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3b:SetCode(EVENT_DESTROYED)
+	e3b:SetRange(LOCATION_FZONE)
+	e3b:SetLabelObject(e3a)
+	e3b:SetOperation(s.regop)
+	c:RegisterEffect(e3b)
+	
  end
  function s.fil(c,e,tp)
 	return c:IsCode(81632718, 81632719, 81632720, 81632721) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -70,30 +84,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 		e1:SetValue(tc:GetBaseAttack()/2)
-		tc:RegisterEffect(e1)
-	end
-end
-
-function s.cfilter(c,e,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) 
-		and c:IsCode(81632719, 81632720, 81632721) and c:IsCanBeEffectTarget(e) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
-end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return eg:IsContains(chkc) and s.cfilter(chkc,e,tp) end
-	if chk==0 then return eg:IsExists(s.cfilter,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=eg:FilterSelect(tp,s.cfilter,1,1,nil,e,tp)
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(tc:GetBaseAttack()/2)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
 end
