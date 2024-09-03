@@ -64,7 +64,9 @@ function s.cfilter(c)
 	return c:IsFaceup() and (c:IsRace(RACE_ZOMBIE) and not c:IsOriginalRace(RACE_ZOMBIE))
 end
 function s.ntcon(e,c,minc)
-	return Duel.IsExistingMatchingCard(s.cfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+	if c==nil then return true end
+	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.cfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 
 function s.thfilter(c)
