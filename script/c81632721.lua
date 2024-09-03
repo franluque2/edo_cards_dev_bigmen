@@ -90,8 +90,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
 end
-function s.operation(c,e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+    if not e:GetHandler():IsRace(RACE_ZOMBIE) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(c,POS_FACEUP_ATTACK)
