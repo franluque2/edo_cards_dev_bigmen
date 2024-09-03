@@ -77,7 +77,7 @@ function s.gspop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.mentionsabyssal(c)
-    return c:IsFaceup() and (c:IsCode(CARD_ABYSSAL_DREDGE) or c:IsListsCode(CARD_ABYSSAL_DREDGE))
+    return c:IsFaceup() and (c:IsCode(CARD_ABYSSAL_DREDGE) or c:ListsCode(CARD_ABYSSAL_DREDGE))
 end
 
 function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
