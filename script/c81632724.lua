@@ -11,16 +11,20 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 	--draw
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetCode(EVENT_DESTROYED)
-    e2:SetCountLimit(1,{id,1})
-	e2:SetTarget(s.target)
-	e2:SetOperation(s.operation)
-	c:RegisterEffect(e2)
+	local e3a=Effect.CreateEffect(c)
+	e3a:SetDescription(aux.Stringid(id,1))
+	e3a:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3a:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3a:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3a:SetCode(EVENT_CUSTOM+id)
+	e3a:SetRange(LOCATION_FZONE)
+	e3a:SetCountLimit(1,id)
+	e3a:SetTarget(s.sptg)
+	e3a:SetOperation(s.spop)
+	c:RegisterEffect(e3a)
+	local g=Group.CreateGroup()
+	g:KeepAlive()
+	e3a:SetLabelObject(g)
 
  end
  function s.fil(c,e,tp)
@@ -41,26 +45,36 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,ft,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 end
-function s.filter(c,tid,e,tp)
-	return c:IsReason(REASON_DESTROY) and c:GetTurnID()==tid
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsPreviousControler(tp) and not c:IsOriginalRace(RACE_ZOMBIE)
+function s.tgfilter(c,tp,e)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
+		and c:IsLocation(LOCATION_GRAVE|LOCATION_REMOVED) and c:IsFaceup() and c:IsPreviousControler(tp)
+		and c:IsReason(REASON_BATTLE|REASON_EFFECT) and c:IsCanBeEffectTarget(e)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(81632719, 81632720, 81632721)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil,Duel.GetTurnCount(),e,tp)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g==1 end
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=e:GetLabelObject():Filter(s.tgfilter,nil,tp,e)
+	if chkc then return g:IsContains(chkc) and s.tgfilter(chkc,tp,e) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,0,1)
+	local tc=nil
+	if #g==1 then
+		tc=g:GetFirst()
+		Duel.SetTargetCard(tc)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		tc=g:Select(tp,1,1,nil)
+		Duel.SetTargetCard(tc)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,tp,0)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil,Duel.GetTurnCount(),e,tp)
-	local tc=g:GetFirst()
-	if #g~=1 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)~=0 then
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(tc:GetAttack()/2)
-		Duel.SpecialSummonComplete()
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
+		e1:SetValue(tc:GetBaseAttack()/2)
+		tc:RegisterEffect(e1)
 	end
 end
