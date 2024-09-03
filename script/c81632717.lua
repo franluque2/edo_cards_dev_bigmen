@@ -45,10 +45,10 @@ function s.initial_effect(c)
 	e5:SetValue(1)
 	c:RegisterEffect(e5)
 end
-function s.HauntedFilter(c)
-	return c:IsFaceup() and c:IsCode(97077563,81632724)
+function s.HauntedFilter(c,e)
+	return c:IsFaceup() and c:IsCode(97077563, 81632724)
 end
-function s.atkfilter(c)
+function s.atkfilter(c,e)
 	return c:IsFaceup() and c:IsRace(RACE_ZOMBIE)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
