@@ -11,7 +11,7 @@ function s.initial_effect(c)
 
     --Activate
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGITION)
+	e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
