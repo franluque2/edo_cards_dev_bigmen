@@ -39,27 +39,28 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.fil,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if #g==0 then return end
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,ft,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
-	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 end
- function s.filter(c,e,tp)
-	return c:IsLocation(LOCATION_GRAVE) and c:GetPreviousControler()==tp and c:IsReason(REASON_DESTROY) and c:GetOriginalRace()~=RACE_ZOMBIE
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
- end
- function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and eg:IsExists(s.filter,1,nil,e,tp) end
-	eg:Filter(s.filter,nil,e,tp):GetFirst():CreateEffectRelation(e)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,eg:Filter(s.filter,nil,e,tp),1,0,0)
- end
- function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:Filter(s.filter,nil,e,tp):GetFirst()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)
-		local e3=Effect.CreateEffect(e:GetHandler())
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e3:SetCode(EFFECT_UPDATE_ATTACK)
-		e3:SetValue(tc:GetAttack()/2)
-		tc:RegisterEffect(e3)
+function s.filter(c,tid,e,tp)
+	return c:IsReason(REASON_DESTROY) and c:IsType(TYPE_XYZ) and c:GetTurnID()==tid
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsPreviousControler(tp)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil,Duel.GetTurnCount(),e,tp)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g==1 end
+	Duel.SetTargetCard(g)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil,Duel.GetTurnCount(),e,tp)
+	local tc=g:GetFirst()
+	if #g~=1 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK) then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_SET_ATTACK)
+		e1:SetValue(tc:GetAttack()/2)
 		Duel.SpecialSummonComplete()
 	end
- end
+end
