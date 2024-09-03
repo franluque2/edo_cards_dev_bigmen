@@ -42,7 +42,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 end
  function s.filter(c,e,tp)
-	return c:IsLocation(LOCATION_GRAVE) and c:GetPreviousControler()==tp and c:IsReason(REASON_DESTROY) and c:GetOriginalRace()~=RACE_ZOMBIE and c:IsCode(81632719, 81632720, 81632721)
+	return c:IsLocation(LOCATION_GRAVE) and c:GetPreviousControler()==tp and c:IsReason(REASON_DESTROY) and c:IsCode(81632719, 81632720, 81632721)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
  end
  function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
