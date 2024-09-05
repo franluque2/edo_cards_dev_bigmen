@@ -6,6 +6,13 @@ CARD_ABYSSAL_DREDGE=851632001
 
 NORMAL_IGKNIGHTS={96802306,93662626,67273917,50407691,97024987,24019092,61639289,24131534,851632017}
 
+--Spiderite
+
+CARD_SPIDERITELING=851632018
+
+SET_SPIDERITE=0xc00
+
+CARD_SPIDERITELING_ARTS={851632018,851632019,851632020,851632021,851632022}
 
 if not WbAux then
     WbAux={}
@@ -26,3 +33,6 @@ function WbAux.SpecialSummonDredge(tp, pos)
     return Duel.SpecialSummon(dredge, SUMMON_TYPE_SPECIAL, tp, tp, false,false, pos)
 end
 
+function WbAux.GetSpideriteling(tp)
+    return Duel.CreateToken(tp, CARD_SPIDERITELING_ARTS[Duel.GetRandomNumber(1,#CARD_SPIDERITELING_ARTS)])
+end
