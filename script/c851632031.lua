@@ -88,7 +88,7 @@ end
 function s.diszaop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
+	local tg=Duel.SelectMatchingCard(tp,Card.IsCode,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil, CARD_SPIDERITELING)
 
     if Duel.SendtoGrave(tg,REASON_EFFECT+REASON_RETURN)>0 then
         Duel.BreakEffect()
