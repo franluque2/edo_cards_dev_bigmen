@@ -14,7 +14,7 @@ function s.initial_effect(c)
     e2:SetTargetRange(LOCATION_ONFIELD, 0)
     e2:SetValue(aux.indoval)
     e2:SetTarget(function (_e,_c) return c:IsFaceup() and c:IsSetCard(SET_SPIDERITE) end)
-    e2:SetCondition(function (_e,_tp) return Duel.IsExistingMatchingCard(Card.IsCode, _tp, LOCATION_GRAVE, 0, 5, nil, CARD_SPIDERITELING) end)
+    e2:SetCondition(function (_e) return Duel.IsExistingMatchingCard(Card.IsCode, _e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 5, nil, CARD_SPIDERITELING) end)
 	c:RegisterEffect(e2)
 
 
