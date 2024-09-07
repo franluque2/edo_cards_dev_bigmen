@@ -5,15 +5,25 @@ function s.initial_effect(c)
     Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_INSECT),1,2)
 	c:EnableReviveLimit()
 
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_SPSUMMON_PROC)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCondition(s.hspcon)
+	e0:SetTarget(s.hsptg)
+	e0:SetOperation(s.hspop)
+	e0:SetCountLimit(1,{id,3})
+	c:RegisterEffect(e0)
+
     local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_CONJURE)
-	e1:SetCode(EVENT_PHASE+PHASE_DRAW)
-	e1:SetRange(LOCATION_EXTRA)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_CONJURE+CATEGORY_REMOVE)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(s.bancon)
-    e1:SetCost(s.bancost)
 	e1:SetOperation(s.banop)
 	c:RegisterEffect(e1)
 
@@ -76,6 +86,32 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.tohandfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHandAsCost()
+end
+
+function s.hspcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.IsExistingMatchingCard(s.tohandfilter, tp, LOCATION_MZONE, 0,1, nil)
+end
+function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
+	local g=Duel.SelectMatchingCard(tp,s.tohandfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+	if g then
+		g:KeepAlive()
+		e:SetLabelObject(g)
+		return true
+	else
+		return false
+	end
+end
+function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
+	Duel.SendtoHand(g, tp, REASON_COST+REASON_MATERIAL)
+	c:SetMaterial(g)
+	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
+	g:DeleteGroup()
+end
 
 function s.diszafilter(c)
 	return c:IsFaceup() and c:IsNegatable()
@@ -84,6 +120,7 @@ end
 function s.diszacon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return Duel.IsExistingMatchingCard(s.diszafilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and
         Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_REMOVED, LOCATION_REMOVED, 1, nil, CARD_SPIDERITELING)
+		and not Duel.IsTurnPlayer(tp)
 end
 function s.diszaop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -97,7 +134,7 @@ function s.diszaop(e,tp,eg,ep,ev,re,r,rp)
         Duel.HintSelection(g)
         local tc=g:GetFirst()
         if tc then
-            tc:NegateEffects(c)
+            tc:NegateEffects(c,RESET_PHASE+PHASE_END)
         end
     
     end
@@ -106,14 +143,13 @@ end
 
 
 function s.bancon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.IsPlayerCanSendtoGrave(tp, e:GetHandler())
+	return e:GetHandler():GetFlagEffect(id)>0
 end
-function s.bancost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Card.IsPublic(e:GetHandler()) end
-	Duel.ConfirmCards(1-tp, e:GetHandler())
-end
+
 function s.banop(e,tp,eg,ep,ev,re,r,rp)
     local Spideriteling=WbAux.GetSpideriteling(tp)
     Duel.SendtoGrave(Spideriteling, REASON_EFFECT)
 
+	local Spideriteling2=WbAux.GetSpideriteling(tp)
+	Duel.Remove(Spideriteling2, POS_FACEUP, REASON_EFFECT)
 end
