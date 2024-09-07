@@ -55,7 +55,30 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetMaterial(g)
 	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
 	g:DeleteGroup()
+
+	local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCode(EVENT_PHASE+PHASE_END)
+			e1:SetCountLimit(1)
+			e1:SetOperation(s.retop)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END)
+			c:RegisterEffect(e1,true)
+
+		local e2=Effect.CreateEffect(c)
+		e2:SetDescription(3206)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_ATTACK)
+		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+		c:RegisterEffect(e2,true)
 end
+
+function s.retop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+end
+
 
 
 function s.spspiderop(e,tp,eg,ep,ev,re,r,rp)
