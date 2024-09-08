@@ -16,7 +16,7 @@ s.listed_names={CARD_ABYSSAL_DREDGE}
 
 
 function s.desfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_AQUA) and c:IsDestructable()
+	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and c:IsDestructable()
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)

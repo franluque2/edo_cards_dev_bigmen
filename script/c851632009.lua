@@ -39,7 +39,7 @@ end
 s.listed_names={CARD_ABYSSAL_DREDGE}
 
 function s.spcfilter(c)
-	return c:IsRace(RACE_AQUA) and c:IsAbleToGraveAsCost()
+	return c:IsRace(RACE_REPTILE) and c:IsAbleToGraveAsCost()
 end
 
 function s.sendcost(e,tp,eg,ep,ev,re,r,rp,chk)

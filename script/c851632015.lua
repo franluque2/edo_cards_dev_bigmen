@@ -55,7 +55,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_AQUA)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_REPTILE)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
