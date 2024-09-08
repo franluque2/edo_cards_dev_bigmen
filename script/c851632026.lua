@@ -102,7 +102,7 @@ end
 
 function s.sptar(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and
-         Duel.IsPlayerCanSpecialSummonMonster(tp, CARD_SPIDERITELING, SET_SPIDERITE, TYPE_NORMAL, 0, 0, 1, RACE_INSECT, ATTRIBUTE_LIGHT) end
+         Duel.IsPlayerCanSpecialSummonMonster(tp, CARD_SPIDERITELING, SET_SPIDERITE, TYPE_MONSTER+TYPE_NORMAL, 0, 0, 1, RACE_INSECT, ATTRIBUTE_LIGHT) end
 end
 
 function s.activate2(e,tp,eg,ep,ev,re,r,rp)
