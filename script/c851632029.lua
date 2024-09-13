@@ -73,17 +73,17 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.tohandfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHandAsCost()
+function s.todeckfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToDeckAsCost()
 end
 
 function s.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.tohandfilter, tp, LOCATION_MZONE, 0,1, nil)
+	return Duel.IsExistingMatchingCard(s.todeckfilter, tp, LOCATION_MZONE, 0,1, nil)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.SelectMatchingCard(tp,s.tohandfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+	local g=Duel.SelectMatchingCard(tp,s.todeckfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)
@@ -94,7 +94,7 @@ function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	Duel.SendtoHand(g, tp, REASON_COST+REASON_MATERIAL)
+	Duel.SendtoDeck(g, tp, SEQ_DECKSHUFFLE, REASON_COST+REASON_MATERIAL)
 	c:SetMaterial(g)
 	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
 	g:DeleteGroup()

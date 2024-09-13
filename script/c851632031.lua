@@ -86,17 +86,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.tohandfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHandAsCost()
+function s.togravefilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToGraveAsCost() and not c:IsPreviousLocation(LOCATION_EXTRA)
 end
 
 function s.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(s.tohandfilter, tp, LOCATION_MZONE, 0,1, nil)
+	return Duel.IsExistingMatchingCard(s.togravefilter, tp, LOCATION_MZONE, 0,1, nil)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g=Duel.SelectMatchingCard(tp,s.tohandfilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
+	local g=Duel.SelectMatchingCard(tp,s.togravefilter, tp, LOCATION_MZONE, 0, 1,1,false,nil)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)
@@ -107,7 +107,7 @@ function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 end
 function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	Duel.SendtoHand(g, tp, REASON_COST+REASON_MATERIAL)
+	Duel.SendtoGrave(g, REASON_COST+REASON_MATERIAL)
 	c:SetMaterial(g)
 	c:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD, 0, 0)
 	g:DeleteGroup()
