@@ -1,76 +1,108 @@
---Spiderite Roll Call
+--Spiderite Drop-Off
 Duel.LoadScript ("wb_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-    local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_TOGRAVE)
+    --Activate
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(s.cost)
+	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(s.target)
-    e1:SetCountLimit(1,{id,0})
-	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-
-    local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetCondition(aux.exccon)
-	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(s.thtg)
-	e2:SetOperation(s.thop)
-	c:RegisterEffect(e2)
 end
 s.listed_names={CARD_SPIDERITELING}
 s.listed_series={SET_SPIDERITE}
 
+function s.spsummonfilter(c,e,tp)
+	return c:IsMonster() and c:IsSetCard(SET_SPIDERITE) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false,POS_FACEUP)
+end
+
+function s.noninsectdesfilter(c)
+	return c:IsDestructable() and not ( c:IsFaceup() and c:IsRace(RACE_INSECT))
+end
+
+function s.revealfilter(c,e,tp)
+	return (not c:IsPublic()) and
+	(
+	(c:IsOriginalCode(851632030) and Duel.IsExistingMatchingCard(s.spsummonfilter, tp, LOCATION_HAND, 0, 1, nil,e, tp)) or
+	(c:IsOriginalCode(851632029) and Duel.IsExistingMatchingCard(s.noninsectdesfilter, tp, LOCATION_MZONE, LOCATION_MZONE, 1, nil)) or
+	(c:IsOriginalCode(851632031) and Duel.IsExistingMatchingCard(Card.IsAbleToDeck, tp, LOCATION_GRAVE+LOCATION_REMOVED, LOCATION_GRAVE+LOCATION_REMOVED, 1, nil))
+	)
+end
+
 
 function s.filter(c)
-	return c:IsSetCard(SET_SPIDERITE) and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsRace(RACE_INSECT)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.filter,1,false,nil,nil) and Duel.IsExistingMatchingCard(s.revealfilter, tp, LOCATION_EXTRA, 0, 1, nil,e,tp) end
+	local g=Duel.SelectReleaseGroupCost(tp,s.filter,1,1,false,nil,nil)
+	Duel.Release(g,REASON_COST)
+	local tc=Duel.SelectMatchingCard(tp, s.revealfilter, tp, LOCATION_EXTRA, 0, 1,1,false,nil,e,tp)
+	Duel.ConfirmCards(1-tp, tc)
+	e:SetLabelObject(tc:GetFirst())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 
-end
-function s.sendfilter(c)
-    return c:IsCode(CARD_SPIDERITELING) and c:IsAbleToGrave()
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		if Duel.SendtoHand(g,nil,REASON_EFFECT) >0 then
-            Duel.ConfirmCards(1-tp,g)
-            if Duel.IsExistingMatchingCard(s.sendfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-                Duel.BreakEffect()
-                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-                local g2=Duel.SelectMatchingCard(tp,s.sendfilter,tp,LOCATION_DECK,0,1,1,nil)
-                if #g2>0 then
-                    Duel.SendtoGrave(g2,REASON_EFFECT)
-                end
-            end
-        end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.revealfilter, tp, LOCATION_EXTRA, 0, 1, nil,e,tp) end
+	local tc=e:GetLabelObject()
+	--Spindel
+	if tc:IsOriginalCode(851632029) then
+		e:SetCategory(CATEGORY_DESTROY+CATEGORY_CONJURE+CATEGORY_TODECK)
+		e:SetOperation(s.desop)
+		local g=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,PLAYER_ALL,LOCATION_ONFIELD)
+	
+	--Arachne
+	elseif tc:IsOriginalCode(851632030) then
+
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONJURE)
+		e:SetOperation(s.spop)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_HAND)
+
+	--Payak	
+	elseif tc:IsOriginalCode(851632031) then
+		e:SetCategory(CATEGORY_TODECK)
+		e:SetOperation(s.tdop)
+		Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 	end
 end
 
 
-function s.thfilter(c)
-	return c:IsCode(CARD_SPIDERITELING) and c:IsAbleToHand()
-end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.thfilter),tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.noninsectdesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tc=g:Select(tp, 1,1,nil)
+	if tc and Duel.Destroy(tc, REASON_EFFECT)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+		Duel.BreakEffect()
+		local Spiderite=WbAux.GetSpideriteling(tp)
+		Duel.SendtoDeck(Spiderite, tp, SEQ_DECKSHUFFLE, REASON_EFFECT)
 	end
 end
 
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.spsummonfilter,tp,LOCATION_HAND,0,nil,e,tp)
+	local tc=g:Select(tp, 1,1,nil)
+	if tc and Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP) and Duel.CheckReleaseGroup(tp, Card.IsReleasableByEffect, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+		Duel.BreakEffect()
+		local relg=Duel.SelectReleaseGroupCost(tp,Card.IsReleasableByEffect,1,1,false,nil,nil)
+		if Duel.Release(relg,REASON_EFFECT)>0 then
+			local Spiderite=WbAux.GetSpideriteling(tp)
+			Duel.SpecialSummon(Spiderite, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)
+		end
+	
+	end
+end
+function s.tdop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsAbletoDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil)
+	local tc=g:Select(tp, 1,1,nil)
+	if tc and Duel.SendtoDeck(tc, tc:GetFirst():GetControler(), SEQ_DECKSHUFFLE, REASON_EFFECT)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 4)) then
+		Duel.BreakEffect()
+		local Spiderite=WbAux.GetSpideriteling(tp)
+		if Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+			Duel.SendtoGrave(Spiderite, REASON_EFFECT)
+		else
+			Duel.Remove(Spiderite, POS_FACEUP, REASON_EFFECT)
+		end
+	end
+end
