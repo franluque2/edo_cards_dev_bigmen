@@ -51,7 +51,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 
     local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetTargetRange(LOCATION_MZONE,0)
     e5:SetCondition(s.gaincon)
