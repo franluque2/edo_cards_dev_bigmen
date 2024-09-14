@@ -38,7 +38,7 @@ function s.spcon(e,c)
     end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_FLAMVELL),tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_FLAMVELL),tp,LOCATION_MZONE,0,1,nil)
 end
 
 
