@@ -1,6 +1,9 @@
 --Generate from outside the duel
 CATEGORY_CONJURE=0x20000000
 
+--Make a card dissapear from the Duel
+CATEGORY_ERASE=0x30000000
+
 --Abyssal Dredges
 CARD_ABYSSAL_DREDGE=851632001
 
