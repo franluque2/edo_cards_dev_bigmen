@@ -13,15 +13,16 @@ function s.initial_effect(c)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
 
-    --special summon
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,{id,0})
-	e2:SetTarget(s.sptg)
-	e2:SetOperation(s.spop)
+	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
+    e2:SetCountLimit(1,{id,0})
+	e2:SetCost(s.hspcost)
+	e2:SetTarget(s.hsptg)
+	e2:SetOperation(s.hspop)
 	c:RegisterEffect(e2)
 end
 s.listed_names={31560081,id}
@@ -52,22 +53,19 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function s.costfilter(c)
-	return (((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL) and c:IsAbleToGrave())
+function s.hspcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.Summonfilter,1,false,aux.ReleaseCheckMMZ,nil) end
+	local g=Duel.SelectReleaseGroupCost(tp,s.Summonfilter,1,1,false,aux.ReleaseCheckMMZ,nil)
+	Duel.Release(g,REASON_COST)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE,0,1,nil) and
-		Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_MZONE)
+	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.hspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	if #g>0 and Duel.SendtoGrave(g,REASON_EFFECT)~=0 and
-		c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end
 end
