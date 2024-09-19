@@ -103,6 +103,6 @@ end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoDeck(eg,nil,2,REASON_EFFECT)
+		Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
 	end
 end
