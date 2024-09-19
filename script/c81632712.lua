@@ -60,7 +60,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         if op==1 then
     	--Special Summon 2 vanillas monster from your Deck
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
-		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
+		local g=Duel.GetMatchingGroup(s.Summonfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
         if #g<2 then return end
         local thg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
 		if #thg>0 then
@@ -99,4 +99,8 @@ end
 
 function s.Summonfilter(c)
 	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL)))
+end
+
+function s.thfilter(c)
+	return c:IsCTFriendship() and not c:IsCode(id)
 end
