@@ -40,16 +40,15 @@ function s.initial_effect(c)
 
     
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
-	e4:SetCategory(CATEGORY_LEAVE_GRAVE)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetCountLimit(1)
-	e4:SetCondition(function(e,tp) return Duel.IsTurnPlayer(tp) end)
-	e4:SetTarget(s.settg)
-	e4:SetOperation(s.setop)
+	e4:SetRange(LOCATION_FZONE)
+	e4:SetCountLimit(1,{id,1})
+	e4:SetTarget(s.thtg)
+	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)
 end
 function s.indval(e,re,tp)
@@ -91,7 +90,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.setfilter(c)
-	return (((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or (c:IsCTFriendship() or c:IsCode(12607053)) and c:IsAbleToDeck()) and not c:IsCode(id)
+	return (((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or c:IsCode(12607053) and c:IsAbleToDeck()) and not c:IsCode(id)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end
@@ -103,6 +102,6 @@ end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
+		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
