@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x2))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3b))
 	e2:SetValue(500)
 	c:RegisterEffect(e2)
 
