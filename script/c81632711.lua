@@ -53,19 +53,19 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.costfilter(c)
-	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL)) and c:IsAbleToGrave()) or c:IsCode(02295831) and c:IsAbleToGrave()
+	return (((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL) and c:IsAbleToGrave())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) and
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE,0,1,nil) and
 		Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK+LOCATION_HAND)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if #g>0 and Duel.SendtoGrave(g,REASON_EFFECT)~=0 and
 		c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)

@@ -35,7 +35,7 @@ function s.costfilter(c)
 	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL)) and c:IsAbleToGrave()) or c:IsCode(02295831) and c:IsAbleToGrave()
 end
 function s.Summonfilter(c)
-	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL)))
+	return ((((c:IsRace(RACE_FAIRY) and c:IsLevelBelow(4)) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsType(TYPE_NORMAL))) or c:IsType(TYPE_FLIP)
 end
 function s.filter(c)
 	return c:IsCode(82085619, 81632708, 81632710, 81632711, 81632712, 81632713, 81632714, 81632715, 81632716, 02295831, 81332143) and c:IsAbleToHand()
