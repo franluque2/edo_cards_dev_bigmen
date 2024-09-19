@@ -45,7 +45,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
-	e4:SetRange(LOCATION_FZONE)
+	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,{id,1})
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
@@ -96,7 +96,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.setfilter(c)
-	return (((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or c:IsCode(12607053) and c:IsAbleToDeck()) and not c:IsCode(id)
+	return (((c:IsType(TYPE_NORMAL) and c:IsLevelBelow(4) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)) and c:IsAbleToDeck()) or c:IsCode(12607053) and c:IsAbleToDeck())
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end
