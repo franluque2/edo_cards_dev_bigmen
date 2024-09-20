@@ -34,7 +34,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 
 
-	
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_ADD_SETCODE)
+	e3:SetRange(LOCATION_EXTRA)
+	e3:SetValue(0x4b)
+	c:RegisterEffect(e3)
+
 end
 
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
