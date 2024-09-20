@@ -47,7 +47,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.sptar)
 	e2:SetOperation(s.activate2)
 	e2:SetCountLimit(1,{id,2})
-	c:RegisterEffect(e2)
+	--c:RegisterEffect(e2)
 	
 end
 s.listed_names={CARD_SPIDERITELING}
