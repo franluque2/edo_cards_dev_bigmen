@@ -77,24 +77,34 @@ function s.eraseop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.flipop3)
 		Duel.RegisterEffect(e1,tp)
 
-        Duel.RemoveCards(tc)
+		Duel.SendtoDeck(tc, tp, -2, REASON_EFFECT)
 
     end
 end
 
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_CARD,tp,id)
-		local ft2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
-		if ft2>0 then
-        local tc=e:GetLabelObject()
+		local tc=e:GetLabelObject()
         local pos=tc:GetPreviousLocation()
+
+		local ft2=Duel.GetLocationCount(1-tp,pos)
+		if ft2>0 then
         local position=tc:GetPreviousPosition()
+		
+		if tc:IsType(TYPE_FIELD) then
+			pos=LOCATION_FZONE
+		end
+		
+		if tc:IsType(TYPE_PENDULUM) and tc:IsPreviousLocation(LOCATION_PZONE) then
+			pos=LOCATION_PZONE
+		end
 
-        Duel.MoveToField(tc, 1-tp, 1-tp, pos, position, true, nil)
-
+		if (not Duel.MoveToField(tc, 1-tp, 1-tp, pos, position, true, nil) ) or (tc:IsSpellTrap() and position==POS_FACEUP and not (tc:IsType(TYPE_FIELD) or tc:IsType(TYPE_CONTINUOUS) or tc:IsType(TYPE_PENDULUM))) then
+			Duel.SendtoGrave(tc, REASON_RULE)
+		end
 	end
-
 end
+
 
 
 function s.cfilter(c)
@@ -112,10 +122,10 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_ONFIELD,LOCATION_ONFIELD, nil)
-    if not #g>0 then return end
+    if not (#g>0) then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
     local tc=g:Select(tp, 1,1,nil)
-	if tc and tc:IsRelateToEffect(e) then
+	if tc then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
