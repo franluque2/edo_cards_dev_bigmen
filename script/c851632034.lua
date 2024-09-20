@@ -93,7 +93,7 @@ function s.mrettg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spfilter(c,e,tp)
-    return c:IsType(TYPE_SPIRIT) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, false,POS_FACEUP)
+    return c:IsType(TYPE_SPIRIT) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, false,POS_FACEUP) and not c:IsCode(id)
 end
 function s.mretop2(e,tp,eg,ep,ev,re,r,rp)
 	Spirit.ReturnOperation(e,tp,eg,ep,ev,re,r,rp)
