@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetCost(s.cost)
     e1:SetCondition(aux.NOT, Gemini.EffectStatusCondition)
+    e1:SetTarget(s.thtar)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 
@@ -86,6 +87,11 @@ s.listed_names={95750695}
 
 local equips_to_create={12735388,19578592,21900719,22046459,68427465,90246973,242146,1118137,24845628,44092304,53363708,64867422,69954399,75524092,75560629,87481592,90861137,95515060,95638658}
 
+
+function s.thtar(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetChainLimit(aux.FALSE)
+end
 function s.gaincon(e,tp,eg,ep,ev,re,r,rp,chk)
     return Gemini.EffectStatusCondition(e) and s.eqcount>5
 end
