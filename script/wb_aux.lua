@@ -7,7 +7,10 @@ CATEGORY_ERASE=0x30000000
 --Abyssal Dredges
 CARD_ABYSSAL_DREDGE=851632001
 
-NORMAL_IGKNIGHTS={96802306,93662626,67273917,50407691,97024987,24019092,61639289,24131534,851632017}
+NORMAL_IGKNIGHTS={96802306,93662626,67273917,50407691,97024987,24019092,61639289,24131534}
+NORMAL_IGKNIGHTS_TWOS={96802306,67273917,24019092,61639289}
+NORMAL_IGKNIGHTS_SEVENS={93662626,50407691,97024987,24131534}
+
 
 --Spiderite
 
@@ -121,3 +124,22 @@ WbAux.CreateFrieslaAttachEffect=(function()
 	end
 end
 )()
+
+function WbAux.GetNormalIgknight(tp,c)
+    local scale=0
+    if c then
+        scale=c:GetLeftScale()
+    end
+
+    local id=0
+    if scale==0 or ((scale~=2) and (scale~=7)) then
+        id=NORMAL_IGKNIGHTS[Duel.GetRandomNumber(1,#NORMAL_IGKNIGHTS)]
+    elseif scale==2 then
+        id=NORMAL_IGKNIGHTS_SEVENS[Duel.GetRandomNumber(1,#NORMAL_IGKNIGHTS_SEVENS)]
+    elseif scale==7 then
+        id=NORMAL_IGKNIGHTS_TWOS[Duel.GetRandomNumber(1,#NORMAL_IGKNIGHTS_TWOS)]
+
+    end
+
+    return Duel.CreateToken(tp, id)
+end
