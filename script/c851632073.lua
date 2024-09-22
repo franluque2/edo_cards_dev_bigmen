@@ -84,7 +84,7 @@ end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp, id, 0xc8, TYPE_NORMAL+TYPE_PENDULUM, 1300, 2300, 5, RACE_WARRIOR, ATTRIBUTE_FIRE) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e, 0, tp, false,false) end
 
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
