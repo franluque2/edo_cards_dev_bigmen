@@ -31,6 +31,15 @@ function s.initial_effect(c)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
 
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetRange(LOCATION_GRAVE)
+	e4:SetTarget(s.atktg)
+	e4:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
+	c:RegisterEffect(e4)
+
 end
 s.listed_series={0x1b}
 
