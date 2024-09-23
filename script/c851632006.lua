@@ -29,12 +29,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)
 	if sg and #sg>0 then
 		
-	
-	if Duel.Destroy(sg,REASON_EFFECT) then
-        if not (not Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) and WbAux.CanPlayerSummonDredge(tp)) then return end
+	local num=Duel.Destroy(sg,REASON_EFFECT)+1
+	if num>0 then
+        if not ((not (num>1 and Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT))) and WbAux.CanPlayerSummonDredge(tp)) then return end
         Duel.BreakEffect()
 
-        for i = 1, #sg+1, 1 do
+        for i = 1, num, 1 do
             local dredge=Duel.CreateToken(tp, CARD_ABYSSAL_DREDGE)
             Duel.SpecialSummonStep(dredge, SUMMON_TYPE_SPECIAL, tp, tp, false,false,POS_FACEUP)
         end
