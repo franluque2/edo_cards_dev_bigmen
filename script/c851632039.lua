@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(function() return Duel.GetFieldGroupCount(0,0,LOCATION_REMOVED)*200 end)
+	e1:SetValue(function(_e) return Duel.GetFieldGroupCount(_e:GetHandlerPlayer(),0,LOCATION_REMOVED)*200 end)
 	c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
