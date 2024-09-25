@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetCondition(s.condition)
+	e1:SetCondition(s.poscon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(s.condition)
+	e2:SetCondition(s.poscon)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.activate)
 	c:RegisterEffect(e2)
@@ -23,8 +23,11 @@ end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DINOSAUR)
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ep==1-tp and Duel.IsExistingMatchingCard(aux.FilterMaximumSideFunctionEx(s.cfilter),tp,LOCATION_MZONE,0,3,nil)
+function s.posconfilter(c,tp)
+	return c:IsFaceup() and c:IsSummonPlayer(1-tp)
+end
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.posconfilter,1,nil,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) end
@@ -52,17 +55,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             ge1:SetValue(300)
             ge1:SetReset(RESET_PHASE+PHASE_END)
 	end
-end
-function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.effilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
-end
-function s.effilter(c)
-	return c:IsPosition(POS_DEFENSE)
-end
-function s.eftg(e,c)
-	return c:IsFaceup()
-end
-function s.vala(e,c)
-	return not c:IsDefensePos()
 end
 
