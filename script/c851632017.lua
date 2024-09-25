@@ -17,9 +17,7 @@ function s.initial_effect(c)
 
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)	
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,{id,1})
 	e3:SetCondition(s.spsynccon)
@@ -36,7 +34,7 @@ s.listed_series={0xc8}
 
 
 function s.spsynccon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.IsMainPhase() and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
+	return Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
 end
 function s.desfilter(c)
 	return c:HasLevel() and c:IsDestructable()
