@@ -37,28 +37,24 @@ function s.filter(c)
 	return c:IsFaceup() and c:IsAttackPos() and c:IsRace(RACE_DINOSAUR) and c:IsCanChangePositionRush()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	--Requirement
-	--Effect
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	if Duel.ChangePosition(tc,POS_DEFENSE) then return end
-	local g=Duel.GetMatchingGroup(aux.FilterMaximumSideFunctionEx(s.filter),tp,LOCATION_MZONE,0,nil)
-	if #g==0 then return end
 	local c=e:GetHandler()
-	Duel.BreakEffect()
-	for tc in g:Iter() do
-		--Increase ATK
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	--Effect
+	local g=Duel.SelectMatchingCard(tp,aux.FilterMaximumSideFunctionEx(s.filter),tp,LOCATION_MZONE,0,1,1,nil)
+	if #g>0 and Duel.ChangePosition(tc,POS_FACEUP_DEFENSE) then
+		Duel.HintSelection(g)
+		local tc=g:GetFirst()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(300)
 		e1:SetReset(RESETS_STANDARD_PHASE_END)
-		tc:RegisterEffect(e1)
+		tc:RegisterEffect(e2)
         local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
 		e2:SetValue(300)
 		e2:SetReset(RESETS_STANDARD_PHASE_END)
 		tc:RegisterEffect(e2)
-	end
 end
-
+end
