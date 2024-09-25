@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and c:GetAttack()==0
+	return c:IsFaceup() and c:IsRace(RACE_DINOSAUR)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and Duel.IsExistingMatchingCard(aux.FilterMaximumSideFunctionEx(s.cfilter),tp,LOCATION_MZONE,0,3,nil)
