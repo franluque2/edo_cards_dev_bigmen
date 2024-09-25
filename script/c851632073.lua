@@ -79,7 +79,7 @@ end
 
 
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	return (r&REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
+	return (r&REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
