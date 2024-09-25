@@ -41,7 +41,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	--Effect
 	local g=Duel.SelectMatchingCard(tp,aux.FilterMaximumSideFunctionEx(s.filter),tp,LOCATION_MZONE,0,1,1,nil)
-	if #g>0 and Duel.ChangePosition(tc,POS_FACEUP_DEFENSE) then
+	if #g>0 then
+        Duel.ChangePosition(tc,POS_FACEUP_DEFENSE) 
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
 		local e1=Effect.CreateEffect(c)
