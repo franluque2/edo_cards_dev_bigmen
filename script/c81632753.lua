@@ -69,3 +69,14 @@ end
 function s.tdfilter(c)
 	return c:IsCode(81632751, 81632754, 81632755) and c:IsAbleToDeckAsCost()
 end
+
+function s.atkcon(e)
+	return e:GetLabel()~=0
+end
+function s.atktg(e,c)
+	return c:GetFieldID()~=e:GetLabel()
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local fid=eg:GetFirst():GetFieldID()
+	e:GetLabelObject():SetLabel(fid)
+end
