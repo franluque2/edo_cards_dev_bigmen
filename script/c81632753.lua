@@ -32,7 +32,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             e1:SetCode(EFFECT_UPDATE_ATTACK)
             e1:SetValue(4600)
             e1:SetReset(RESETS_STANDARD_PHASE_END)
-            g:GetFirst():RegisterEffect(e1)
+            tc:GetFirst():RegisterEffect(e1)
         end
 end
 end
