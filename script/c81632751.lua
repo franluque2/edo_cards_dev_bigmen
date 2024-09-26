@@ -29,5 +29,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.costfilter(c)
-	return c:IsMonster() and c:IsAbleToDeck()
+	return c:IsAbleToDeck()
 end
