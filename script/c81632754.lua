@@ -19,7 +19,7 @@ function s.filter1(c,tp)
 	return c:IsSummonPlayer(1-tp) and c:IsLocation(LOCATION_MZONE)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filter1,1,nil,tp)
+	return eg:IsExists(s.filter1,1,nil,tp) and Duel.IsExistingMatchingCard(s.Manga,tp,LOCATION_GRAVE,0,1,nil)
 end
 function s.filter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
