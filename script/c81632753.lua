@@ -24,16 +24,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		--Effect
         local ct=Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
         if ct>0 then
-        Duel.Recover(tp,ct*300,REASON_EFFECT)
-        local tc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-            Duel.HintSelection(tc)
-            local e1=Effect.CreateEffect(c)
+        if Duel.Recover(tp,ct*300,REASON_EFFECT)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATKDEF)
+        local tc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+        if tc then
+            local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_UPDATE_ATTACK)
+            e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
             e1:SetValue(4600)
-            e1:SetReset(RESETS_STANDARD_PHASE_END)
-            tc:GetFirst():RegisterEffect(e1)
+            tc:RegisterEffect(e1)
         end
+end
+end
 end
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
