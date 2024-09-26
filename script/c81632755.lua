@@ -57,4 +57,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	end
 end
-
+function s.tdfilter(c,tp)
+	return c:IsMonster() and c:IsAbleToDeck()
+end
