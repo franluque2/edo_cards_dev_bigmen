@@ -16,9 +16,11 @@ function s.initial_effect(c)
 
 
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
 	e3:SetCountLimit(1,{id,1})
 	e3:SetCondition(s.spsynccon)
 	e3:SetTarget(s.spsynctg)
@@ -34,7 +36,7 @@ s.listed_series={0xc8}
 
 
 function s.spsynccon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
+	return Duel.IsMainPhase() and (Duel.GetTurnPlayer()~=tp) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0
 end
 function s.desfilter(c)
 	return c:HasLevel() and c:IsDestructable()
@@ -49,13 +51,14 @@ function s.rescon(sg,e,tp,mg)
 	return sg:IsContains(e:GetHandler())
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,sg,sg:GetSum(Card.GetLevel))
 end
+
+function s.syncfilter(c, tc)
+	return Card.IsSynchroSummonable(c,tc) and c:IsAttribute(ATTRIBUTE_FIRE)
+end
 function s.spsynctg(e,tp,eg,ep,ev,re,r,rp,chk)
+
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,0,nil)
-	g:Merge(c)
-	if chk==0 then return c:HasLevel() and #g>=2
-		and aux.SelectUnselectGroup(g,e,tp,2,#g,s.rescon,0) end
-	Duel.SetOperationInfo(0,CATEGORY_RELEASE,c,1,tp,LOCATION_ONFIELD)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.syncfilter,tp,LOCATION_EXTRA,0,1,nil,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 
 	
@@ -76,24 +79,18 @@ function s.spsynctg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spsyncop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,0,nil)
-	g:Merge(c)
-	if #g<2 then return end
-	local rg=aux.SelectUnselectGroup(g,e,tp,2,#g,s.rescon,1,tp,HINTMSG_DESTROY)
-	if #rg<2 then return end
-	local lv=rg:GetSum(Card.GetLevel)
-	if Duel.Destroy(rg,REASON_EFFECT)>0 then
+	if c:IsControler(1-tp) or not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	local g=Duel.GetMatchingGroup(s.syncfilter,tp,LOCATION_EXTRA,0,nil,c)
+	if #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,nil,lv):GetFirst()
-		if sc then
-			Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
-		end
+		local sg=g:Select(tp,1,1,nil)
+		Duel.SynchroSummon(tp,sg:GetFirst(),c)
 	end
+
 end
 
 function s.counterfilter(c)
-	return c:IsRace(RACE_DRAGON) or c:IsRace(RACE_WARRIOR)
+	return c:IsAttribute(ATTRIBUTE_FIRE)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)

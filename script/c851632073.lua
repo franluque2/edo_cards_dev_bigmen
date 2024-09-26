@@ -39,7 +39,7 @@ end
 s.listed_series={0xc8}
 
 function s.counterfilter(c)
-	return c:IsRace(RACE_DRAGON) or c:IsRace(RACE_WARRIOR)
+	return c:IsAttribute(ATTRIBUTE_FIRE)
 end
 
 function s.splimit(e,c)
