@@ -35,9 +35,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(g2)
 			Duel.SendtoHand(g2,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g2)
-			local tg=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-			Duel.HintSelection(tg)
-			Duel.SendtoDeck(tg,nil,SEQ_DECKTOP,REASON_EFFECT)
 		end
 	end
 end
