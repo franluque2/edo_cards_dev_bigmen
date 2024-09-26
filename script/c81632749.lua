@@ -43,7 +43,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.Manga,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.Manga,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil)
 end
 
 function s.Manga(c)
