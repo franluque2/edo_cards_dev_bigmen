@@ -26,5 +26,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.Manga(c)
-	return c:IsCode(81632751, 81632754, 81632755)
+	return c:IsCode(81632751, 81632755)
 end
