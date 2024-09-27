@@ -29,7 +29,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		--Effect
 		local pg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 		local og=Duel.GetMatchingGroup(aux.FilterMaximumSideFunctionEx(s.filter),tp,0,LOCATION_MZONE,nil)
-		local _,atk=pg:GetMaxGroup(Card.GetAttack)
+		local _,atk=pg:GetMaxGroup(Card.GetLevel)
 		local sub1,_=og:GetMaxGroup(Card.GetAttack)
 		for tc in sub1:Iter() do
 			local e1=Effect.CreateEffect(e:GetHandler())
