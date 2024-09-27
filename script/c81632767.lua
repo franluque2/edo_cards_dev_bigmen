@@ -13,8 +13,17 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	e3:SetValue(800)
 	c:RegisterEffect(e3)
+    --Cannot be destroyed by the opponent's trap effects
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_EQUIP)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e4:SetValue(s.efilter)
+	c:RegisterEffect(e4)
 end
 
 function s.filter(c)
 	return c:IsRace(RACE_PYRO)
+end
+function s.efilter(e,te)
+	return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
 end

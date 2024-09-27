@@ -40,6 +40,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(g2)
 			Duel.SendtoHand(g2,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g2)
+            local g3=Duel.GetMatchingGroup(s.thfilter2,tp,LOCATION_GRAVE,0,nil)
+			if g2:GetFirst():IsCode(81632764) and #g3>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+				local sg=g3:Select(tp,1,1,nil)
+				Duel.HintSelection(sg)
+				Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			end
 		end
 	end
 end

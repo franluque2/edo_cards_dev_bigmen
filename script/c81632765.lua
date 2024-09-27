@@ -39,6 +39,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(-atk*200)
 			e1:SetReset(RESETS_STANDARD_PHASE_END)
 			tc:RegisterEffect(e1)
+            local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			e2:SetValue(-atk*200)
+			e2:SetReset(RESETS_STANDARD_PHASE_END)
+			tc:RegisterEffect(e2)
 		end
 	end
 end

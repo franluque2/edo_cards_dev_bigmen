@@ -42,5 +42,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsCanTurnSet() and c:IsCanChangePositionRush()
+	return c:IsAttackPos() and c:IsFaceup() and c:IsCanTurnSet() and c:IsCanChangePositionRush()
 end
