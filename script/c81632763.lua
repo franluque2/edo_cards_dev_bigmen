@@ -23,7 +23,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.thfilter(c)
-	return (c:IsType(TYPE_EQUIP) and c:IsSpell()) or c:IsCode(81632765) and c:IsAbleToHand()
+	return c:IsCode(81632765) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--Requirement

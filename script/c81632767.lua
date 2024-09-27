@@ -25,5 +25,5 @@ function s.filter(c)
 	return c:IsRace(RACE_PYRO)
 end
 function s.efilter(e,te)
-	return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
+	return te:IsTrapEffect() and te:GetOwnerPlayer()~=e:GetOwnerPlayer()
 end
