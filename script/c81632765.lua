@@ -32,6 +32,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         local g3=Duel.SelectMatchingCard(tp,aux.FilterMaximumSideFunctionEx(Card.IsFaceup),tp,0,LOCATION_MZONE,1,1,nil)
         if #g3>0 then
             Duel.HintSelection(g3,true)
+            local tc=g3:GetFirst()
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
