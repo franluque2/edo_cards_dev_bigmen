@@ -28,16 +28,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)>0 then
 		--Effect
 		local pg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-		local og=Duel.GetMatchingGroup(aux.FilterMaximumSideFunctionEx(s.filter),tp,0,LOCATION_MZONE,nil)
 		local _,atk=pg:GetMaxGroup(Card.GetLevel)
-		local sub1,_=og:GetMaxGroup(Card.GetAttack)
-		for tc in sub1:Iter() do
+        local g3=Duel.SelectMatchingCard(tp,aux.FilterMaximumSideFunctionEx(Card.IsFaceup),tp,0,LOCATION_MZONE,1,1,nil)
+        if #g3>0 then
+            Duel.HintSelection(g3,true)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetValue(-atk*200)
 			e1:SetReset(RESETS_STANDARD_PHASE_END)
-			tc:RegisterEffect(e1)
+			g3:RegisterEffect(e1)
 		end
 	end
 end
