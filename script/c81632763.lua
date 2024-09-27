@@ -28,7 +28,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--Requirement
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD|LOCATION_HAND,0,2,2,c)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD|LOCATION_HAND,0,2,2,false,c)
 	if Duel.SendtoGrave(g,REASON_COST)==0 then return end
 		--Effect
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
