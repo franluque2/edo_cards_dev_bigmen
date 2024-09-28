@@ -15,7 +15,7 @@ function s.initial_effect(c)
 end
 s.listed_names={CARD_BLUEEYES_W_DRAGON}
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_LIGHTNING_VOLTCONDOR),tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,81632771),tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,2,nil) end
