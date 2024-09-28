@@ -29,7 +29,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	--gy recover
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_GRAVE,0,nil)
-	local th=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,2,2,nil)
+	local th=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_SELECT)
 	if #th>0 then
 		Duel.SendtoHand(th,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,th)
@@ -40,4 +40,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.SendtoDeck(tg,nil,SEQ_DECKTOP,REASON_EFFECT)
         end
 	end
+end
+function s.rescon(sg,e,tp,mg)
+	return sg:GetClassCount(Card.GetLevel)==#sg,sg:GetClassCount(Card.GetCode)~=#sg and Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_GRAVE,0,1,sg,e,tp)
 end
