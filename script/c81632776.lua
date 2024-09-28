@@ -37,7 +37,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
             local tg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,3,3,nil)
             Duel.HintSelection(tg,true)
-            Duel.SendtoDeck(tg,nil,SEQ_DECKTOP,REASON_EFFECT)
+            Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
         end
 	end
 end
