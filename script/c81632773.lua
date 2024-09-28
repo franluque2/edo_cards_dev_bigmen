@@ -52,7 +52,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
                     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
                     local tg=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_GRAVE,0,3,3,nil)
                     Duel.HintSelection(tg,true)
-                    Duel.SendtoDeck(tg,nil,SEQ_DECKTOP,REASON_EFFECT)
+                    Duel.SendtoDeck(tg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
                 end
             end
         end
@@ -62,7 +62,7 @@ function s.setfilter(c)
 	return c:IsCode(81632784) and c:IsSSetable()
 end
 function s.tdfilter(c)
-	return c:IsAbleToDeck() and c:IsMonster() and c:IsRace(RACE_WINGEDBEAST) and c:IsAttribute(ATTRIBUTE_WIND) 
+	return c:IsAbleToDeck() and c:IsMonster() and c:IsRace(RACE_WINGEDBEAST) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_NORMAL)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
