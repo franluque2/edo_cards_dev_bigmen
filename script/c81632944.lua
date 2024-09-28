@@ -36,14 +36,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 
 		--halve battle dmg
+
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e3:SetTargetRange(0,1)
 		e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-		e3:SetTargetRange(LOCATION_MZONE,0)
-		e3:SetTarget(s.rdtg)
 		e3:SetCondition(s.halvecon)
-		e3:SetValue(aux.ChangeBattleDamage(1,HALF_DAMAGE))
-		Duel.RegisterEffect(e3,tp)
+		e3:SetValue(HALF_DAMAGE)
+        Duel.RegisterEffect(e3, tp)
+	
 
 
 		local e8=Effect.CreateEffect(e:GetHandler())
@@ -73,7 +75,7 @@ function s.fuaojfilter(c)
 end
 
 function s.halvecon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(s.fuaojfilter, tp, LOCATION_MZONE, 0, 1, nil)
+	return not Duel.IsExistingMatchingCard(s.fuaojfilter, e:GetHandlerPlayer(), LOCATION_MZONE, 0, 1, nil)
 end
 
 function s.efilter(e,te)
