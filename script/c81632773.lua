@@ -12,6 +12,14 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
+    --special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(s.spcon)
+	c:RegisterEffect(e2)
 end
 s.listed_names={CARD_SEVENS_ROAD_MAGICIAN}
 function s.cfilter(c,e,tp)
@@ -62,4 +70,9 @@ function s.setfilter(c)
 end
 function s.tdfilter(c)
 	return c:IsAbleToDeck() and c:IsMonster() and c:IsRace(RACE_WINGEDBEAST) and c:IsAttribute(ATTRIBUTE_WIND) 
+end
+function s.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
