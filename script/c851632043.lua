@@ -72,7 +72,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetOperation(s.damop)
 		e3:SetReset(RESET_PHASE+PHASE_DAMAGE)
 		Duel.RegisterEffect(e3,tp)
-		Duel.ForceAttack(e:GetHandler(), tc:GetFirst())
+		Duel.CalculateDamage(e:GetHandler(), tc:GetFirst())
 	end
 end
 

@@ -41,7 +41,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(Card.IsCanBeBattleTarget, e:GetHandler(), e:GetHandler())
 	local tc=g:Select(tp, 1,1,nil)
 	if tc then
-		Duel.ForceAttack(e:GetHandler(), tc:GetFirst())
+		Duel.CalculateDamage(e:GetHandler(), tc:GetFirst())
 	end
 end
 
