@@ -25,6 +25,7 @@ function s.initial_effect(c)
     Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 
 end
+s.listed_series={0x107a,0x207a}
 
 function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
