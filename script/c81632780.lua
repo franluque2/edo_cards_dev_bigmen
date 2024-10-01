@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_WINGEDBEAST) and c:IsNotMaximumModeSide()
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsNotMaximumModeSide()
 end
 function s.tdfilter(c)
 	return c:IsRace(RACE_WINGEDBEAST) and c:IsAbleToDeckOrExtraAsCost()
