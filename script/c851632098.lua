@@ -52,9 +52,8 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
 	local g=Duel.GetTargetCards(e)
-	if #g~=3 then return end
-	local b1=g:FilterCount(Card.IsAbleToRemove,nil)==3
-	local b2=g:FilterCount(Card.IsAbleToDeck,nil)==3
+	local b1=g:FilterCount(Card.IsAbleToRemove,nil)>0
+	local b2=g:FilterCount(Card.IsAbleToDeck,nil)>0
 	if not (b1 or b2) then return end
 	local op=Duel.SelectEffect(tp,
 		{b1,aux.Stringid(id,1)}, --"Banish"
