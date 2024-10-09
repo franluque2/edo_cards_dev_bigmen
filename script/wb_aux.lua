@@ -26,6 +26,14 @@ SET_FRIESLA=0xc01
 
 CARD_FRIESLA_BIERGARTEN=851632054
 
+-- Diktat / Techminator
+
+SET_DIKTAT=0xc02
+SET_TECHMINATOR=0xc03
+CARD_TECHMINATOR_TOKEN=851632091
+TECHMINATOR_LINKS={851632086, 851632087, 851632088, 851632089, 851632090}
+REGISTER_FLAG_TECHMINATOR_IGNITION=2048
+
 if not WbAux then
     WbAux={}
 end
@@ -144,3 +152,52 @@ function WbAux.GetNormalIgknight(tp,c)
 
     return Duel.CreateToken(tp, id)
 end
+
+function WbAux.CanPlayerSummonTechminator(tp)
+    return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+    and Duel.IsPlayerCanSpecialSummonMonster(tp,TECHMINATOR_LINKS[1],nil,TYPE_MONSTER+TYPE_EFFECT+TYPE_LINK,0,0,2,RACE_MACHINE,ATTRIBUTE_DARK,POS_FACEUP_ATTACK,tp,0)
+end
+
+function WbAux.MMzoneTechminatorFilter(c)
+    return c:IsInMainMZone(c:GetControler()) and c:IsSetCard(SET_TECHMINATOR)
+end
+
+function WbAux.FuCodeFilter(c,code)
+    return c:IsFaceup() and c:IsCode(code)
+end
+
+function WbAux.SpecialTechminatorLink(tp, pos)
+    local id=TECHMINATOR_LINKS[Duel.GetRandomNumber(1,#TECHMINATOR_LINKS)]
+    if Duel.GetMatchingGroupCount(Card.IsInMainMZone, tp, LOCATION_MZONE, 0, nil)>4 then return false end
+    if Duel.GetMatchingGroupCount(WbAux.MMzoneTechminatorFilter, tp, LOCATION_MZONE, 0, nil)>=#TECHMINATOR_LINKS then return false end
+
+    while Duel.IsExistingMatchingCard(WbAux.FuCodeFilter, tp, LOCATION_MZONE, 0, 1, nil, id) do
+        id=TECHMINATOR_LINKS[Duel.GetRandomNumber(1,#TECHMINATOR_LINKS)]
+    end
+    if not Duel.IsPlayerCanSpecialSummonMonster(tp,id,nil,TYPE_MONSTER+TYPE_EFFECT+TYPE_LINK,0,0,2,RACE_MACHINE,ATTRIBUTE_DARK,POS_FACEUP,tp,0) then return false end
+    local token=Duel.CreateToken(tp, id)
+    if not pos then pos=POS_FACEUP end
+
+    local res= Duel.SpecialSummon(token, SUMMON_TYPE_LINK, tp, tp, false,false, pos)
+
+    if res>0 then
+        Card.CompleteProcedure(token)
+    end
+    return res
+end
+
+
+WbAux.CreateDiktatSummonEffect=(function()
+
+    
+
+    return function(e,tp,eg,ep,ev,re,r,rp)
+    
+        if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) and WbAux.CanPlayerSummonTechminator(tp) and Duel.SelectYesNo(tp, aux.Stringid(851632093,0)) then
+            if Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil)>0 then
+                WbAux.SpecialTechminatorLink(tp,POS_FACEUP_ATTACK)
+            end
+        end
+	end
+end
+)()

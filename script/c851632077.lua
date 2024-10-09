@@ -67,32 +67,33 @@ function s.cpfilter(c)
 	return c:IsSetCard(0x106e) and c:IsSpellTrap() and c:IsAbleToDeck() and (c:IsType(TYPE_QUICKPLAY) or (c:GetType()==TYPE_SPELL)) and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE|LOCATION_REMOVED) and chkc:IsControler(tp) and s.cpfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.cpfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,nil) end
+	if chkc then
+		local te=e:GetLabelObject()
+		local tg=te:GetTarget()
+		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+	end
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingTarget(s.cpfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,c) end
+	e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.cpfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+	local g=Duel.SelectTarget(tp,s.cpfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,1,1,c)
+	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(false,true,true)
+	Duel.ClearTargetCard()
+	g:GetFirst():CreateEffectRelation(e)
+	local tg=te:GetTarget()
+	e:SetProperty(te:GetProperty())
+	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
+	te:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(te)
+	Duel.ClearOperationInfo(0)
 end
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if not (tc and tc:IsRelateToEffect(e)) then return end
-	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
-	if not te then return end
-	local tg=te:GetTarget()
+	local te=e:GetLabelObject()
+	if not te or not te:GetHandler():IsRelateToEffect(e) then return end
+	e:SetLabelObject(te:GetLabelObject())
 	local op=te:GetOperation()
-	if tg then tg(te,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE,1) end
-	Duel.BreakEffect()
-	tc:CreateEffectRelation(te)
-	Duel.BreakEffect()
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	for etc in aux.Next(g) do
-		etc:CreateEffectRelation(te)
+	if op then
+		op(e,tp,eg,ep,ev,re,r,rp)
 	end
-	if op then op(te,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE,1) end
-	tc:ReleaseEffectRelation(te)
-	for etc in aux.Next(g) do
-		etc:ReleaseEffectRelation(te)
-	end
-	Duel.BreakEffect()
 	Duel.SendtoDeck(te:GetHandler(),nil,2,REASON_EFFECT)
 end
