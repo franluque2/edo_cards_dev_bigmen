@@ -90,7 +90,7 @@ end
 
 
 function s.costfilter(c,e,tp)
-	return c:IsDiscardable() and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp)
+	return c:IsDiscardable() and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,c,e,tp)
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x42) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
