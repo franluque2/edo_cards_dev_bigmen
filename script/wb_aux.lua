@@ -236,3 +236,26 @@ function Card.RegisterEffect(c,e,forced,...)
 	end
 	return reg_e
 end
+
+
+
+--For LP Gain Manipulation
+
+EFFECT_NO_LP_GAIN=851632104
+
+Duel.Recover=(function()
+
+	local oldfunc=Duel.Recover
+
+			return function(player,value,reason,...)
+                local res=false
+                if Duel.IsPlayerAffectedByEffect(player,EFFECT_NO_LP_GAIN) then
+                    res=oldfunc(player, 0, reason,...)
+                else
+                    res=oldfunc(player, value, reason,...)
+                end
+			return res
+	end
+
+
+end)()
