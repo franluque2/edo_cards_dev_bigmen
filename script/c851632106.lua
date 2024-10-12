@@ -114,6 +114,6 @@ end
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-        Duel.ChangePosition(tc,tc:IsFaceup() and POS_FACEDOWN_DEFENSE or POS_FACEUP_DEFENSE)
+        Duel.ChangePosition(tc,tc:IsFaceup() and POS_FACEDOWN_DEFENSE or POS_FACEUP_ATTACK)
 	end
 end
