@@ -68,5 +68,6 @@ function s.upop(e,tp,eg,ep,ev,re,r,rp)
         
         Duel.Damage(1-tp,dam,REASON_EFFECT)
 
+        Duel.ChangeBattleDamage(tp, 0)
     end
 end
