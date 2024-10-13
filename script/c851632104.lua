@@ -56,7 +56,7 @@ function s.sumfilter(c,tp)
 end
 
 function s.upcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.sumfilter,1,nil,1-tp) and #eg==1
+	return eg:IsExists(s.sumfilter,1,nil,1-tp) and #eg==1 and not (Duel.GetCurrentPhase()==PHASE_DAMAGE or Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL)
 end
 function s.upop(e,tp,eg,ep,ev,re,r,rp)
     local tc=eg:GetFirst()
