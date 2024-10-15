@@ -114,7 +114,7 @@ end
 
 
 function s.machinefilter(c)
-    return c:IsRace(RACE_MACHINE) and c:IsSetCard(0xd2)
+    return c:IsRace(RACE_MACHINE) and c:IsSetCard(0xd2) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
 end
 
 
@@ -144,7 +144,7 @@ end
 
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.machinefilter, e:GetHandlerPlayer(), LOCATION_GRAVE, 0, 3,nil)
+	return Duel.IsExistingMatchingCard(s.machinefilter, e:GetHandlerPlayer(), LOCATION_GRAVE|LOCATION_REMOVED, 0, 3,nil)
 end
 
 
