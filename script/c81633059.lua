@@ -24,6 +24,7 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 --add archetype setcode here
 local ARCHETYPE=0x1186
 
+local FLAVIUS_ARENA=101207060
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
   return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DINOSAUR)
@@ -129,7 +130,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e13:SetValue(83104731)
         Duel.RegisterEffect(e13,tp)
     
-
 	end
 	e:SetLabel(1)
 end
@@ -167,7 +167,7 @@ function s.adcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 local table_not_glads={{36256625,03897065},
-                        {90140980,40391316},
+                        {76263644,69394324},
                         {91998119,58859575},
                         {27134689,07243511},
                         {25586143,66309175},
@@ -220,9 +220,61 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 
+    local flavius=Duel.GetMatchingGroup(Card.IsOriginalCode, tp, LOCATION_ALL,LOCATION_ALL, nil, FLAVIUS_ARENA)
+	for tc in flavius:Iter() do
+		if tc:GetFlagEffect(id)==0 then
+			local eff={tc:GetCardEffect()}
+			for _,teh in ipairs(eff) do
+                if teh:GetCode()==EVENT_ATTACK_ANNOUNCE then
+                    teh:Reset()
+                end
+
+			end
+
+
+            local e2=Effect.CreateEffect(tc)
+            e2:SetDescription(aux.Stringid(tc:GetOriginalCode(),1))
+            e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+            e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+            e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+            e2:SetRange(LOCATION_FZONE)
+            e2:SetCountLimit(1,{id,1})
+            e2:SetCondition(function(e,tp) return Duel.GetAttacker():IsControler(1-tp) end)
+            e2:SetTarget(s.sptg)
+            e2:SetOperation(s.spop)
+            tc:RegisterEffect(e2)
+
+
+            tc:RegisterFlagEffect(id,0,0,0)
+
+	end
+    end
+
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
     return c:IsLocation(LOCATION_HAND)
+end
+
+
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(SET_GLADIATOR_BEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
+	if sc  then
+        Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+
+function s.discon(e)
+	return Duel.IsBattlePhase() and Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
