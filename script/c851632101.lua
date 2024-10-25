@@ -18,7 +18,7 @@ function s.initial_effect(c)
 
 
     local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_CONJURE)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(aux.selfreleasecost)
@@ -34,24 +34,8 @@ function s.initial_effect(c)
 	e3:SetValue(0x4b)
 	c:RegisterEffect(e3)
 
-    local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCountLimit(1,{id,2})
-	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E|TIMING_MAIN_END|TIMING_BATTLE_START)
-    e4:SetCondition(s.rmcon)
-	e4:SetCost(aux.bfgcost)
-	e4:SetTarget(s.rmtg)
-	e4:SetOperation(s.rmop)
-	c:RegisterEffect(e4)
-
 end
 s.listed_series={0x42,0x4b,0x5042}
-
-local RAGNAROK_CARDS={91148083,28643791,88069166,511000061}
-
 
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard, 0x4b), tp, LOCATION_MZONE, 0, 1, nil)
@@ -90,10 +74,16 @@ function s.matfilter(c,scard,sumtype,tp)
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-    local res=Duel.SelectCardsFromCodes(tp,1,1,false,false,RAGNAROK_CARDS)
-    local token=Duel.CreateToken(tp, res)
+	local e1=Effect.CreateEffect(e:GetHandler())
 
-    aux.ToHandOrElse(token,tp)
+	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetTarget(s.rmtg)
+	e1:SetOperation(s.rmop)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
 
 function s.setfilter(c)
@@ -121,7 +111,6 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SSet(tp,g)
 
         local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetDescription(aux.Stringid(id,3))
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
 		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
