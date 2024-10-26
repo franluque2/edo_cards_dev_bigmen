@@ -1,11 +1,10 @@
---Diktat of Inquiry
+--Diktat of Repurposing
 Duel.LoadScript ("wb_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_CONJURE)
+	e1:SetCategory(CATEGORY_LEAVE_GRAVE+CATEGORY_CONJURE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -13,15 +12,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 
 end
-s.listed_series={SET_TECHMINATOR, SET_DIKTAT}
+s.listed_series={SET_TECHMINATOR}
 
-function s.filter(c)
-	return c:IsSetCard(SET_DIKTAT) and not c:IsCode(id) and c:IsAbleToHand()
-end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+    local g=Duel.GetMatchingGroup(s.tohandfilter, tp, LOCATION_GRAVE, 0, nil)
 
+    if chk==0 then return #g>0 or WbAux.CanPlayerSummonTechminator(tp) end
     local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -35,16 +31,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 
 end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		if Duel.SendtoHand(g,nil,REASON_EFFECT) then
-            Duel.ConfirmCards(1-tp,g)
-            WbAux.CreateDiktatSummonEffect(e,tp,eg,ep,ev,re,r,rp)
 
-        end
-	end
+function s.tohandfilter(c)
+    return c:IsReason(REASON_DISCARD) and c:GetTurnID()==Duel.GetTurnCount() and c:GetReasonEffect() and c:GetReasonEffect():GetHandler():IsSetCard({SET_TECHMINATOR,SET_DIKTAT})
+end
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.tohandfilter, tp, LOCATION_GRAVE, 0, nil)
+    if #g>0 then
+        Duel.SendtoHand(g, tp, REASON_EFFECT)
+    end
+    WbAux.CreateDiktatSummonEffect(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
