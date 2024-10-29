@@ -28,8 +28,11 @@ end
 
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
+    Duel.ConfirmCards(tp,g)
+
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
-    local tocopy=Duel.SelectMatchingCard(tp, Card.IsFacedown, tp, 0, LOCATION_EXTRA, 1,1,false,nil):GetFirst()
+    local tocopy=g:FilterSelect(tp,Card.IsFacedown,1,1,nil):GetFirst()
     if tocopy then
 
         Duel.ConfirmCards(1-tp, tocopy)
