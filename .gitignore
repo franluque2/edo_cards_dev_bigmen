@@ -7,6 +7,6 @@
 !/A World Beyond.cdb
 !/lflists/
 !strings.conf
-
+!*.lflist.conf
 .gitignore
 script/.vscode/settings.json
