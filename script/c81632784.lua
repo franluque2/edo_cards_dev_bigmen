@@ -40,12 +40,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
     if ct==3 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local tg=sg:Select(tp,1,1,nil)
-		if #tg>0 then 
-			tg=tg:AddMaximumCheck()
-			Duel.HintSelection(tg)
-			Duel.Destroy(tg,REASON_EFFECT) 
+		local dg=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil)
+		if #dg>0 then
+			local sg=dg:Select(tp,1,1,nil)
+			sg=sg:AddMaximumCheck()
+			Duel.HintSelection(sg)
+			Duel.Destroy(sg,REASON_EFFECT)
 		end
 	end
 end
