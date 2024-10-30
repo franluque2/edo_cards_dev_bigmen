@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
-    e2:SetCondition(s.birdfilter)
+    e2:SetCondition(s.condition)
 	c:RegisterEffect(e2)
 end
 function s.eqfilter(c)
