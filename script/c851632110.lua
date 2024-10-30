@@ -75,7 +75,7 @@ function s.tgfilter(c)
 	return c:GetControler()~=c:GetOwner()
 end
 function s.tgcon(e)
-	return Duel.IsExistingMatchingCard(s.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(s.tgfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,e:GetHandler())
 end
 
 
