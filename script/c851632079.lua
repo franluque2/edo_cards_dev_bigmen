@@ -79,11 +79,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-
 function s.value(e)
-    local pos=1<<e:GetHandler():GetSequence()
-    if pos==0x1 then return 0x3 end
-    if pos==0x10 then return 0x10 end
+    local tp=e:GetHandlerPlayer()
+    local c=e:GetHandler()
+    local zone=1<<c:GetSequence()
+
+    if zone & 0x1 > 0 then
+        return tp==0 and 0x3 or 0x30000
+    elseif zone & 0x10 > 0 then
+        return tp==0 and 0x10 or 0x100000
+    end
 end
 
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
