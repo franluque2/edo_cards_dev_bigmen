@@ -20,7 +20,7 @@ end
 function s.eqlimit(e,c)
 	return c:IsFaceup()
 end
-function s.birdfilter(c)
-    local c=e:GetHandler():GetEquipTarget()
-	return c:IsRace(RACE_WINGEDBEAST)
+function s.condition(e)
+	local c=e:GetHandler():GetEquipTarget()
+	return c:IsAttribute(ATTRIBUTE_WIND)
 end
