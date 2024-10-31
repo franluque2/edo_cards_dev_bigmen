@@ -18,7 +18,7 @@ function s.tdfilter(c)
 end
 --Activation legality
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE,0,3,nil)end
 end
 --Make 1 pyro monster you control gain ATK
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
