@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	e3:SetTarget(s.gytg)
     e3:SetOperation(s.operation)
     e3:SetCountLimit(1,id)
-	e3:SetHintTiming(TIMING_DRAW_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
+	e3:SetHintTiming(0,TIMING_DRAW_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
 	c:RegisterEffect(e3)
 
 
