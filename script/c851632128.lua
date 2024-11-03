@@ -135,12 +135,14 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp)
     local num=Duel.GetMatchingGroupCount(aux.TRUE, tp, LOCATION_MZONE, LOCATION_MZONE, e:GetHandler())
     if num>Duel.GetLocationCount(tp,LOCATION_MZONE) then num=Duel.GetLocationCount(tp,LOCATION_MZONE) end
     if Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) then num=1 end
-    local continue=true
-	if continue and num>0 and WbAux.SpecialSummonDredge(tp,POS_FACEUP)>0 then
-        if num>1 then
-            continue=Duel.SelectYesNo(tp, aux.Stringid(id, 3))
-        end
-        num=num-1
+	if num<1 then return end
+	local tossummon=Duel.AnnounceNumberRange(tp,1,num)
+
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,CARD_ABYSSAL_DREDGE,nil,TYPE_MONSTER+TYPE_EFFECT,0,0,4,RACE_REPTILE,ATTRIBUTE_DARK,POS_FACEUP,tp,0) then return end
+
+	for i = 1, tossummon, 1 do
+		local dredge=Duel.CreateToken(tp, CARD_ABYSSAL_DREDGE)
+		Duel.SpecialSummonStep(dredge, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP)	
 	end
 	Duel.SpecialSummonComplete()
 end
