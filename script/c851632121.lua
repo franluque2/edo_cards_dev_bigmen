@@ -11,11 +11,17 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+
 end
 s.listed_series={SET_TECHMINATOR}
 
+function s.counterfilter(c)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsRace(RACE_MACHINE)
+end
+
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return WbAux.CanPlayerSummonTechminator(tp) end
+    if chk==0 then return WbAux.CanPlayerSummonTechminator(tp) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 
     local e1=Effect.CreateEffect(e:GetHandler())

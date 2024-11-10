@@ -13,8 +13,14 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+
 end
 s.listed_series={SET_TECHMINATOR, SET_DIKTAT}
+
+function s.counterfilter(c)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsRace(RACE_MACHINE)
+end
 
 function s.filter(c,e,tp)
 	if not (c:IsSetCard(SET_TECHMINATOR) and c:IsMonster()
@@ -34,7 +40,7 @@ function s.filter(c,e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 

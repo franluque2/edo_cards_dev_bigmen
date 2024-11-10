@@ -12,14 +12,19 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+
 end
 s.listed_series={SET_TECHMINATOR, SET_DIKTAT}
 
+function s.counterfilter(c)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsRace(RACE_MACHINE)
+end
 function s.filter(c)
 	return c:IsSetCard(SET_DIKTAT) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 
     local e1=Effect.CreateEffect(e:GetHandler())

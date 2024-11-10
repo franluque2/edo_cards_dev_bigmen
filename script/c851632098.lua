@@ -12,8 +12,14 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
+
 end
 s.listed_series={SET_TECHMINATOR, SET_DIKTAT}
+
+function s.counterfilter(c)
+	return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsRace(RACE_MACHINE)
+end
 
 function s.tgfilter(c,e)
 	return c:IsCanBeEffectTarget(e) and (c:IsAbleToRemove() or c:IsAbleToDeck())
@@ -26,7 +32,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e)
-	if chk==0 then return #g>=2 and aux.SelectUnselectGroup(g,e,tp,1,3,s.rescon,0) end
+	if chk==0 then return #g>=2 and aux.SelectUnselectGroup(g,e,tp,1,3,s.rescon,0) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,3,s.rescon,1,tp,HINTMSG_TARGET)
 	Duel.SetTargetCard(sg)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_REMOVE,sg,#sg,tp,0)
