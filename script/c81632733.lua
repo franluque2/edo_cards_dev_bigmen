@@ -33,8 +33,8 @@ function s.initial_effect(c)
     e3:SetCountLimit(1,{id,2})
 	e3:SetCondition(aux.exccon)
 	e3:SetCost(aux.bfgcost)
-	e2:SetTarget(Fusion.SummonEffTG(params))
-	e2:SetOperation(Fusion.SummonEffOP(params))
+	e3:SetTarget(Fusion.SummonEffTG(params))
+	e3:SetOperation(Fusion.SummonEffOP(params))
 	c:RegisterEffect(e3)
 	
 end
