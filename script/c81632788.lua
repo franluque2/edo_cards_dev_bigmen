@@ -15,7 +15,7 @@ end
 
 --Condition: During the turn this card was Normal Summoned
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():IsSummonType(SUMMON_TYPE_NORMAL)
+    e:GetHandler():RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD&~(RESET_TEMP_REMOVE|RESET_TURN_SET)|RESET_PHASE|PHASE_END,0,1)
 end
 
 --Operation: Change battle position, protect Spell/Trap cards, and retrieve a specific card

@@ -20,7 +20,7 @@ function s.initial_effect(c)
     --Equip effect: Change Attribute if WIND Zombie
     local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e3:SetCode(EVENT_ADJUST)
+    e3:SetCode(EFFECT_CHANGE_ATTRIBUTE)
     e3:SetRange(LOCATION_SZONE)
     e3:SetCondition(s.condition)
     e3:SetOperation(s.operation2)
