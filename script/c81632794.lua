@@ -70,7 +70,7 @@ function s.light_condition(e)
     return ec and ec:IsAttribute(ATTRIBUTE_WIND) and ec:IsRace(RACE_ZOMBIE)
 end
 
---Operation: Change all opponent's monsters (field + Graveyard) to LIGHT Attribute
+--Operation: Temporarily change all opponent's monsters (field + Graveyard) to LIGHT Attribute
 function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if not s.light_condition(e) then return end
@@ -78,22 +78,26 @@ function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
     -- Change Attributes of monsters on opponent's field
     local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
     for tc in aux.Next(g1) do
-        local e1=Effect.CreateEffect(c)
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-        e1:SetValue(ATTRIBUTE_LIGHT)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e1)
+        if not tc:IsAttribute(ATTRIBUTE_LIGHT) then
+            local e1=Effect.CreateEffect(c)
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+            e1:SetValue(ATTRIBUTE_LIGHT)
+            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_LEAVE)
+            tc:RegisterEffect(e1)
+        end
     end
 
     -- Change Attributes of monsters in opponent's Graveyard
     local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_GRAVE,nil)
     for tc in aux.Next(g2) do
-        local e2=Effect.CreateEffect(c)
-        e2:SetType(EFFECT_TYPE_SINGLE)
-        e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-        e2:SetValue(ATTRIBUTE_LIGHT)
-        e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e2)
+        if not tc:IsAttribute(ATTRIBUTE_LIGHT) then
+            local e2=Effect.CreateEffect(c)
+            e2:SetType(EFFECT_TYPE_SINGLE)
+            e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+            e2:SetValue(ATTRIBUTE_LIGHT)
+            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_LEAVE)
+            tc:RegisterEffect(e2)
+        end
     end
 end
