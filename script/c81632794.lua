@@ -17,7 +17,7 @@ function s.initial_effect(c)
     e2:SetValue(s.atkvalue)
     c:RegisterEffect(e2)
 
-    --Continuous effect: Change opponent's monsters to LIGHT Attribute
+    --Continuous effect: Apply Attribute change
     local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e3:SetCode(EVENT_ADJUST)
@@ -33,6 +33,13 @@ function s.initial_effect(c)
     e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
     e4:SetValue(s.eqlimit)
     c:RegisterEffect(e4)
+
+    --Remove Attribute change when leaving field
+    local e5=Effect.CreateEffect(c)
+    e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+    e5:SetCode(EVENT_LEAVE_FIELD)
+    e5:SetOperation(s.cleanup_operation)
+    c:RegisterEffect(e5)
 end
 
 --Target: Select 1 monster to equip this card to
@@ -70,7 +77,7 @@ function s.light_condition(e)
     return ec and ec:IsAttribute(ATTRIBUTE_WIND) and ec:IsRace(RACE_ZOMBIE)
 end
 
---Operation: Temporarily change all opponent's monsters (field + Graveyard) to LIGHT Attribute
+--Operation: Apply Attribute change to opponent's monsters
 function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if not s.light_condition(e) then return end
@@ -83,7 +90,8 @@ function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
             e1:SetValue(ATTRIBUTE_LIGHT)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_LEAVE)
+            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1) -- Track affected monsters
             tc:RegisterEffect(e1)
         end
     end
@@ -96,8 +104,22 @@ function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
             e2:SetType(EFFECT_TYPE_SINGLE)
             e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
             e2:SetValue(ATTRIBUTE_LIGHT)
-            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_LEAVE)
+            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1) -- Track affected monsters
             tc:RegisterEffect(e2)
+        end
+    end
+end
+
+--Cleanup: Remove the Attribute change from affected monsters
+function s.cleanup_operation(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    local g1=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+    local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_GRAVE,nil)
+    for tc in aux.Next(g1+g2) do
+        if tc:GetFlagEffect(id)~=0 then
+            tc:ResetEffect(EFFECT_CHANGE_ATTRIBUTE,RESET_CODE)
+            tc:ResetFlagEffect(id)
         end
     end
 end
