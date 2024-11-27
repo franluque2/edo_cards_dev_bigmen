@@ -19,13 +19,11 @@ function s.initial_effect(c)
 
     --Continuous effect: Change opponent's monsters to LIGHT Attribute
     local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_FIELD)
-    e3:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EVENT_ADJUST)
     e3:SetRange(LOCATION_SZONE)
-    e3:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
     e3:SetCondition(s.light_condition)
-    e3:SetTarget(s.light_target)
-    e3:SetValue(ATTRIBUTE_LIGHT)
+    e3:SetOperation(s.light_operation)
     c:RegisterEffect(e3)
 
     --Equip limit
@@ -72,7 +70,30 @@ function s.light_condition(e)
     return ec and ec:IsAttribute(ATTRIBUTE_WIND) and ec:IsRace(RACE_ZOMBIE)
 end
 
---Target: Opponent's monsters (on the field and in the Graveyard)
-function s.light_target(e,c)
-    return c:IsControler(1-e:GetHandlerPlayer())
+--Operation: Change all opponent's monsters (field + Graveyard) to LIGHT Attribute
+function s.light_operation(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if not s.light_condition(e) then return end
+
+    -- Change Attributes of monsters on opponent's field
+    local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+    for tc in aux.Next(g1) do
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+        e1:SetValue(ATTRIBUTE_LIGHT)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+        tc:RegisterEffect(e1)
+    end
+
+    -- Change Attributes of monsters in opponent's Graveyard
+    local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_GRAVE,nil)
+    for tc in aux.Next(g2) do
+        local e2=Effect.CreateEffect(c)
+        e2:SetType(EFFECT_TYPE_SINGLE)
+        e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+        e2:SetValue(ATTRIBUTE_LIGHT)
+        e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+        tc:RegisterEffect(e2)
+    end
 end
