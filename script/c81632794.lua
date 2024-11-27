@@ -1,7 +1,7 @@
---Golondrinas Ray (CT)
+--Custom Equip Spell Card
 local s,id=GetID()
 function s.initial_effect(c)
-    --Activate
+    --Activate and equip
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetCode(EVENT_FREE_CHAIN)
@@ -17,16 +17,18 @@ function s.initial_effect(c)
     e2:SetValue(s.atkvalue)
     c:RegisterEffect(e2)
 
-    --Equip effect: Change Attribute if WIND Zombie
+    --Continuous effect: Change opponent's monsters to LIGHT Attribute
     local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e3:SetType(EFFECT_TYPE_FIELD)
     e3:SetCode(EFFECT_CHANGE_ATTRIBUTE)
     e3:SetRange(LOCATION_SZONE)
-    e3:SetCondition(s.condition)
-    e3:SetOperation(s.operation2)
+    e3:SetTargetRange(LOCATION_MZONE+LOCATION_GRAVE,0)
+    e3:SetCondition(s.light_condition)
+    e3:SetTarget(s.light_target)
+    e3:SetValue(ATTRIBUTE_LIGHT)
     c:RegisterEffect(e3)
 
-    --Equip Limit
+    --Equip limit
     local e4=Effect.CreateEffect(c)
     e4:SetType(EFFECT_TYPE_SINGLE)
     e4:SetCode(EFFECT_EQUIP_LIMIT)
@@ -64,32 +66,16 @@ function s.atkvalue(e,c)
     return g:GetCount() * 100
 end
 
---Condition: Equipped monster is WIND Attribute Zombie
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
+--Condition: Equipped monster is a WIND Attribute Zombie Type monster
+function s.light_condition(e)
     local ec=e:GetHandler():GetEquipTarget()
     return ec and ec:IsAttribute(ATTRIBUTE_WIND) and ec:IsRace(RACE_ZOMBIE)
 end
 
---Operation: Change all opponent's monsters' Attributes to LIGHT
-function s.operation2(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-    local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_GRAVE,nil)
-    for tc in aux.Next(g) do
-        local e1=Effect.CreateEffect(e:GetHandler())
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-        e1:SetValue(ATTRIBUTE_LIGHT)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e1)
-    end
-    for tc in aux.Next(g2) do
-        local e2=Effect.CreateEffect(e:GetHandler())
-        e2:SetType(EFFECT_TYPE_SINGLE)
-        e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-        e2:SetValue(ATTRIBUTE_LIGHT)
-        e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-        tc:RegisterEffect(e2)
-    end
+--Target: Opponent's monsters (on the field and in the Graveyard)
+function s.light_target(e,c)
+    return c:IsControler(1-e:GetHandlerPlayer())
 end
+
 
 
