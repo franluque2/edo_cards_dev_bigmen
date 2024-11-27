@@ -16,7 +16,7 @@ end
 
 --Condition: Opponent must control a LIGHT Attribute monster
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),tp,0,LOCATION_MZONE,1,nil)
+    return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsAttribute,ATTRIBUTE_LIGHT),tp,0,LOCATION_MZONE,1,nil)
 end
 
 --Target: Ensure at least 3 cards exist in both players' decks
