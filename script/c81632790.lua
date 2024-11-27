@@ -1,47 +1,49 @@
 --Sky Fossil Stanleycaris (CT)
-local s, id = GetID()
+local s,id=GetID()
 function s.initial_effect(c)
-    -- Requirement and Effect
-    local e1 = Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id, 0)) -- Effect description
+    --Effect: Mill 3 cards from both players' decks and retrieve a specific card
+    local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(id,0))
+    e1:SetCategory(CATEGORY_DECKDES+CATEGORY_TOHAND)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_MZONE)
-    e1:SetCountLimit(1, id)
-    e1:SetCondition(s.condition)
+    e1:SetCountLimit(1,id)
     e1:SetCost(s.cost)
+    e1:SetTarget(s.target)
     e1:SetOperation(s.operation)
     c:RegisterEffect(e1)
 end
 
--- Requirement: Reveal 1 Level 7 WIND Zombie in hand
-function s.condition(e, tp, eg, ep, ev, re, r, rp)
-    return Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_HAND, 0, 1, nil)
+--Cost: Each player sends the top 3 cards of their Deck to the Graveyard
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then 
+        return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 and Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)>=3
+    end
+    Duel.DiscardDeck(tp,3,REASON_COST)
+    Duel.DiscardDeck(1-tp,3,REASON_COST)
 end
 
+--Target: Ensure at least one of the specified cards exists in your Graveyard
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then
+        return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil)
+    end
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+end
+
+--Operation: Add one of the specified cards to your hand
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+    if #g>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
+    end
+end
+
+--Filter: Specific cards ("Golondrinas Jail", "Golondrinas Ray", "Golondrinas Roar")
 function s.filter(c)
-    return c:IsLevel(7) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_ZOMBIE)
+    return c:IsCode(10000040,10000050,10000060) and c:IsAbleToHand() -- Replace these IDs with the actual IDs for the specified cards
 end
 
--- Cost: Reveal the monster
-function s.cost(e, tp, eg, ep, ev, re, r, rp, chk)
-    if chk == 0 then return Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_HAND, 0, 1, nil) end
-    local g = Duel.SelectMatchingCard(tp, s.filter, tp, LOCATION_HAND, 0, 1, 1, nil)
-    Duel.ConfirmCards(1-tp, g)
-    Duel.ShuffleHand(tp)
-end
-
--- Effect: Treat as 2 Tributes for WIND Zombie Tribute Summon
-function s.operation(e, tp, eg, ep, ev, re, r, rp)
-    local c = e:GetHandler()
-    local e1 = Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetCode(EFFECT_DOUBLE_TRIBUTE)
-    e1:SetValue(s.tribute_filter)
-    e1:SetReset(RESET_EVENT + RESETS_STANDARD + RESET_PHASE + PHASE_END)
-    c:RegisterEffect(e1)
-end
-
-function s.tribute_filter(e, c)
-    return c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_ZOMBIE)
-end
 
