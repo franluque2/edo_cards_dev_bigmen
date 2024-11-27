@@ -43,7 +43,7 @@ end
 
 --Filter: Specific cards ("Golondrinas Jail", "Golondrinas Ray", "Golondrinas Roar")
 function s.filter(c)
-    return c:IsCode(10000040,10000050,10000060) and c:IsAbleToHand() -- Replace these IDs with the actual IDs for the specified cards
+    return c:IsCode(81632793,81632794,81632796) and c:IsAbleToHand() -- Replace these IDs with the actual IDs for the specified cards
 end
 
 

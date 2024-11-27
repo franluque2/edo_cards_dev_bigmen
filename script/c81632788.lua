@@ -52,6 +52,6 @@ end
 
 --Filter: Specific card names
 function s.filter(c)
-    return c:IsCode(10000010,10000020,10000030) and c:IsAbleToHand() -- Use actual IDs for "Devilcaris Trident," "Golondrinas Roar," and "Rainbow Rod"
+    return c:IsCode(81632795, 81632796, 81632797) and c:IsAbleToHand() -- Use actual IDs for "Devilcaris Trident," "Golondrinas Roar," and "Rainbow Rod"
 end
 
