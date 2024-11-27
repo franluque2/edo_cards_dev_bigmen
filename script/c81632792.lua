@@ -33,16 +33,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 
     -- Optionally add 1 WIND Zombie to the hand
     local added = false
-    if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+    if #sg>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
         local tc=sg:Select(tp,1,1,nil):GetFirst()
-        Duel.SendtoHand(tc,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,tc)
-        g:RemoveCard(tc)
-        added = tc:IsCode(81632787) -- Replace with the ID for "Sky Fossil Anomalocaris"
+        if tc then
+            Duel.SendtoHand(tc,nil,REASON_EFFECT)
+            Duel.ConfirmCards(1-tp,tc)
+            g:RemoveCard(tc)
+            added = tc:IsCode(10000070) -- Replace with the ID for "Sky Fossil Anomalocaris"
+        end
     end
 
     -- Place remaining cards on the bottom of the deck in any order
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
     Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
     Duel.SortDeckbottom(tp,tp,#g)
 
