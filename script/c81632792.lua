@@ -40,7 +40,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.SendtoHand(tc,nil,REASON_EFFECT)
             Duel.ConfirmCards(1-tp,tc)
             g:RemoveCard(tc)
-            added = tc:IsCode(10000070) -- Replace with the ID for "Sky Fossil Anomalocaris"
+            added = tc:IsCode(81632787) -- Replace with the ID for "Sky Fossil Anomalocaris"
         end
     end
 
