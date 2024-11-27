@@ -76,6 +76,3 @@ end
 function s.light_target(e,c)
     return c:IsControler(1-e:GetHandlerPlayer())
 end
-
-
-
