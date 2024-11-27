@@ -9,7 +9,6 @@ function s.initial_effect(c)
     e1:SetRange(LOCATION_MZONE)
     e1:SetCountLimit(1,id)
     e1:SetCost(s.cost)
-    e1:SetTarget(s.target)
     e1:SetOperation(s.operation)
     c:RegisterEffect(e1)
 end
@@ -21,14 +20,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     end
     Duel.DiscardDeck(tp,3,REASON_COST)
     Duel.DiscardDeck(1-tp,3,REASON_COST)
-end
-
---Target: Ensure at least one of the specified cards exists in your Graveyard
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then
-        return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil)
-    end
-    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 
 --Operation: Add one of the specified cards to your hand
