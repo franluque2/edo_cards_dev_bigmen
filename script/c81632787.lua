@@ -7,7 +7,7 @@ function s.initial_effect(c)
     e1:SetCategory(CATEGORY_DECKDES + CATEGORY_ATKCHANGE)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_MZONE)
-    e1:SetCountLimit(1, id) -- Once per turn
+    e1:SetCountLimit(1) -- Once per turn
     e1:SetCondition(s.condition)
     e1:SetCost(s.cost)
     e1:SetOperation(s.operation)
