@@ -1,34 +1,33 @@
 --Golondrinas Jail (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-    --Field Spell activation
-    aux.AddFieldSpellEffect(c)
-    
-    --Reduce ATK of LIGHT Attribute monsters
+    --Activate
     local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_UPDATE_ATTACK)
-    e1:SetRange(LOCATION_FZONE)
-    e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-    e1:SetTarget(s.atktg)
-    e1:SetValue(s.atkval)
+    e1:SetType(EFFECT_TYPE_ACTIVATE)
+    e1:SetCode(EVENT_FREE_CHAIN)
     c:RegisterEffect(e1)
+
+    --Continuous effect: Reduce ATK of face-up LIGHT monsters
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_UPDATE_ATTACK)
+    e2:SetRange(LOCATION_FZONE)
+    e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+    e2:SetTarget(s.atktarget)
+    e2:SetValue(s.atkvalue)
+    c:RegisterEffect(e2)
 end
 
 --Target: Face-up LIGHT Attribute monsters
-function s.atktg(e,c)
+function s.atktarget(e,c)
     return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
---Value: Reduce ATK based on total number of LIGHT Attribute monsters in both Graveyards
-function s.atkval(e,c)
+--Value: Decrease ATK by [total number of LIGHT monsters in both players' Graveyards] x 100
+function s.atkvalue(e,c)
     local tp=e:GetHandlerPlayer()
-    local g=Duel.GetMatchingGroup(s.grave_filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
-    return -g:GetCount()*100
+    local g=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,ATTRIBUTE_LIGHT)
+    return -g:GetCount() * 100
 end
 
---Filter: LIGHT Attribute monsters in the Graveyard
-function s.grave_filter(c)
-    return c:IsAttribute(ATTRIBUTE_LIGHT)
-end
 
