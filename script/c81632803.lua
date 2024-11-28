@@ -25,7 +25,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,4)
 	if #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local sc=g:FilterSelect(tp,s.filter,1,1,nil)
+	local sc=g:FilterSelect(tp,s.filter,1,1,nil):GetFirst()
 	Duel.ConfirmCards(1-tp,sc)
 	local res=Duel.TossCoin(tp,1)
 	if res==COIN_HEADS then
