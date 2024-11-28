@@ -23,7 +23,8 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,4)
 	local g=Duel.GetDecktopGroup(tp,4)
-	if #g==0 then return end
+	Duel.DisableShuffleCheck()
+	if g:IsExists(s.filter,1,nil) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local sc=g:FilterSelect(tp,s.filter,1,1,nil):GetFirst()
 	Duel.ConfirmCards(1-tp,sc)
@@ -41,6 +42,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToDeckBottom(ct,tp)
 		Duel.SortDeckbottom(tp,tp,ct)
 	end
+end
 end
 function s.filter(c)
 	return (c.toss_coin and c:IsMonster())
