@@ -32,10 +32,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if res==COIN_HEADS then
 		Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP)
 		Duel.SpecialSummonComplete()
+		g:RemoveCard(sc)
 	elseif res==COIN_TAILS then
 		Duel.SendtoHand(sc,tp,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sc)
 		Duel.ShuffleHand(tp)
+		g:RemoveCard(sc)
 	end
 	local ct=#g
 	if ct>0 then
