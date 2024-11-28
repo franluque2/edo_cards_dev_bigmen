@@ -24,6 +24,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	--Requirement
 	if Duel.DiscardDeck(tp,1,REASON_COST)<1 then return end
 	--Effect
