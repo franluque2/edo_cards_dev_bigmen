@@ -20,42 +20,32 @@ end
 
 --Operation: Excavate, add to hand, and reorder
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    -- Ensure deck has at least 4 cards
-    if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<4 then return end
-
-    -- Excavate the top 4 cards
-    Duel.ConfirmDecktop(tp,4)
-    local g=Duel.GetDecktopGroup(tp,4)
-    if #g==0 then return end
-
-    -- Filter for WIND Attribute Zombie Type monsters
-    local sg=g:Filter(s.filter,nil)
-
-    -- Optionally add 1 WIND Zombie to the hand
-    local added = false
-    if #sg>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-        local tc=sg:Select(tp,1,1,nil):GetFirst()
-        if tc then
-            Duel.SendtoHand(tc,nil,REASON_EFFECT)
-            Duel.ConfirmCards(1-tp,tc)
-            g:RemoveCard(tc)
-            added = tc:IsCode(81632787) -- Replace with the ID for "Sky Fossil Anomalocaris"
-        end
-    end
-
-    -- Place remaining cards on the bottom of the deck in any order
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    Duel.SendtoDeck(g,nil,SEQ_DECKBOTTOM,REASON_EFFECT)
-    Duel.SortDeckbottom(tp,tp,#g)
-
-    -- Draw 1 card if "Sky Fossil Anomalocaris" was added
-    if added then
-        Duel.Draw(tp,1,REASON_EFFECT)
-    end
+	local c=e:GetHandler()
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<4 then return end
+	Duel.ConfirmDecktop(tp,4)
+	local g=Duel.GetDecktopGroup(tp,4)
+	Duel.DisableShuffleCheck()
+	local tg=nil
+	if g:IsExists(s.filter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		tg=g:FilterSelect(tp,s.filter,1,1,nil)
+		if #tg>0 then
+			Duel.SendtoHand(tg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tg)
+			Duel.ShuffleHand(tp)
+			g:RemoveCard(tg)
+		end
+	end
+	local ct=#g
+	if ct>0 then
+		Duel.MoveToDeckBottom(ct,tp)
+		Duel.SortDeckbottom(tp,tp,ct)
+	end
+	if tg and tg:GetFirst():IsCode(81632787) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
+	end
 end
-
---Filter: WIND Attribute Zombie Type monsters
 function s.filter(c)
-    return c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_ZOMBIE) and c:IsAbleToHand()
+	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
 end
