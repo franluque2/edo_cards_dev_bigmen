@@ -52,5 +52,5 @@ function s.desfilter(c)
 	return c:IsAttackPos() and (c:IsLevelBelow(8) or c:IsRankBelow(8) or c:IsLinkBelow(4)) and c:IsNotMaximumModeSide()
 end
 function s.costfilter(c)
-	return c.toss_coin and c:IsMonster()
+	return (c.toss_coin and c:IsMonster()) or (c:IsMonster() and c:IsDefense(c:GetAttack()))
 end
