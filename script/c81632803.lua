@@ -21,8 +21,8 @@ end
 
 --Operation: Excavate, add to hand, and reorder
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ConfirmDecktop(1-tp,4)
-	local g=Duel.GetDecktopGroup(1-tp,4)
+	Duel.ConfirmDecktop(tp,4)
+	local g=Duel.GetDecktopGroup(tp,4)
 	if #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local sc=g:Select(tp,1,1,nil):GetFirst()
