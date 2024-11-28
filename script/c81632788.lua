@@ -1,57 +1,59 @@
---Sky Fossil Peytoia (CT)
+--Sky Fossil Peytoia
 local s,id=GetID()
 function s.initial_effect(c)
-    --Single Ignition Effect
-    local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,0))
-    e1:SetCategory(CATEGORY_POSITION+CATEGORY_TOHAND)
-    e1:SetType(EFFECT_TYPE_IGNITION)
-    e1:SetRange(LOCATION_MZONE)
-    e1:SetCountLimit(1)
-    e1:SetCondition(s.condition)
-    e1:SetOperation(s.operation)
-    c:RegisterEffect(e1)
+	--disable
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetOperation(s.sumsuc)
+	c:RegisterEffect(e1)
+	--Prevent Tribute Summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetCondition(s.condition)
+	e2:SetCost(s.cost)
+	e2:SetOperation(s.operation)
+	c:RegisterEffect(e2)
 end
-
---Condition: During the turn this card was Normal Summoned
+function s.sumsuc(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD&~(RESET_TEMP_REMOVE|RESET_TURN_SET)|RESET_PHASE|PHASE_END,0,1)
+end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():IsSummonType(SUMMON_TYPE_NORMAL)
+	return e:GetHandler():GetFlagEffect(id)>0
 end
-
---Operation: Change battle position, protect Spell/Trap cards, and retrieve a specific card
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-
-    --Change this card's battle position
-    if c:IsPosition(POS_FACEUP_ATTACK) then
-        Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
-    elseif c:IsPosition(POS_FACEUP_DEFENSE) then
-        Duel.ChangePosition(c,POS_FACEUP_ATTACK)
-    end
-
-    --Apply protection to Spell/Trap cards until the end of the opponent's next turn
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-    e1:SetTargetRange(LOCATION_SZONE,0)
-    e1:SetTarget(aux.TRUE)
-    e1:SetValue(1)
-    e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
-    Duel.RegisterEffect(e1,tp)
-
-    --Optional: Add a specific card from the Graveyard to the hand
-    if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-        local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-        if #g>0 then
-            Duel.SendtoHand(g,nil,REASON_EFFECT)
-            Duel.ConfirmCards(1-tp,g)
+	local c=e:GetHandler()
+	if Duel.ChangePosition(e:GetHandler(),POS_FACEUP_DEFENSE,0,POS_FACEUP_ATTACK,0)~=0 then
+        local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		e2:SetTargetRange(LOCATION_ONFIELD,0)
+		e2:SetTarget(s.indtg)
+		e2:SetValue(1)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e2,tp)
+        c:RegisterEffect(e1)
+        if Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+            local g2=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+            if #g2>0 then
+                Duel.HintSelection(g2,true)
+                Duel.BreakEffect()
+                Duel.SendtoHand(g2,nil,REASON_EFFECT)
+            end
         end
-    end
+	end
 end
-
---Filter: Specific card names
-function s.filter(c)
-    return c:IsCode(81632795, 81632796, 81632797) and c:IsAbleToHand() -- Use actual IDs for "Devilcaris Trident," "Golondrinas Roar," and "Rainbow Rod"
+function s.indtg(e,c)
+	return c:IsSpellTrap()
 end
-
+function s.thfilter(c)
+	return c:IsCode(81632795,81632796,81632797) and c:IsAbleToHand()
+end
