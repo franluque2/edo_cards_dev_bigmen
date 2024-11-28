@@ -25,7 +25,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,4)
 	if #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local sc=g:Select(tp,1,1,nil):GetFirst()
+	local sc=g:FilterSelect(tp,s.filter,1,1,nil)
 	Duel.ConfirmCards(1-tp,sc)
 	local res=Duel.TossCoin(tp,1)
 	if res==COIN_HEADS then
@@ -43,5 +43,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
+	return (c.toss_coin and c:IsMonster())
 end
