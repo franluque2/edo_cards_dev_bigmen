@@ -30,7 +30,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,sc)
 	local res=Duel.TossCoin(tp,1)
 	if res==COIN_HEADS then
-		Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 		g:RemoveCard(sc)
 		Duel.SpecialSummonComplete()
 	elseif res==COIN_TAILS then
