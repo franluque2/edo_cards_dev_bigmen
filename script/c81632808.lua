@@ -11,18 +11,6 @@ function s.initial_effect(c)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 
-    --Add 1 "Earthbound Immortal" to the hand
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetTarget(s.thtg)
-	e2:SetOperation(s.thop)
-    e2:SetCondition(s.dircon)
-	c:RegisterEffect(e2)
-
     --Send to Deck 1 "Fusion" Spell
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
@@ -45,25 +33,6 @@ function s.initial_effect(c)
 	e4:SetValue(73216412)
 	c:RegisterEffect(e4)
 
-end
-
-function s.dircon(e)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,73216412),tp,LOCATION_ONFIELD,0,1,nil)
-end
-function s.thfilter(c)
-	return c:IsCode(CARD_POLYMERIZATION) and c:IsAbleToHand()
-end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
 end
 
 function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
