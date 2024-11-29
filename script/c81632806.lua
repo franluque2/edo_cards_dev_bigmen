@@ -54,7 +54,7 @@ function s.cfilter2(c,e,tp)
 end
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
-		and eg:IsExists(s.cfilter2,1,nil,e,tp) end
+		and eg:IsExists(s.cfilter2,1,nil,e,tp) and Duel.GetFlagEffect(tp,id)==0 end
 	local g=eg:Filter(s.cfilter2,nil,e,tp)
 	Duel.SetTargetCard(g)
     Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
