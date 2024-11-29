@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+    e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -74,7 +75,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         Duel.ChangeAttackTarget(tc)
 	end
 end
-function s.dircon(e)
+function s.dircon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,73216412),tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.thfilter(c)
