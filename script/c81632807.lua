@@ -99,7 +99,7 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tdfilter(c)
-	return c:IsCode(81632806, 31709826) and c:IsAbleToHand()
+	return c:IsCode(94163677, 21558682, 57953380) and c:IsAbleToHand()
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_DECK,0,1,nil) end
