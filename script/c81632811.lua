@@ -88,7 +88,7 @@ function s.filter2(c)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	-- Requirement
-    local pg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE,0,nil)
+    local pg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_HAND,0,1,#pg,e:GetHandler())
 	if #g<1 then return end
 	local dr=Duel.SendtoGrave(g,REASON_COST)
