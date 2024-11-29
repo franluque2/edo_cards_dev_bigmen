@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetCode(EFFECT_CHANGE_CODE)
-	e4:SetRange(LOCATION_MZONE|LOCATION_GRAVE)
+	e4:SetRange(LOCATION_MZONE|LOCATION_GRAVE|LOCATION_HAND)
 	e4:SetValue(73216412)
 	c:RegisterEffect(e4)
 
