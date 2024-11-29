@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.filter(c)
-	return c:IsCode(31709826, 81632808, 81632807, 81632806, 81632811, 94163677, 21558682, 57953380) and c:IsAbleToHand()
+	return c:IsCode(31709826, 81632808, 81632807, 81632806, 81632811, 94163677, 21558682, 57953380, 21770260) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
