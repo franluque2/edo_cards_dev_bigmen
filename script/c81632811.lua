@@ -46,7 +46,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return c:IsCode(31709826, 81632810, 81632807, 81632806) and c:IsAbleToHand()
+	return c:IsCode(31709826, 81632810, 81632807, 81632806, 81632808) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--Search 1 "Infinitrack" monster
