@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.condition)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
+    e2:SetCost(aux.bfgcost)
 	c:RegisterEffect(e2)
 
     --Send to Deck 1 "Fusion" Spell
