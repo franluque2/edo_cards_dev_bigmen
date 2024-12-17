@@ -24,7 +24,7 @@ local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 --add archetype setcode here
 local ARCHETYPE=0x1186
 
-local FLAVIUS_ARENA=101207060
+local FLAVIUS_ARENA=05063379
 --add the conditions for the archetype swap here
 function s.archetypefilter(c)
   return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DINOSAUR)

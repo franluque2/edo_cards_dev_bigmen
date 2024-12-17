@@ -15,8 +15,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 
-local FLAVIUS_ARENA=101207060
-local DAREIOS=101207048
+local FLAVIUS_ARENA=05063379
+local DAREIOS=72246674
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
