@@ -124,7 +124,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.flipcon3(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==25
+	return Duel.GetCurrentChain()==0 and ((Duel.GetTurnCount()==24) or (Duel.GetTurnCount()==25))
 end
 function s.flipop3(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,tp,id)
