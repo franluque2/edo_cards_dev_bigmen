@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and re:IsActiveType(TYPE_EFFECT) and Duel.IsChainDisablable(ev)
+	return ep~=tp and re:IsActiveType(TYPE_EFFECT) and Duel.IsChainDisablable(ev) and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -24,4 +24,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
     Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 end
+end
+
+function s.filter(c)
+	return c:IsCode(08170654,61245403,81632822,73776643,74983881,51735257)
 end

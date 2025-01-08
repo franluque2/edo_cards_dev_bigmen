@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
+	e2:SetCondition(s.spcon)
     e2:SetCost(s.cost)
 	e2:SetTarget(s.tktg)
 	e2:SetOperation(s.tkop)
@@ -51,4 +52,10 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,74983882,0,TYPES_TOKEN,0,0,1,RACE_PLANT,ATTRIBUTE_EARTH,POS_FACEUP) then return end
 	local token=Duel.CreateToken(tp,74983882)
 	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
+end
+function s.filter(c)
+	return c:IsCode(08170654)
 end
