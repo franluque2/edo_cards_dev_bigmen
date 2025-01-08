@@ -20,8 +20,8 @@ function s.spfilter(c,e,tp)
 	return c:IsMonster() and c:IsCode(08170654,61245403,81632822,73776643,74983881,51735257) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK)
+	if chk==0 then return Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
@@ -29,7 +29,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if ct==0 then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
     Duel.BreakEffect()
     local c=e:GetHandler()
 	if #g>0 then
@@ -37,12 +37,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         local e3=Effect.CreateEffect(c)
         e3:SetType(EFFECT_TYPE_SINGLE)
         e3:SetCode(EFFECT_SET_BASE_ATTACK)
-        e3:SetValue(g:GetBaseAttack()+ct*500)
+        e3:SetValue(c:GetBaseAttack()+ct*500)
         e3:SetReset(RESET_EVENT|RESETS_STANDARD)
         tc:RegisterEffect(e3)
         local e4=e3:Clone()
         e4:SetCode(EFFECT_SET_BASE_DEFENSE)
-        e4:SetValue(g:GetBaseDefense()+ct*500)
+        e4:SetValue(c:GetBaseDefense()+ct*500)
         tc:RegisterEffect(e4)
 	end
     Duel.SpecialSummonComplete()
