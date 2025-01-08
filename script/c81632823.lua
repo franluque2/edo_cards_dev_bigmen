@@ -39,11 +39,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         e3:SetCode(EFFECT_SET_BASE_ATTACK)
         e3:SetValue(c:GetBaseAttack()+ct*500)
         e3:SetReset(RESET_EVENT|RESETS_STANDARD)
-        tc:RegisterEffect(e3)
+        c:RegisterEffect(e3)
         local e4=e3:Clone()
         e4:SetCode(EFFECT_SET_BASE_DEFENSE)
         e4:SetValue(c:GetBaseDefense()+ct*500)
-        tc:RegisterEffect(e4)
+        c:RegisterEffect(e4)
 	end
     Duel.SpecialSummonComplete()
 end
