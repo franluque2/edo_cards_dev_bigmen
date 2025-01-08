@@ -33,7 +33,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.hspcon(e,c)
-	if c==nil then return true end
 	return Duel.IsExistingMatchingCard(s.Ninjafilter,tp,LOCATION_GRAVE,0,1,nil)
     and Duel.IsExistingMatchingCard(s.Ninjafilter2,tp,LOCATION_GRAVE,0,1,nil)
 end
@@ -43,10 +42,10 @@ end
 function s.filter(c,e,tp)
 	return c:IsSetCard(0x2b) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.Ninjafilter(c,e,tp)
+function s.Ninjafilter(c)
 	return c:IsSetCard(0x2b) and c:IsType(TYPE_EFFECT)
 end
-function s.Ninjafilter2(c,e,tp)
+function s.Ninjafilter2(c)
 	return c:IsSetCard(0x2b) and c:IsType(TYPE_NORMAL)
 end
 
