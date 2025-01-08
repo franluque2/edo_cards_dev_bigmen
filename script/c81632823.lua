@@ -8,11 +8,14 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
     e1:SetCountLimit(1,id)
+	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
+end
 function s.filter(c)
 	return c:IsReleasableByEffect() and c:IsCode(74983882)
 end
