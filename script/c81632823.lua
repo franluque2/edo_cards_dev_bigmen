@@ -26,7 +26,6 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
 	local ct=Duel.Release(rg,REASON_EFFECT)
-    local tc=g:GetFirst()
 	if ct==0 then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -36,12 +35,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         local e3=Effect.CreateEffect(c)
         e3:SetType(EFFECT_TYPE_SINGLE)
         e3:SetCode(EFFECT_SET_BASE_ATTACK)
-        e3:SetValue(tc:GetBaseAttack()+ct*500)
+        e3:SetValue(g:GetBaseAttack()+ct*500)
         e3:SetReset(RESET_EVENT|RESETS_STANDARD)
         tc:RegisterEffect(e3)
         local e4=e3:Clone()
         e4:SetCode(EFFECT_SET_BASE_DEFENSE)
-        e4:SetValue(tc:GetBaseDefense()+ct*500)
+        e4:SetValue(g:GetBaseDefense()+ct*500)
         tc:RegisterEffect(e4)
 	end
     Duel.SpecialSummonComplete()
