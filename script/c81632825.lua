@@ -53,7 +53,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter2(c,e,tp)
-	return c:IsCode(08170654,61245403,81632822) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(08170654,61245403,81632822, 73776643) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

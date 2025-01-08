@@ -21,7 +21,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateEffect(ev) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 then
+	if Duel.NegateEffect(ev) and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
     for _=1,2 do
     local token=Duel.CreateToken(tp,74983882)
     Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
