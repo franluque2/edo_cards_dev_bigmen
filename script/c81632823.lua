@@ -13,13 +13,6 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.tkncost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,74983882),tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return #g==g:FilterCount(Card.IsReleasable,nil) and Duel.GetMZoneCount(tp,g)>0 end
-	g:Filter(Card.IsReleasable,nil)
-	Duel.Release(g,REASON_COST)
-	e:SetLabel(g)
-end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
 end
@@ -34,6 +27,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local rg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
+	local ct=Duel.Release(rg,REASON_EFFECT)
+	if ct==0 then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -44,12 +40,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         local e3=Effect.CreateEffect(c)
         e3:SetType(EFFECT_TYPE_SINGLE)
         e3:SetCode(EFFECT_SET_BASE_ATTACK)
-        e3:SetValue(c:GetBaseAttack()+g*500)
+        e3:SetValue(c:GetBaseAttack()+ct*500)
         e3:SetReset(RESET_EVENT|RESETS_STANDARD)
         c:RegisterEffect(e3)
         local e4=e3:Clone()
         e4:SetCode(EFFECT_SET_BASE_DEFENSE)
-        e4:SetValue(c:GetBaseDefense()+g*500)
+        e4:SetValue(c:GetBaseDefense()+ct*500)
         c:RegisterEffect(e4)
 	end
     Duel.SpecialSummonComplete()
