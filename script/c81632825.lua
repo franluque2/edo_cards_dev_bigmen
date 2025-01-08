@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e3:SetCondition(function(_,tp) return Duel.IsTurnPlayer(tp) end)
+    e3:SetCondition(s.spcon)
 	e3:SetCountLimit(1)
 	e3:SetTarget(s.sptg2)
 	e3:SetOperation(s.spop2)
@@ -68,4 +68,11 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsTurnPlayer(tp)
+end
+function s.filter(c)
+	return c:IsCode(08170654)
 end

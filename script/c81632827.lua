@@ -39,13 +39,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,s.fil,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 	if not tc then return end
 	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) then
-        local e1=Effect.CreateEffect(tc)
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-        e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-        e1:SetValue(1)
-        e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-        tc:RegisterEffect(e1)
 		Duel.ChangeAttackTarget(tc)
 	end
 end
