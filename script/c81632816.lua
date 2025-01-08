@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.filter(c,e,tp)
-	return c:IsCode(511001318) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(81632819) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -45,7 +45,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511001318),tp,LOCATION_GRAVE,0,1,nil)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,81632819),tp,LOCATION_GRAVE,0,1,nil)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x2b) and c:IsLevelAbove(5) and c:IsAbleToHand()
