@@ -49,7 +49,7 @@ function s.spfilter2(c)
 	return c:IsCode(08170654) and c:IsCanBeSpecialSummoned()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spfilter,1,nil)
+	return eg:IsExists(s.spfilter,1,nil)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -60,9 +60,8 @@ function s.costfilter(c,e,tp)
 	return c:IsRace(RACE_PLANT)
 end
 function s.deckexspcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToRemoveAsCost() and Duel.CheckReleaseGroupCost(tp,s.costfilter,1,false,nil,nil,e,tp) end
-	Duel.Remove(c,POS_FACEUP,REASON_COST)
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) and Duel.CheckReleaseGroupCost(tp,s.costfilter,1,false,nil,nil,e,tp) end
+    aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectReleaseGroupCost(tp,s.costfilter,1,1,false,nil,nil,e,tp)
 	Duel.Release(g,REASON_COST)
 end
