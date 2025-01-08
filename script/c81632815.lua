@@ -34,6 +34,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.hspcon(e,tp,eg,ep,ev,re,r,rp)
+	if c==nil then return true end
 	return Duel.IsExistingMatchingCard(s.Ninjafilter,tp,LOCATION_GRAVE,0,1,nil)
     and Duel.IsExistingMatchingCard(s.Ninjafilter2,tp,LOCATION_GRAVE,0,1,nil)
 end
