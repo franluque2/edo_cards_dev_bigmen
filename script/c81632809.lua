@@ -73,7 +73,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,TOKEN_SLIME,0x54b,TYPES_TOKEN,500,500,1,RACE_AQUA,ATTRIBUTE_WATER) then
             for i=1,2 do
                 local token=Duel.CreateToken(tp,TOKEN_SLIME)
-                Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+                Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
             end
 	end
 end
