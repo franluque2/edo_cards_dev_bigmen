@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e4:SetTarget(s.tg)
 	e4:SetValue(s.val)
 	c:RegisterEffect(e4)
     --set
@@ -45,6 +46,9 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ct=#g
 	local tg=g:GetFirst()
 	return ct==1 and tg:IsFaceup() and tg:IsRace(RACE_PLANT)
+end
+function s.tg(e,c)
+	return c:IsRace(RACE_PLANT)
 end
 function s.filter(c,e,tp)
 	return c:IsRace(RACE_PLANT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
