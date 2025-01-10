@@ -10,19 +10,14 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--recover
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(47432275,0))
-	e2:SetCategory(CATEGORY_RECOVER)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
-	e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetCondition(s.reccon)
-	e2:SetTarget(s.rectg)
-	e2:SetOperation(s.recop)
-	c:RegisterEffect(e2)
+	--no damage
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e3:SetCountLimit(id,{id,2})
+	e3:SetOperation(s.op)
+	c:RegisterEffect(e3)
 	--EP 
     local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
@@ -70,33 +65,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	    end
     end
 end
-function s.reccon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
-	return tc and tc:IsControler(tp) and tc:IsMonster() and Duel.GetBattleDamage(tp)>0
-end
-function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local val=Duel.GetBattleDamage(tp)
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(val)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,val)
-end
-function s.recop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-		e1:SetOperation(s.damop)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-		Duel.RegisterEffect(e1,tp)
-		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-		Duel.Recover(p,d,REASON_EFFECT)
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	if ep==1-tp then
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.ChangeBattleDamage(1-tp,0)
+		Duel.Recover(tp,ev,REASON_EFFECT)
 	end
-end
-function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(tp,0)
 end
 
 function s.setfilter(c)
