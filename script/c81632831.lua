@@ -16,12 +16,13 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_RECOVER)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1)
 	e2:SetCondition(s.reccon)
 	e2:SetTarget(s.rectg)
 	e2:SetOperation(s.recop)
 	c:RegisterEffect(e2)
+	--EP 
     local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
@@ -45,18 +46,6 @@ end
 function s.filter(c)
 	return c:IsSpellTrap()
 end
-function s.reccon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
-	return tc and tc:IsControler(tp) and Duel.GetBattleDamage(tp)>0
-end
-function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local val=Duel.GetBattleDamage(tp)
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(val)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,val)
-end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,3) then return end
 	Duel.ConfirmDecktop(tp,3)
@@ -79,6 +68,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(g,REASON_EFFECT|REASON_EXCAVATE)
 	    end
     end
+end
+function s.reccon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetAttacker()
+	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
+	return tc and tc:IsControler(tp) and tc:IsMonster() and Duel.GetBattleDamage(tp)>0
+end
+function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local val=Duel.GetBattleDamage(tp)
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(val)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,val)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
