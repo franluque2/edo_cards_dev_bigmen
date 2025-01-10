@@ -85,7 +85,9 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
 end
-
+function s.reccon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(1-tp)>0
+end
 function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local val=Duel.GetBattleDamage(1-tp)
