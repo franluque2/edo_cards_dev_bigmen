@@ -10,17 +10,17 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--Battle
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_RECOVER+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
-	e2:SetCode(EVENT_DAMAGE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,{id,2})
-	e2:SetTarget(s.tg)
-	e2:SetOperation(s.operation)
-	c:RegisterEffect(e2)
+	--recover
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(47432275,0))
+	e4:SetCategory(CATEGORY_RECOVER)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCountLimit(1)
+	e4:SetTarget(s.rectg)
+	e4:SetOperation(s.recop)
+	c:RegisterEffect(e4)
 	--EP 
     local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
@@ -68,15 +68,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	    end
     end
 end
-function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ev)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,ev)
-end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Recover(tp,ev,REASON_EFFECT,true)
-	Duel.Recover(1-tp,ev,REASON_EFFECT,true)
-end
 
 function s.setfilter(c)
 	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(10)) and c:IsAbleToDeck()
@@ -93,4 +84,28 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
 	end
+end
+
+function s.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local val=Duel.GetBattleDamage(1-tp)
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(val)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,val)
+end
+function s.recop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+		e1:SetOperation(s.damop)
+		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+		Duel.RegisterEffect(e1,tp)
+		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		Duel.Recover(p,d,REASON_EFFECT)
+	end
+end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,0)
 end
