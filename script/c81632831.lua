@@ -107,5 +107,5 @@ function s.recop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(tp,0)
+	Duel.ChangeBattleDamage(1-tp,0)
 end
