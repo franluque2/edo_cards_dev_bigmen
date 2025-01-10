@@ -18,7 +18,7 @@ function s.initial_effect(c)
     e2:SetProperty(EFFECT_FLAG_DELAY)
     e2:SetCountLimit(1,{id,2})
 	e2:SetCondition(s.damageeffect)
-	e2:SetOperation(s.op)
+	e2:SetOperation(s.recop)
 	c:RegisterEffect(e2)
     local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
@@ -69,12 +69,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	    end
     end
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	if ep==1-tp then
-		Duel.Hint(HINT_CARD,0,id)
-		Duel.ChangeBattleDamage(1-tp,0)
-		Duel.Recover(tp,ev,REASON_EFFECT)
+function s.recop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+		e1:SetOperation(s.damop)
+		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+		Duel.RegisterEffect(e1,tp)
+		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		Duel.Recover(p,d,REASON_EFFECT)
 	end
+end
+function s.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,0)
 end
 
 function s.setfilter(c)
