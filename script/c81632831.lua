@@ -33,19 +33,19 @@ function s.initial_effect(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<5 then return false end
-		local g=Duel.GetDecktopGroup(tp,5)
+		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
+		local g=Duel.GetDecktopGroup(tp,3)
 		local result=g:FilterCount(Card.IsAbleToHand,nil)>0
-		return result and Duel.IsPlayerCanDiscardDeck(tp,5)
+		return result and Duel.IsPlayerCanDiscardDeck(tp,3)
 	end
 end
 function s.filter(c)
 	return c:IsSpellTrap()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsPlayerCanDiscardDeck(tp,5) then return end
-	Duel.ConfirmDecktop(tp,5)
-	local g=Duel.GetDecktopGroup(tp,5)
+	if not Duel.IsPlayerCanDiscardDeck(tp,3) then return end
+	Duel.ConfirmDecktop(tp,3)
+	local g=Duel.GetDecktopGroup(tp,3)
 	if #g>0 then
 		Duel.DisableShuffleCheck()
 		if g:IsExists(s.filter,1,nil) then
