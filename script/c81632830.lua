@@ -47,7 +47,7 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,9877036),tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,98777036),tp,LOCATION_MZONE,0,1,nil)
 end
 function s.thfilter(c)
 	return c:IsCode(96029570,511002451) and c:IsAbleToHand()
