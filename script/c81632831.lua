@@ -14,9 +14,10 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCode(EVENT_DAMAGE_CALCULATING)
+	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
     e2:SetProperty(EFFECT_FLAG_DELAY)
     e2:SetCountLimit(1,{id,2})
+	e2:SetCondition(s.damageeffect)
 	e2:SetOperation(s.op)
 	c:RegisterEffect(e2)
     local e4=Effect.CreateEffect(c)
@@ -41,6 +42,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.filter(c)
 	return c:IsSpellTrap()
+end
+function s.damageeffect(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(1-tp)>0
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,3) then return end
