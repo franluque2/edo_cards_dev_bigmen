@@ -10,26 +10,28 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--no damage
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e3:SetCountLimit(id,{id,2})
-	e3:SetOperation(s.op)
-	c:RegisterEffect(e3)
+	--Battle
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_RECOVER+CATEGORY_SEARCH)
+	e2:SetType(EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DAMAGE)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,{id,2})
+	e2:SetTarget(s.tg)
+	e2:SetOperation(s.operation)
+	c:RegisterEffect(e2)
 	--EP 
-    local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetCode(EVENT_PHASE+PHASE_END)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetCountLimit(1,{id,1})
-	e4:SetTarget(s.settg)
-	e4:SetOperation(s.setop)
-	c:RegisterEffect(e4)
+    local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetTarget(s.settg)
+	e3:SetOperation(s.setop)
+	c:RegisterEffect(e3)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -65,12 +67,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	    end
     end
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	if ep==1-tp then
-		Duel.Hint(HINT_CARD,0,id)
-		Duel.ChangeBattleDamage(1-tp,0)
-		Duel.Recover(tp,ev,REASON_EFFECT)
-	end
+function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ev)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,ev)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Recover(tp,ev,REASON_EFFECT,true)
+	Duel.Recover(1-tp,ev,REASON_EFFECT,true)
 end
 
 function s.setfilter(c)
