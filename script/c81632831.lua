@@ -60,6 +60,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			else
 				Duel.SendtoGrave(g,REASON_EFFECT|REASON_EXCAVATE)
 			end
+		else
+			Duel.SendtoGrave(g,REASON_EFFECT|REASON_EXCAVATE)
 	    end
     end
 end
