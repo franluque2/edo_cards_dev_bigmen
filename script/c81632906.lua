@@ -80,6 +80,17 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	eaxel4:SetTarget(function(_,c)  return c:IsOriginalCode(41443249) end)
 	Duel.RegisterEffect(eaxel4,tp)
 
+	--trag
+
+	local etrag1=Effect.CreateEffect(e:GetHandler())
+	etrag1:SetType(EFFECT_TYPE_FIELD)
+	etrag1:SetCode(EFFECT_CHANGE_RACE)
+	etrag1:SetTargetRange(LOCATION_ALL,0)
+	etrag1:SetCondition(function(_,pl) return Duel.IsExistingMatchingCard(Card.IsCode, e:GetHandler():GetControler(), LOCATION_ALL, 0, 1, nil, 51402908) end)
+	etrag1:SetTarget(function(_,c)  return c:IsOriginalRace(RACE_FIEND) end)
+	etrag1:SetValue(RACE_ZOMBIE)
+	Duel.RegisterEffect(etrag1,tp)
+	
 	end
 	e:SetLabel(1)
 end
