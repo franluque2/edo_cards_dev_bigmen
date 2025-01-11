@@ -52,6 +52,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetCondition(s.repcon)
 		e4:SetOperation(s.repop)
 		Duel.RegisterEffect(e4,tp)
+
+        local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_CHANGE_CODE)
+        e5:SetTargetRange(LOCATION_ALL,0)
+        e5:SetTarget(function(_,c) return c:IsOriginalCode(64047146) end)
+        e5:SetValue(92341815)
+        Duel.RegisterEffect(e5, tp)
 	end
 	e:SetLabel(1)
 end
@@ -120,6 +128,16 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
             table.insert(metatable.listed_names,CARD_ANCIENT_FAIRY_DRAGON)
         else
             metatable.listed_names={TOKEN_ADVENTURER,CARD_ANCIENT_FAIRY_DRAGON}
+        end
+    end
+
+    local g3=Duel.GetMatchingGroup(Card.IsOriginalCode, tp, LOCATION_ALL, 0, nil,64047146)
+    for tc in g3:Iter() do
+        local metatable=tc:GetMetatable()
+        if metatable.listed_names and #metatable.listed_names>0 then
+            table.insert(metatable.listed_names,TOKEN_ADVENTURER)
+        else
+            metatable.listed_names={TOKEN_ADVENTURER}
         end
     end
 
