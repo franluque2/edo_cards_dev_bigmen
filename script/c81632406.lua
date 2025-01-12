@@ -59,23 +59,24 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.CardFilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(1000)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
+	
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		e1:SetValue(2100)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		e2:SetValue(2100)
-		tc:RegisterEffect(e2)
-	end
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	if Duel.Damage(p,d,REASON_EFFECT) then
+		local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsPosition,POS_DEFENSE),tp,LOCATION_MZONE,0,nil)
+		for tc in g:Iter() do
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_DEFENSE)
+			e1:SetValue(1000)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+		end
+end
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_FZONE) end
@@ -104,3 +105,4 @@ end
 function s.plfilter(c)
 	return c:IsFieldSpell() and not c:IsForbidden()
 end
+
