@@ -26,17 +26,19 @@ end
 s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     local num=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,10321588), tp, LOCATION_ONFIELD, 0, nil)
-	if chk==0 then return num>0 and Duel.IsExistingMatchingCard(Card.IsType,TYPE_EQUIP, tp, LOCATION_DECK, 0, 1, nil) end
+	if chk==0 then return num>0 and Duel.IsExistingMatchingCard(s.equipfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, 1, nil) end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.SelectMatchingCard(tp,Card.IsType,TYPE_EQUIP,tp,LOCATION_DECK, 0, 1,1,false,nil)
+    local tc=Duel.SelectMatchingCard(tp,s.equipfilter,tp,LOCATION_DECK+LOCATION_GRAVE, 0, 1,1,false,nil)
     if tc then
 		Duel.ShuffleDeck(tp)
 		Duel.MoveSequence(tc:GetFirst(),0)
 		Duel.ConfirmDecktop(tp,1)
     end
 end
-
+function s.equipfilter(c)
+    return c:IsAbleToHand() and c:IsType(TYPE_EQUIP)
+end
 
 function s.addpixiefilter(c)
     return c:IsAbleToHand() and (c:IsMonster() and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON))
