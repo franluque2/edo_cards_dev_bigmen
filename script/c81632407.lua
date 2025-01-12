@@ -85,10 +85,16 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		if Duel.Destroy(tc,REASON_EFFECT) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
-			if not sc then return end
-			Duel.ActivateFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+			local tc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+			aux.ToHandOrElse(tc,tp,function(c)
+										local te=tc:GetActivateEffect()
+										return te:IsActivatable(tp,true,true)
+									end,
+									function(c)
+										Duel.ActivateFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
+									end,
+									aux.Stringid(id,2))
 		end
 	end
 end
