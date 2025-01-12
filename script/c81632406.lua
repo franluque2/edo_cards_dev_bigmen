@@ -88,17 +88,12 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		if Duel.Destroy(tc,REASON_EFFECT) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp,tc):GetFirst()
 			if not sc then return end
-			local fc=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
-			if fc then
-				Duel.SendtoGrave(fc,REASON_RULE)
-				Duel.BreakEffect()
-			end
 			Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 		end
 	end
 end
-function s.plfilter(c,tc)
-	return c:IsFieldSpell() and not c:IsForbidden() or tc:IsExists(Card.IsCode,1,nil,c:GetCode())
+function s.plfilter(c)
+	return c:IsFieldSpell() and not c:IsForbidden()
 end
