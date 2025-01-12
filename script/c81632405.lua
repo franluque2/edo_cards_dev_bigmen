@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	--recover
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCategory(CATEGORY_RECOVER+CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE)
+	e1:SetCategory(CATEGORY_RECOVER+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(s.tg)
@@ -23,13 +23,13 @@ function s.initial_effect(c)
 	e2:SetOperation(s.drop)
 	c:RegisterEffect(e2)
 end
-
+s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     local num=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,10321588), tp, LOCATION_ONFIELD, 0, nil)
-	if chk==0 then return num>0 and Duel.IsExistingMatchingCard(Card.IsSpellTrap, tp, LOCATION_DECK, 0, 1, nil) end
+	if chk==0 then return num>0 and Duel.IsExistingMatchingCard(Card.IsType,TYPE_EQUIP, tp, LOCATION_DECK, 0, 1, nil) end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.SelectMatchingCard(tp, Card.IsSpellTrap, tp, LOCATION_DECK, 0, 1,1,false,nil)
+    local tc=Duel.SelectMatchingCard(tp,Card.IsType,TYPE_EQUIP,tp,LOCATION_DECK, 0, 1,1,false,nil)
     if tc then
 		Duel.ShuffleDeck(tp)
 		Duel.MoveSequence(tc:GetFirst(),0)
@@ -39,7 +39,7 @@ end
 
 
 function s.addpixiefilter(c)
-    return c:IsAbleToHand() and c:IsSpellTrap() and (c:IsFairy() or c:IsPixie())
+    return c:IsAbleToHand() and (c:IsMonster() and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON))
 end
 
 function s.specialsummonbeastfilter(c,e,tp)
@@ -59,44 +59,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
                 Duel.SendtoHand(tc, tp, REASON_EFFECT)
                 Duel.ConfirmCards(1-tp, tc)
             end
-        end
-
-        if recoveredlp>=400 and Duel.IsExistingMatchingCard(s.specialsummonbeastfilter, tp, LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK, 0, 1, nil, e,tp) and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-            local tc=Duel.SelectMatchingCard(tp, s.specialsummonbeastfilter, tp, LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK, 0, 1,1,false,nil,e,tp)
-            if tc then
-                if Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
-                    local tc1=tc:GetFirst()
-
-                local e1=Effect.CreateEffect(e:GetHandler())
-                e1:SetType(EFFECT_TYPE_SINGLE)
-                e1:SetCode(EFFECT_CHANGE_LEVEL)
-                e1:SetValue(3)
-                e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
-                tc1:RegisterEffect(e1)
-				local e3=e1:Clone()
-				e3:SetCode(EFFECT_ADD_TYPE)
-				e3:SetValue(TYPE_TUNER)
-				tc1:RegisterEffect(e3)
-                end
-            end
-        end
-
-        if recoveredlp>=1000 and Duel.GetMatchingGroupCount(Card.IsFaceup, tp, LOCATION_MZONE,0,nil)>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 3))  then
-            local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-	        local tc=g:GetFirst()
-	        for tc in aux.Next(g) do
-                local e1=Effect.CreateEffect(e:GetHandler())
-                e1:SetType(EFFECT_TYPE_SINGLE)
-                e1:SetCode(EFFECT_UPDATE_ATTACK)
-                e1:SetValue(recoveredlp)
-                e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
-                tc:RegisterEffect(e1)
-
-                local e2=e1:Clone()
-                e2:SetCode(EFFECT_UPDATE_DEFENSE)
-                tc:RegisterEffect(e2)
-	        end
-            
         end
     end
 end

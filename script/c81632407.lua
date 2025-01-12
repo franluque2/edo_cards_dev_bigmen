@@ -1,43 +1,65 @@
 --Fairy Breath (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-	--Activate
+	--Name Change
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DEFCHANGE+CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(TIMING_DAMAGE_STEP)
-	e1:SetCondition(s.condition)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.activate)
-    e1:SetCountLimit(1,{id,0})
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_CHANGE_CODE)
+	e1:SetRange(LOCATION_DECK)
+	e1:SetValue(101208071)
 	c:RegisterEffect(e1)
 
-    --Substitute destruction
+	--Activate
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EFFECT_DESTROY_REPLACE)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetTarget(s.reptg)
-	e2:SetValue(s.repval)
-	e2:SetOperation(s.repop)
+	e2:SetCategory(CATEGORY_DEFCHANGE)
+	e2:SetType(EFFECT_TYPE_ACTIVATE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP)
+	e2:SetCountLimit(1,{id,0})
+	e2:SetCondition(s.condition)
+	e2:SetTarget(s.target)
+	e2:SetOperation(s.activate)
 	c:RegisterEffect(e2)
+
+	--GY
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetCondition(function(_,tp) return Duel.IsTurnPlayer(1-tp) end)
+	e3:SetTarget(s.destg)
+	e3:SetOperation(s.desop)
+	c:RegisterEffect(e3)
 end
-s.listed_names={25862681}
+s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
+function s.CardFilter(c)
+    return c:IsMonster() and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON)
+end
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsCode(25862681)
+	return c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_EXTRA) or aux.SpElimFilter(c,true))
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE+LOCATION_MZONE+LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE+LOCATION_MZONE+LOCATION_EXTRA,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function s.cfilter2(c)
+	return c:IsFaceup() and c:IsCode(25862681) or (c:IsType(TYPE_SYNCHRO) and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON))
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -48,25 +70,31 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e1:SetValue(3000)
 		tc:RegisterEffect(e1)
-
-        local e2=e1:Clone()
-        e2:SetCode(EFFECT_UPDATE_ATTACK)
-        tc:RegisterEffect(e2)
 	end
 end
-
-function s.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and Duel.IsExistingMatchingCard(s.cfilter, tp, LOCATION_ONFIELD, 0, 1, nil)
-		and not c:IsReason(REASON_REPLACE)
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_FZONE) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_FZONE,0,1,nil) and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_FZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToRemove() and eg:IsExists(s.repfilter,1,nil,tp) end
-	return Duel.SelectEffectYesNo(tp,c,96)
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		if Duel.Destroy(tc,REASON_EFFECT) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+			if not sc then return end
+			local fc=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
+			if fc then
+				Duel.SendtoGrave(fc,REASON_RULE)
+				Duel.BreakEffect()
+			end
+			Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+		end
+	end
 end
-function s.repval(e,c)
-	return s.repfilter(c,e:GetHandlerPlayer())
-end
-function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
+function s.plfilter(c,tp,og)
+	return c:IsFieldSpell() and not c:IsForbidden() or tc:IsExists(Card.IsCode,1,nil,c:GetCode())
 end

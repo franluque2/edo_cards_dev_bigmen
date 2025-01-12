@@ -1,98 +1,103 @@
 --Ancient Sunshine (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-	--Activate
+	--Name Change
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCost(s.cost)
-	e1:SetCondition(s.condition)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.operation)
-    e1:SetCountLimit(1,{id,0})
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_CHANGE_CODE)
+	e1:SetRange(LOCATION_DECK)
+	e1:SetValue(101208071)
 	c:RegisterEffect(e1)
 
-    --become a fairy card
-    local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_SINGLE)
-    e3:SetCode(EFFECT_ADD_SETCODE)
-    e3:SetValue(0x51d)
-    e3:SetRange(LOCATION_ALL)
-    e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-    c:RegisterEffect(e3)
-
-    local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-    e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-    e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetHintTiming(0,TIMING_END_PHASE)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(s.drtg)
-	e2:SetOperation(s.drop)
+	--Activate
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetType(EFFECT_TYPE_ACTIVATE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP)
+	e2:SetCountLimit(1,{id,0})
+	e2:SetCost(s.cost)
+	e2:SetCondition(s.condition)
+	e2:SetTarget(s.target)
+	e2:SetOperation(s.activate)
 	c:RegisterEffect(e2)
-end
-s.listed_names={25862681}
 
-function s.retfilter(c)
-    return c:IsCode(25862681) and c:IsAbleToDeck()
+	--GY
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetCondition(function(_,tp) return Duel.IsTurnPlayer(1-tp) end)
+	e3:SetTarget(s.destg)
+	e3:SetOperation(s.desop)
+	c:RegisterEffect(e3)
 end
-function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    local num=Duel.GetMatchingGroupCount(s.retfilter, tp, LOCATION_GRAVE+LOCATION_REMOVED, 0, nil)
-    if chkc then return (chkc:IsLocation(LOCATION_REMOVED) or chkc:IsLocation(LOCATION_GRAVE)) and chkc:IsControler(tp) and s.retfilter(chkc) end
-	if chk==0 then return num>0 and Duel.IsPlayerCanDraw(tp) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,s.retfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
+function s.CardFilter(c)
+    return c:IsMonster() and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON)
 end
-function s.drop(e,tp,eg,ep,ev,re,r,rp)
-    local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if #tg<=0 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct>0 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
-	end
-end
-
-
 function s.cfilter(c)
-	return c:IsCode(25862681) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_EXTRA))
-end
-function s.confilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_BEAST)
+	return c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA,0,1,nil)
-		and Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.confilter,tp,LOCATION_MZONE,0,1,nil) 
+	return (Duel.IsExistingMatchingCard(s.CardFilter,tp,LOCATION_ONFIELD,0,1,nil)) and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(2100)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,2100)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(s.CardFilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Damage(p,d,REASON_EFFECT)
-	
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetValue(2100)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetValue(2100)
+		tc:RegisterEffect(e2)
+	end
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_FZONE) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_FZONE,0,1,nil) and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_FZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		if Duel.Destroy(tc,REASON_EFFECT) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+			if not sc then return end
+			local fc=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
+			if fc then
+				Duel.SendtoGrave(fc,REASON_RULE)
+				Duel.BreakEffect()
+			end
+			Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+		end
+	end
+end
+function s.plfilter(c,tp,og)
+	return c:IsFieldSpell() and not c:IsForbidden() or tc:IsExists(Card.IsCode,1,nil,c:GetCode())
 end
