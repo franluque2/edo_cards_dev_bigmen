@@ -68,12 +68,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if Duel.Damage(p,d,REASON_EFFECT) then
 		local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsPosition,POS_DEFENSE),tp,LOCATION_MZONE,0,nil)
+		local tc=g:GetFirst()
+		local c=e:GetHandler()
 		for tc in g:Iter() do
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_DEFENSE)
 			e1:SetValue(1000)
-			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE_END)
 			tc:RegisterEffect(e1)
 		end
 end
