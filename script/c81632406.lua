@@ -99,6 +99,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function s.plfilter(c,tp,og)
+function s.plfilter(c,tc)
 	return c:IsFieldSpell() and not c:IsForbidden() or tc:IsExists(Card.IsCode,1,nil,c:GetCode())
 end
