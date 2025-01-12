@@ -93,7 +93,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=hg:Select(tp,1,1,nil)
 		Duel.BreakEffect()
-		Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+		Duel.MoveToField(sg,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 end
 function s.plfilter(c)
