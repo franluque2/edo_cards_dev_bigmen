@@ -85,14 +85,15 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		if Duel.Destroy(tc,REASON_EFFECT) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp,tc):GetFirst()
-			if not sc then return end
-			Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
-		end
+	local dg=Duel.GetFieldGroup(0,LOCATION_FZONE,LOCATION_FZONE)
+	if not Duel.Destroy(dg,REASON_EFFECT)>0 then return end
+	local og=Duel.GetOperatedGroup()
+	local hg=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_DECK,0,nil,og)
+	if #hg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local sg=hg:Select(tp,1,1,nil)
+		Duel.BreakEffect()
+		Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 end
 function s.plfilter(c)
