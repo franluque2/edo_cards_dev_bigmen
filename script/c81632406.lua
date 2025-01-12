@@ -86,7 +86,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetFieldGroup(0,LOCATION_FZONE,LOCATION_FZONE)
-	if not Duel.Destroy(dg,REASON_EFFECT)>0 then return end
+	if Duel.Destroy(dg,REASON_EFFECT) then
 	local og=Duel.GetOperatedGroup()
 	local hg=Duel.GetMatchingGroup(s.plfilter,tp,LOCATION_DECK,0,nil,og)
 	if #hg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
@@ -95,6 +95,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.MoveToField(sg,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
+end
 end
 function s.plfilter(c)
 	return c:IsFieldSpell() and not c:IsForbidden()
