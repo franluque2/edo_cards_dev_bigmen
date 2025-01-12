@@ -39,7 +39,7 @@ function s.initial_effect(c)
 end
 s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
 function s.CardFilter(c)
-    return c:IsMonster() and c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON)
+    return c:IsMonster() and (c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON) and c:IsLevelBelow(4))
 end
 function s.cfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_EXTRA) or aux.SpElimFilter(c,true))
@@ -59,9 +59,9 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.CardFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,s.CardFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
