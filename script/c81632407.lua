@@ -86,7 +86,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		if Duel.Destroy(tc,REASON_EFFECT) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp,tc):GetFirst()
+			local sc=Duel.SelectMatchingCard(tp,s.plfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 			if not sc then return end
 			Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 		end
