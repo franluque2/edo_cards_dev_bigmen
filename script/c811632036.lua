@@ -105,11 +105,11 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
         local selectgroup={}
         local num1=Duel.GetRandomNumber(1,#levels[lv])
         local num2=Duel.GetRandomNumber(1,#levels[lv])
-        while num2==num1 do
+        while (num2==num1) do
             num2=Duel.GetRandomNumber(1,#levels[lv])
         end
         local num3=Duel.GetRandomNumber(1,#levels[lv])
-        while num3==num2 or num3==num1 do
+        while (num3==num2) or (num3==num1) do
             num3=Duel.GetRandomNumber(1,#levels[lv])
         end
 
