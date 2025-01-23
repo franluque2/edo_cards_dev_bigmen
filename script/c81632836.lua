@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCost(s.coscost)
 	e5:SetOperation(s.cosoperation)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e5)
 end
 s.listed_names={511000706}
 
