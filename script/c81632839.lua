@@ -38,9 +38,12 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED) 
 		and eg:IsExists(s.repfilter,1,nil,tp) end
+	if Duel.SelectEffectYesNo(tp,c,aux.Stringid(id,0)) then
 		local g=eg:Filter(s.repfilter,nil,tp)
 		if #g==1 then
 			e:SetLabelObject(g:GetFirst())
+		else
+		end
 		c:SetStatus(STATUS_DESTROY_CONFIRMED,true)
 		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		return true
