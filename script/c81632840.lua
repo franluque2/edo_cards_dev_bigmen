@@ -43,17 +43,20 @@ function s.spfilter(c,e,tp)
 	return (c:IsSetCard(0x550) and c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_EARTH)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,2,nil,e,tp) end
+	if chk==0 then
+		local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+		return g:GetClassCount(Card.GetCode)>=2
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,2,2,nil,e,tp)
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	if g:GetClassCount(Card.GetCode)>=2 then
+		local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_ATOHAND)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
+end
 end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
