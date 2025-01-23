@@ -24,6 +24,7 @@ function s.initial_effect(c)
 end
 s.listed_names={511000706}
 
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,511000706),tp,LOCATION_ONFIELD,0,1,nil)
+function s.spcon(e,c)
+	if c==nil then return true end
+	return not Duel.IsEnvironment(511000706) and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
