@@ -19,15 +19,15 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Activate
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SEARCH)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,id)
-	e3:SetCondition(s.drcon)
-	e3:SetTarget(s.target)
-	e3:SetOperation(s.activate2)
+	e3:SetCondition(function(_,tp) return Duel.IsTurnPlayer(tp) end)
+	e3:SetTarget(s.settg)
+	e3:SetOperation(s.setop)
 	c:RegisterEffect(e3)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -70,28 +70,19 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(c,REASON_EFFECT+REASON_REPLACE)
 end
 
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+function s.setfilter(c)
+	return (c:IsAttribute(ATTRIBUTE_EARTH) and c:IsRace(RACE_FAIRY)) and c:IsAbleToDeck()
 end
-function s.filter(c)
-	return (c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_EARTH)) and c:IsAbleToHand()
+function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.setfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectTarget(tp,s.setfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 end
-function s.activate2(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return end
-	local g=Duel.GetDecktopGroup(tp,3)
-	Duel.ConfirmCards(tp,g)
-	if g:IsExists(s.filter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=g:FilterSelect(tp,s.filter,1,1,nil)
-		Duel.DisableShuffleCheck()
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
-		Duel.ShuffleHand(tp)
-		Duel.SortDeckbottom(tp,tp,2)
-	else Duel.SortDeckbottom(tp,tp,2) end
-end
-function s.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+function s.setop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	end
 end
