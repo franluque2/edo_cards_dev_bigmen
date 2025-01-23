@@ -27,7 +27,6 @@ end
 s.listed_names={511000706}
 
 function s.spcon(e,c)
-	if c==nil then return true end
 	return not Duel.IsEnvironment(511000706) and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
