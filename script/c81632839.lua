@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,id)
+	e3:SetCondition(s.drcon)
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.activate2)
 	c:RegisterEffect(e3)
@@ -88,6 +89,9 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 		Duel.ShuffleHand(tp)
-		Duel.SortDecktop(tp,tp,2)
-	else Duel.SortDecktop(tp,tp,3) end
+		Duel.SortDeckbottom(tp,tp,2)
+	else Duel.SortDeckbottom(tp,tp,2) end
+end
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
