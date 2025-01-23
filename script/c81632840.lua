@@ -32,7 +32,6 @@ function s.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_FZONE)
 	e5:SetCountLimit(1,{id,1})
-	e5:SetTarget(s.settg)
 	e5:SetOperation(s.setop)
 	c:RegisterEffect(e5)
 end
@@ -56,12 +55,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
 end
-function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsSSetable() end
-end
 function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsSSetable() then
-		Duel.SSet(tp,c)
+	if c:IsRelateToEffect(e) then
+		Duel.ChangePosition(c,POS_FACEDOWN)
 	end
 end
