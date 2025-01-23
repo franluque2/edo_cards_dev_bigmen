@@ -17,6 +17,17 @@ function s.initial_effect(c)
 	e2:SetValue(s.repval)
 	e2:SetOperation(s.repop)
 	c:RegisterEffect(e2)
+	--Activate
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SEARCH)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1,id)
+	e3:SetTarget(s.target)
+	e3:SetOperation(s.activate2)
+	c:RegisterEffect(e3)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.cardfilter,tp,LOCATION_DECK,0,nil)
@@ -56,4 +67,27 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:SetStatus(STATUS_DESTROY_CONFIRMED,false)
 	Duel.Destroy(c,REASON_EFFECT+REASON_REPLACE)
+end
+
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function s.filter(c)
+	return (c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_EARTH)) and c:IsAbleToHand()
+end
+function s.activate2(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return end
+	local g=Duel.GetDecktopGroup(tp,3)
+	Duel.ConfirmCards(tp,g)
+	if g:IsExists(s.filter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local sg=g:FilterSelect(tp,s.filter,1,1,nil)
+		Duel.DisableShuffleCheck()
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg)
+		Duel.ShuffleHand(tp)
+		Duel.SortDecktop(tp,tp,2)
+	else Duel.SortDecktop(tp,tp,3) end
 end

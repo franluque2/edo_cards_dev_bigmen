@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
     --Search
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_TODECK)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_HAND)
