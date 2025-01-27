@@ -30,6 +30,14 @@ function s.Warriors(c)
   return c:IsSetCard(0x66) and c:IsType(TYPE_SYNCHRO)
 end
 
+function s.WarriorSynchros(c)
+	return c:IsSetCard(0x66) and c:IsType(TYPE_SYNCHRO) and c:IsLevelBelow(7)
+end
+
+function s.Junk(c)
+	return c:IsOriginalSetCard() and not (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK))
+end
+
 function s.tfilter(tc,lc,stype,tp)
 	return tc:IsSummonCode(lc,stype,tp,63977008) or tc:IsHasEffect(20932152)
 end
@@ -46,6 +54,22 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 		--other passive duel effects go here
+
+		local e5=Effect.CreateEffect(e:GetHandler())
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetCode(EFFECT_ADD_SETCODE)
+        e5:SetTargetRange(LOCATION_EXTRA,0)
+        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetValue(0x43)
+        Duel.RegisterEffect(e5,tp)
+
+		local e6=Effect.CreateEffect(e:GetHandler())
+        e6:SetType(EFFECT_TYPE_FIELD)
+        e6:SetCode(EFFECT_ADD_SETCODE)
+        e6:SetTargetRange(LOCATIONS,0)
+        e6:SetTarget(function(_,c)  return c:IsHasEffect(id+1) end)
+        e6:SetValue(0x1017)
+        Duel.RegisterEffect(e6,tp)
     
 
 	end
@@ -64,6 +88,38 @@ end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
+
+	local g=Duel.GetMatchingGroup(s.WarriorSynchros, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
+
+	local g=Duel.GetMatchingGroup(s.Junk, tp, LOCATION_ALL, LOCATION_ALL, nil)
+
+    if #g>0 then
+		local tc=g:GetFirst()
+		while tc do
+			
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(id+1)
+				tc:RegisterEffect(e3)
+
+
+			tc=g:GetNext()
+		end
+	end
 
     local EndDragons=Duel.GetMatchingGroup(s.Warriors, tp, LOCATION_EXTRA, 0, nil)
 	if #EndDragons>0 then
@@ -101,6 +157,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	end
+
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
