@@ -35,7 +35,7 @@ function s.WarriorSynchros(c)
 end
 
 function s.Junk(c)
-	return c:IsOriginalSetCard() and not (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK))
+	return c:IsOriginalSetCard(0x43) and not (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK))
 end
 
 function s.tfilter(tc,lc,stype,tp)
