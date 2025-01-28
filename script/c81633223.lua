@@ -93,7 +93,7 @@ end
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()<=1 and Duel.GetFlagEffect(tp, id)==0 and Duel.GetTurnPlayer()==tp
+	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()<=2 and Duel.GetFlagEffect(tp, id)==0 and Duel.GetTurnPlayer()==tp
 end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
