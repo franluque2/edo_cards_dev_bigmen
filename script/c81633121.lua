@@ -86,7 +86,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 local ANCIENT_GEAR_CARD=31557782
-local ANCIENT_GEAR_STATUE=500000006
+local ANCIENT_GEAR_STATUE=32762201
 
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER)
