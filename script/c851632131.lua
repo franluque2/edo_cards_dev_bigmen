@@ -19,6 +19,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E|TIMING_MAIN_END)
 	e2:SetCost(aux.bfgcost)
+	e2:SetCondition(s.thcon)
 	e2:SetTarget(s.rmtg)
 	e2:SetOperation(s.rmop)
 	c:RegisterEffect(e2)
@@ -26,6 +27,10 @@ function s.initial_effect(c)
 	
 end
 
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	return g:FilterCount(Card.IsAttribute,nil,ATTRIBUTE_EARTH)==#g
+end
 
 function s.rmfilter(c)
 	return c:IsAbleToRemove() and aux.SpElimFilter(c) and c:IsMonster()
