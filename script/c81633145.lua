@@ -42,7 +42,7 @@ end
 
 function s.defamazonessfilter(e,c)
 
-    return (c:IsDefensePos() and c:IsType(TYPE_FUSION) and c:IsSetCard(SET_AMAZONESS)) or c:IsCode(10979723)
+    return (c:IsDefensePos() and (c:IsType(TYPE_FUSION) or c:IsCode(10979723)) and c:IsSetCard(SET_AMAZONESS))
 end
 
 function s.efilter(e,te)
