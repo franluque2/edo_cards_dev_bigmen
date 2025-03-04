@@ -133,7 +133,7 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.discon2(e)
-	return Duel.GetFlagEffect(tp,id+1)>0
+	return Duel.GetFlagEffect(e:GetHandlerPlayer(),id+1)>0
 end
 
 function s.actfilter(e,c)
