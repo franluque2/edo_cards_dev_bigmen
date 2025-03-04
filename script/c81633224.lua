@@ -19,9 +19,9 @@ end
 local MYSTICAL_BEAST_SERKET=89194033
 
 -- fill in once the cards come out in edo
-local MAN_WITH_THE_MARK=89194033
-local DIVINE_SERPENT_APOPHIS=89194033
-local MERCILESS_SCORPION_OF_SERKET=89194033
+local MAN_WITH_THE_MARK=100410001
+local DIVINE_SERPENT_APOPHIS=100410004
+local MERCILESS_SCORPION_OF_SERKET=100410002
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
