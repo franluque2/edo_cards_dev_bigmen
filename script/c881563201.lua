@@ -28,7 +28,7 @@ function s.initial_effect(c)
     c:RegisterEffect(e2)
 
     local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e3:SetRange(LOCATION_MZONE)
     e3:SetCode(EVENT_SPSUMMON_SUCCESS)
     e3:SetDescription(aux.Stringid(id,0))
@@ -41,15 +41,30 @@ function s.initial_effect(c)
 
     local e4=e3:Clone()
     e4:SetCode(EVENT_CUSTOM+id)
+	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCondition(s.battlecon2)
     c:RegisterEffect(e4)
+
+    local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_ADJUST)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetCondition(function(e) return (e:GetHandler():GetFlagEffect(id)>0) and (Duel.GetCurrentChain()==0) and (not Duel.IsPhase(PHASE_DAMAGE)) end)
+	e7:SetOperation(s.adop)
+	c:RegisterEffect(e7)
 
 
 end
 s.listed_names={TOKEN_FOLLOWUP}
 s.counter_place_list={COUNTER_DEBTOR}
 
+
+function s.battlecon2(e,tp,eg,ep,ev,re,r,rp)
+	return WbAux.CanPlayerSpecialSummonFollowupToken(tp)
+end
+
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
-    return WbAux.CanPlayerSpecialSummonFollowupToken(tp)
+    return WbAux.CanPlayerSpecialSummonFollowupToken(tp) and (e:GetHandler():GetFlagEffect(id)==0)
 end
 
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
@@ -78,7 +93,7 @@ function s.raop2(e,tp,eg,ep,ev,re,r,rp)
     e:GetHandler():AddCounter(COUNTER_DEBTOR,1)
 
     if e:GetHandler():GetCounter(COUNTER_DEBTOR)==3 then
-        Duel.RaiseSingleEvent(e:GetHandler(), EVENT_CUSTOM+id, e:GetHandler(), 0, tp, tp, 0)
+        e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
     end
 end
 
