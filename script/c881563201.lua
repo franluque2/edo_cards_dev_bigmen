@@ -59,6 +59,11 @@ s.listed_names={TOKEN_FOLLOWUP}
 s.counter_place_list={COUNTER_DEBTOR}
 
 
+function s.adop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():ResetFlagEffect(id)
+	Duel.RaiseSingleEvent(e:GetHandler(), EVENT_CUSTOM+id, 0, REASON_EFFECT, e:GetHandlerPlayer(), e:GetHandlerPlayer(), 0)
+end
+
 function s.battlecon2(e,tp,eg,ep,ev,re,r,rp)
 	return WbAux.CanPlayerSpecialSummonFollowupToken(tp)
 end

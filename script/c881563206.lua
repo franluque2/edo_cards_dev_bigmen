@@ -102,7 +102,7 @@ function s.raop(e,tp,eg,ep,ev,re,r,rp)
     for tc in aux.Next(g) do
         if not tc:IsType(TYPE_TOKEN) then
             tc:AddCounter(0x1021,1)
-            if tc:GetFlagEffect(id)~=0 then return end
+            if tc:GetFlagEffect(id+500)~=0 then return end
             local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
             e1:SetCode(EFFECT_DESTROY_REPLACE)
@@ -110,7 +110,7 @@ function s.raop(e,tp,eg,ep,ev,re,r,rp)
             e1:SetOperation(s.repop)
             e1:SetReset(RESET_EVENT+RESETS_STANDARD)
             tc:RegisterEffect(e1)
-            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
+            tc:RegisterFlagEffect(id+500,RESET_EVENT+RESETS_STANDARD,0,0)
         end
     end
 end
@@ -128,7 +128,7 @@ function s.raop2(e,tp,eg,ep,ev,re,r,rp)
     if e:GetHandler():GetCounter(COUNTER_BLIND_BET)>=7 then return end
     e:GetHandler():AddCounter(COUNTER_BLIND_BET,1)
 
-    if e:GetHandler():GetCounter(COUNTER_DEBTOR)==7 then
+    if e:GetHandler():GetCounter(COUNTER_BLIND_BET)==7 then
         e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
     end
 end
