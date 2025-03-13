@@ -28,7 +28,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.MaterialMosiac(c)
-  return c:IsCode(511002423, 511002424, 511002422, 511002421, 511002425)
+  return c:IsCode(511002423, 511002424, 511002422, 511002421) or c:IsOriginalCode(511002425)
 end
 
 function s.Mosiac(c)
