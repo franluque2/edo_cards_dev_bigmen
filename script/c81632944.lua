@@ -31,6 +31,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetType(EFFECT_TYPE_FIELD)
         e7:SetCode(EFFECT_IMMUNE_EFFECT)
         e7:SetTargetRange(LOCATION_MZONE,0)
+		e7:SetTarget(function(e,c) return not c:IsOriginalSetCard(0x1) end)
         e7:SetValue(s.efilter)
         Duel.RegisterEffect(e7, tp)
 
