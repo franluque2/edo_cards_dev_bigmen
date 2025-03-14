@@ -40,3 +40,7 @@ function WbAux.GetFollowupToken(tp, c)
     Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
     return token
 end
+
+--Minecraft
+
+SET_MINECRAFT=0xd01
