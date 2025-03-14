@@ -36,7 +36,7 @@ function s.Mosiac(c)
 end
 
 function s.OfD(c)
-  return c:IsCode(67511500, 08978197, 17985575, 66961194, 160319005)
+  return c:IsOriginalCode(67511500, 08978197, 17985575, 66961194, 160319005)
 end
 
 function s.Virus(c)
@@ -102,6 +102,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e17:SetCountLimit(1)
 		Duel.RegisterEffect(e17,tp)
     
+
+		local e29=Effect.CreateEffect(e:GetHandler())
+        e29:SetType(EFFECT_TYPE_FIELD)
+        e29:SetCode(EFFECT_ADD_CODE)
+        e29:SetTargetRange(LOCATION_ALL,0)
+        e29:SetTarget(function(_,c)  return s.OfD(c) end)
+        e29:SetValue(17985575)
+        Duel.RegisterEffect(e29,tp)
 
 	end
 	e:SetLabel(1)
