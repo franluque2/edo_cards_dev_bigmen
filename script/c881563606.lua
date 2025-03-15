@@ -35,8 +35,8 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    local e0=Duel.IsPlayerCanDraw(tp,1) and not Duel.HasFlagEffect(tp,id)
-    local e1=s[tp]>0 and not Duel.HasFlagEffect(tp,id+1)
+    local e0=Duel.IsPlayerCanDraw(tp,1) and not Duel.HasFlagEffect(tp,id+1)
+    local e1=s[tp]>0 and not Duel.HasFlagEffect(tp,id)
 	if chk==0 then return e0 or e1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
 	local op=Duel.SelectEffect(tp,{e0,aux.Stringid(id,0)},{e1,aux.Stringid(id,1)})

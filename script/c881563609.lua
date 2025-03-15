@@ -47,7 +47,7 @@ end
 
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
     if not eg and not re:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return false end
-    if re:IsActiveType(TYPE_SPELL+TYPE_TRAP) then
+    if re and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) then
         if not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
         eg=Group.CreateGroup()
         eg:AddCard(re:GetHandler())
