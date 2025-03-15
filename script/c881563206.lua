@@ -10,6 +10,8 @@ function s.initial_effect(c)
 
     Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_IPC),2)
 
+    Link.AddProcedure(c,aux.FilterBoolFunctionEx(s.mfilter),2)
+
     --Cannot be targetted by your opponent's card effects
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
@@ -74,6 +76,11 @@ function s.initial_effect(c)
 end
 s.listed_names={TOKEN_FOLLOWUP}
 s.counter_place_list={COUNTER_BLIND_BET}
+
+function s.mfilter(c,lc,sumtype,tp)
+    return c:IsSetCard(SET_IPC,lc,sumtype,tp) or c:IsType(TYPE_TOKEN,lc,sumtype,tp)
+end
+
 
 function s.battlecon2(e,tp,eg,ep,ev,re,r,rp)
 	return WbAux.CanPlayerSpecialSummonFollowupToken(tp)

@@ -5,7 +5,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     c:SetUniqueOnField(1,0,id)
 	c:EnableReviveLimit()
-    Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_IPC),3,99)
+    Link.AddProcedure(c,aux.FilterBoolFunctionEx(s.mfilter),3,99)
 
 
     local e1=Effect.CreateEffect(c)
@@ -49,6 +49,11 @@ function s.initial_effect(c)
     
 end
 s.listed_names={881563205}
+
+function s.mfilter(c,lc,sumtype,tp)
+    return c:IsSetCard(SET_IPC,lc,sumtype,tp) or c:IsType(TYPE_TOKEN,lc,sumtype,tp)
+end
+
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return  Duel.GetLocationCount(tp,LOCATION_MZONE)>0

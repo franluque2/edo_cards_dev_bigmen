@@ -8,7 +8,7 @@ function s.initial_effect(c)
 
     c:EnableCounterPermit(COUNTER_DEBTOR)
 
-    Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_IPC),2,99)
+    Link.AddProcedure(c,aux.FilterBoolFunctionEx(s.mfilter),2,99)
 
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -58,6 +58,9 @@ end
 s.listed_names={TOKEN_FOLLOWUP}
 s.counter_place_list={COUNTER_DEBTOR}
 
+function s.mfilter(c,lc,sumtype,tp)
+    return c:IsSetCard(SET_IPC,lc,sumtype,tp) or c:IsType(TYPE_TOKEN,lc,sumtype,tp)
+end
 
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():ResetFlagEffect(id)
