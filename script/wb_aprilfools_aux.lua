@@ -43,4 +43,25 @@ end
 
 --Minecraft
 
-SET_MINECRAFT=0xd01
+SET_MINECRAFT=0xd04
+
+MINECRAFT_NORMIE_IDS={881563802,881563803,881563804,881563805,881563806,881563807}
+
+function WbAux.GetMinecraftNormie(tp,att)
+    local normieid=881563808
+    if att==ATTRIBUTE_DARK then
+        normieid=MINECRAFT_NORMIE_IDS[2]
+    elseif att==ATTRIBUTE_EARTH then
+        normieid=MINECRAFT_NORMIE_IDS[1]
+    elseif att==ATTRIBUTE_FIRE then
+        normieid=MINECRAFT_NORMIE_IDS[5]
+    elseif att==ATTRIBUTE_LIGHT then
+        normieid=MINECRAFT_NORMIE_IDS[6]
+    elseif att==ATTRIBUTE_WATER then
+        normieid=MINECRAFT_NORMIE_IDS[5]
+    elseif att==ATTRIBUTE_WIND then
+        normieid=MINECRAFT_NORMIE_IDS[3]
+    end
+    local normie=Duel.CreateToken(tp,normieid)
+    return normie
+end
