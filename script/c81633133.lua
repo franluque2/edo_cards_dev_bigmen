@@ -165,7 +165,7 @@ function s.limop2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.chainlm(e,rp,tp)
-	return (tp~=rp) and not e:GetHandler():IsCode(511030011)
+	return (tp~=rp) or (not e:GetHandler():IsCode(511030011))
 end
 
 function s.discon5(e)
