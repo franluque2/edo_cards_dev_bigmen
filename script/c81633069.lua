@@ -22,15 +22,6 @@ end
 --change this to change the locations where this acts
 local LOCATIONS=LOCATION_ALL-LOCATION_OVERLAY
 
---add archetype setcode here
-local ARCHETYPE=0x1186
-
---add the conditions for the archetype swap here
-function s.archetypefilter(c)
-  return c:IsCode(86327225)
-end
-
-
 
 
 
@@ -49,7 +40,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e5:SetType(EFFECT_TYPE_FIELD)
         e5:SetCode(EFFECT_ADD_CODE)
         e5:SetTargetRange(LOCATIONS,0)
-        e5:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e5:SetTarget(function(_,_c)  return _c:IsOriginalCode(86327225) end)
         e5:SetValue(52900000)
         Duel.RegisterEffect(e5,tp)
 
@@ -57,7 +48,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e6:SetType(EFFECT_TYPE_FIELD)
         e6:SetCode(EFFECT_ADD_TYPE)
         e6:SetTargetRange(LOCATIONS,0)
-        e6:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e6:SetTarget(function(_,_c)  return _c:IsOriginalCode(86327225) end)
         e6:SetValue(TYPE_SPIRIT)
         Duel.RegisterEffect(e6,tp)
 
@@ -65,19 +56,21 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e7:SetType(EFFECT_TYPE_FIELD)
         e7:SetCode(EFFECT_ADD_ATTRIBUTE)
         e7:SetTargetRange(LOCATIONS,0)
-        e7:SetTarget(function(_,c)  return c:IsHasEffect(id) end)
+        e7:SetTarget(function(_,_c)  return _c:IsOriginalCode(86327225) end)
         e7:SetValue(ATTRIBUTE_WIND)
         Duel.RegisterEffect(e7,tp)
     
-
 	end
 	e:SetLabel(1)
 end
 
-
-function s.markedfilter(c,e)
-    return #c:IsHasEffect(e)>0
-end
+Card.IsType=(function()
+	local oldfunc=Card.IsType
+	return function(c,t)
+		if c:IsOriginalCode(86327225) and t==TYPE_SPIRIT and Duel.GetFlagEffect(c:GetControler(), id)>0 then return true end
+		return oldfunc(c,t)
+	end
+end)()
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -86,22 +79,6 @@ end
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SKILL_FLIP,tp,id|(1<<32))
 	Duel.Hint(HINT_CARD,tp,id)
-
-    local g=Duel.GetMatchingGroup(s.archetypefilter, tp, LOCATION_ALL, LOCATION_ALL, nil)
-
-    if #g>0 then
-		local tc=g:GetFirst()
-		while tc do
-			
-				local e3=Effect.CreateEffect(e:GetHandler())
-				e3:SetType(EFFECT_TYPE_SINGLE)
-				e3:SetCode(id)
-				tc:RegisterEffect(e3)
-
-
-			tc=g:GetNext()
-		end
-	end
 
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
