@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 
 function s.checkcon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetTurnPlayer()==tp and r&REASON_EFFECT==REASON_EFFECT
+    return Duel.GetTurnPlayer()==ep and r&REASON_EFFECT==REASON_EFFECT
 end
 
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
