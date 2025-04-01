@@ -3,15 +3,13 @@ Duel.LoadScript ("wb_aux.lua")
 Duel.LoadScript ("wb_aprilfools_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)	
+
     local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_DESTROYED)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
+    e1:SetType(EFFECT_TYPE_ACTIVATE)
+    e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+    e1:SetTarget(s.target)
     e1:SetCost(s.cost)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.activate)
-	c:RegisterEffect(e1)
+    c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -23,22 +21,83 @@ end
 s.listed_series={SET_DRAGON_BALL}
 
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (e:GetHandler():IsLocation(LOCATION_ONFIELD) or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler())) end
+	if chk==0 then return (Duel.GetTurnPlayer()==tp or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler())) end
     local c=e:GetHandler()
-    local pos=e:IsHasType(EFFECT_TYPE_ACTIVATE) and c:IsStatus(STATUS_ACT_FROM_HAND)
-    if pos then
+    if Duel.GetTurnPlayer()~=tp then
         Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
     end
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tc=eg:GetFirst()
-	if chk==0 then return #eg==1 and tc:IsPreviousControler(tp) and tc:IsPreviousLocation(LOCATION_MZONE)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and tc:IsLocation(LOCATION_GRAVE)
-		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-        
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
+    local num=Duel.GetFlagEffect(0, id)
+    if chk==0 then return true end
+    if num==0 then
+        e:SetLabel(1)
+        e:SetCategory(CATEGORY_DRAW)
+        Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+        e:SetOperation(s.drawop)
+    elseif num==1 then
+        e:SetLabel(2)
+        e:SetOperation(s.negateop)
+    end
+end
+
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(SET_DRAGON_BALL)
+end
+
+function s.negateop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    Card.CancelToGrave(c)
+
+	local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
+    Duel.RegisterFlagEffect(0,id,0,0,0)
+
+    if Duel.SendtoHand(c, tp, REASON_EFFECT) and #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        Duel.BreakEffect()
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+        local sg=g:Select(tp,1,1,nil)
+        Duel.HintSelection(sg)
+        local tc=sg:GetFirst()
+        Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_DISABLE)
+        e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+        e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+        tc:RegisterEffect(e1)
+        local e2=e1:Clone()
+        e2:SetCode(EFFECT_DISABLE_EFFECT)
+        tc:RegisterEffect(e2)
+
+        local e3=Effect.CreateEffect(e:GetHandler())
+        e3:SetType(EFFECT_TYPE_FIELD)
+        e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+        e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+        e3:SetDescription(aux.Stringid(id,2))
+        e3:SetTargetRange(1,0)
+        e3:SetTarget(s.splimit)
+        e3:SetReset(RESET_PHASE+PHASE_END)
+        Duel.RegisterEffect(e3,tp)
+end
+end
+
+function s.drawop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    Card.CancelToGrave(c)
+    Duel.RegisterFlagEffect(0,id,0,0,0)
+
+    if Duel.SendtoHand(c, tp, REASON_EFFECT) and Duel.Draw(tp,1,REASON_EFFECT)>0 then
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_FIELD)
+        e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+        e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+        e1:SetDescription(aux.Stringid(id,2))
+        e1:SetTargetRange(1,0)
+        e1:SetTarget(s.splimit)
+        e1:SetReset(RESET_PHASE+PHASE_END)
+        Duel.RegisterEffect(e1,tp)
+    end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
