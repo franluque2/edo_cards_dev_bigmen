@@ -1,4 +1,4 @@
---Dragon Ball Technique - Kamehameha
+--Piccolo, Namekian Warrior
 Duel.LoadScript ("wb_aux.lua")
 Duel.LoadScript ("wb_aprilfools_aux.lua")
 local s,id=GetID()
