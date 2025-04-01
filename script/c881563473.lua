@@ -9,6 +9,7 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
     e1:SetTarget(s.target)
     e1:SetCost(s.cost)
+    e1:SetOperation(s.activate)
     c:RegisterEffect(e1)
 
     local e2=Effect.CreateEffect(c)
@@ -35,10 +36,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
         e:SetLabel(1)
         e:SetCategory(CATEGORY_DRAW)
         Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-        e:SetOperation(s.drawop)
     elseif num==1 then
         e:SetLabel(2)
-        e:SetOperation(s.negateop)
+    else
+        e:SetLabel(3)
+        e:SetCategory(CATEGORY_DESTROY)
+        local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+        Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)    
     end
 end
 
@@ -46,14 +50,33 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(SET_DRAGON_BALL)
 end
 
-function s.negateop(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    Card.CancelToGrave(c)
+    local num=e:GetLabel()
 
-	local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
-    Duel.RegisterFlagEffect(0,id,0,0,0)
+    if num==1 then
+        Card.CancelToGrave(c)
+        Duel.RegisterFlagEffect(0,id,0,0,0)
 
-    if Duel.SendtoHand(c, tp, REASON_EFFECT) and #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        if Duel.SendtoHand(c, tp, REASON_EFFECT) and Duel.Draw(tp,1,REASON_EFFECT)>0 then
+            local e1=Effect.CreateEffect(e:GetHandler())
+            e1:SetType(EFFECT_TYPE_FIELD)
+            e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+            e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+            e1:SetDescription(aux.Stringid(id,2))
+            e1:SetTargetRange(1,0)
+            e1:SetTarget(s.splimit)
+            e1:SetReset(RESET_PHASE+PHASE_END)
+            Duel.RegisterEffect(e1,tp)
+        end
+    elseif num==2 then
+
+        Card.CancelToGrave(c)
+
+        local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
+        Duel.RegisterFlagEffect(0,id,0,0,0)
+
+        if Duel.SendtoHand(c, tp, REASON_EFFECT) and #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         Duel.BreakEffect()
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
         local sg=g:Select(tp,1,1,nil)
@@ -79,48 +102,13 @@ function s.negateop(e,tp,eg,ep,ev,re,r,rp)
         e3:SetTarget(s.splimit)
         e3:SetReset(RESET_PHASE+PHASE_END)
         Duel.RegisterEffect(e3,tp)
-end
-end
-
-function s.drawop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    Card.CancelToGrave(c)
-    Duel.RegisterFlagEffect(0,id,0,0,0)
-
-    if Duel.SendtoHand(c, tp, REASON_EFFECT) and Duel.Draw(tp,1,REASON_EFFECT)>0 then
-        local e1=Effect.CreateEffect(e:GetHandler())
-        e1:SetType(EFFECT_TYPE_FIELD)
-        e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-        e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-        e1:SetDescription(aux.Stringid(id,2))
-        e1:SetTargetRange(1,0)
-        e1:SetTarget(s.splimit)
-        e1:SetReset(RESET_PHASE+PHASE_END)
-        Duel.RegisterEffect(e1,tp)
-    end
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-    local c=e:GetHandler()
-	if tc and tc:IsLocation(LOCATION_GRAVE) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
-            local e2=Effect.CreateEffect(c)
-            e2:SetDescription(3308)
-            e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-            e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_CANNOT_DISABLE)
-            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-            tc:RegisterEffect(e2,true)
-            local e3=Effect.CreateEffect(c)
-            e3:SetType(EFFECT_TYPE_FIELD)
-            e3:SetCode(EFFECT_CANNOT_DISEFFECT)
-            e3:SetRange(LOCATION_MZONE)
-            e3:SetValue(s.efilter)
-            e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-            tc:RegisterEffect(e3,true)
-    
         end
-	end
+    else
+        Duel.RegisterFlagEffect(0,id,0,0,0)
+        local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+        Duel.Destroy(sg,REASON_EFFECT)
+    
+    end
 end
 
 function s.efilter(e,ct)
