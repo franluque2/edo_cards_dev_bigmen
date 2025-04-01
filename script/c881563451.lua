@@ -22,6 +22,17 @@ function s.initial_effect(c)
 	e2:SetTarget(s.rmtg)
 	e2:SetOperation(s.rmop)
 	c:RegisterEffect(e2)
+
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_IMMUNE_EFFECT)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetValue(s.efilter)
+	c:RegisterEffect(e3)
+end
+function s.efilter(e,te)
+	return te:GetOwner()~=e:GetOwner()
 end
 
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
