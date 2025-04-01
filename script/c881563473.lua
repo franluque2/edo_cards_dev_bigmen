@@ -5,7 +5,9 @@ local s,id=GetID()
 function s.initial_effect(c)	
 
     local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+    e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_MAIN_END+TIMINGS_CHECK_MONSTER_E+TIMING_END_PHASE)
     e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
     e1:SetTarget(s.target)
     e1:SetCost(s.cost)
@@ -22,7 +24,8 @@ end
 s.listed_series={SET_DRAGON_BALL}
 
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetTurnPlayer()==tp or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler())) end
+
+	if chk==0 then return Duel.GetTurnPlayer()==tp or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
     local c=e:GetHandler()
     if Duel.GetTurnPlayer()~=tp then
         Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
@@ -70,7 +73,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             Duel.RegisterEffect(e1,tp)
         end
     elseif num==2 then
-
         Card.CancelToGrave(c)
 
         local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
