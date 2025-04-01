@@ -25,9 +25,11 @@ s.listed_series={SET_DRAGON_BALL}
 
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 
-	if chk==0 then return Duel.GetTurnPlayer()==tp or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.GetTurnPlayer()==tp or e:GetHandler():IsLocation(LOCATION_ONFIELD) or Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
     local c=e:GetHandler()
-    if Duel.GetTurnPlayer()~=tp then
+    local pos=e:IsHasType(EFFECT_TYPE_ACTIVATE) and c:IsStatus(STATUS_ACT_FROM_HAND)
+
+    if Duel.GetTurnPlayer()~=tp and pos then
         Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
     end
 end
