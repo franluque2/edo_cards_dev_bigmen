@@ -54,7 +54,7 @@ function s.lcheck(g,lc,sumtype,tp)
 end
 
 function s.filter(c,tp)
-	return c:IsSetCard(SET_DRAGON_BALL) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
+	return c:IsSetCard(SET_DRAGON_BALL) and c:IsMonster() and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
