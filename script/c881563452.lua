@@ -4,7 +4,7 @@ Duel.LoadScript ("wb_aprilfools_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0xd02),aux.FilterBoolFunctionEx(Card.IsSetCard,0xd03))
+	Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0xd02),aux.FilterBoolFunctionEx(Card.IsSetCard,0xd05))
 	
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,function(e,se,sp,st) return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st) end,nil,nil,nil,false)
 

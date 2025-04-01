@@ -4,7 +4,7 @@ Duel.LoadScript ("wb_aprilfools_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
-    Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0xd03),aux.FilterBoolFunctionEx(Card.IsSetCard,0xd02))
+    Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0xd05),aux.FilterBoolFunctionEx(Card.IsSetCard,0xd02))
 	
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,function(e,se,sp,st) return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st) end,nil,nil,nil,false)
 
@@ -78,10 +78,11 @@ end
 
 function s.spfilter1(c,e,tp)
 	return c:IsSetCard(SET_GOKU) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_DECK,0,1,c,e,tp)
+		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,c,e,tp)
 end
 function s.spfilter2(c,e,tp)
-	return c:IsSetCard(SET_VEGETA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(SET_VEGETA) and
+	c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
