@@ -42,7 +42,7 @@ s.listed_series={SET_DRAGON_BALL}
 
 
 function s.filter(c)
-	return c:IsSetCard(SET_DRAGON_BALL) and c:IsMonster() and not c:IsCode(id) and c:IsAbleToHand()
+	return c:IsSetCard(SET_DRAGON_BALL) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
