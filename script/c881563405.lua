@@ -5,6 +5,8 @@ local s,id=GetID()
 function s.initial_effect(c)
     c:SetUniqueOnField(1,0,id)
 	c:EnableReviveLimit()
+	c:SetSPSummonOnce(id)
+
 	aux.AddLavaProcedure(c,1,POS_FACEUP,nil,1)
 
     local e2=Effect.CreateEffect(c)

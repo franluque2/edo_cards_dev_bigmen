@@ -120,6 +120,11 @@ WbAux.CreateDBZInstantAttackEffect=(function()
         Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
     end
 
+    local function condition(e,tp,eg,ep,ev,re,r,rp)
+        local tn=Duel.GetTurnPlayer()
+        return (tn==tp and Duel.IsMainPhase()) or (tn~=tp and Duel.IsBattlePhase())
+    end
+
     return function(c,cardid,followupop)
 
     local function desop(e,tp,eg,ep,ev,re,r,rp)
@@ -143,7 +148,7 @@ WbAux.CreateDBZInstantAttackEffect=(function()
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(1,{cardid,0})
 	e5:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
-    e5:SetCondition(function() return Duel.IsMainPhase() end)
+    e5:SetCondition(condition)
 	e5:SetTarget(destg)
 	e5:SetOperation(desop)
 	return e5

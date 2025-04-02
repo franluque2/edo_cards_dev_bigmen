@@ -42,7 +42,7 @@ function s.spcon(e,c)
 end
 
 function s.spfilter(c,e,tp)
-    return c:IsSetCard(SET_SAIYAN) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(7)
+    return c:IsSetCard(SET_SAIYAN) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(7) and not c:IsCode(id)
 end
 
 function InvaderVegetaSummonOp(e,tp,eg,ep,ev,re,r,rp)
@@ -51,7 +51,21 @@ function InvaderVegetaSummonOp(e,tp,eg,ep,ev,re,r,rp)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
         if #g>0 then
-            Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+
+            if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+                local c=e:GetHandler()
+                local tc=g:GetFirst()
+                local e1=Effect.CreateEffect(c)
+                e1:SetType(EFFECT_TYPE_SINGLE)
+                e1:SetCode(EFFECT_DISABLE)
+                e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+                tc:RegisterEffect(e1)
+                local e2=Effect.CreateEffect(c)
+                e2:SetType(EFFECT_TYPE_SINGLE)
+                e2:SetCode(EFFECT_DISABLE_EFFECT)
+                e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+                tc:RegisterEffect(e2)
+            end
         end
     end
 end

@@ -34,7 +34,7 @@ s.listed_series={SET_MINECRAFT}
 
 
 function s.thfilter(c)
-	return c:IsRace(RACE_ROCK) and c:IsAbleToHand()
+	return c:IsRace(RACE_ROCK) and c:IsType(TYPE_NORMAL) and c:IsAbleToHand()
 end
 
 function s.aclimit(e,re,tp)
@@ -43,7 +43,7 @@ end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
-	if chk==0 then return g:CheckWithSumEqual(Card.GetLevel,8,1,3) end
+	if chk==0 then return g:CheckWithSumEqual(Card.GetLevel,8,1,3) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_CHAIN)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 
     local e1=Effect.CreateEffect(e:GetHandler())
