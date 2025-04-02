@@ -61,7 +61,7 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter, tp, LOCATION_GRAVE, 0, 1, nil,tp) and ft>0 end
-	ft=math.min(ft,3)
+	ft=math.min(ft,2)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,ft,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,#g,tp,0)
