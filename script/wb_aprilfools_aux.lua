@@ -37,7 +37,7 @@ function WbAux.GetFollowupToken(tp, c)
         end
     end
     local token=Duel.CreateToken(tp,tokenid)
-    Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+    Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
     return token
 end
 
