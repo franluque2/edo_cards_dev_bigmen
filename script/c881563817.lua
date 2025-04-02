@@ -34,13 +34,20 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_MINECRAFT}
 
+function s.ctfilter1(c,tp)
+	local seq=c:GetSequence()
+	if seq>4 then return false end
+	return (seq>0 and Duel.CheckLocation(tp,LOCATION_MZONE,seq-1))
+		or (seq<4 and Duel.CheckLocation(tp,LOCATION_MZONE,seq+1))
+end
+
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(s.ctfilter1,tp,0,LOCATION_MZONE,nil,tp)
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0,nil)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(nil,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(s.ctfilter1,tp,0,LOCATION_MZONE,nil,tp)
 
     if g then
         local tc=g:GetMinGroup(Card.GetSequence)
