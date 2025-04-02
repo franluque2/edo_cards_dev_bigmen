@@ -42,7 +42,7 @@ function s.spcon(e,c)
 end
 
 function s.spfilter(c,e,tp)
-    return c:IsSetCard(SET_SAIYAN) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(7) and not c:IsCode(id)
+    return c:IsSetCard(SET_DRAGON_BALL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(7) and not c:IsCode(id)
 end
 
 function InvaderVegetaSummonOp(e,tp,eg,ep,ev,re,r,rp)
