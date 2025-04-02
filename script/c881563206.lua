@@ -8,8 +8,6 @@ function s.initial_effect(c)
 
     c:EnableCounterPermit(COUNTER_BLIND_BET)
 
-    Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_IPC),2)
-
     Link.AddProcedure(c,aux.FilterBoolFunctionEx(s.mfilter),2)
 
     --Cannot be targetted by your opponent's card effects
