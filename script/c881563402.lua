@@ -51,9 +51,10 @@ end
 s.listed_names={CARD_DRAGON_BALLS,id+1}
 s.listed_series={SET_DRAGON_BALL}
 
-function s.con(e)
+function s.con(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    return Duel.IsMainPhase() and (c:GetFlagEffect(id)==0 or Duel.GetChainInfo(0, CHAININFO_CHAIN_COUNT)>2)
+	local tn=Duel.GetTurnPlayer()
+    return ((tn==tp and Duel.IsMainPhase()) or (tn~=tp and Duel.IsBattlePhase())) and (c:GetFlagEffect(id)==0 or Duel.GetChainInfo(0, CHAININFO_CHAIN_COUNT)>2)
 end
 
 function s.chainfilter(re,tp,cid)
