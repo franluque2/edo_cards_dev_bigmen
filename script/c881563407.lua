@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 
-    local fparams={aux.FilterBoolFunction(Card.IsSetCard,SET_DRAGON_BALL),Fusion.OnFieldMat,extrafil=s.fextra}
+    local fparams={fusfilter=aux.FilterBoolFunction(Card.IsSetCard,SET_DRAGON_BALL),matfilter=Fusion.OnFieldMat,extrafil=s.fextra}
 
     local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DAMAGE+CATEGORY_FUSION_SUMMON+CATEGORY_SPECIAL_SUMMON)
@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.atktg)
-    e2:SetOperation(s.activate(Fusion.SummonEffTG(table.unpack(fparams)),Fusion.SummonEffOP(table.unpack(fparams))))
+    e2:SetOperation(s.activate(Fusion.SummonEffTG(fparams),Fusion.SummonEffOP(fparams)))
 	c:RegisterEffect(e2)
 
 end
