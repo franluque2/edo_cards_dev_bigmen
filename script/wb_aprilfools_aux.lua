@@ -129,6 +129,8 @@ WbAux.CreateDBZInstantAttackEffect=(function()
 
     local function desop(e,tp,eg,ep,ev,re,r,rp)
         local tc=Duel.GetFirstTarget()
+        local thisc=e:GetHandler()
+        if not thisc:IsPosition(POS_FACEUP_ATTACK) then return end
         if tc:IsRelateToEffect(e) then
             Duel.CalculateDamage(e:GetHandler(), tc)
         end

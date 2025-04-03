@@ -93,7 +93,7 @@ function s.aclimit(e,re,tp)
 end
 
 function s.opccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
+	if chk==0 then return (Duel.GetFlagEffect(tp,id)==0) and Duel.GetCustomActivityCount(id, tp, ACTIVITY_CHAIN)==0 end
 	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
 end
 
