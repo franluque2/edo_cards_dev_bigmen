@@ -80,7 +80,7 @@ function s.equipop(c,e,tp,tc,owner)
 end
 
 function s.chainfilter(re,tp,cid)
-	return re:IsActiveType(TYPE_MONSTER) and not (re:GetHandler():IsSetCard(SET_MINECRAFT) or re:GetHandler():IsRace(RACE_ROCK))
+	return not (re:IsActiveType(TYPE_MONSTER) and not (re:GetHandler():IsSetCard(SET_MINECRAFT) or re:GetHandler():IsRace(RACE_ROCK)))
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)

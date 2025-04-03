@@ -54,7 +54,7 @@ function s.extratarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND|LOCATION_ONFIELD|LOCATION_GRAVE)
 end
 function s.chainfilter(re,tp,cid)
-	return re:IsActiveType(TYPE_MONSTER) and not (re:GetHandler():IsSetCard(SET_MINECRAFT) or re:GetHandler():IsRace(RACE_ROCK))
+	return not (re:IsActiveType(TYPE_MONSTER) and not (re:GetHandler():IsSetCard(SET_MINECRAFT) or re:GetHandler():IsRace(RACE_ROCK)))
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
