@@ -80,19 +80,7 @@ function s.sop0(e,tp,eg,ep,ev,re,r,rp)
     local chance=Duel.GetFlagEffect(tp, id+6)
     local triggered=false
 
-    if chance==0 then
-        local num=Duel.GetRandomNumber(0,100)
-        if num<25 then
-            triggered=true
-        end
-        
-    elseif chance==1 then
-        local num=Duel.GetRandomNumber(0,100)
-        if num<50 then
-            triggered=true
-        end
-    
-    elseif chance>1 then
+    if chance==2 then
         triggered=true
     end
 
@@ -157,13 +145,13 @@ function s.epop(e,tp,eg,ep,ev,re,r,rp)
 	local littledarks=Duel.GetMatchingGroup(s.lowleveldarknessfilter, tp, LOCATION_GRAVE, 0, nil)
 	if #littledarks>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 4)) then
         Duel.Hint(HINT_CARD,tp,id)
-        sg=aux.SelectUnselectGroup(littledarks,e,tp,1,99,aux.dncheck,1,tp,HINTMSG_TODECK)
+        local sg=aux.SelectUnselectGroup(littledarks,e,tp,1,99,aux.dncheck,1,tp,HINTMSG_TODECK)
 
         for tc in sg:Iter() do
             local tc2=Duel.CreateToken(tp, tc:GetOriginalCode())
 
-            Duel.SendtoDeck(tc,1-tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
-            Duel.SendtoDeck(tc2,1-tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
+            Duel.SendtoDeck(tc,1-tp,SEQ_DECKBOTTOM,REASON_EFFECT)
+            Duel.SendtoDeck(tc2,1-tp,SEQ_DECKBOTTOM,REASON_EFFECT)
 
             
 

@@ -52,7 +52,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         e2:SetCode(EVENT_CHAIN_SOLVING)
         e2:SetCondition(s.negcon)
         e2:SetOperation(s.negop)
-        Duel.RegisterEffect(e2, tp)
+        --Duel.RegisterEffect(e2, tp)
     
 	end
 	e:SetLabel(1)
