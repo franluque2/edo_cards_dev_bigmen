@@ -1,4 +1,4 @@
---The Tower of Hanoi
+--Pendulumstatue Wager
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -11,8 +11,6 @@ function s.initial_effect(c)
 	e1:SetLabel(0)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-
-	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
 
 end
 
@@ -30,9 +28,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
 
 
+
 	end
 	e:SetLabel(1)
 end
+
+local pendulumstatues={511001259,511001094,511001096,511001093,511001090,511001097}
+local pendulumstatuepairs={511001094,511001259,511001093,511001096,511001097,511001090}
 
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -46,34 +48,12 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
+
+    local val=Duel.GetRandomNumber(1, #pendulumstatues)
+    local token=Duel.CreateToken(tp, pendulumstatues[val])
+    local token2=Duel.CreateToken(tp,pendulumstatuepairs[val])
+    local g=Group.FromCards(token,token2)
+    Duel.SendtoHand(g, tp, REASON_RULE)
+    Duel.ConfirmCards(1-tp,g)
 end
 
-local oldfunc=Link.ConditionFilter
-
-function Link.ConditionFilter(c,fc,og,sg,lv)
-	if c:GetFlagEffect(id)>0 then
-		return true
-	end
-	return oldfunc(c,fc,og,sg,lv)
-end
-
-function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
-
-	--OPD check
-	if Duel.GetFlagEffect(tp,id)>1  then return end
-
-	return aux.CanActivateSkill(tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-    and Duel.IsPlayerCanSpecialSummonMonster(tp,881632758,0,TYPES_TOKEN,0,0,1,RACE_MACHINE,ATTRIBUTE_DARK,POS_FACEUP)
-end
-
-
-
-function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
-       
-	Duel.Hint(HINT_CARD,tp,id)
-	local token=Duel.CreateToken(tp,881632758)
-	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
-	token:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0,0)
-	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
-
-end

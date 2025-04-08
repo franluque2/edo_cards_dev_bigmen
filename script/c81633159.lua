@@ -47,5 +47,40 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	end
 
     local duelac=Duel.CreateToken(tp, 05833312)
+	for _,eff in ipairs({duelac:GetCardEffect(EVENT_CHAIN_SOLVED)}) do
+
+		if eff:GetCategory()&CATEGORY_DESTROY==CATEGORY_DESTROY then
+			eff:SetCondition(s.descon)
+		end
+		if eff:GetCategory()&CATEGORY_DAMAGE==CATEGORY_DAMAGE then
+			eff:SetCondition(s.damcon)
+		end
+		if eff:GetCategory()&CATEGORY_ATKCHANGE==CATEGORY_ATKCHANGE then
+			eff:SetCondition(s.atkcon)
+		end
+	end
+
     Duel.SendtoHand(duelac, tp, REASON_RULE)
+
+	local poly=Duel.CreateToken(tp, CARD_POLYMERIZATION)
+    Duel.SendtoHand(poly, tp, REASON_RULE)
+
+end
+
+
+function s.typecheck(types,tp)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsRace,types),0,LOCATION_MZONE,LOCATION_MZONE,1,nil) or Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_FUSION),tp,LOCATION_MZONE,0,1,nil)
+end
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	return s.typecheck(RACE_WARRIOR|RACE_BEAST|RACE_PYRO,tp) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and rp==tp
+		and not e:GetHandler():IsDisabled()
+end
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return s.typecheck(RACE_MACHINE|RACE_FAIRY|RACE_FIEND,tp) and re:IsActiveType(TYPE_MONSTER) and rp==tp
+		and not e:GetHandler():IsDisabled()
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return s.typecheck(RACE_DINOSAUR|RACE_SEASERPENT|RACE_THUNDER,tp) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and rp==tp
+		and re:GetHandler()~=c and not c:IsDisabled()
 end

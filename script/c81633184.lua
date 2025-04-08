@@ -40,22 +40,28 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cfilter(c,tp)
-	return c:GetPreviousControler()==tp and c:IsSpellTrap()
+	return c:GetPreviousControler()==tp
 end
 function s.adfilter(c)
-    return c:IsSpell() and (c:IsType(TYPE_FIELD) or c:IsType(TYPE_CONTINUOUS))
+    return c:IsSpellTrap() and (c:IsType(TYPE_FIELD) or (c:IsType(TYPE_CONTINUOUS) and Duel.GetLocationCount(c:GetOwner(), LOCATION_SZONE)>0))
 end
 function s.gycon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.cfilter,1,nil,tp) and Duel.GetFlagEffect(tp, id)==1 and Duel.IsExistingMatchingCard(s.adfilter, tp, LOCATION_GRAVE, 0, 1, nil)
+	return eg:IsExists(s.cfilter,1,nil,tp) and Duel.GetFlagEffect(tp, id)==1 and Duel.IsExistingMatchingCard(s.adfilter, tp, LOCATION_GRAVE|LOCATION_DECK, 0, 1, nil)
 end
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
         Duel.Hint(HINT_CARD, tp, id)
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-        local toadd=Duel.SelectMatchingCard(tp, s.adfilter, tp, LOCATION_GRAVE, 0, 1,1,false,nil)
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+        local toadd=Duel.SelectMatchingCard(tp, s.adfilter, tp, LOCATION_GRAVE|LOCATION_DECK, 0, 1,1,false,nil)
         if toadd then
-            Duel.SendtoHand(toadd, tp, REASON_EFFECT)
-            Duel.ConfirmCards(1-tp, toadd)
+			local tc=toadd:GetFirst()
+			if tc then
+				if tc:IsType(TYPE_FIELD) then
+					Duel.ActivateFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
+				else
+					Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+				end
+			end
         end
         Duel.RegisterFlagEffect(tp,id,0,0,0)
     end

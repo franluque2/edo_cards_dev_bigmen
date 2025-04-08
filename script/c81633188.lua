@@ -1,4 +1,6 @@
 --Action Field - Crossover
+Duel.LoadScript("c151000000.lua")
+
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -12,7 +14,16 @@ function s.initial_effect(c)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 
+	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
+
 end
+
+local tableActionCards={
+	150000024,150000033,
+	150000042,
+	150000011,150000044,
+	150000020
+}
 
 
 
@@ -26,91 +37,26 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 
+		local e6=Effect.CreateEffect(e:GetHandler())
+		e6:SetType(EFFECT_TYPE_FIELD)
+		e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+		e6:SetCode(EFFECT_BECOME_QUICK)
+		e6:SetTargetRange(0xff,0)
+		e6:SetTarget(aux.TargetBoolFunction(Card.IsActionSpell))
+		Duel.RegisterEffect(e6,tp)
+		local e7=e6:Clone()
+		e7:SetDescription(aux.Stringid(id,7))
+		e7:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
+		Duel.RegisterEffect(e7,tp)
+		local e8=e6:Clone()
+		e8:SetDescription(aux.Stringid(id,7))
+		e8:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+		Duel.RegisterEffect(e8,tp)
 
-        local e2=Effect.CreateEffect(e:GetHandler())
-        e2:SetCategory(CATEGORY_ATKCHANGE)
-        e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e2:SetCode(EVENT_ATTACK_ANNOUNCE)
-        e2:SetCondition(s.condition)
-        e2:SetOperation(s.activate)
-		Duel.RegisterEffect(e2,tp)
 
 	end
 	e:SetLabel(1)
 end
-
-function s.spsumfilter(c,e,tp)
-
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false)
-end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetFlagEffect(tp, id)==1
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-    Duel.Hint(HINT_CARD,tp,id)
-
-    local d=Duel.TossDice(tp,1)
-	if d==1 or d==3 or d==5 then
-
-	elseif d==2 then
-		Duel.NegateAttack()
-	elseif d==4 then
-
-	local bc=Duel.GetAttacker()
-	if bc:IsRelateToBattle() then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-			e1:SetValue(1)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
-			bc:RegisterEffect(e1)
-
-            local e2=Effect.CreateEffect(c)
-            e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-            e2:SetValue(aux.ChangeBattleDamage(0,HALF_DAMAGE))
-            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
-            bc:RegisterEffect(e2)
-		end
-    
-        local tc=Duel.GetAttackTarget()
-        if tc and tc:IsRelateToBattle() then
-            local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-			e1:SetValue(1)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
-			tc:RegisterEffect(e1)
-
-            local e2=Effect.CreateEffect(c)
-            e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-            e2:SetValue(aux.ChangeBattleDamage(0,HALF_DAMAGE))
-            e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
-            tc:RegisterEffect(e2)
-        end
-
-    else
-        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_FACEUP)
-        local tc=Duel.SelectMatchingCard(tp, Card.IsFaceup, tp, LOCATION_MZONE, LOCATION_MZONE, 1,1,false,nil)
-        if tc then
-            Duel.HintSelection(tc)
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(EFFECT_UPDATE_ATTACK)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            e1:SetValue(1000)
-            tc:RegisterEffect(e1)
-        end
-		
-	end
-
-
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
-end
-end
-
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,0),nil)
@@ -123,4 +69,25 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
+end
+
+
+function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
+
+	--OPD check
+	if Duel.GetFlagEffect(tp,id)>1 or Duel.GetFlagEffect(tp, id+500)>1  then return end
+
+	return aux.CanActivateSkill(tp)
+end
+
+
+
+function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
+       
+	Duel.Hint(HINT_CARD,tp,id)
+	local token=Duel.CreateToken(tp,tableActionCards[Duel.GetRandomNumber(1,#tableActionCards)])
+	Duel.SendtoHand(token, tp, REASON_RULE)
+	Duel.RegisterFlagEffect(tp, id, RESET_PHASE+PHASE_END, 0, 0)
+	Duel.RegisterFlagEffect(tp, id+500, 0, 0, 0)
+
 end
