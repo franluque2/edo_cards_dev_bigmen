@@ -12,9 +12,48 @@ function s.initial_effect(c)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 
+	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
+
+end
+
+function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
+
+	--OPD check
+	if Duel.GetFlagEffect(tp,id)>1 then return end
+
+	return aux.CanActivateSkill(tp) and Duel.IsExistingMatchingCard(Card.IsAbleToHand, tp, LOCATION_GRAVE, 0, 1, nil) and Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)>=15
 end
 
 
+
+function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
+       
+	Duel.Hint(HINT_CARD,tp,id)
+	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+
+	local g=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_GRAVE,0,nil)
+	if #g>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+
+		--cannot activate effects of cards with its name for the rest of the turn
+		local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+			e1:SetTargetRange(1,0)
+			e1:SetValue(s.aclimit)
+			e1:SetLabelObject(sg:GetFirst())
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,tp)
+	end
+end
+
+function s.aclimit(e,re,tp)
+	local tc=e:GetLabelObject()
+	return re:GetHandler():IsCode(tc:GetCode())
+end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
