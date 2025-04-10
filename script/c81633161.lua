@@ -39,15 +39,13 @@ end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()>1 and Duel.GetFlagEffect(tp, id-500)==0 
-    and Duel.GetDrawCount(tp)>0 and Duel.GetMatchingGroupCount(aux.TRUE, 1-tp, LOCATION_MZONE, 0, nil)>2 and Duel.GetMatchingGroupCount(aux.TRUE, 1-tp, 0, LOCATION_MZONE, nil)==0
+    and Duel.GetDrawCount(tp)>0 and Duel.GetTurnPlayer()==tp and Duel.GetMatchingGroupCount(aux.TRUE, 1-tp, 0, LOCATION_MZONE, nil)==0 and Duel.GetLP(tp)<Duel.GetLP(1-tp)
 end
 function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
-
-	Duel.Hint(HINT_CARD,tp,id)
-	Duel.RegisterFlagEffect(tp,id-500,0,0,0)
-
     if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-        Duel.Hint(HINT_CARD,tp,id)
+		Duel.Hint(HINT_CARD,tp,id)
+		Duel.RegisterFlagEffect(tp,id-500,0,0,0)
+	
         local dt=Duel.GetDrawCount(tp)
         if dt~=0 then
             _replace_count=0
@@ -65,7 +63,36 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
         local card=Duel.SelectMatchingCard(tp, aux.TRUE, tp, LOCATION_DECK, 0, 1, 1, false, nil)
         Duel.SendtoHand(card, tp, REASON_RULE)
+
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCountLimit(1)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCondition(s.adcon)
+		e1:SetOperation(s.adop)
+		Duel.RegisterEffect(e1,tp)
     end
+end
+
+function s.adcon(e,tp,eg,ep,ev,re,r,rp)
+	local flag=Duel.GetFlagEffect(tp, id)
+	return Duel.GetTurnPlayer()==tp and flag>0 and flag<5
+end
+
+function s.getcard(flag)
+	if flag==2 then return 81332143 end
+	if flag==3 then return 14731897 end
+	if flag==4 then return 55948544 end
+end
+
+function s.adop(e,tp,eg,ep,ev,re,r,rp)
+	local flag=Duel.GetFlagEffect(tp, id)
+	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+	if flag==1 then return end
+	Duel.Hint(HINT_CARD,tp,id)
+	local g=Duel.CreateToken(tp,s.getcard(flag))
+	Duel.SendtoHand(g, tp, REASON_RULE)
+	Duel.ConfirmCards(1-tp, g)
 end
 
 
