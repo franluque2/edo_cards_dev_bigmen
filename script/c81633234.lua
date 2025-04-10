@@ -25,12 +25,54 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
 
-
-
-
-
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetCode(EVENT_PHASE+PHASE_BATTLE)
+		e3:SetCountLimit(1)
+		e3:SetCondition(s.spcon)
+		e3:SetTarget(s.sptg)
+		e3:SetOperation(s.spop)
+		Duel.RegisterEffect(e3,tp)
 	end
 	e:SetLabel(1)
+end
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(id,tp)==1
+end
+
+function s.spfilter1(c,e,tp,tid)
+	return c:GetTurnID()==tid and (c:GetReason()&REASON_BATTLE)~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local sg=Duel.GetMatchingGroup(s.spfilter1,tp,LOCATION_GRAVE,0,nil,e,tp,Duel.GetTurnCount())
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_GRAVE,0,1,nil,e,tp,Duel.GetTurnCount()) and ft>0 end
+end
+
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_GRAVE,0,1,nil,e,tp,Duel.GetTurnCount()) and ft>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+		Duel.Hint(HINT_CARD,tp,id)
+		Duel.RegisterFlagEffect(tp,id,0,0,0)
+		local g=Duel.GetMatchingGroup(s.spfilter1,tp,LOCATION_GRAVE,0,nil,e,tp,Duel.GetTurnCount())
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=g:Select(tp,1,1,nil):GetFirst()
+		if tc then
+			local c=e:GetHandler()
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+			tc:RegisterEffect(e2)
+		
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		end
+	end
 end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
