@@ -14,7 +14,7 @@ function s.initial_effect(c)
 
 end
 
-
+local wickedgods={21208154,62180201,57793869}
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -24,8 +24,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCondition(s.flipcon)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
-
-
 
 
 
@@ -45,4 +43,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
 
+	local wickedgod=Duel.CreateToken(tp, wickedgods[Duel.GetRandomNumber(1, #wickedgods)])
+	Duel.SendtoHand(wickedgod, tp, REASON_RULE)
+	Duel.ShuffleHand(tp)
 end

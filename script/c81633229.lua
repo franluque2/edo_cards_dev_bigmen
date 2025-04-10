@@ -45,4 +45,8 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
 
+
+	local dealings=Duel.CreateToken(tp, 74117290)
+	Duel.SendtoHand(dealings, tp, REASON_RULE)
+	Duel.ShuffleHand(tp)
 end

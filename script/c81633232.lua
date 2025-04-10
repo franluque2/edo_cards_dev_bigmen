@@ -14,7 +14,7 @@ function s.initial_effect(c)
 
 end
 
-
+local legplanets={24413299,88071625,15033525,34004470,51402908,03912064,05645210,16255173,32588805}
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -24,8 +24,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCondition(s.flipcon)
 		e1:SetOperation(s.flipop)
 		Duel.RegisterEffect(e1,tp)
-
-
 
 
 
@@ -45,4 +43,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
 
+	local legplanet=Duel.CreateToken(tp, legplanets[Duel.GetRandomNumber(1, #legplanets)])
+	Duel.SendtoHand(legplanet, tp, REASON_RULE)
+	Duel.ShuffleHand(tp)
 end
