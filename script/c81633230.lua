@@ -18,7 +18,9 @@ function s.initial_effect(c)
 end
 local xyzmats={}
 local fusmats={}
-local mons={}
+
+fusmats[22160245]={58932615, 21844576}
+local mons={22160245}
 local monstosummon={}
 monstosummon[0]=Group.CreateGroup()
 monstosummon[1]=Group.CreateGroup()
@@ -73,7 +75,7 @@ end
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 
 	--OPD check
-	if Duel.GetFlagEffect(tp,id)>0  then return end
+	if Duel.GetFlagEffect(tp,id)>1  then return end
 
 	local b1=Duel.CheckLPCost(tp, 2000)
 
