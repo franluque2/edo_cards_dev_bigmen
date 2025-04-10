@@ -12,9 +12,31 @@ function s.initial_effect(c)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 
+	aux.AddSkillProcedure(c,1,false,s.flipcon2,s.flipop2)
+
+
 end
+local xyzmats={}
+local fusmats={}
+local mons={}
+local monstosummon={}
+monstosummon[0]=Group.CreateGroup()
+monstosummon[1]=Group.CreateGroup()
 
 
+function s.filltables()
+    if #monstosummon[0]==0 then
+        for i, v in pairs(mons) do
+            local token1=Duel.CreateToken(0, v)
+            monstosummon[0]:AddCard(token1)
+            local token2=Duel.CreateToken(1, v)
+            monstosummon[1]:AddCard(token2)
+
+
+        end
+
+    end
+end
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
@@ -26,39 +48,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 
+        s.filltables()
 
-        local e2=Effect.CreateEffect(e:GetHandler())
-        e2:SetCategory(CATEGORY_ATKCHANGE)
-        e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e2:SetCode(EVENT_ATTACK_ANNOUNCE)
-        e2:SetCondition(s.condition)
-        e2:SetOperation(s.activate)
-		Duel.RegisterEffect(e2,tp)
+
 
 	end
 	e:SetLabel(1)
 end
-
-function s.spsumfilter(c,e,tp)
-
-    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false,false)
-end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetFlagEffect(tp, id)==1 and Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(s.spsumfilter, tp, LOCATION_DECK, 0, 1, nil, e,tp)
-end
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_CARD,tp,id)
-
-    local g=Duel.GetMatchingGroup(s.spsumfilter, tp, LOCATION_DECK, 0, nil,e,tp)
-    local tc=g:RandomSelect(tp,1):GetFirst()
-
-    if Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false,false, POS_FACEUP) then
-        Duel.ChangeAttackTarget(tc)
-    end
-
-	Duel.RegisterFlagEffect(tp,id,0,0,0)
-end
-
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,0),nil)
@@ -71,4 +67,60 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
 		Duel.Draw(tp, 1, REASON_EFFECT)
 	end
+
+end
+
+function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
+
+	--OPD check
+	if Duel.GetFlagEffect(tp,id)>0  then return end
+
+	local b1=Duel.CheckLPCost(tp, 2000)
+
+	return aux.CanActivateSkill(tp) and b1
+end
+
+function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,tp,id)
+    Duel.PayLPCost(tp, 2000)
+
+    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+    local tar=monstosummon[tp]:Select(tp,1,1,nil):GetFirst()
+    monstosummon[tp]:RemoveCard(tar)
+
+    if tar:IsType(TYPE_FUSION) then
+        Duel.SpecialSummon(tar, SUMMON_TYPE_FUSION, tp, tp, true, true, POS_FACEUP)
+        Card.CompleteProcedure(tar)
+
+        if fusmats[tar:GetOriginalCode()]~=nil then
+            for i, val in ipairs(fusmats[tar:GetOriginalCode()]) do
+                local mat=Duel.CreateToken(tp, val)
+                Duel.SendtoGrave(mat, REASON_RULE)
+            end
+            local poly=Duel.CreateToken(tp, CARD_POLYMERIZATION)
+            Duel.SendtoGrave(poly, REASON_RULE)
+        end
+    elseif tar:IsType(TYPE_XYZ) then
+        Duel.SpecialSummon(tar, SUMMON_TYPE_XYZ, tp, tp, true, true, POS_FACEUP)
+        Card.CompleteProcedure(tar)
+        if xyzmats[tar:GetOriginalCode()]~=nil then
+            for i, val in ipairs(xyzmats[tar:GetOriginalCode()]) do
+                local mat=Duel.CreateToken(tp, val)
+                Duel.SendtoGrave(mat, REASON_RULE)
+                Duel.Overlay(tar, mat)
+            end
+        end
+    
+    else
+
+        Duel.SpecialSummon(tar, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
+        Card.CompleteProcedure(tar)
+    end
+
+    --add additional handling for stuff like parasite queen here later
+
+	
+
+	Duel.RegisterFlagEffect(tp, id, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 0)
+
 end
