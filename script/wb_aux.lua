@@ -34,6 +34,9 @@ CARD_TECHMINATOR_TOKEN=851632091
 TECHMINATOR_LINKS={851632086, 851632087, 851632088, 851632089, 851632090}
 REGISTER_FLAG_TECHMINATOR_IGNITION=2048
 
+FLAG_TECHMINATOR_OPT_PER_MONSTER=851632136
+FLAG_DIKTAT_SEND_FROM_DECK=851632137
+
 if not WbAux then
     WbAux={}
 end
@@ -189,12 +192,23 @@ end
 
 WbAux.CreateDiktatSummonEffect=(function()
 
-    
+    local function sendfilter(c)
+        return c:IsRace(RACE_MACHINE) and c:IsAbleToGrave()
+    end
 
     return function(e,tp,eg,ep,ev,re,r,rp)
     
-        if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) and WbAux.CanPlayerSummonTechminator(tp) and Duel.SelectYesNo(tp, aux.Stringid(851632093,0)) then
-            if Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil)>0 then
+        if (Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) or (Duel.IsPlayerAffectedByEffect(tp, FLAG_DIKTAT_SEND_FROM_DECK) and Duel.GetFlagEffect(tp,id)==0)) and WbAux.CanPlayerSummonTechminator(tp) and Duel.SelectYesNo(tp, aux.Stringid(851632093,0)) then
+            if Duel.IsPlayerAffectedByEffect(tp, FLAG_DIKTAT_SEND_FROM_DECK) and Duel.GetFlagEffect(tp,851632136)==0 and Duel.SelectYesNo(tp,aux.Stringid(851632136,0)) then
+                Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
+                local g=Duel.SelectMatchingCard(tp, sendfilter, tp, LOCATION_DECK, 0, 1, 1, nil)
+                if #g>0 then
+                    Duel.SendtoGrave(g, REASON_EFFECT)
+                    WbAux.SpecialTechminatorLink(tp,POS_FACEUP_ATTACK)
+                    Duel.RegisterFlagEffect(tp, 851632136, RESET_PHASE+PHASE_END, 0, 0)
+                end
+
+            elseif Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil)>0 then
                 WbAux.SpecialTechminatorLink(tp,POS_FACEUP_ATTACK)
             end
         end
