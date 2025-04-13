@@ -149,7 +149,7 @@ function s.sendfilter(c,code)
 end
 
 function s.motordiscardfilter(c)
-	return c:IsMotor() and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_COST)
+	return c:IsCode(82556058, 77672444, 65515667, 78394032) and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_COST)
 end
 
 function s.motorbackrowfilter(c)
