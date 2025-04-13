@@ -162,8 +162,8 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 	--Boolean checks for the activation condition: b1, b2
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and (( Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,78394032)
-						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,511002408))
-			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,511002408)
+						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,65515667))
+			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,65515667)
 						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,77672444))
 			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,77672444)
 						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,82556058)))
