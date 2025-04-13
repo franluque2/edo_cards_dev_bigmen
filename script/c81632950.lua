@@ -153,7 +153,7 @@ function s.motordiscardfilter(c)
 end
 
 function s.motorbackrowfilter(c)
-	return (c:IsCode(511002411) or c:IsCode(511002410) or c:IsCode(511002409)) and c:IsAbleToHand() and not c:hasbeenadded()
+	return (c:IsCode(44459942) or c:IsCode(511002410) or c:IsCode(91019775)) and c:IsAbleToHand() and not c:hasbeenadded()
 end
 
 function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
