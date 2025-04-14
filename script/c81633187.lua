@@ -1,4 +1,4 @@
---A HERO Emerges!
+--Crew in the Schoolyard!
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -101,23 +101,19 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
             local poly=Duel.CreateToken(tp, CARD_POLYMERIZATION)
             Duel.SendtoGrave(poly, REASON_RULE)
         end
-    elseif tar:IsType(TYPE_XYZ) then
-        Duel.SpecialSummon(tar, SUMMON_TYPE_XYZ, tp, tp, true, true, POS_FACEUP)
+    elseif tar:IsType(TYPE_SYNCHRO) then
+        Duel.SpecialSummon(tar, SUMMON_TYPE_SYNCHRO, tp, tp, true, true, POS_FACEUP)
         Card.CompleteProcedure(tar)
-        if xyzmats[tar:GetOriginalCode()]~=nil then
-            for i, val in ipairs(xyzmats[tar:GetOriginalCode()]) do
-                local mat=Duel.CreateToken(tp, val)
-                Duel.SendtoGrave(mat, REASON_RULE)
-                Duel.Overlay(tar, mat)
-            end
-        end
-    
+    elseif tar:IsType(TYPE_LINK) then
+        Duel.SpecialSummon(tar, SUMMON_TYPE_LINK, tp, tp, true, true, POS_FACEUP)
+        Card.CompleteProcedure(tar)
+    elseif tar:IsType(TYPE_RITUAL) then
+        Duel.SpecialSummon(tar, SUMMON_TYPE_RITUAL, tp, tp, true, true, POS_FACEUP)
+        Card.CompleteProcedure(tar)
     else
-
         Duel.SpecialSummon(tar, SUMMON_TYPE_SPECIAL, tp, tp, true, true, POS_FACEUP)
         Card.CompleteProcedure(tar)
     end
-
     --add additional handling for stuff like parasite queen here later
 
 	
