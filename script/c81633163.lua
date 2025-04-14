@@ -84,6 +84,9 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
         
 	Duel.Hint(HINT_CARD,tp,id)
 
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp, s.banishpolyfilter, tp, LOCATION_GRAVE, 0, 1, 1, nil)
+	Duel.Remove(g, POS_FACEUP, REASON_COST)
     Fusion.SummonEffTG()(e,tp,eg,ep,ev,re,r,rp,1)
     Fusion.SummonEffOP()(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(s.addpolyfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
