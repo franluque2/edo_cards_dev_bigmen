@@ -183,8 +183,8 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	--Boolean check for effect 1:
 	local b1=Duel.GetFlagEffect(tp,id+1)==0
 			and (( Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,78394032)
-						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,511002408))
-			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,511002408)
+						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,65515667))
+			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,65515667)
 						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,77672444))
 			or (Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,77672444)
 						and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,82556058)))
@@ -214,9 +214,9 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id+1,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 
 	local b1=Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,78394032)
-				and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,511002408)
+				and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,65515667)
 
-	local b2=Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,511002408)
+	local b2=Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,65515667)
 				and Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,77672444)
 
 	local b3=Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_ONFIELD,0,1,nil,77672444)
@@ -230,14 +230,14 @@ function s.operation_for_res0(e,tp,eg,ep,ev,re,r,rp)
 	if op==0 then
 		local g=Duel.SelectMatchingCard(tp, s.sendfilter, tp, LOCATION_ONFIELD, 0, 1,1,false,nil,78394032)
 		if Duel.SendtoGrave(g, REASON_EFFECT) then
-			local tc=Duel.SelectMatchingCard(tp,s.sumfilter, tp, LOCATION_DECK+LOCATION_HAND, 0, 1,1,false,nil,e,tp,511002408)
+			local tc=Duel.SelectMatchingCard(tp,s.sumfilter, tp, LOCATION_DECK+LOCATION_HAND, 0, 1,1,false,nil,e,tp,65515667)
 			if #tc>0 then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	elseif op==1 then
 
-		local g=Duel.SelectMatchingCard(tp, s.sendfilter, tp, LOCATION_ONFIELD, 0, 1,1,false,nil,511002408)
+		local g=Duel.SelectMatchingCard(tp, s.sendfilter, tp, LOCATION_ONFIELD, 0, 1,1,false,nil,65515667)
 		if Duel.SendtoGrave(g, REASON_EFFECT) then
 			local tc=Duel.SelectMatchingCard(tp,s.sumfilter, tp, LOCATION_DECK+LOCATION_HAND, 0, 1,1,false,nil,e,tp,77672444)
 			if #tc>0 then
