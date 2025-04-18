@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--Cannot be destroyed by battle while "Pierce!" in GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE+EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(s.con1)
@@ -35,7 +35,7 @@ function s.cfilter(c)
 end
 function s.con1(e)
 	local tp=e:GetHandler():GetControler()
-	 return e:GetHandler():IsAttackPos()
+	return e:GetHandler():IsAttackPos()
 		and Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil)
 end
 function s.atkcon(e)
