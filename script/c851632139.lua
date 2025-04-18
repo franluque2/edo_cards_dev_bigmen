@@ -118,6 +118,7 @@ end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xd1)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsLevelBelow(5)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
