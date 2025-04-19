@@ -18,7 +18,7 @@ function s.initial_effect(c)
 end
 
 local CARD_PANDEMONIUM=94585852
-local ARCHFIEND_MATADOR=511000009
+local ARCHFIEND_MATADOR=100443104
 local VILEPAWN_ARCHFIEND=73219648
 local MASTERKING_ARCHFIEND=35606858
 
@@ -149,7 +149,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e11,tp)
 
 	local e22=e11:Clone()
-	e22:SetLabel(e21)
+	e22:SetLabelObject(e21)
 	Duel.RegisterEffect(e22,tp)
 
 
