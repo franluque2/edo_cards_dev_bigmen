@@ -22,7 +22,7 @@ function s.initial_effect(c)
     e2:SetCountLimit(1,id)
 	e2:SetTarget(s.target2)
     e2:SetCondition(aux.exccon)
-	e2:SetCost(aux.selfbanishcost)
+	e2:SetCost(Cost.SelfBanish)
 	e2:SetOperation(s.activate)
 	c:RegisterEffect(e2)
 

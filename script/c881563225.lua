@@ -20,7 +20,7 @@ function s.initial_effect(c)
     e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.target2)
-	e2:SetCost(aux.SelfBanishCost)
+	e2:SetCost(Cost.SelfBanish)
 	e2:SetOperation(s.activate2)
 	c:RegisterEffect(e2)
 end
