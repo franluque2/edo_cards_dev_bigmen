@@ -37,6 +37,7 @@ s.listed_series={SET_FRIGHTFUR,SET_FLUFFAL,SET_EDGE_IMP}
 
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard({SET_FRIGHTFUR,SET_FLUFFAL,SET_EDGE_IMP},fc,sumtype,tp)
+	and c:IsMonster()
     and not c:IsCode(id)
 end
 
