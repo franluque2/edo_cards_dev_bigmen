@@ -29,7 +29,7 @@ function s.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end)
 end
-s.listed_series={0xa9,0xad}
+s.listed_series={0xa9,SET_EDGE_IMP,0xad}
 
 function s.spcon(c)
     local tc=c:GetReasonEffect():GetHandler()
@@ -49,7 +49,7 @@ end
 
 
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xa9)
+	return (c:IsSetCard(SET_FLUFFAL) or c:IsSetCard(SET_EDGE_IMP))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
