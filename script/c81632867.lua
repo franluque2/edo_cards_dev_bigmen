@@ -1,7 +1,7 @@
 --Snared Crystal Beast Sapphire Pegasus (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-
+    --Place & Search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_IGNITION)
