@@ -27,7 +27,6 @@ function s.target(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 end
 function s.activate(e,tp,eg,ev,ep,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local g=Duel.SelectMatchingCard(tp,s.filter2,tp,0,LOCATION_MZONE,1,1,nil,tc:GetRace())
 		local tc2=g:GetFirst()

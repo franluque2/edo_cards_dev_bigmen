@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,{id,1})
+	e1:SetCondition(s.datcon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -51,6 +52,9 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 	end
+end
+function s.datcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()==PHASE_MAIN1
 end
 function s.cardfilter(c)
 	return (c:IsCode(81632872, 511004337, 511004339, 511004327, 511004336, 511004328)) and c:IsAbleToHand()

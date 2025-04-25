@@ -91,27 +91,20 @@ function s.operation2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rmvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		and Duel.IsExistingTarget(s.filter3,tp,LOCATION_REMOVED,0,1,nil) end
-	local ct=Duel.GetMatchingGroupCount(s.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,s.filter3,tp,LOCATION_REMOVED,0,1,ct,nil)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 end
 function s.rmvop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetTargetCards(e)
-	if #g>0 then
-		Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_EFFECT)
-		local g=Duel.GetOperatedGroup()
-		if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	end
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=1 then return end
+	Duel.SendtoDeck(tg,nil,SEQ_DECKTOP,REASON_EFFECT)
+	local g=Duel.GetOperatedGroup()
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
 end
 
 function s.filter2(c)
-	return c:IsFaceup() and c:GetCounter(0x1107)>0
-end
-
-function s.filter3(c)
-	return c:IsFaceup() and c:IsTrap()
+	return c:IsCode(81632867, 81632122, 511001382, 511001381)
 end

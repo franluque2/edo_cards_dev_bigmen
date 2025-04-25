@@ -30,16 +30,12 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_SUMMON_PROC)
 	e3:SetCondition(s.ntcon)
 	c:RegisterEffect(e3)
-    --direct attack
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(41077745,0))
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
-    e4:SetCountLimit(1,{id,0})
-	e4:SetCondition(s.datcon)
-	e4:SetCost(s.datcost)
-	e4:SetOperation(s.datop)
-	c:RegisterEffect(e4)
+ 	--direct attack
+	 local e1=Effect.CreateEffect(c)
+	 e1:SetType(EFFECT_TYPE_SINGLE)
+	 e1:SetCode(EFFECT_DIRECT_ATTACK)
+	 e1:SetCondition(s.con)
+	 c:RegisterEffect(e1)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
@@ -79,26 +75,6 @@ function s.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.filter2,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
-function s.datcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 and not e:GetHandler():IsHasEffect(EFFECT_DIRECT_ATTACK)
-end
-function s.datcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function s.datop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DIRECT_ATTACK)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e1)
-	end
-end
-function s.cfilter(c)
-	return c:IsTrap() and c:IsAbleToRemoveAsCost()
+function s.con(c)
+	return Duel.IsExistingMatchingCard(s.filter2,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
