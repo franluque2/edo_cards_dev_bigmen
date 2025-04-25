@@ -20,7 +20,7 @@ function s.DARKfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(5)
 end
 function s.cagefilter(c)
-	return c:IsLevelAbove(4)
+	return c:IsLevelBelow(4)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
@@ -53,7 +53,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
 		if #pg>0 then
 			Duel.HintSelection(pg)
-			if break_chk then Duel.BreakEffect() end
             if (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
                 Duel.MoveToField(pg,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
                 pg:AddCounter(0x1107,1)
@@ -61,6 +60,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
                 Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
                 pg:AddCounter(0x1107,1)
             end
+			if break_chk then Duel.BreakEffect() end
 		end
 	end
 end
