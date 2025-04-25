@@ -24,13 +24,13 @@ function s.cagefilter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=Duel.IsExistingMatchingCard(s.cagefilter,1-tp,0,LOCATION_GRAVE,1,nil,e,tp)
+	local b2=Duel.IsExistingMatchingCard(s.cagefilter,tp,0,LOCATION_GRAVE,1,nil,e,tp)
 	if chk==0 then return b1 or b2 end
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=Duel.IsExistingMatchingCard(s.cagefilter,1-tp,0,LOCATION_GRAVE,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.cagefilter,tp,0,LOCATION_GRAVE,1,nil)
 	if not (b1 or b2) then return end
 	local both=b1 and b2 and Duel.IsExistingMatchingCard(s.DARKfilter,tp,LOCATION_MZONE,0,1,nil)
 	local op=Duel.SelectEffect(tp,
