@@ -33,7 +33,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Damage(p,d,REASON_EFFECT)
 	end
-    if tc:GetFirst():IsOwner(tp) then
+    if tc:GetOwner()==tp then
         Duel.Draw(tp,2,REASON_EFFECT)
     end
 end
