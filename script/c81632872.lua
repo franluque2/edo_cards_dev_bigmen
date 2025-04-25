@@ -56,11 +56,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			if break_chk then Duel.BreakEffect() end
             local tc=Duel.GetFirstTarget()
             if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
-            if Duel.GetLocationCount(p,LOCATION_SZONE)==0 then
-                Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
             elseif Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
                 tc:AddCounter(0x1107,1)
             end
-	    end
-    end
+        end
 end
