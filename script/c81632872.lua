@@ -49,14 +49,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		break_chk=true
 	end
 	if op&2>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
-            if Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,nil) then
-            pg:AddCounter(0x1107,1)
-		    end
+            local tc=Duel.GetFirstTarget()
+            if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
+            if Duel.GetLocationCount(p,LOCATION_SZONE)==0 then
+                Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
+            elseif Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+                tc:AddCounter(0x1107,1)
+            end
 	    end
     end
 end
