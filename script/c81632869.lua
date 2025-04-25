@@ -34,6 +34,7 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(TIMING_DAMAGE_STEP)
 	e3:SetRange(LOCATION_MZONE)
+    e3:SetCountLimit(1)
 	e3:SetCondition(s.atkcon)
 	e3:SetCost(s.atkcost)
 	e3:SetOperation(s.atkop)
@@ -82,7 +83,13 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(p,LOCATION_SZONE)==0 then
 		Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
 	elseif tc:CheckUniqueOnField(p) and Duel.MoveToField(tc,tp,p,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
-        tc:AddCounter(0x1107,1)
+		if (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+			Duel.MoveToField(oc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+			oc:AddCounter(0x1107,1)
+		else
+			Duel.MoveToField(oc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			oc:AddCounter(0x1107,1)
+		end
 	end
 end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -93,7 +100,7 @@ function s.atkfilter(c)
 	return c:IsMonsterCard() and c:IsFaceup() and c:IsAbleToGraveAsCost() and c:GetCounter(0x1107)>0
 end
 function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_SZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if chk==0 then return #g>0 and not g:IsContains(e:GetHandler()) end
 	Duel.SendtoGrave(g,REASON_COST)
 	e:SetLabel(#g)
