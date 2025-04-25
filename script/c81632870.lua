@@ -34,6 +34,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(p,d,REASON_EFFECT)
 	end
     if tc:GetOwner()==tp then
-        Duel.Draw(tp,2,REASON_EFFECT)
+        Duel.Draw(tp,1,REASON_EFFECT)
     end
 end
