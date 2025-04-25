@@ -20,7 +20,7 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(s.tfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,s.tfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
-	local dam=g:GetFirst():GetAttack()
+	local dam=g:GetFirst():GetAttack()/2
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(dam)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
@@ -32,8 +32,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.BreakEffect()
 		Duel.Damage(p,d,REASON_EFFECT)
-        if tc:GetFirst():IsOwner(tp) then
-            Duel.Draw(tp,2,REASON_EFFECT)
-        end
 	end
+    if tc:GetFirst():IsOwner(tp) then
+        Duel.Draw(tp,2,REASON_EFFECT)
+    end
 end
