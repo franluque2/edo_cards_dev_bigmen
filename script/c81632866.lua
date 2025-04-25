@@ -77,5 +77,5 @@ function s.ntcon(e,c,minc)
 end
 function s.con(e,c,minc)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
