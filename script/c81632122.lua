@@ -42,11 +42,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_names={511004336}
-function s.filter2(c)
-	return c:IsFaceup() and c:GetCounter(0x1107)>0
+function s.GamblerCon(e)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(s.filter2),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.filter2
+	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.GamblerCon(e))
+end
+function s.filter2(c)
+	return c:IsFaceup() and c:GetCounter(0x1107)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
