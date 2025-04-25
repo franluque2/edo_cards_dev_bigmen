@@ -82,8 +82,7 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	local p=tc:GetOwner()
 	if Duel.GetLocationCount(p,LOCATION_SZONE)==0 then
 		Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
-	elseif tc:CheckUniqueOnField(p) and Duel.MoveToField(tc,tp,p,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
-		if (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	elseif tc:CheckUniqueOnField(p) and (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0))  then
 			Duel.MoveToField(oc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
 			oc:AddCounter(0x1107,1)
 		else
