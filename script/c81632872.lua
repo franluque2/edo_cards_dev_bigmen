@@ -53,14 +53,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
 		if #pg>0 then
 			Duel.HintSelection(pg)
-            if (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-                Duel.MoveToField(pg,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
-                pg:AddCounter(0x1107,1)
-            else
-                Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-                pg:AddCounter(0x1107,1)
-            end
 			if break_chk then Duel.BreakEffect() end
-		end
-	end
+            if Duel.MoveToField(tc,tp,p,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+            tc:AddCounter(0x1107,1)
+		    end
+	    end
+    end
 end
