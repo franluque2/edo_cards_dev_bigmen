@@ -54,7 +54,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
-			Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			for tc in pg:Iter() do if Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+                tc:AddCounter(0x1107,1)
+            end
 		end
     end
+end
 end
