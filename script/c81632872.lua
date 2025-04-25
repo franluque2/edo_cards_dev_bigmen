@@ -53,11 +53,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
 		if #pg>0 then
 			Duel.HintSelection(pg)
+            if Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,nil) then
+            pg:AddCounter(0x1107,1)
 			if break_chk then Duel.BreakEffect() end
-            local pg=Duel.GetFirstTarget()
-            if not pg:IsRelateToEffect(e) or pg:IsImmuneToEffect(e) then return end
-            elseif Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,pg:IsMonsterCard()) then
-                pg:AddCounter(0x1107,1)
-            end
-        end
+		    end
+	    end
+    end
 end
