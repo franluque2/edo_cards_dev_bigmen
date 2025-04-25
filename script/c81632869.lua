@@ -68,7 +68,7 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.plfilter(c)
 	local p=c:GetOwner()
-	return c:IsFaceup() and Duel.GetLocationCount(p,LOCATION_SZONE)>0 and not c:IsForbidden() and c:CheckUniqueOnField(p)
+	return c:IsFaceup() and Duel.GetLocationCount(p,LOCATION_SZONE)>0 and not c:IsForbidden() and c:CheckUniqueOnField(p) and not c:IsCode(id)
 end
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.plfilter(chkc) end
