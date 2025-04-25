@@ -30,6 +30,14 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then
 		if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
         e:GetHandler():AddCounter(0x1107,1)
+		--Treated as a Continuous Spell
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+		e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+		c:RegisterEffect(e1)
         local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
         if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
             Duel.BreakEffect()
@@ -43,7 +51,7 @@ function s.plop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.thfilter(c)
-	return c:IsCode(81632872, 511004337, 511004339, 511004327, 511004336, 511004328) and c:IsAbleToHand()
+	return c:IsCode(81632872, 511004337, 511004339, 511004327, 511004336, 511004328, 101301080) and c:IsAbleToHand()
 end
 
 function s.changetypetg(e,tp,eg,ep,ev,re,r,rp,chk)

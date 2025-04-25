@@ -57,5 +57,5 @@ function s.datcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1
 end
 function s.cardfilter(c)
-	return (c:IsCode(81632872, 511004337, 511004339, 511004327, 511004336, 511004328)) and c:IsAbleToHand()
+	return (c:IsCode(81632872, 511004337, 511004339, 511004327, 511004336, 511004328, 101301080)) and c:IsAbleToHand()
 end

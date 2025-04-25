@@ -55,6 +55,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
 			if Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+				--Treated as a Continuous Spell
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e1:SetCode(EFFECT_CHANGE_TYPE)
+				e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+				e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+				pg:RegisterEffect(e1)
                 pg:AddCounter(0x1107,1)
             end
 		end

@@ -32,9 +32,25 @@ function s.activate(e,tp,eg,ev,ep,re,r,rp,chk)
 		local tc2=g:GetFirst()
 		if tc2 and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
             Duel.MoveToField(tc2,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+			--Treated as a Continuous Spell
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+			tc2:RegisterEffect(e1)
             tc2:AddCounter(0x1107,1)
         else
             Duel.MoveToField(tc2,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			--Treated as a Continuous Spell
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+			tc2:RegisterEffect(e1)
             tc2:AddCounter(0x1107,1)
         end
 	end

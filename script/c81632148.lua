@@ -41,9 +41,25 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		if (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0)
 		and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
 			Duel.MoveToField(g,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+			--Treated as a Continuous Spell
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+			g:RegisterEffect(e1)
 			g:AddCounter(0x1107,1)
 		else
 			Duel.MoveToField(g,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			--Treated as a Continuous Spell
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+			e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+			g:RegisterEffect(e1)
 			g:AddCounter(0x1107,1)
 		end
 	end
