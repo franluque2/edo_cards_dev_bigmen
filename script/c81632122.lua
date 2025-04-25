@@ -87,8 +87,5 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if rc:IsRelateToBattle() and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) then
         Duel.MoveToField(rc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
         rc:AddCounter(0x1107,1)
-    else
-        Duel.MoveToField(rc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-        rc:AddCounter(0x1107,1)
     end
 end
