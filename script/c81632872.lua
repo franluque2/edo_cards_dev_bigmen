@@ -54,7 +54,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
-			Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,pg:IsMonsterCard())
+			Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		end
     end
 end
