@@ -44,7 +44,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	if tc then
+	if tc and tc:IsLocation(LOCATION_MZONE) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
