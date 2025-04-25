@@ -1,65 +1,53 @@
 --Camouflage Gardna
 local s,id=GetID()
 function s.initial_effect(c)
-	c:SetUniqueOnField(1, 0, id)
-	--special summon
+    -- Special Summon itself from the hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
+	e1:SetHintTiming(0,TIMING_MAIN_END|TIMINGS_CHECK_MONSTER)
+	e1:SetCountLimit(1,{id,1})
 	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-
-	--place on s/t
+    --Cannot be destroyed
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(s.indcon)
+	e2:SetValue(aux.indoval)
+	c:RegisterEffect(e2)
+    --change battle target
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
+	e3:SetCondition(s.condition2)
+	e3:SetOperation(s.operation2)
+	c:RegisterEffect(e3)
+    --If destroyed by battle, the monster that destroyed goes to smelly zone
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_BE_BATTLE_TARGET)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e3:SetCountLimit(1)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetOperation(s.activate)
+	e3:SetCode(EVENT_BATTLE_DESTROYED)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCondition(s.atkcon)
+	e3:SetOperation(s.atkop)
 	c:RegisterEffect(e3)
-
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e4:SetCode(EVENT_TO_GRAVE)
-	e4:SetCondition(s.tgcon)
-	e4:SetTarget(s.tgtg)
-	e4:SetOperation(s.tgop)
-	c:RegisterEffect(e4)
-
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetValue(s.atlimit)
-	c:RegisterEffect(e2)
-
 end
 s.listed_names={511004336}
-
-function s.atlimit(e,c)
-	return c~=e:GetHandler()
+function s.filter2(c)
+	return c:IsFaceup() and c:GetCounter(0x1107)>0
 end
-
-function s.cfilter(c)
-	return c:IsFacedown() or not c:IsCode(id)
-end
-
-function s.preycounterfilter(c)
-	return c:GetCounter(0x1107)>0
-end
-
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.IsExistingMatchingCard(s.preycounterfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or not Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,0,1,nil))
+	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.filter2)
 end
-
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
@@ -71,60 +59,33 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
-
-function s.setop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoHand(g, tp, REASON_EFFECT)
-		Duel.ConfirmCards(1-tp, g)
-	end
+function s.indcon(e)
+	return Duel.IsExistingMatchingCard(s.filter2,tp,0,LOCATION_MZONE,1,nil)
 end
-
-
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler()
-	local g=Duel.GetAttacker()
-
-	if g and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) then
-		if (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-			Duel.MoveToField(g,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
-			g:AddCounter(0x1107,1)
-		else
-			Duel.MoveToField(g,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			g:AddCounter(0x1107,1)
+function s.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsTurnPlayer(1-tp) and Duel.GetAttackTarget()~=e:GetHandler()
+end
+function s.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		local at=Duel.GetAttacker()
+		if at:CanAttack() and not at:IsImmuneToEffect(e) then
+			Duel.CalculateDamage(at,c)
 		end
 	end
-
 end
 
-function s.summonfilter(c,e,tp)
-	return c:IsCode(id) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false)
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local rc=e:GetHandler():GetReasonCard()
+	return rc:IsRelateToBattle()
 end
-
-function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_DESTROY)
-end
-function s.tgfilter(c)
-	return (Card.ListsCode(c,511004336) or c:IsCode(511004337) or c:IsCode(511004339) or c:IsCode(511004327) or c:IsCode(511004336) or c:IsCode(511004328)) and c:IsAbleToHand() and not c:IsCode(id)
-end
-function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		if Duel.SendtoHand(g, tp, REASON_EFFECT) then
-			Duel.ConfirmCards(1-tp, g)
-			if Duel.IsExistingMatchingCard(s.summonfilter, tp, LOCATION_DECK, 0, 1, nil,e,tp) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-				Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-				local tc=Duel.SelectMatchingCard(tp, s.summonfilter,tp,LOCATION_DECK,0, 1, 1,false,nil,e,tp)
-				if tc then
-					Duel.SpecialSummon(tc, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
-				end
-			end
-		end
-	end
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=e:GetHandler():GetReasonCard()
+	if rc:IsRelateToBattle() then
+        Duel.MoveToField(rc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+        rc:AddCounter(0x1107,1)
+    else
+        Duel.MoveToField(rc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+        rc:AddCounter(0x1107,1)
+    end
 end
