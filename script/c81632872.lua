@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if op&2>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-        :GetFirst()local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
+        local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil):GetFirst()
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
