@@ -46,7 +46,7 @@ function s.filter2(c)
 	return c:IsFaceup() and c:GetCounter(0x1107)>0
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.filter2)
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.filter2
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
