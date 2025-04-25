@@ -49,8 +49,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		break_chk=true
 	end
 	if op&2>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-		local pg=Duel.SelectMatchingCard(tp,s.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+		local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil)
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
