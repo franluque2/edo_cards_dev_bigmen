@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
---place on spell field on return to extra
+	--place on spell field on return to extra
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_CHAINING)
@@ -19,6 +19,17 @@ function s.initial_effect(c)
 	e2:SetTarget(s.target2)
 	e2:SetOperation(s.operation2)
 	c:RegisterEffect(e2)
+	--Shuffle Traps up to the number of Prey Counters
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCategory(CATEGORY_REMOVE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,id)
+	e3:SetTarget(s.rmvtg)
+	e3:SetOperation(s.rmvop)
+	c:RegisterEffect(e3)
 end
 s.listed_names={511004336}
 function s.filter(c)
@@ -52,12 +63,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 
 		oc=og:GetNext()
 	end
-	if Duel.IsExistingMatchingCard(s.backrowfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-		local tc=Duel.SelectMatchingCard(tp, s.backrowfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
-		if tc then
-			Duel.SSet(tp, tc)
-		end
-	end
 end
 
 
@@ -85,10 +90,29 @@ function s.operation2(e,tp,eg,ep,ev,re,r,rp)
 
 		oc=og:GetNext()
 	end
-	if Duel.IsExistingMatchingCard(s.backrowfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-		local tc=Duel.SelectMatchingCard(tp, s.backrowfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
-		if tc then
-			Duel.SSet(tp, tc)
-		end
+end
+function s.rmvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+		and Duel.IsExistingTarget(s.filter3,tp,LOCATION_REMOVED,0,1,nil) end
+	local ct=Duel.GetMatchingGroupCount(s.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,s.filter3,tp,LOCATION_REMOVED,0,1,ct,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
+end
+function s.rmvop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetTargetCards(e)
+	if #g>0 then
+		Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_EFFECT)
+		local g=Duel.GetOperatedGroup()
+		if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
 	end
+end
+
+function s.filter2(c)
+	return c:IsFaceup() and c:GetCounter(0x1107)>0
+end
+
+function s.filter3(c)
+	return c:IsFaceup() and c:IsTrap()
 end
