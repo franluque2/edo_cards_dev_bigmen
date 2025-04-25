@@ -54,8 +54,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #pg>0 then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
-            local tc=Duel.GetFirstTarget()
-            if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
+            local pg=Duel.GetFirstTarget()
+            if not pg:IsRelateToEffect(e) or pg:IsImmuneToEffect(e) then return end
             elseif Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,pg:IsMonsterCard()) then
                 pg:AddCounter(0x1107,1)
             end
