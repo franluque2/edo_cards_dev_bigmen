@@ -63,7 +63,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.indcon(e)
-	return Duel.IsExistingMatchingCard(s.filter2,tp,0,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.filter2,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil)
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp) and Duel.GetAttackTarget()~=e:GetHandler()
