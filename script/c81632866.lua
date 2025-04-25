@@ -75,6 +75,7 @@ function s.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.filter2,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
-function s.con(c)
-	return Duel.IsExistingMatchingCard(s.filter2,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+function s.con(e,c,minc)
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_ONFIELD,0,1,nil)
 end

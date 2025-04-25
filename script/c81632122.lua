@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(s.indcon)
+	e2:SetCondition(s.invcon)
 	e2:SetValue(aux.indoval)
 	c:RegisterEffect(e2)
     --change battle target
@@ -62,8 +62,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
-function s.indcon(e)
-	return Duel.IsExistingMatchingCard(s.filter2,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil)
+function s.invcon(e)
+	return Duel.IsExistingMatchingCard(s.filter2,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp) and Duel.GetAttackTarget()~=e:GetHandler()
