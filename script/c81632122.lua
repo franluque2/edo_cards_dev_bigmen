@@ -43,7 +43,7 @@ function s.initial_effect(c)
 end
 s.listed_names={511004336}
 function s.GamblerCon(e)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(s.filter2),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(s.filter2),e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase() and (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or s.GamblerCon(e))
