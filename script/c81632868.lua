@@ -38,15 +38,14 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return  Duel.GetAttacker():IsAbleToHand() end
-	local g=Duel.GetAttacker()
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
+	local tg=Duel.GetAttacker()
+	if chk==0 then return tg:IsOnField() and tg:IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tg,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetAttacker()
-	if #g>1 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+	local tc=Duel.GetAttacker()
+	if tc then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
 function s.operation2(e,tp,eg,ep,ev,re,r,rp)
@@ -82,7 +81,7 @@ end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
     local ct=e:GetHandler():GetCounter(0x1107)
 	e:GetHandler():RemoveCounter(tp,0x1107,ct,REASON_EFFECT)
 	end
