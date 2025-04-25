@@ -33,7 +33,7 @@ function s.backrowfilter(c)
 	return (c:IsCode(511004336) or c:IsCode(511004328)) and c:IsSSetable()
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	if chk==0 then return ((Duel.GetLocationCount(tp,LOCATION_SZONE)>0) or (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0))end
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetAttacker()

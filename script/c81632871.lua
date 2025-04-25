@@ -21,7 +21,7 @@ end
 function s.target(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and s.filter1(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter1,tp,LOCATION_SZONE,0,1,nil,tp)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+		and ((Duel.GetLocationCount(tp,LOCATION_SZONE)>0) or (Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0)) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,s.filter1,tp,LOCATION_SZONE,0,1,1,nil,tp)
 end
