@@ -84,8 +84,11 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetHandler():GetReasonCard()
-	if rc:IsRelateToBattle() and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) then
+	if rc:IsRelateToBattle() and (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         Duel.MoveToField(rc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
+        rc:AddCounter(0x1107,1)
+    else
+        Duel.MoveToField(rc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
         rc:AddCounter(0x1107,1)
     end
 end
