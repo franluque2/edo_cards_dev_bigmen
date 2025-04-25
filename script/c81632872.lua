@@ -51,10 +51,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if op&2>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
         local pg=Duel.SelectMatchingCard(tp,s.cagefilter,tp,0,LOCATION_GRAVE,1,1,nil):GetFirst()
-		if #pg>0 then
+		if pg then
 			Duel.HintSelection(pg)
 			if break_chk then Duel.BreakEffect() end
-			if pg and Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+			if Duel.MoveToField(pg,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
                 pg:AddCounter(0x1107,1)
             end
 		end
