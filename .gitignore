@@ -11,5 +11,6 @@
 !/lflists/
 !strings.conf
 !*.lflist.conf
+!init.lua
 .gitignore
 script/.vscode/settings.json
