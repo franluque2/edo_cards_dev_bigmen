@@ -51,8 +51,11 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 		Duel.ShuffleHand(tp)
-		Duel.SortDecktop(tp,tp,2)
-	else Duel.SortDecktop(tp,tp,3) end
+		local ct=#g
+		if ct>0 then
+			Duel.MoveToDeckBottom(ct,tp)
+			Duel.SortDeckbottom(tp,tp,ct)
+		end end
 end
 function s.relavfieldfilter(c)
     return c.IsCode(c, 511000479) and c:IsFaceup()
@@ -106,5 +109,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD|LOCATION_HAND)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
