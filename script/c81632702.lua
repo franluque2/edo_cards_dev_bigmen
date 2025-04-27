@@ -73,7 +73,7 @@ function s.tgfilter(c)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
-	if g:GetClassCount(Card.GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP))<2 then return end
+	if g:GetClassCount(Card.GetOriginalType)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tg1=g:Select(tp,1,1,nil)
 	g:Remove(Card.GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP),nil,tg1:GetFirst():GetCode())
