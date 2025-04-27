@@ -54,7 +54,7 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 		local ct=#g
 		if ct>0 then
 			Duel.MoveToDeckBottom(ct,tp)
-			Duel.SortDeckbotto(tp,tp,2)
+			Duel.SortDeckbottom(tp,tp,2)
 		end end
 end
 function s.relavfieldfilter(c)
