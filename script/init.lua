@@ -5,7 +5,7 @@ local function startergaiafilter(c)
 end
 
 local function topstarterfilter(c)
-	return startergaiafilter(c) and c:GetSequence()>=25
+	return startergaiafilter(c) and c:GetSequence()>25
 end
 
 local function bottomofdeckfilter(c)
