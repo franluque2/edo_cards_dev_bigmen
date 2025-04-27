@@ -60,8 +60,8 @@ function s.effectfilter(e,ct)
 end
 
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	local te,tp,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	return rp==tp
+	local de,dp=Duel.GetChainInfo(ev,CHAININFO_DISABLE_REASON,CHAININFO_DISABLE_PLAYER)
+	return de and (dp==tp)
 end
 
 
