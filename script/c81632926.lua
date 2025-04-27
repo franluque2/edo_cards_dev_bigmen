@@ -70,8 +70,8 @@ e:SetLabel(1)
 	end
 
 	function s.checkcon(e,tp,eg,ep,ev,re,r,rp)
-		return Duel.GetAttacker():IsCode(100000139)
-			or Duel.GetAttackTarget():IsCode(100000139)
+		return Duel.GetAttacker():IsCode(100443001)
+			or Duel.GetAttackTarget():IsCode(100443001)
 	end
 
 	function s.checkop(e,tp,eg,ep,ev,re,r,rp)
@@ -91,7 +91,7 @@ e:SetLabel(1)
 
 
 function s.maidenfilter(c,tp)
-	return c:IsCode(100000139) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.defmaidenfilter, tp, LOCATION_SZONE, 0, 1, nil)
+	return c:IsCode(100443001) and c:IsFaceup() and Duel.IsExistingMatchingCard(s.defmaidenfilter, tp, LOCATION_SZONE, 0, 1, nil)
 end
 
 function s.defmaidenfilter(c)
@@ -100,7 +100,7 @@ end
 
 
 function s.maidenfilter_fup(c)
-	return c:IsCode(100000139) and c:IsFaceup()
+	return c:IsCode(100443001) and c:IsFaceup()
 end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
@@ -114,7 +114,7 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,id,0,0,0)
 end
 function s.summon_maiden_in_love(e,tp,eg,ep,ev,re,r,rp)
-	local maiden=Duel.CreateToken(tp,100000139)
+	local maiden=Duel.CreateToken(tp,100443001)
 	Duel.SpecialSummon(maiden,0,tp,tp,false,false,POS_FACEUP)
 end
 
