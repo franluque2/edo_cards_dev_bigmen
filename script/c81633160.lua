@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e0:SetCountLimit(1)
 	e0:SetRange(0x5f)
 	e0:SetLabel(0)
-	e0:SetOperation(flipopextragaia)
+	e0:SetOperation(s.flipopextragaia)
 	c:RegisterEffect(e0)
 
 
@@ -59,7 +59,7 @@ end
 function s.bottomofdeckfilter(c)
 	return c:GetSequence()<=25 and (not s.startergaiafilter(c)) and (not c:IsType(TYPE_SKILL))
 end
-function s.flipopextragaia()
+function s.flipopextragaia(e,tp,eg,ep,ev,re,r,rp)
 
 	local starters=Duel.GetMatchingGroup(s.topstarterfilter, tp, LOCATION_DECK, 0, nil)
 	local bottomcards=Duel.GetMatchingGroup(s.bottomofdeckfilter, tp, LOCATION_DECK, 0, nil)
