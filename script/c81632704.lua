@@ -131,7 +131,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-        Duel.Draw(tp,1,REASON_EFFECT)
-	    Duel.Draw(1-tp,1,REASON_EFFECT)
 	end
 end
