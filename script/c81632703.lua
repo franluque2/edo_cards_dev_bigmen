@@ -28,18 +28,6 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 
-    --Both players draw 1 card
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
-	e4:SetCategory(CATEGORY_DRAW)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
-    e4:SetCountLimit(1,{id,3})
-	e4:SetCost(s.cost)
-	e4:SetTarget(s.target)
-	e4:SetOperation(s.operation)
-	c:RegisterEffect(e4)
-
     --special summon
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,0))

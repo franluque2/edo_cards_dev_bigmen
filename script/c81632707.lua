@@ -40,6 +40,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,{id,1},EFFECT_COUNT_CODE_DUEL)
 	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCondition(s.thcon)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
@@ -93,4 +94,7 @@ function s.repval(e,c)
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT)
+end
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end

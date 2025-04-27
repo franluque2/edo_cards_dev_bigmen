@@ -28,6 +28,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(1,{id,1})
 	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCondition(s.thcon)
 	e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
 end
@@ -103,4 +104,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Draw(tp,#g,REASON_EFFECT)
 	end
+end
+function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD|LOCATION_HAND)
 end
