@@ -24,6 +24,8 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.atkcon)
+	e2:SetCost(s.spcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
@@ -65,44 +67,43 @@ function s.nsop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.tgfilter(c)
+	return c:GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP) and c:IsAbleToGraveAsCost()
+end
+function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,nil)
+	if chk==0 then return g:GetClassCount(Card.GetOriginalType)>1 end
+	if g:GetClassCount(Card.GetOriginalType)<2 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local tg1=g:Select(tp,1,1,nil)
+	g:Remove(Card.GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP),nil,tg1:GetFirst():GetCode())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local tg2=g:Select(tp,1,1,nil)
+	tg1:Merge(tg2)
+	Duel.SendtoGrave(tg1,REASON_EFFECT)
+end
 
-function s.rescon(sg,e,tp,mg)
-	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(Card.IsType,1,nil,TYPE_CONTINUOUS)
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and (r&REASON_EFFECT)~=0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local loc=LOCATION_MZONE|LOCATION_HAND
-	if ft<0 then loc=LOCATION_MZONE end
-	local loc2=0
-	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
-	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE|LOCATION_HAND,loc2,c)
-	if chk==0 then return ft>-2 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and #g>=2 and aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,0) end
-	if (#g==2 and g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)==1) or not g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,2,0,0)
-	else
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,2,tp,loc)
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-end
-function s.rmfilter(c)
-	return c:IsSpellTrap() and c:IsAbleToRemove()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+		and c:IsLocation(LOCATION_GRAVE) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,c:GetLocation())
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local loc2=0
-	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
-	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE|LOCATION_HAND,loc2,c)
-	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_TOGRAVE)
-	if Duel.SendtoGrave(sg,REASON_EFFECT)==2 then
-		if not c:IsRelateToEffect(e) then return end
-		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 then
-			return
-		end
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		--Banish it if it leaves the field
+		local e1=Effect.CreateEffect(c)
+		e1:SetDescription(3300)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		e1:SetValue(LOCATION_REMOVED)
+		c:RegisterEffect(e1,true)
 	end
-end
-function s.desfilter(c)
-	return ((c:IsLocation(LOCATION_MZONE) and c:IsFaceup()) or c:IsLocation(LOCATION_HAND))
 end
