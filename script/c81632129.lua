@@ -55,7 +55,7 @@ function s.flipfliter(c)
 end
 
 function s.fliter2(c)
-	return c:IsCode(100000321, 100000322, 511000720, 511000721)
+	return c:IsCode(100000321, 100000322, 511000720, 511000721, 100000323, 100000320, 511002458, 511000722)
 end
 
 function s.incon(e)
