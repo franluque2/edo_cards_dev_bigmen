@@ -16,7 +16,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetTarget(s.reftg)
 	e2:SetCondition(s.con)
 	e2:SetOperation(s.op)
 	c:RegisterEffect(e2)
@@ -32,11 +31,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.con(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp
+	return ep~=tp and Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_ONFIELD,0,1,nil)
 end
-function s.reftg(e,c)
-	return c:IsCode(100000321, 100000322, 511000720, 511000719, 511000721)
-end
+
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
