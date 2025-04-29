@@ -46,7 +46,7 @@ function s.spfilter(c)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsCode(08170654)
 end
 function s.spfilter2(c)
-	return c:IsCode(08170654)
+	return c:IsCode(08170654) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil)
