@@ -68,19 +68,13 @@ function s.nsop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tgfilter(c)
-	return c:GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP) and c:IsAbleToGraveAsCost()
+	return c:IsAbleToGraveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,nil)
-	if chk==0 then return g:GetClassCount(Card.GetOriginalType)>1 end
-	if g:GetClassCount(Card.GetOriginalType)<2 then return end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tg1=g:Select(tp,1,1,nil)
-	g:Remove(Card.GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP),nil,tg1:GetFirst():GetCode())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tg2=g:Select(tp,1,1,nil)
-	tg1:Merge(tg2)
-	Duel.SendtoGrave(tg1,REASON_EFFECT)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_HAND|LOCATION_ONFIELD,0,1,1,nil,tp)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
