@@ -34,7 +34,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
     Duel.BreakEffect()
-	if #g>0 then
+	if g then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
         local e3=Effect.CreateEffect(e:GetHandler())
         e3:SetType(EFFECT_TYPE_SINGLE)
