@@ -33,19 +33,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
-    Duel.BreakEffect()
-	if g then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		local sg=g:GetFirst()
+		if sg then
         local e3=Effect.CreateEffect(e:GetHandler())
         e3:SetType(EFFECT_TYPE_SINGLE)
         e3:SetCode(EFFECT_SET_BASE_ATTACK)
-        e3:SetValue(g:GetBaseAttack()+ct*500)
+        e3:SetValue(sg:GetBaseAttack()+ct*500)
         e3:SetReset(RESET_EVENT|RESETS_STANDARD)
-        g:RegisterEffect(e3)
+        sg:RegisterEffect(e3)
         local e4=e3:Clone()
         e4:SetCode(EFFECT_SET_BASE_DEFENSE)
-        e4:SetValue(g:GetBaseDefense()+ct*500)
-        g:RegisterEffect(e4)
+        e4:SetValue(sg:GetBaseDefense()+ct*500)
+        sg:RegisterEffect(e4)
 	end
     Duel.SpecialSummonComplete()
+end
 end
