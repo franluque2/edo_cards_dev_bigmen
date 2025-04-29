@@ -71,7 +71,7 @@ function s.tgfilter(c)
 	return c:GetOriginalType()&(TYPE_MONSTER|TYPE_SPELL|TYPE_TRAP) and c:IsAbleToGraveAsCost()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,nil)
 	if chk==0 then return g:GetClassCount(Card.GetOriginalType)>1 end
 	if g:GetClassCount(Card.GetOriginalType)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
