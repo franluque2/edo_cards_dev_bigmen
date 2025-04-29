@@ -72,7 +72,7 @@ function s.tgfilter(c)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.tgfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,nil,tp) end
+	if chk==0 then return g:GetClassCount(Card.GetOriginalType)>1 end
 	if g:GetClassCount(Card.GetOriginalType)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tg1=g:Select(tp,1,1,nil)
