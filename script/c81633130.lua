@@ -155,7 +155,7 @@ end
 
 function s.actop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if (rc:IsCode(160016001) or rc:IsCode(CARD_FUSION)) then
+	if (rc:IsCode(160016001)) then
 		Duel.SetChainLimit(s.chainlm)
 	end
 end
