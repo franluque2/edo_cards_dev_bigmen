@@ -140,9 +140,46 @@ function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
 		local ec=eg:GetFirst()
 		while ec do
 			ec:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
+			if rp==tp then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CHANGE_RACE)
+				e1:SetValue(RACE_REPTILE)
+				e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+				ec:RegisterEffect(e1)
+
+				local e2=Effect.CreateEffect(e:GetHandler())
+				e2:SetCode(EFFECT_SEND_REPLACE)
+				e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e2:SetTarget(s.reptg)
+				e2:SetOperation(s.repop)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+				ec:RegisterEffect(e2)
+		
+			end
+
 			ec=eg:GetNext()
 		end
 	end
+end
+
+function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return c:GetDestination()&LOCATION_ALL-LOCATION_OVERLAY>0 end
+    return true
+end
+function s.repop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Remove(e:GetHandler(),POS_FACEDOWN,REASON_RULE)
+
+	local name=e:GetHandler():GetOriginalCode()
+	local e6=Effect.CreateEffect(e:GetHandler())
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_CHANGE_CODE)
+	e6:SetTargetRange(0,LOCATION_ALL-LOCATION_OVERLAY)
+	e6:SetTarget(function(_,c)  return c:IsOriginalCode(name) end)
+	e6:SetValue(CARD_UNKNOWN)
+	Duel.RegisterEffect(e6,tp)
 end
 
 
@@ -199,6 +236,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 -- -For the rest of this turn, your opponent cannot activate cards or effects.
 	local b1=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.monsterfilter,tp,LOCATION_MZONE,0,1,nil)
+			and false
 
 	local b2=Duel.GetFlagEffect(tp,id+4)==0
 		and Duel.IsExistingMatchingCard(s.mrebornfilter,tp,LOCATION_DECK,0,1,nil)
@@ -211,6 +249,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 
 	local b1=Duel.GetFlagEffect(tp,id+2)==0
 			and Duel.IsExistingMatchingCard(s.monsterfilter,tp,LOCATION_MZONE,0,1,nil)
+			and false
 
 	local b2=Duel.GetFlagEffect(tp,id+4)==0
 		and Duel.IsExistingMatchingCard(s.mrebornfilter,tp,LOCATION_DECK,0,1,nil)
