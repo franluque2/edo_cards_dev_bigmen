@@ -132,6 +132,7 @@
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
         Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+        g:GetFirst():CompleteProcedure()
     end
     function s.thcon2(e,tp,eg,ep,ev,re,r,rp)
         return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
