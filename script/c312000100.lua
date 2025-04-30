@@ -51,11 +51,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cornfilter(c,e)
-	return c:IsCode(08170654,61245403,81632822,73776643,74983881,51735257)
+	return c:IsCode(08170654,61245403,312000100,73776643,74983881,51735257)
 end
 
 function s.thfilter1(c)
-	return c:IsCode(81632826,511005019,511002805) and c:IsAbleToHand()
+	return c:IsCode(511005019,511002805) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_SZONE,0,1,nil)

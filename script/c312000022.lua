@@ -29,7 +29,7 @@ end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,81632701,0,TYPES_TOKEN,1000,1000,3,RACE_AQUA,ATTRIBUTE_WATER) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,312000030,0,TYPES_TOKEN,1000,1000,3,RACE_AQUA,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,tp,0)
 end
@@ -42,8 +42,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetLabel(e:GetLabel())
 	Duel.RegisterEffect(e1,tp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,81632701,0,TYPES_TOKEN,1000,1000,3,RACE_AQUA,ATTRIBUTE_WATER) then
-		local token=Duel.CreateToken(tp,81632701)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,312000030,0,TYPES_TOKEN,1000,1000,3,RACE_AQUA,ATTRIBUTE_WATER) then
+		local token=Duel.CreateToken(tp,312000030)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)

@@ -24,7 +24,7 @@ function s.initial_effect(c)
 
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(61245403,81632822,73776643,74983881) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(61245403,312000100,73776643,74983881) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end

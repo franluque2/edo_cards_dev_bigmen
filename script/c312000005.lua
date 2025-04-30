@@ -46,7 +46,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.thfilter(c)
-	return c:IsCode(31709826, 81632810, 81632807, 81632806, 81632808) and c:IsAbleToHand()
+	return c:IsCode(31709826, 312000004, 312000001, 312000000, 312000002) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--Search 1 "Infinitrack" monster
@@ -84,7 +84,7 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,tp,1)
 end
 function s.filter2(c)
-	return c:IsCode(81632806) and c:IsAbleToHand()
+	return c:IsCode(312000000) and c:IsAbleToHand()
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	-- Requirement

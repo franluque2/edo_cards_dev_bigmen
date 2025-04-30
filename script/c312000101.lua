@@ -20,7 +20,7 @@ function s.filter(c)
 	return c:IsReleasableByEffect() and c:IsCode(74983882)
 end
 function s.spfilter(c,e,tp)
-	return c:IsMonster() and c:IsCode(08170654,61245403,81632822,73776643,74983881,51735257) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsMonster() and c:IsCode(08170654,61245403,312000100,73776643,74983881,51735257) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil) and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
