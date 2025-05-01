@@ -77,6 +77,6 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	g:DeleteGroup()
 end
 function s.tglimit(e,c)
-	return c:IsCode(42166000)
+	return c:GetCode()~=42166000
 end
 
