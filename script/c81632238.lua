@@ -25,7 +25,7 @@ function s.initial_effect(c)
 end
 
 function s.repfilter(c,tp)
-	return c:IsFaceup() and (c:IsKoala() or c:IsCode(27134689)) and c:IsLocation(LOCATION_ONFIELD)
+	return c:IsFaceup() and (c:IsSetCard(SET_KOALA) or c:IsCode(27134689)) and c:IsLocation(LOCATION_ONFIELD)
 		and c:IsControler(tp) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -42,7 +42,7 @@ end
 
 
 function s.filter(c,e,tp)
-	return (c:IsKoala() or c:IsCode(27134689)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+	return (c:IsSetCard(SET_KOALA) or c:IsCode(27134689)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
                 and Duel.IsExistingMatchingCard(s.spfilter, tp, LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA, 0, 1,nil,c:GetCode(),e,tp)
 end
 function s.spfilter(c,code,e,tp)
