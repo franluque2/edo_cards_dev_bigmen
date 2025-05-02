@@ -13,8 +13,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 
-    --destroy replace
+	--Destruction replacement for a "Frightfur" Fusion Monster
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EFFECT_DESTROY_REPLACE)
 	e2:SetRange(LOCATION_GRAVE)
@@ -25,18 +26,19 @@ function s.initial_effect(c)
 end
 
 function s.repfilter(c,tp)
-	return c:IsFaceup() and (c:IsSetCard(SET_KOALA) or c:IsCode(27134689)) and c:IsLocation(LOCATION_ONFIELD)
-		and c:IsControler(tp) and not c:IsReason(REASON_REPLACE)
+	return c:IsFaceup() and (c:IsSetCard(SET_KOALA) or c:IsCode(27134689)) and c:IsLocation(LOCATION_MZONE)
+	and c:IsControler(tp) and c:IsReason(REASON_EFFECT|REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemove() and aux.exccon(e) and eg:IsExists(s.repfilter,1,nil,tp) and rp==1-tp end
-	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToRemove() and eg:IsExists(s.repfilter,1,nil,tp) end
+	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function s.repval(e,c)
 	return s.repfilter(c,e:GetHandlerPlayer())
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT|REASON_REPLACE)
 end
 
 
