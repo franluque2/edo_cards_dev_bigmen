@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.thfilter(c)
-	return c:IsCode(08170654,61245403,81632822,73776643,74983881) and c:IsAbleToHand()
+	return c:IsCode(08170654,61245403,312000100,73776643,74983881) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
@@ -53,7 +53,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter2(c,e,tp)
-	return c:IsCode(61245403,81632822, 73776643) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(61245403,312000100, 73776643) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

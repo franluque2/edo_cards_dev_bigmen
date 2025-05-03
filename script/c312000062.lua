@@ -143,5 +143,5 @@ function s.rmvop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter2(c)
-	return c:IsCode(81632867, 81632122, 511001382, 511001381)
+	return c:IsCode(312000065, 312000063, 312000067, 511001382, 511001381)
 end

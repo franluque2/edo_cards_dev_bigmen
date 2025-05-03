@@ -46,9 +46,6 @@ function s.initial_effect(c)
 
 end
 
-function s.thfilter1(c)
-	return c:IsOriginalCode(81632132) and c:IsAbleToHand()
-end
 
 function s.flipfliter(c)
 	return c:IsCode(100000323) and c:IsFaceup()
