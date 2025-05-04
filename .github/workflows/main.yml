@@ -1,0 +1,47 @@
+name: Sync Lua Files to edopro_cards_bigmen
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  sync-lua:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dev repository
+        uses: actions/checkout@v3
+
+      - name: Get list of changed .lua files
+        id: changed-lua
+        run: |
+          git fetch origin dev
+          FILES=$(git diff --name-only HEAD~1 HEAD | grep '\.lua$' || true)
+          echo "Changed Lua files:"
+          echo "$FILES"
+          echo "files=$FILES" >> $GITHUB_ENV
+
+      - name: Clone edopro_cards_bigmen repository
+        if: env.files != ''
+        run: |
+          git clone https://github.com/franluque2/edopro_cards_bigmen.git target_repo
+
+      - name: Copy over Lua files
+        if: env.files != ''
+        run: |
+          for file in $files; do
+            if [ -f target_repo/$file ]; then
+              cp "$file" "target_repo/$file"
+            fi
+          done
+
+      - name: Commit and push changes to edopro_cards_bigmen
+        if: env.files != ''
+        run: |
+          cd target_repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Sync Lua files from dev_bigmen"
+          git push https://x-access-token:${{ secrets.EDOPRO_REPO_TOKEN }}@github.com/franluque2/edopro_cards_bigmen.git HEAD:main
