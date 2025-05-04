@@ -65,7 +65,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rdcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()~=nil and tp==ep
+	return tp==ep
 end
 function s.rdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,0)
