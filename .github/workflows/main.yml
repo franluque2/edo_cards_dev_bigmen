@@ -61,6 +61,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update Card Scripts"
+            git commit -m "Sync Script Files"
             git push https://x-access-token:${{ secrets.EDOPRO_REPO_TOKEN }}@github.com/franluque2/edopro_cards_bigmen.git HEAD:main
           fi
