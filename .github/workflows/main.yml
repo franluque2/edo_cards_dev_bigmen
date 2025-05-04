@@ -44,5 +44,5 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Sync Lua files from dev_bigmen"
+          git commit -m "Update Card Scripts"
           git push https://x-access-token:${{ secrets.EDOPRO_REPO_TOKEN }}@github.com/franluque2/edopro_cards_bigmen.git HEAD:main
