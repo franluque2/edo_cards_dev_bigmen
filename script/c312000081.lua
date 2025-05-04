@@ -52,7 +52,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.IsExistingMatchingCard(s.CardFilter,tp,LOCATION_ONFIELD,0,1,nil)) and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
+	return (Duel.IsExistingMatchingCard(s.CardFilter,tp,LOCATION_MZONE,0,1,nil)) and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end

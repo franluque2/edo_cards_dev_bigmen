@@ -14,7 +14,7 @@ function s.initial_effect(c)
 end
 
 function s.thfilter(c)
-	return c:IsCode(312000065, 312000065, 511001382, 511001381) and c:IsAbleToHand()
+	return c:IsCode(312000063, 312000065, 511001382, 511001381) and c:IsAbleToHand()
 end
 function s.DARKfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(5)
