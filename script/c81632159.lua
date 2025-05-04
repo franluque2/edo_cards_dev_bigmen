@@ -3,6 +3,8 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 
+	c:SetUniqueOnField(1,0,c:Alias())
+
 	local e6=Effect.CreateEffect(c)
 	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_IGNITION)
