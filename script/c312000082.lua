@@ -38,6 +38,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_names={CARD_ANCIENT_FAIRY_DRAGON}
+
 function s.CardFilter(c)
     return c:IsMonster() and (c:ListsCode(CARD_ANCIENT_FAIRY_DRAGON) and c:IsLevelBelow(4))
 end
