@@ -24,8 +24,8 @@ jobs:
           echo "$FILES"
           echo "Deleted Lua files:"
           echo "$DELETED_FILES"
-          echo "files=$FILES" >> $GITHUB_ENV
-          echo "deleted_files=$DELETED_FILES" >> $GITHUB_ENV
+          printf "files<<EOF\n%s\nEOF\n" "$FILES" >> $GITHUB_ENV
+          printf "deleted_files<<EOF\n%s\nEOF\n" "$DELETED_FILES" >> $GITHUB_ENV
 
       - name: Clone edopro_cards_bigmen repository
         if: env.files != ''
