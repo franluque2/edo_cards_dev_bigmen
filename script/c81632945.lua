@@ -369,7 +369,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 			local g=Duel.SelectMatchingCard(tp, s.serpentfilter, tp, LOCATION_DECK, 0, 1,1,false,nil)
 			if #g>0 then
 					if Duel.SendtoHand(g, tp,REASON_EFFECT)>0 then
-						Duel.ConfirmCards(1-tp, tc)
+						Duel.ConfirmCards(1-tp, g)
 					end
 			end
 
