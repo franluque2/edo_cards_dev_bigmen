@@ -30,7 +30,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetLabel(0)
 		return res
 	end
-    if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+    if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local rc=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp):GetFirst()
 	e:SetLabel(rc:GetRace(),rc:GetCode())
@@ -44,6 +44,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,race,code):GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT) then
-        Duel.ConfirmCards(1-tp,th)
+        Duel.ConfirmCards(1-tp,tc)
 	end
 end
