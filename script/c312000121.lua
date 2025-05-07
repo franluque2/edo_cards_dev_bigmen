@@ -31,6 +31,16 @@ function s.stage2(e,tc,tp,sg,chk)
 		e1:SetCode(511004016)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
+		--Any battle damage your opponent takes becomes halved for the rest of this turn
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetDescription(aux.Stringid(id,3))
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e2:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+		e2:SetTargetRange(0,1)
+		e2:SetValue(HALF_DAMAGE)
+		e2:SetReset(RESET_PHASE|PHASE_END)
+		Duel.RegisterEffect(e2,tp)
 	end
 end
 function s.extratg(e,tp,eg,ep,ev,re,r,rp,chk)
