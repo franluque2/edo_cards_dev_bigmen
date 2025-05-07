@@ -99,8 +99,39 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterEffect(e19,tp)
     
 
+        local e20=Effect.CreateEffect(e:GetHandler())
+        e20:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e20:SetCode(EVENT_ADJUST)
+        e20:SetOperation(s.nonchangedop)
+        e20:SetCountLimit(1)
+        Duel.RegisterEffect(e20,tp)
 	end
 	e:SetLabel(1)
+end
+
+function s.nonchangedskypegasus(c)
+  return c:IsCode(80764541) and not c:IsHasEffect(id)
+end
+
+function s.nonchangedop(e,tp,eg,ep,ev,re,r,rp)
+  local g=Duel.GetMatchingGroup(s.nonchangedskypegasus, tp, LOCATION_ALL, 0, nil)
+  if #g>0 then
+    for tc in g:Iter() do
+      if not tc:IsHasEffect(id) then
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(id)
+        tc:RegisterEffect(e1)
+
+        for _,eff in ipairs({tc:GetCardEffect()}) do
+          if eff:GetCode()==EFFECT_INDESTRUCTABLE_BATTLE then
+            eff:Reset()
+          end
+
+      end
+    end
+    end
+  end
 end
 
 function s.mreborncheck(e,tp,eg,ev,ep,re,r,rp)
