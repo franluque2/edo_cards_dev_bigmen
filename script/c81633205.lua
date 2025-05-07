@@ -73,7 +73,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e8:SetCondition(s.chaincon)
 		e8:SetCountLimit(1)
 		e8:SetOperation(s.chainop)
-		Duel.RegisterEffect(e8, tp)
+		--Duel.RegisterEffect(e8, tp)
 
 
 		local e9=Effect.CreateEffect(e:GetHandler())
@@ -82,7 +82,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e9:SetCondition(s.fuscon)
 		e9:SetCountLimit(1)
 		e9:SetOperation(s.fusop)
-		Duel.RegisterEffect(e9, tp)
+		--Duel.RegisterEffect(e9, tp)
 
 
 		local e10=Effect.CreateEffect(e:GetHandler())
