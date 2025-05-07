@@ -28,22 +28,9 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 
-    --add counter
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
-	e4:SetCategory(CATEGORY_COUNTER)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetCountLimit(1,{id,3})
-	e4:SetRange(LOCATION_GRAVE)
-    e4:SetCost(aux.bfgcost)
-	e4:SetTarget(s.target)
-	e4:SetOperation(s.operation)
-	c:RegisterEffect(e4)
-
 end
 function s.filter(c)
-	return c:IsCode(511000635, 311000000) and c:IsAbleToHand()
+	return c:IsCode(511000635, 311000000, 07359741, 44203504, 18891691, 46700124, 89222931) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -64,31 +51,14 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
-	if chk==0 then return ft>0 and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp) end
+	if chk==0 then return ft>0 and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-end
-
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsCanAddCounter(COUNTER_PREDATOR,1) end
-	if chk==0 then return Duel.IsExistingTarget(s.VWR,tp,0,LOCATION_ONFIELD,1,nil,COUNTER_PREDATOR,1) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,s.VWR,tp,0,LOCATION_ONFIELD,1,1,nil,COUNTER_PREDATOR,1)
-end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-        tc:AddCounter(COUNTER_PREDATOR,1)
-    end 
-end
-
-function s.VWR(c)
-	return c:IsCode(311000000)
 end
