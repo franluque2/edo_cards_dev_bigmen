@@ -21,6 +21,7 @@ end
 
 local CARD_ROBOTIC_KNIGHT=44203504
 local CARD_MACHINE_ASSEMBLY_LINE=25518020
+local CARD_CLOCKWORK_NIGHT=84797028
 function s.ismachineking(c)
     return c:IsCode(46700124, 19028307, 18891691, 89222931, 70406920, CARD_ROBOTIC_KNIGHT, 07359741)
 end
@@ -102,9 +103,29 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e11,tp)
 
 
+		local e12=Effect.CreateEffect(e:GetHandler())
+        e12:SetType(EFFECT_TYPE_FIELD)
+        e12:SetCode(EFFECT_IMMUNE_EFFECT)
+        e12:SetTargetRange(0,LOCATION_MZONE)
+		e12:SetCondition(s.discon)
+        e12:SetValue(s.efilter)
+        Duel.RegisterEffect(e12, tp)
+
+
+
 	end
 	e:SetLabel(1)
 end
+
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,41739381)
+end
+
+
+function s.efilter(e,te)
+	return e:GetOwnerPlayer()==te:GetOwnerPlayer() and te:GetHandler():IsCode(CARD_CLOCKWORK_NIGHT)
+end
+
 
 function s.addvanillafilter(c)
 	return c:IsMonster() and c:IsType(TYPE_NORMAL) and c:IsAbleToHand()
@@ -305,26 +326,49 @@ function s.discardmachinefilter(c)
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode),tp,LOCATION_SZONE,0,1,nil,CARD_MACHINE_ASSEMBLY_LINE)
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tffilter),tp,LOCATION_HAND|LOCATION_GRAVE|LOCATION_DECK,0,1,nil,tp) end
 end
 function s.tftcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.discardmachinefilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,s.discardmachinefilter,1,1,REASON_DISCARD+REASON_COST)
+	local cg=Duel.DiscardHand(tp,s.discardmachinefilter,1,3,REASON_DISCARD+REASON_COST)
+	e:SetLabel(cg)
 end
 function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tffilter),tp,LOCATION_HAND|LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
-	if tc then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	local num=e:GetLabel()
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<num then return end
 
-		local g=Duel.GetMatchingGroup(aux.FaceupFilter(s.ismachineking), tp, LOCATION_ONFIELD|LOCATION_GRAVE, 0, nil)
-		local num=Group.GetClassCount(g, Card.GetCode)
-		tc:AddCounter(0x1d,num)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.tffilter),tp,LOCATION_HAND|LOCATION_GRAVE|LOCATION_DECK,0,num,num,nil,tp)
+	if g then
+		for tc in g:Iter() do
+			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+
+			local g2=Duel.GetMatchingGroup(aux.FaceupFilter(s.ismachineking), tp, LOCATION_ONFIELD|LOCATION_GRAVE, 0, nil)
+			local num2=Group.GetClassCount(g2, Card.GetCode)
+			tc:AddCounter(0x1d,num2)
+	
+		end
 
 	end
-end
 
+	local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e2:SetTargetRange(1,0)
+	e2:SetValue(s.aclimit)
+	e2:SetLabel(CARD_MACHINE_ASSEMBLY_LINE)
+	e2:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e2,tp)
+
+
+
+end
+function s.aclimit(e,re,tp)
+	return re:GetHandler():IsCode(e:GetLabel())
+end
 function s.val(e,c)
 	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsRace,RACE_MACHINE),c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*300
 end
@@ -384,6 +428,7 @@ function s.flipcon2(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(s.spsummonmkingfilter, tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp)
 
 	local b6=Duel.GetFlagEffect(tp, id+4)==0
+			and false
 			and Duel.GetFlagEffect(tp, id+8)==0
 			and Duel.IsExistingMatchingCard(s.tributefilter,tp,LOCATION_ONFIELD,0,1,nil, 46700124)
 			and Duel.IsExistingMatchingCard(s.spsummonperfkingfilter, tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp)
@@ -422,6 +467,7 @@ function s.flipop2(e,tp,eg,ep,ev,re,r,rp)
 	and Duel.IsExistingMatchingCard(s.spsummonmkingfilter, tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp)
 
 	local b6=Duel.GetFlagEffect(tp, id+4)==0
+	and false
 	and Duel.GetFlagEffect(tp, id+8)==0
 	and Duel.IsExistingMatchingCard(s.tributefilter,tp,LOCATION_ONFIELD,0,1,nil, 46700124)
 	and Duel.IsExistingMatchingCard(s.spsummonperfkingfilter, tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp)
@@ -523,13 +569,6 @@ function s.operation_for_res4(e,tp,eg,ep,ev,re,r,rp)
 		local tosum=Duel.SelectMatchingCard(tp, s.spsummonmkingfilter, tp, LOCATION_HAND|LOCATION_DECK, 0, 1,1,false,nil,e,tp)
 		if tosum then
 			Duel.SpecialSummon(tosum, SUMMON_TYPE_SPECIAL, tp,tp, false,false, POS_FACEUP)
-			local e2=Effect.CreateEffect(e:GetHandler())
-			e2:SetType(EFFECT_TYPE_FIELD)
-			e2:SetCode(EFFECT_CHANGE_RACE)
-			e2:SetValue(RACE_MACHINE)
-			e2:SetTargetRange(0,LOCATION_MZONE)
-			e2:SetReset(RESET_PHASE+PHASE_END)
-			Duel.RegisterEffect(e2,tp)
 		end
 	end
 
