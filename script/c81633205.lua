@@ -326,7 +326,7 @@ function s.discardmachinefilter(c)
 end
 function s.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode),tp,LOCATION_SZONE,0,1,nil,CARD_MACHINE_ASSEMBLY_LINE)
+		and not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_MACHINE_ASSEMBLY_LINE),tp,LOCATION_SZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.tffilter),tp,LOCATION_HAND|LOCATION_GRAVE|LOCATION_DECK,0,1,nil,tp) end
 end
 function s.tftcost(e,tp,eg,ep,ev,re,r,rp,chk)
