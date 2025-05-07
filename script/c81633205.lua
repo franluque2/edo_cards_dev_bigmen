@@ -118,7 +118,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode),tp,LOCATION_ONFIELD,0,1,nil,41739381)
+	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,41739381),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 
 
