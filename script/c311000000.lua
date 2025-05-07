@@ -25,7 +25,7 @@ function s.spfilter(c,e,tp,race,code)
 		and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
+	if chk==0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then 
 		local res=e:GetLabel()==-1 and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 		e:SetLabel(0)
 		return res
@@ -39,9 +39,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local race,code=e:GetLabel()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,race,code):GetFirst()
-	if tc and Duel.SendtoHand(th,nil,REASON_EFFECT) then
+	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT) then
         Duel.ConfirmCards(1-tp,th)
 	end
 end
