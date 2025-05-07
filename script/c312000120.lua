@@ -46,7 +46,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.filter2(c,e,tp)
-	return (c:IsLevelBelow(7) and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_EARTH)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
+	return (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_EARTH)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
