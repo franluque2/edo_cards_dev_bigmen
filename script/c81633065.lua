@@ -27,7 +27,7 @@ local ARCHETYPE=0x1186
 
 --add the conditions for the archetype swap here
 function s.TurboMonsters(c)
-  return c:IsCode(06256844, 06142213, 67270095, 60187739, 46195773, 13574687)
+  return c:IsCode(06256844, 06142213, 67270095, 60187739, 46195773, 13574687,16769305)
 end
 
 function s.TurboRocket(c)
