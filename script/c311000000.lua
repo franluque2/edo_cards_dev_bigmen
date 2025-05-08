@@ -128,7 +128,7 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.shufflebackfilter(c)
-	return c:IsFaceup() and c:IsMonster() and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsMonster() and c:IsAbleToDeckOrExtraAsCost()
 end
 
 function s.spsumfilter(c,e,tp)
