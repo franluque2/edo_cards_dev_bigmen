@@ -28,6 +28,38 @@ function s.initial_effect(c)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
 
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_COUNTER)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_GRAVE)
+	e4:SetCountLimit(1,{id,3})
+	e4:SetCost(aux.bfgcost)
+	e4:SetTarget(s.bfgtg)
+	e4:SetOperation(s.counteroperation)
+	c:RegisterEffect(e4)
+
+
+end
+s.listed_names={311000000}
+
+function s.counteroperation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) then
+		tc:AddCounter(0x1657,1)
+	end
+end
+
+function s.counterfilter(c)
+	return c:IsFaceup() and c:IsCode(311000000) and c:IsCanAddCounter(0x1657,1) and c:GetCounter(311000000)<5
+end
+function s.bfgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(tp) and s.counterfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.counterfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_COUNTER)
+	local g=Duel.SelectTarget(tp,s.counterfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.HintSelection(g)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0,0x1657)
 end
 function s.filter(c)
 	return c:IsCode(511000635, 311000000, 07359741, 44203504, 18891691, 46700124, 89222931) and c:IsAbleToHand()
