@@ -367,7 +367,7 @@ function s.tfop(e,tp,eg,ep,ev,re,r,rp)
 
 end
 function s.aclimit(e,re,tp)
-	return re:GetHandler():IsCode(e:GetLabel()) and re:GetHandler():IsOnfield() and re:GetHandler():IsFaceup()
+	return re:GetHandler():IsCode(e:GetLabel()) and re:GetHandler():IsOnField() and re:GetHandler():IsFaceup()
 end
 function s.val(e,c)
 	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsRace,RACE_MACHINE),c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*300
