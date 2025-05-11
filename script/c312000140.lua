@@ -39,9 +39,8 @@ function s.lv5plusmonfilter(c)
 end
 function s.nscon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
-		and Duel.CheckTribute(c,1)
+	return (Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.CheckTribute(c,1))
+	and Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
 function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=Duel.SelectTribute(tp,c,1,1)
