@@ -100,7 +100,7 @@ function s.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function s.nttg(e,c)
-	return c:IsLevel(5) and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK))
+	return c:IsLevel(5) and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)
 end
 
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
