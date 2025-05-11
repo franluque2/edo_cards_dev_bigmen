@@ -1,7 +1,7 @@
 --P.K. Gauntlet (CT)
 local s,id=GetID()
 function s.initial_effect(c)
-    c:EnableCounterPermit(COUNTER_STAR_CHIP)
+    c:EnableCounterPermit(0x1658)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.plop)
 	c:RegisterEffect(e4)
 end
-s.counter_place_list={COUNTER_STAR_CHIP}
+s.counter_place_list={0x1658}
 function s.thfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsAbleToHand()
 end
@@ -65,21 +65,21 @@ end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFaceup() and c:IsRelateToEffect(e) then
-		c:AddCounter(COUNTER_STAR_CHIP,1)
+		c:AddCounter(0x1658,1)
 	end
 end
 
 function s.plcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToGraveAsCost() end
-	e:SetLabel(c:GetCounter(COUNTER_STAR_CHIP))
+	e:SetLabel(c:GetCounter(0x1658))
 	Duel.SendtoGrave(c,REASON_COST)
 end
 function s.plfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsCanBeSpecialSummoned()
 end
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=e:GetHandler():GetCounter(COUNTER_STAR_CHIP)
+	local ct=e:GetHandler():GetCounter(0x1658)
 	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct-1
 		and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,ct,nil) end
 end
