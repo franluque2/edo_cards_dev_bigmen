@@ -53,7 +53,6 @@ function s.setfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsDefensePos()
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	if c==nil then return true end
 	return Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
 function s.lv5plusmonfilter(c)
