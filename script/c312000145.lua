@@ -34,11 +34,14 @@ function s.initial_effect(c)
 end
 s.counter_place_list={COUNTER_STAR_CHIP}
 function s.thfilter(c)
-	return (c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
+	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
+end
+function s.lv5plusmonfilter(c)
+	return c:IsCode(312000143) and c:IsFaceup()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local zarc_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,312000143),tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
     if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,zarc_chk):GetFirst()
