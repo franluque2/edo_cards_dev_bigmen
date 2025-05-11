@@ -9,7 +9,6 @@ function s.initial_effect(c)
     e1:SetCountLimit(1,{id,0})
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-
     --atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -31,7 +30,6 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_HAND,0)
 	e3:SetCountLimit(1,{id,0})
-	e3:SetCondition(s.ntcon)
 	e3:SetTarget(aux.FieldSummonProcTg(s.nttg))
 	c:RegisterEffect(e3)
     local e4=e3:Clone()
@@ -100,10 +98,6 @@ function s.atkop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.ntcon(e,c,minc)
-	if c==nil then return true end
-	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-end
 function s.nttg(e,c)
 	return (c:IsLevel(5) and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK))
 end
