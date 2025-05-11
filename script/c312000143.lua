@@ -24,7 +24,7 @@ function s.initial_effect(c)
 
     --Level 5 monsters can be summoned without Tributing
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SUMMON_PROC)
 	e3:SetRange(LOCATION_FZONE)
@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_SET_PROC)
 	e4:SetRange(LOCATION_FZONE)
