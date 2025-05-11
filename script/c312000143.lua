@@ -29,7 +29,6 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_SUMMON_PROC)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_HAND,0)
-	e3:SetCountLimit(1,{id,0})
 	e3:SetCondition(s.ntcon)
 	e3:SetTarget(aux.FieldSummonProcTg(s.nttg))
 	c:RegisterEffect(e3)
@@ -101,7 +100,7 @@ function s.ntcon(e,c,minc)
 	return minc==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function s.nttg(e,c)
-	return c:IsLevel(5)
+	return c:IsLevel(5) and c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK))
 end
 
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
