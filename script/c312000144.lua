@@ -52,9 +52,12 @@ function s.setfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsDefensePos()
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,312000143),tp,LOCATION_ONFIELD,0,1,nil)
+	if c==nil then return true end
+	return Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
-
+function s.lv5plusmonfilter(c)
+	return c:IsCode(312000143) and c:IsFaceup()
+end
 function s.repfilter(c,tp)
 	return c:IsCode(312000143) and c:IsFaceup() and c:IsControler(tp) and c:IsOnField()
 		and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
