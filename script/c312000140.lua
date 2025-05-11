@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SUMMON_PROC)
-	e1:SetCondition(s.otcon)
+	e1:SetCondition(s.nscon)
 	e1:SetOperation(s.otop)
 	e1:SetValue(SUMMON_TYPE_TRIBUTE)
 	c:RegisterEffect(e1)
@@ -34,16 +34,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-function s.otcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,0,1,nil)
+function s.lv5plusmonfilter(c)
+	return c:IsCode(312000143) and c:IsFaceup()
+end
+function s.nscon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
 function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=Duel.SelectTribute(tp,c,1,1)
 	c:SetMaterial(sg)
 	Duel.Release(sg,REASON_SUMMON|REASON_MATERIAL)
-end
-function s.thfilter(c)
-	return c:IsCode(312000143)
 end
 function s.actcon(e)
 	return (Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()) and 
