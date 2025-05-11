@@ -32,9 +32,16 @@ function s.initial_effect(c)
 	e3:SetCondition(s.ntcon)
 	e3:SetTarget(aux.FieldSummonProcTg(s.nttg))
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
+
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_SET_PROC)
-	Duel.RegisterEffect(e4,0)
+	e4:SetRange(LOCATION_FZONE)
+	e4:SetTargetRange(LOCATION_HAND,0)
+	e4:SetCondition(s.ntcon)
+	e4:SetTarget(aux.FieldSummonProcTg(s.nttg))
+	c:RegisterEffect(e4)
 
     --Activate
 	local e5=Effect.CreateEffect(c)
