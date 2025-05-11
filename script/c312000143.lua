@@ -32,6 +32,9 @@ function s.initial_effect(c)
 	e3:SetCondition(s.ntcon)
 	e3:SetTarget(aux.FieldSummonProcTg(s.nttg))
 	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_SET_PROC)
+	Duel.RegisterEffect(e4,0)
 
     --Activate
 	local e5=Effect.CreateEffect(c)
