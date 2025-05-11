@@ -37,22 +37,14 @@ function s.thfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local zarc_chk=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,312000143),tp,LOCATION_ONFIELD,0,1,nil)
-    if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-	local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,zarc_chk):GetFirst()
-	if not sc then return end
-	aux.ToHandOrElse(sc,tp,
-		function(sc)
-			return zarc_chk and sc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		end,
-		function(sc)
-			return Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
-		end,
-		aux.Stringid(id,1)
-	)
-end
+	--Search 1 "Infinitrack" monster
+	local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg)
+	end
 end
 function s.dcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
