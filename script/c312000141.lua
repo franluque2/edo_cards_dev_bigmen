@@ -28,9 +28,13 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_PHASE|PHASE_STANDBY)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(s.atkcon)
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.operation)
 	c:RegisterEffect(e3)
+end
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
 end
 function s.filter(c)
 	return c:IsSpellTrap()
