@@ -107,5 +107,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.removefilter(c,e,tp)
-	return c:IsAbleToRemove()
+	return c:IsAbleToRemove() and c:IsMonster()
 end
