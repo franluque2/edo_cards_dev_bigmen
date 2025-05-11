@@ -52,7 +52,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		if Duel.Destroy(tc,REASON_EFFECT) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	    local sc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,fossil_chk):GetFirst()
+	    local sc=Duel.SelectMatchingCard(tp,s.thfilter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,fossil_chk):GetFirst()
 	    if not sc then return end
 	    aux.ToHandOrElse(sc,tp,
 		function(sc)
@@ -66,7 +66,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
-
+function s.thfilter2(c)
+	return (c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
+end
 function s.thfilter(c)
 	return c:IsCode(312000143) and c:IsAbleToHand()
 end
