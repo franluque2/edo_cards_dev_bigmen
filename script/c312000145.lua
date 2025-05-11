@@ -71,8 +71,7 @@ function s.plfilter(c)
 end
 function s.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=e:GetHandler():GetCounter(0x1658)
-	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct-1
-		and Duel.IsExistingMatchingCard(s.plfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,ct,nil) end
+	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct-1 end
 end
 function s.plop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabel()
