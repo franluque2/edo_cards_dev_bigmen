@@ -38,7 +38,6 @@ function s.lv5plusmonfilter(c)
 	return c:IsCode(312000143) and c:IsFaceup()
 end
 function s.nscon(e,c)
-	if c==nil then return true end
 	return (Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.CheckTribute(c,1))
 	and Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
