@@ -82,7 +82,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function s.atkfilter(c)
-	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsFaceup()
 end
 function s.atkop2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil)

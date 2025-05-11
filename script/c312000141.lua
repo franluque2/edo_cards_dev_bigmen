@@ -61,7 +61,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		function(sc)
 			return Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
 		end,
-		aux.Stringid(id,2)
+		aux.Stringid(id,1)
 	)
 	end
 end

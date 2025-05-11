@@ -49,6 +49,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.setfilter(c)
+	c=e:GetHandler()
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsDefensePos()
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
