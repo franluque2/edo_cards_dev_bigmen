@@ -18,7 +18,6 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_BATTLE_DESTROYED)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCondition(s.dcon)
-	e2:SetTarget(s.dtg)
 	e2:SetOperation(s.dop)
 	c:RegisterEffect(e2)
     --Special Summon
