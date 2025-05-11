@@ -57,7 +57,7 @@ end
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetAttackTarget()~=nil then
 		return (Duel.GetAttacker():IsControler(tp) and (Duel.GetAttacker():IsRace(RACE_FIEND) and Duel.GetAttacker():IsAttribute(ATTRIBUTE_DARK) and Duel.GetAttacker():IsType(TYPE_NORMAL)))
-		or (Duel.GetAttackTarget() and Duel.GetAttackTarget():IsControler(tp) and (Duel.GetAttacker():IsRace(RACE_FIEND) and Duel.GetAttacker():IsAttribute(ATTRIBUTE_DARK) and Duel.GetAttacker():IsType(TYPE_NORMAL)))
+		or (Duel.GetAttackTarget() and Duel.GetAttackTarget():IsControler(tp) and (Duel.GetAttackTarget():IsRace(RACE_FIEND) and Duel.GetAttackTarget():IsAttribute(ATTRIBUTE_DARK) and Duel.GetAttackTarget():IsType(TYPE_NORMAL)))
 	end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
