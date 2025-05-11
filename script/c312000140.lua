@@ -49,9 +49,7 @@ function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(sg,REASON_SUMMON|REASON_MATERIAL)
 end
 function s.actcon(e)
-	if c==nil then return true end
-	return (Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()) and 
-    Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
+	return (Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler())
 end
 
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
