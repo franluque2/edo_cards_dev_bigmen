@@ -35,14 +35,16 @@ function s.initial_effect(c)
 end
 
 function s.otcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,312000143),tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=Duel.SelectTribute(tp,c,1,1)
 	c:SetMaterial(sg)
 	Duel.Release(sg,REASON_SUMMON|REASON_MATERIAL)
 end
-
+function s.thfilter(c)
+	return c:IsCode(312000143)
+end
 function s.actcon(e)
 	return (Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()) and 
     Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,312000143),tp,LOCATION_ONFIELD,0,1,nil)
