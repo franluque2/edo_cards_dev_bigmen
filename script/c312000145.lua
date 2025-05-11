@@ -34,7 +34,7 @@ function s.initial_effect(c)
 end
 s.counter_place_list={COUNTER_STAR_CHIP}
 function s.thfilter(c)
-	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
+	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsAbleToHand()
 end
 function s.lv5plusmonfilter(c)
 	return c:IsCode(312000143) and c:IsFaceup()
