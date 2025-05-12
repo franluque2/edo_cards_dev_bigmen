@@ -52,8 +52,8 @@ function s.setfilter(c)
 	c=e:GetHandler()
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsDefensePos()
 end
-function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.lv5plusmonfilter,tp,LOCATION_ONFIELD,0,1,nil)
+function s.rmcon(e)
+	return Duel.IsExistingMatchingCard(s.lv5plusmonfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function s.lv5plusmonfilter(c)
 	return c:IsCode(312000143) and c:IsFaceup()
