@@ -53,10 +53,10 @@ function s.setfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsDefensePos()
 end
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.FieldSpell,tp,LOCATION_FZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.lv5plusmonfilter,0,LOCATION_ONFIELD,0,1,nil)
 end
-function s.FieldSpell(c)
-	return c:IsFaceup() and c:IsCode(312000143)
+function s.lv5plusmonfilter(c)
+	return c:IsCode(312000143) and c:IsFaceup()
 end
 function s.repfilter(c,tp)
 	return c:IsCode(312000143) and c:IsFaceup() and c:IsControler(tp) and c:IsOnField()
