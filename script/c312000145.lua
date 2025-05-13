@@ -48,13 +48,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
-		if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
-		local eg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
+		if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+DECK,0,1,nil,e,tp) and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
 	if #eg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=eg:Select(tp,2,2,nil)
-		Duel.BreakEffect()
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+		local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,2,2,nil,e,tp)
+		if #sg>0 then
+			Duel.BreakEffect()
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 		end
 	end
