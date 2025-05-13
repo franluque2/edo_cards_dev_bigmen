@@ -76,7 +76,7 @@ function s.thfilter2(c)
 	return (c:IsRace(RACE_FIEND) and c:IsType(TYPE_NORMAL) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevel(5)) and c:IsAbleToHand()
 end
 function s.thfilter(c)
-	return c:IsCode(312000143) and c:IsAbleToHand()
+	return c:IsCode(312000143, 312000144, 312000145) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
