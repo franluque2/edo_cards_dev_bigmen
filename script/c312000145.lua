@@ -35,6 +35,9 @@ s.counter_place_list={0x1658}
 function s.thfilter(c)
 	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsAbleToHand()
 end
+function s.spfilter(c)
+	return (c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK)) and c:IsType(TYPE_NORMAL)
+end
 function s.lv5plusmonfilter(c)
 	return c:IsCode(312000143) and c:IsFaceup()
 end
@@ -44,7 +47,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
+		if Duel.ConfirmCards(1-tp,sg) and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
+		local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,e,tp,code)
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=g:Select(tp,2,2,nil)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	end
+		end
 	end
 end
 
