@@ -78,7 +78,7 @@ function s.spcheck(g,lc,sumtype,tp)
 end
 
 function s.matfilter(c,rc,st,tp)
-	return c:IsAttribute(ATTRIBUTE_DARK,rc,st,tp) and c:IsRace(RACE_REPTILE,rc,st,tp)
+	return c:IsAttribute(ATTRIBUTE_DARK,rc,st,tp)
 end
 
 function s.copfilter(c)
