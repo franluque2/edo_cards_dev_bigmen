@@ -101,7 +101,7 @@ function s.copfilter(c)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetMatchingGroup(aux.FaceupFilter(Card.IsCode,CARD_ABYSSAL_DREDGE),tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,CARD_ABYSSAL_DREDGE),tp,LOCATION_MZONE,0,nil)
     if #g==0 then return end
     for tc in g:Iter() do
         local wg=Duel.GetMatchingGroup(s.copfilter,tp,0,LOCATION_MZONE,tc)
