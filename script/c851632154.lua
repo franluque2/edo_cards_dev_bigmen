@@ -47,7 +47,7 @@ function s.initial_effect(c)
 
 
 end
-s.listed_names={CARD_ABYSSAL_DREDGE}
+s.listed_names={CARD_ABYSSAL_DREDGE, 851632008}
 
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
