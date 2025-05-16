@@ -45,6 +45,21 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 
 
+		local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_BE_PRE_MATERIAL)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e7:SetOperation(s.reset)
+	c:RegisterEffect(e7)
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e8:SetCode(EVENT_LEAVE_FIELD)
+	e8:SetRange(LOCATION_MZONE)
+	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e8:SetOperation(s.reset)
+	c:RegisterEffect(e8)
+
 
 end
 s.listed_names={CARD_ABYSSAL_DREDGE, 851632008}
@@ -97,4 +112,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             end
         end
     end
+end
+
+function s.rfilter(c)
+	return c:GetFlagEffect(id)>0
+end
+function s.reset(e,tp,eg,ep,ev,re,r,rp)
+	local wg=eg:Filter(s.rfilter,nil)
+	for wbc in aux.Next(wg) do
+			local g=e:GetMatchingGroup(aux.FaceupFilter(Card.IsCode,CARD_ABYSSAL_DREDGE),tp,LOCATION_MZONE,0,nil)
+			if #g==0 then return end
+			for tc in g:Iter() do
+				tc:ResetEffect(wbc:GetFlagEffectLabel(id),RESET_COPY)
+				wbc:ResetFlagEffect(id)
+		end
+	end
 end
