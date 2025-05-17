@@ -20,12 +20,25 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCountLimit(1,{id,2})
 	e2:SetTarget(s.settg)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
 
     Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,function(c) return (c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT)) end)
 
+
+	    local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONJURE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCondition(s.tgcon)
+	e3:SetTarget(s.tgtg)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetOperation(s.tgop)
+	c:RegisterEffect(e3)
 
 end
 s.listed_names={CARD_SPIDERITELING}
@@ -116,4 +129,27 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
                 end
         end
     end
+end
+
+
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+end
+function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummonMonster(tp, CARD_SPIDERITELING, SET_SPIDERITE, TYPE_NORMAL, 0, 0, 1, RACE_INSECT, ATTRIBUTE_LIGHT)
+            and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,3))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(function(e,c) return not (c:IsRace(RACE_INSECT) and c:IsAttribute(ATTRIBUTE_LIGHT)) end)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+		local Spideriteling=WbAux.GetSpideriteling(tp)
+		Duel.SpecialSummon(Spideriteling, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
 end
