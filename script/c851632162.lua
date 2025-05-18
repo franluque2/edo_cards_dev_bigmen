@@ -165,7 +165,39 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
         local tc2=Duel.GetFirstMatchingCard(s.spfilter, tp, LOCATION_EXTRA, 0, nil, tc:GetCode())
         if tc2 then
             Duel.ConfirmCards(1-tp, tc2)
-            Duel.SSet(tp, tc, tp, true)
+            if Duel.SSet(tp, tc, tp, true) then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CANNOT_TRIGGER)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+
+				tc:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD,0,1)
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				e3:SetCode(EVENT_PHASE+PHASE_END)
+				e3:SetCountLimit(1)
+				e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+				e3:SetLabelObject(tc)
+				e3:SetCondition(s.rmcon)
+				e3:SetOperation(s.rmop)
+				Duel.RegisterEffect(e3,tp)
+			end
         end
     end
+end
+
+function s.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:GetFlagEffect(id)~=0 then
+		return true
+	else
+		e:Reset()
+		return false
+	end
+end
+function s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 end
