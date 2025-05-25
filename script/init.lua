@@ -13,11 +13,21 @@ Card.RegisterEffect=function(c,e,...)
         local oldTg=e:GetTarget()
         e:SetTarget(splimit(oldTg))
     end
+
+    if e:GetCode()==EFFECT_FORCE_SPSUMMON_POSITION then
+        local oldTg=e:GetTarget()
+        e:SetTarget(splimit(oldTg))
+    end
     return oldcf(c,e,...)
 end
 local oldpf=Duel.RegisterEffect
 Duel.RegisterEffect=function(e,p)
     if e:GetCode()==EFFECT_CANNOT_SPECIAL_SUMMON then
+        local oldTg=e:GetTarget()
+        e:SetTarget(splimit(oldTg))
+    end
+
+    if e:GetCode()==EFFECT_FORCE_SPSUMMON_POSITION then
         local oldTg=e:GetTarget()
         e:SetTarget(splimit(oldTg))
     end
