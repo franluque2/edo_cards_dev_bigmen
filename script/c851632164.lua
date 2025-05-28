@@ -185,11 +185,6 @@ end
 
 
 function s.cusXyzAlterFilter(c,alterf,xyzc,e,tp,op)
-		--Debug.Message(not alterf(c,tp,xyzc))
-		--Debug.Message(c:GetFlagEffect(id)==0)
-		--Debug.Message(c:IsControler(1-tp))
-		--Debug.Message(op and not op(e,tp,0,c))
-
 	if not alterf(c,tp,xyzc) or
 		(c:IsControler(1-tp) and not c:GetFlagEffect(id)==0)
 		or (op and not op(e,tp,0,c)) then return false end
