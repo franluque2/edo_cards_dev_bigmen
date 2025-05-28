@@ -103,7 +103,7 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
     local trig_loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	if re:IsMonsterEffect() and trig_loc==LOCATION_HAND then
-		rc:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1)
+		rc:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	end
 end
 
