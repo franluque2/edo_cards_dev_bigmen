@@ -83,7 +83,7 @@ end
 
 
 function s.filter(c)
-	return c:IsSetCard({SET_RECIPE,SET_FRIESLA}) and c:IsAbleToDeck()
+	return c:IsSetCard({SET_RECIPE,SET_FRIESLA}) and not c:IsCode(id) and c:IsAbleToDeck()
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.filter(chkc) end
