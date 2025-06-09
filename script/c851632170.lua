@@ -85,7 +85,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 
     if #sg>0 then
         Duel.Hint(HINT_CARD, tp, id)
-        Duel.Overlay(tc1 , sg)
+        Duel.Overlay(tc:GetFirst(), sg)
     end
     e:Reset()
 end
