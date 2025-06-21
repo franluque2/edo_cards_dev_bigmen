@@ -85,14 +85,14 @@ end
 
 function s.levelchk(e,te)
 	if te:IsActiveType(TYPE_MONSTER) and te:IsActivated() then
-		local lv=e:GetHandler():GetLevel()
+		local lv=e:GetHandler():GetOriginalLevel()
 		local ec=te:GetOwner()
 		if ec:IsType(TYPE_LINK) then
 			return ec:GetLink()<lv
 		elseif ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<lv
+			return ec:GetRank()<lv
 		else
-			return ec:GetOriginalLevel()<lv
+			return ec:GetLevel()<lv
 		end
 	else
 		return false
