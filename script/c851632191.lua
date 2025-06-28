@@ -43,7 +43,6 @@ function s.initial_effect(c)
     	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.ctfilter)
 
 end
-s.listed_names={60329973} --Chaos Phantasm
 s.listed_series={SET_CHAOS,SET_BLACK_LUSTER_SOLDIER}
 function s.synfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK)
@@ -75,7 +74,7 @@ end
 
 
 function s.thfilter(c)
-	return (((c:IsSetCard(SET_CHAOS) or c:IsSetCard(SET_BLACK_LUSTER_SOLDIER)) and c:IsMonster() and c:IsLevelAbove(7) and not c:IsSummonableCard()) or c:IsCode(60329973))  and c:IsAbleToHand()
+	return (((c:IsSetCard(SET_CHAOS) or c:IsSetCard(SET_BLACK_LUSTER_SOLDIER)) and c:IsMonster() and c:IsLevelAbove(7) and not c:IsSummonableCard()) or (c:IsSetCard(SET_CHAOS) and c:IsTrap()))  and c:IsAbleToHand()
 end
 
 function s.remfilter2(c,c1)
