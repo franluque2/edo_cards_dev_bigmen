@@ -63,7 +63,7 @@ s.listed_names={78552773, 7473735} --Supay, Harmonic Synchro Fusion
 s.listed_series={SET_EARTHBOUND}
 
 function s.tunerfilter(c,scard,sumtype,tp)
-	return c:IsSetCard(SET_EARTHBOUND,scard,sumtype,tp) or c:IsCode(78552773,scard,sumtype,tp)
+	return c:IsSetCard(SET_EARTHBOUND,scard,sumtype,tp) or c:IsCode(78552773)
 end
 
 function s.synclimit(e,se,sp,st)

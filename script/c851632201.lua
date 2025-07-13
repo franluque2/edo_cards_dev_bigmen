@@ -61,7 +61,7 @@ s.listed_names={78275321, 7473735} --Fire Ant Ascator, Harmonic Synchro Fusion
 s.listed_series={SET_EARTHBOUND}
 
 function s.tunerfilter(c,scard,sumtype,tp)
-	return c:IsSetCard(SET_EARTHBOUND,scard,sumtype,tp) or c:IsCode(78275321,scard,sumtype,tp)
+	return c:IsSetCard(SET_EARTHBOUND,scard,sumtype,tp) or c:IsCode(78275321)
 end
 
 
