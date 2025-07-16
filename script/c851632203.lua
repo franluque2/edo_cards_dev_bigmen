@@ -55,7 +55,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
     else
         targetzone=zone2
     end
-	Duel.SpecialSummon(c,0,tp,target_player,false,false,POS_FACEUP,targetzone)
+	Duel.SpecialSummon(c,0,tp,target_player,false,false,POS_FACEUP_DEFENSE,targetzone)
 
     local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,2))
