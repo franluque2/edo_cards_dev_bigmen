@@ -35,11 +35,11 @@ function s.RoidOriginal(c)
 end
 
 function s.CyberConnection(c)
-  return c:IsSetCard(0x93)
+  return c:IsSetCard(0x93) and c:IsSpellTrap()
 end
 
 function s.RoidConnection(c)
-  return c:IsSetCard(0x16) or c:IsCode(23299957)
+  return (c:IsSetCard(0x16) and c:IsSpellTrap()) or c:IsCode(23299957)
 end
 
 function s.Steamroid(c)
