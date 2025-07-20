@@ -44,6 +44,7 @@ end
 
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	if rp==tp then return false end
+	if Duel.GetTurnPlayer()==tp then return false end
 	local ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_HANDES)
 	local ex1,_,_,cp2,cv2=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
 	local ex2,_,_,cp3,cv3=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
