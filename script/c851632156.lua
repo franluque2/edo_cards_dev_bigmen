@@ -108,24 +108,24 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in g:Iter() do
         Duel.SSet(tp,tc)
         if Duel.IsExistingMatchingCard(aux.TRUE, tp, 0, LOCATION_MZONE, 1, nil) then
-            if tc1:IsType(TYPE_TRAP) then
+            if tc:IsType(TYPE_TRAP) then
                 local e2=Effect.CreateEffect(e:GetHandler())
                 e2:SetDescription(aux.Stringid(id,3))
                 e2:SetType(EFFECT_TYPE_SINGLE)
                 e2:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
                 e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
                 e2:SetReset(RESET_EVENT|RESETS_STANDARD)
-                tc1:RegisterEffect(e2)
+                tc:RegisterEffect(e2)
             end
             
-            if tc1:IsQuickPlaySpell() then
+            if tc:IsQuickPlaySpell() then
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetDescription(aux.Stringid(id,3))
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
                 e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
                 e1:SetReset(RESET_EVENT|RESETS_STANDARD)
-                tc1:RegisterEffect(e1)
+                tc:RegisterEffect(e1)
                 end
         end
     end
