@@ -66,7 +66,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetTarget(function(_,c) return c:IsLocation(LOCATION_EXTRA) and not s.synfilter(c) end)
 	Duel.RegisterEffect(e1,tp)
 	--Clock Lizard check
-	aux.addTempLizardCheck(c,tp,s.lizfilter)
+	aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 end
 function s.lizfilter(e,c)
 	return not c:IsOriginalType(TYPE_SYNCHRO) or not c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK)
