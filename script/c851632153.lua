@@ -253,7 +253,7 @@ function s.cusxyzRecursionChk(c,mg,xyz,tp,min,max,minc,maxc,sg,matg,ct,matct,mus
 		addToMatg=true
 	end
 	local xmatct=matct+1
-	if (max and xct>max) or (maxc~=infToken and xmatct>maxc) then mg:Merge(rg) return false end
+	if (max and xct>max) or (maxc~=Xyz.InfiniteMats and xmatct>maxc) then mg:Merge(rg) return false end
 	for i,f in ipairs({c:GetCardEffect(EFFECT_XYZ_MAT_RESTRICTION)}) do
 		if matg:IsExists(Auxiliary.HarmonizingMagFilter,1,c,f,f:GetValue()) then
 			mg:Merge(rg)
@@ -414,7 +414,7 @@ function s.cusxyzTarget(f,lv,minc,maxc,mustbemat,exchk)
 					while true do
 						local ct=#matg
 						local matct=ct+extra_mats
-						if not ((not max or #matg<max) and (maxc==infToken or matct<maxc)) then break end
+						if not ((not max or #matg<max) and (maxc==Xyz.InfiniteMats or matct<maxc)) then break end
 						local selg=mg:Filter(s.cusxyzRecursionChk,sg,mg,c,tp,min,max,minc,maxc,sg,matg,ct,matct,mustbemat,exchk,f,mustg,lv,eqmg,equips_inverse)
 						if #selg==0 then break end
 						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
