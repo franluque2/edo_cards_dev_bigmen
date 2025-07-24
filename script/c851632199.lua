@@ -126,7 +126,7 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c, 0, tp, tp, false, false, POS_FACEUP) then
         
-        local code=Duel.SelectCardsFromCodes(1-tp,1,1,false,false,{78552773,78275321})
+        local code=Duel.SelectCardsFromCodes(tp,1,1,false,false,{78552773,78275321})
 
         local e2=Effect.CreateEffect(c)
         e2:SetType(EFFECT_TYPE_SINGLE)
