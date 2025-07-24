@@ -136,7 +136,8 @@ function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummonMonster(tp, CARD_SPIDERITELING, SET_SPIDERITE, TYPE_NORMAL, 0, 0, 1, RACE_INSECT, ATTRIBUTE_LIGHT)
+	
+	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummonMonster(tp, CARD_SPIDERITELING, SET_SPIDERITE, TYPE_NORMAL+TYPE_MONSTER, 0, 0, 1, RACE_INSECT, ATTRIBUTE_LIGHT)
             and Duel.GetCustomActivityCount(id, tp, ACTIVITY_SPSUMMON)==0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 	local e1=Effect.CreateEffect(e:GetHandler())
