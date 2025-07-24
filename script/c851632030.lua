@@ -87,13 +87,13 @@ function s.spspiderop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(Spideriteling, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEUP)
 	end
     local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,3))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(s.splimit)
 	Duel.RegisterEffect(e1,tp)
-	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,3),nil)
 end
 
 function s.splimit(e,c)
