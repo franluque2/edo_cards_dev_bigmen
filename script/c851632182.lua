@@ -108,6 +108,7 @@ function s.operation(e, tp, eg, ep, ev, re, r, rp)
 	if #g ~= 5 then return end
 
 	Duel.Hint(HINT_MESSAGE, 1 - tp, aux.Stringid(id, 1))
+	Duel.ConfirmCards(1 - tp, g)
 	Duel.Hint(HINT_SELECTMSG, 1 - tp, HINTMSG_CONFIRM)
 	local g1 = g:Select(1 - tp, 1, #g-1, nil)
 	g:Sub(g1)
