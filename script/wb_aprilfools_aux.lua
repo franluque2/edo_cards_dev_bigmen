@@ -206,6 +206,8 @@ end
 
 CARD_FATED_CHANT=881564000
 
+SET_FATED=0xd06
+
 WbAux.IncreaseFatedChantUses=(function()
     return function(c)
         local e1=Effect.CreateEffect(c)
@@ -220,3 +222,48 @@ WbAux.IncreaseFatedChantUses=(function()
     end
 end
 )()
+
+function WbAux.UpdateFatedChantStatus(c)
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e1:SetCode(EVENT_ADJUST)
+        e1:SetRange(LOCATION_ALL)
+        e1:SetOperation(function(e)
+            if Duel.GetFlagEffect(e:GetHandlerPlayer(),CARD_FATED_CHANT+1)>(c:GetOriginalCode()-(CARD_FATED_CHANT+50)) then
+                Card.Recreate(c, c:GetOriginalCode()+1, nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
+            end
+        end)
+        c:RegisterEffect(e1)
+end
+
+function WbAux.IncreaseFatedChantStatus(c,tp)
+    Duel.RegisterFlagEffect(tp,CARD_FATED_CHANT+1,0,0,1)
+end
+
+WbAux.IgnoreStaplesList={14558127,52038441,60643553,62015408,73642296,18964575,59438930,94145021,97268402,42141493,84192580,87126721,27204311,34267821,10045474,40366667,97045737,35261759,49238328,84211599,98645731,25311006,35269904}
+
+function WbAux.IsIgnoreStaple(card)
+    return card:IsCode(table.unpack(WbAux.IgnoreStaplesList))
+end
+
+function WbAux.GetFatedChantUses(tp)
+    return Duel.GetFlagEffect(tp,CARD_FATED_CHANT)
+end
+
+WbAux.RegisterStartedInDeckCards=(function()
+    local e1=Effect.GlobalEffect()
+    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e1:SetCode(EVENT_STARTUP)
+    e1:SetRange(LOCATION_ALL)
+    e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+        return Duel.GetFlagEffect(0,CARD_FATED_CHANT-1)==0
+    end)
+    e1:SetOperation(function()
+        Duel.RegisterFlagEffect(0,CARD_FATED_CHANT-1,RESET_PHASE+PHASE_END,0,1)
+        local g=Duel.GetMatchingGroup(aux.TRUE, 0, LOCATION_HAND|LOCATION_DECK, LOCATION_HAND|LOCATION_DECK, nil)
+        for card in g:Iter() do
+            card:RegisterFlagEffect(CARD_FATED_CHANT-1,0,0,1)
+        end
+    end)
+    Duel.RegisterEffect(e1, 0)
+end)
