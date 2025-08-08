@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e1:SetCode(EFFECT_REFLECT_BATTLE_DAMAGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e1:SetCondition(function(e,tp) return Duel.GetTurnPlayer()==tp end)
+    e1:SetCondition(function(e,tp) return Duel.GetTurnPlayer()==e:GetHandlerPlayer() end)
 	e1:SetTargetRange(1,0)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_REFLECT_DAMAGE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(1,0)
-	e3:SetCondition(function(e,tp) return Duel.GetTurnPlayer()==tp end)
+	e3:SetCondition(function(e,tp) return Duel.GetTurnPlayer()==e:GetHandlerPlayer() end)
 	e3:SetValue(s.reflectvalue)
 	c:RegisterEffect(e3)
 
@@ -67,7 +67,7 @@ function s.counterfilter(c)
 end
 
 function s.reflectvalue(e,re,val,r,rp,rc)
-	if (r&REASON_EFFECT)>0 then
+	if (r&REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_CARD,rp,id)
 		return true
 	end
