@@ -59,7 +59,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_MZONE|LOCATION_HAND|LOCATION_GRAVE|LOCATION_REMOVED,0,nil)
+	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_MZONE|LOCATION_GRAVE,0,nil)
 end
 function s.contactop(g,tp)
 	local fu,fd=g:Split(Card.IsFaceup,nil)
