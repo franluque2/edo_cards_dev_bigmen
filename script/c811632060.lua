@@ -30,8 +30,12 @@ function s.initial_effect(c)
     Duel.RegisterEffect(e2,0)
 
 end
-local passwordcards={{{92919429,1}},{{92919429,3}, {26866984,1}}}
-local cheathands={{{93481594,65681983,92428405}},{{93481594,65681983,92428405},{94145021,42141493,54387923,14558127}}}
+local passwordcards={{{53932291,1}, {43722862,3}},{{43722862,3},{71007216,1},{94145021,1}},{{52038441,3},{94145021,1},{70117860,1}}
+--cheater1
+}
+local cheathands={{{43722862,96156729,54143349,16922142,20508881}},{{43722862}},{{52038441,05318639}}
+--cheater1
+}
 
 
 function s.op(e,tp,eg,ep,ev,re,r,rp)
@@ -80,46 +84,79 @@ function s.lookforpassword(tp)
 end
 
 function s.topdeckfilter(c,num,tp)
-	return not s.starterfilter(c,tp) and c:GetSequence()>=(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-num)
+	return c:GetSequence()>=(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-(num))
 end
 
 function s.bottomofdeckfilter(c,num,tp,topgroup)
-	return c:GetSequence()<(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-num) and (s.starterfilter(c,tp)) and (not c:IsType(TYPE_SKILL)) and not Group.IsExists(topgroup, Card.IsOriginalCode, 1, nil, c:GetOriginalCode())
+	return c:GetSequence()<(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-num) and (s.starterfilter(c,tp)) and (not c:IsType(TYPE_SKILL))
 end
+
+function s.botseekerfilter(c,num,tp) 
+        return c:GetSequence()<(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-num) and (not c:IsType(TYPE_SKILL))
+end
+
 function s.replacecards(tp)
     local decklist=s.cheattype[tp]
-    local num=#cheathands[decklist][s.cheatnum[tp]]
-    local topdeck=Duel.GetMatchingGroup(s.topdeckfilter, tp, LOCATION_DECK, 0, nil,5,tp)
-	local bottomcards=Duel.GetMatchingGroup(s.bottomofdeckfilter, tp, LOCATION_DECK, 0, nil,num,tp,topdeck)
+    local target=cheathands[decklist][s.cheatnum[tp]]
+    local need=5
 
-	Duel.DisableShuffleCheck()
-	if bottomcards then
-		if (#topdeck>0) then
-			local cardstotake=s.silentrandomselect(topdeck, num)
-			local cardstoreplace=Group.CreateGroup()
-            for _,cardid in ipairs(cheathands[decklist][s.cheatnum[tp]]) do
-                local g=bottomcards:Filter(Card.IsOriginalCode, nil, cardid)
-                if #g>0 then
-                    cardstoreplace:AddCard(g:GetFirst())
-                end
-            end
-            if #cardstoreplace==0 then return end
-            if #cardstotake==0 then return end
-			if cardstotake and cardstoreplace then
-                for cardtotake in cardstotake:Iter() do
-                    if #cardstoreplace>0 then
-                    local cardtoreplace=cardstoreplace:GetFirst()
-                    Group.RemoveCard(cardstoreplace, cardtoreplace)
-                    local starterid=cardtotake:GetOriginalCode()
-                    local replacedid=cardtoreplace:GetOriginalCode()
+    local topdeck=Duel.GetMatchingGroup(s.topdeckfilter, tp, LOCATION_DECK, 0, nil, need, tp)
+    local bottomcards=Duel.GetMatchingGroup(s.botseekerfilter, tp, LOCATION_DECK, 0, nil, need, tp)
+    Duel.DisableShuffleCheck()
 
-                    Card.Recreate(cardtotake, replacedid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-                    Card.Recreate(cardtoreplace, starterid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
-                    end
-                end
-			end
-		end
-	end
+    if #topdeck==0 or #bottomcards==0 then return end
+
+    local desiredCounts={}
+    for _,code in ipairs(target) do
+        desiredCounts[code]=(desiredCounts[code] or 0)+1
+    end
+
+    local topCounts={}
+    for tc in topdeck:Iter() do
+        local code=tc:GetOriginalCode()
+        topCounts[code]=(topCounts[code] or 0)+1
+    end
+
+    local cardstoreplace=Group.CreateGroup()
+    for code,qty in pairs(desiredCounts) do
+        local have=topCounts[code] or 0
+        local miss=qty - math.min(qty, have)
+        while miss>0 do
+            local g=bottomcards:Filter(Card.IsOriginalCode, nil, code)
+            if #g==0 then return end
+            local pick=g:GetFirst()
+            cardstoreplace:AddCard(pick)
+            bottomcards:RemoveCard(pick)
+            miss=miss-1
+        end
+    end
+    if #cardstoreplace==0 then return end
+
+    local selectable=Group.CreateGroup()
+    selectable:Merge(topdeck)
+    for code,qty in pairs(desiredCounts) do
+        local keep=math.min(qty, topCounts[code] or 0)
+        for i=1,keep do
+            local g=selectable:Filter(Card.IsOriginalCode, nil, code)
+            if #g>0 then selectable:RemoveCard(g:GetFirst()) end
+        end
+    end
+
+    local toTakeCount=#cardstoreplace
+    if #selectable<toTakeCount then return end
+
+    local cardstotake=s.silentrandomselect(selectable, toTakeCount)
+    if #cardstotake==0 then return end
+
+    for cardtotake in cardstotake:Iter() do
+        local cardtoreplace=cardstoreplace:GetFirst()
+        if not cardtoreplace then break end
+        Group.RemoveCard(cardstoreplace, cardtoreplace)
+        local starterid=cardtotake:GetOriginalCode()
+        local replacedid=cardtoreplace:GetOriginalCode()
+        Card.Recreate(cardtotake, replacedid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
+        Card.Recreate(cardtoreplace, starterid,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true)
+    end
 end
 
 
