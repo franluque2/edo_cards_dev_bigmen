@@ -32,7 +32,7 @@ function s.initial_effect(c)
 end
 local passwordcards={{{53932291,20}}
 --cheater1
-,{{7394770,10}}
+,{{53129443,2},{19535693,3},{42141493,2}},{{8267140,2},{43898403,2},{92003832,2}},{{42141493,2},{75046994,3},{94145021,3}},{{75046994,3},{54670997,2},{59438930,3}},{{43685562,1},{59438930,2}}
 --cheater2
 ,{{49513164,10}}
 --throw 1
@@ -44,7 +44,7 @@ local passwordcards={{{53932291,20}}
 }
 local cheathands={{{43722862}}
 --cheater1
-,{{7394770,55063751,88225269,27004302,51831560}}
+,{{42141493,92003832,19535693,92003832,42141493}},{{8267140,23512906,19535693,19535693,49370016}},{{94145021,94145021,75046994,13258285,96305350}},{{55920742,55920742,54670997,3233859,14558127}},{{43685562,81914447,92003832,59438930,59438930}}
 --cheater2
 ,{{47679935,74063034,53932291,80538047,5318639}}
 --throw 1
@@ -89,7 +89,7 @@ function s.lookforpassword(tp)
     for _,passwordcheck in pairs(passwordcards) do
         local result=true
         for _,password in pairs(passwordcheck) do
-            if Duel.GetMatchingGroupCount(Card.IsCode, tp, LOCATION_ALL, 0, nil, password[1])~=password[2] then
+            if Duel.GetMatchingGroupCount(Card.IsOriginalCode, tp, LOCATION_ALL, 0, nil, password[1])~=password[2] then
                 result=false
             end
         end
@@ -134,7 +134,6 @@ function s.replacecards(tp)
         local code=tc:GetOriginalCode()
         topCounts[code]=(topCounts[code] or 0)+1
     end
-
     local cardstoreplace=Group.CreateGroup()
     for code,qty in pairs(desiredCounts) do
         local have=topCounts[code] or 0
@@ -148,6 +147,7 @@ function s.replacecards(tp)
             miss=miss-1
         end
     end
+
     if #cardstoreplace==0 then return end
 
     local selectable=Group.CreateGroup()
@@ -179,7 +179,7 @@ end
 
 
 function s.starterfilter(c,tp)
-	return c:IsCode(table.unpack(cheathands[s.cheattype[tp]][s.cheatnum[tp]]))
+	return c:IsOriginalCode(table.unpack(cheathands[s.cheattype[tp]][s.cheatnum[tp]]))
 end
 
 function s.silentrandomselect(group, num)
