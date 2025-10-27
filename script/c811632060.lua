@@ -44,7 +44,7 @@ local passwordcards={{{53932291,20}}
 }
 local cheathands={{{43722862}}
 --cheater1
-,{{96305350,6609736,54670997,8267140,8267140}},
+,{{96305350,6609736,54670997,8267140,8267140}}
 --cheater2
 ,{{11637481,43658697,61613388,12931061,19814508}}
 --throw 1
@@ -195,6 +195,7 @@ function s.silentrandomselect(group, num)
     return selected
 
 end
+
 
 
 
