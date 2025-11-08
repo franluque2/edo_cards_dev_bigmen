@@ -49,7 +49,7 @@ function s.initial_effect(c)
     	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,function(c) return not c:IsSummonLocation(LOCATION_EXTRA) or c:IsType(TYPE_FUSION) end)
 
 end
-s.listed_names={CARD_RA}
+s.listed_names={CARD_RA, CARD_MONSTER_REBORN}
 
 function s.sendfilter(c,tp)
 	return c:IsMonsterCard() and c:IsAbleToGrave() and Duel.GetMZoneCount(tp,c)>0
