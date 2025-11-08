@@ -74,7 +74,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.revfilter(c,tp)
-	return c:IsRace(RACE_DIVINE|RACE_AQUA) and not c:IsPublic()
+	return c:IsRace(RACE_DIVINE) and not c:IsPublic()
 end
 
 function s.costfunc(e,tp,eg,ep,ev,re,r,rp,chk)
