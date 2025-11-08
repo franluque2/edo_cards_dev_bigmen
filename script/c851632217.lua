@@ -100,7 +100,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND|LOCATION_ONFIELD)
 end
 function s.thfilter(c)
-	return c:ListsCode(CARD_RA) and c:IsSpellTrap() and c:IsSSetable()
+	return (c:ListsCode(CARD_RA) or c:IsCode(CARD_MONSTER_REBORN)) and c:IsSpellTrap() and c:IsSSetable()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
