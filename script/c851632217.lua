@@ -73,13 +73,13 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function s.revfilter(c,tp)
+function s.revfilter(c)
 	return c:IsRace(RACE_DIVINE) and not c:IsPublic()
 end
 
 function s.costfunc(e,tp,eg,ep,ev,re,r,rp,chk)
     local rg=Duel.GetMatchingGroup(s.revfilter,tp,LOCATION_HAND,0,e:GetHandler())
-    if chk==0 then return #rg>=0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
+    if chk==0 then return #rg>0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
     local g=rg:Select(tp,1,1,nil)
     Duel.ConfirmCards(1-tp,g)
