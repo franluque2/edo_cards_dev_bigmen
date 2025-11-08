@@ -116,7 +116,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
         local b1=Duel.CheckLPCost(tp, 1000) and Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
         local b2=Duel.CheckLPCost(tp, 101)
-        local b3=b1 and b2 and Duel.GetTurnCount()==1 and Duel.GetTurnPlayer()~=tp and Duel.GetFlagEffect(1-tp,id)>=5 and Duel.GetCurrentPhase()==PHASE_MAIN1
+        local b3=b1 and b2 and Duel.GetTurnCount()==1 and Duel.GetFlagEffect(1-tp,id)>=5 and Duel.GetCurrentPhase()==PHASE_MAIN1
         if not (b1 or b2 or b3) then return end
         local op=Duel.SelectEffect(tp,{b1,aux.Stringid(id,2)},{b2,aux.Stringid(id,3)},{b3,aux.Stringid(id,5)},{true,aux.Stringid(id,6)})
         if op==4 then return end
@@ -178,7 +178,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
                 e5:SetCode(EFFECT_CANNOT_EP)
                 e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET)
                 e5:SetCondition(s.bpcondition)
-                e5:SetTargetRange(0,1)
+                e5:SetTargetRange(1,1)
                 e5:SetReset(RESET_PHASE|PHASE_END)
                 Duel.RegisterEffect(e5,tp)
 
@@ -188,12 +188,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
                 e6:SetType(EFFECT_TYPE_FIELD)
                 e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
                 e6:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-                e6:SetTargetRange(0,1)
+                e6:SetTargetRange(1,1)
                 e6:SetValue(HALF_DAMAGE)
                 e6:SetReset(RESET_PHASE|PHASE_END)
                 Duel.RegisterEffect(e6,tp)
 
-                Duel.SkipPhase(1-tp,Duel.GetCurrentPhase(),RESET_PHASE|PHASE_END,1)
+                if Duel.GetTurnPlayer()~=tp then
+                    Duel.SkipPhase(1-tp,Duel.GetCurrentPhase(),RESET_PHASE|PHASE_END,1)
+                else
+                    Duel.SkipPhase(tp,Duel.GetCurrentPhase(),RESET_PHASE|PHASE_END,1)
+                end
 
 
         end
