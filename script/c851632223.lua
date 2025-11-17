@@ -64,7 +64,7 @@ end
 
 function s.aclimit(e,re,tp)
     local rc=re:GetHandler()
-    return not (rc:IsSetCard(SET_POWERUP) or (rc:IsType(TYPE_SPELL+TYPE_TRAP) and (re:GetHandler():IsCode(CARD_BOSS_RUSH) or re:ListsCode(CARD_BOSS_RUSH))) or (rc:IsAttribute(ATTRIBUTE_LIGHT) and rc:IsRace(RACE_MACHINE)))
+    return not (rc:IsSetCard(SET_POWERUP) or (rc:IsType(TYPE_SPELL+TYPE_TRAP) and (re:GetHandler():IsCode(CARD_BOSS_RUSH) or re:GetHandler():ListsCode(CARD_BOSS_RUSH))) or (rc:IsAttribute(ATTRIBUTE_LIGHT) and rc:IsRace(RACE_MACHINE)))
 end
 
 function s.dsop(e,tp,eg,ep,ev,re,r,rp)
