@@ -24,6 +24,7 @@ function s.initial_effect(c)
 
     --if an "Advanced Dark" you control would be destroyed, you can banish this card from your GY or Spell/Trap Zone instead
     local e4=Effect.CreateEffect(c)
+    e4:SetCountLimit(1,{id,2})
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e4:SetCode(EFFECT_DESTROY_REPLACE)
     e4:SetRange(LOCATION_GRAVE|LOCATION_SZONE)
