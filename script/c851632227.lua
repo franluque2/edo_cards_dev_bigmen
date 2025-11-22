@@ -61,7 +61,7 @@ function s.initial_effect(c)
     e4:SetCode(EFFECT_MUST_ATTACK)
     e4:SetRange(LOCATION_MZONE)
     e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-    e4:SetCondition(function(e) return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,79407975),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil) end)
+    e4:SetCondition(function(e) return Duel.IsExistingMatchingCard(s.fudarkulticrystalfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) end)
     c:RegisterEffect(e4)
 
     local e5=e4:Clone()
@@ -77,8 +77,10 @@ function s.initial_effect(c)
     
 end
 s.listed_series={SET_ADVANCED_CRYSTAL_BEAST,SET_CRYSTAL_BEAST,SET_ULTIMATE_CRYSTAL}
-s.listed_names={79407975} -- Rainbow Dark Dragon
 
+function s.fudarkulticrystalfilter(c)
+	return c:IsSetCard(SET_ULTIMATE_CRYSTAL) and c:IsAttribute(ATTRIBUTE_DARK)
+end
 function s.mfilter(c,lc,sumtype,tp)
 	return c:IsSetCard(SET_CRYSTAL_BEAST,lc,sumtype,tp)
 end

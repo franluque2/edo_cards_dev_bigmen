@@ -276,3 +276,9 @@ Duel.Recover=(function()
 
 
 end)()
+
+
+WbAux.equipguardians={47150851,46037213,10755153,9633505,73544866,74367458}
+function WbAux.IsNonNormalSummonableGuardian(c)
+    return c:IsCode(table.unpack(WbAux.equipguardians)) or ( c:IsSetCard(SET_GUARDIAN) and not c:IsSummonableCard())
+end
