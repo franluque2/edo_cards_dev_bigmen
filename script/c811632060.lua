@@ -32,7 +32,7 @@ function s.initial_effect(c)
 end
 local passwordcards={{{53932291,20}}
 --cheater1
-,{{82956214,2}},{{24508238,3}}
+,{{82956214,3},{04810828,2}},{{01372887,3},{24508238,2}}
 --cheater2
 ,{{80538047,1}}
 --throw 1
@@ -44,7 +44,7 @@ local passwordcards={{{53932291,20}}
 }
 local cheathands={{{43722862}}
 --cheater1
-,{{25801745,10804018,52472775}},{{52472775,88284599,04810828,04810828,39114494}}
+,{{95492061,60303688}},{{95492061,25801745,67750322}}
 --cheater2
 ,{{80538047}}
 --throw 1
@@ -195,6 +195,7 @@ function s.silentrandomselect(group, num)
     return selected
 
 end
+
 
 
 
