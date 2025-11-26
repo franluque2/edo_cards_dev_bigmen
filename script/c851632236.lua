@@ -40,7 +40,7 @@ function s.initial_effect(c)
     e3:SetTargetRange(0,LOCATION_MZONE)
     e3:SetCondition(s.defcon)
     e3:SetTarget(function(e,c) return c:IsFaceup() end)
-    e3:SetValue(0)
+    e3:SetValue(s.defval)
     c:RegisterEffect(e3)
 
     Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
@@ -208,4 +208,9 @@ end
 function s.defcon(e)
     local c=e:GetHandler()
     return c:IsType(TYPE_XYZ) and c:IsRace(RACE_INSECT)
+end
+
+
+function s.defval(e,c)
+	return c:GetAttack()/2
 end
