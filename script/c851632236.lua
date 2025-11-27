@@ -13,14 +13,12 @@ function s.initial_effect(c)
     e1:SetOperation(s.spop)
     c:RegisterEffect(e1)
 
-    --If this card is in your GY, except the turn it was sent there (Quick Effect): You can banish this card from your GY, then target 2 Insect monsters in your GY with the same level; Special Summon them, then immediately after this effect resolves, Xyz summon 1 Insect Xyz monster using those 2 monsters only.
+    --If this card is in your GY, except the turn it was sent there: You can banish this card from your GY, then target 2 Insect monsters in your GY with the same level; Special Summon them, then immediately after this effect resolves, Xyz summon 1 Insect Xyz monster using those 2 monsters only.
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,1))
     e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e2:SetType(EFFECT_TYPE_QUICK_O)
-    e2:SetCode(EVENT_FREE_CHAIN)
+    e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_GRAVE)
-    e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E+TIMING_MAIN_END)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetCountLimit(1,{id,1})
     e2:SetCondition(s.gycon)
