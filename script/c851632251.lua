@@ -35,9 +35,7 @@ function s.initial_effect(c)
     e3:SetCode(EVENT_DESTROYED)
     e3:SetRange(LOCATION_GRAVE)
     e3:SetCountLimit(1,{id,2})
-    e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-        return eg:IsExists(function(c,tp) return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) and c:IsControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) end,1,nil,tp)
-    end)
+    e3:SetCondition(s.spbdeckcon)
     e3:SetCost(aux.bfgcost)
     e3:SetTarget(s.spicetarget)
     e3:SetOperation(s.spopice)
@@ -46,7 +44,7 @@ end
 s.listed_series={SET_ICEJADE}
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return not (r&REASON_DRAW)~=0
+    return not e:GetHandler():IsReason(REASON_DRAW)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -121,4 +119,12 @@ function s.spopice(e,tp,eg,ep,ev,re,r,rp)
     if #g>0 then
         Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
     end
+end
+
+function s.spconfilter(c,tp)
+	return c:IsReason(REASON_BATTLE|REASON_EFFECT) and (c:GetPreviousAttributeOnField()&ATTRIBUTE_WATER)==ATTRIBUTE_WATER
+		and c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
+end
+function s.spbdeckcon(e,tp,eg,ep,ev,re,r,rp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.spconfilter,1,nil,tp)
 end
