@@ -57,6 +57,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
     if #g==0 then return end
     Duel.ConfirmCards(1-tp, g)
     Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	Duel.ShuffleDeck(tp)
+	Duel.BreakEffect()
     local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
     if ct==0 then return end
     if Duel.Draw(tp,ct+1,REASON_EFFECT)==0 then return end
