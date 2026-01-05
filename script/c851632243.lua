@@ -31,7 +31,7 @@ function s.posfilter(c)
 end
 
 function s.thfilter(c)
-    return c:IsAbleToHand() and ((not c:IsType(TYPE_MONSTER)) or (c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_LIGHT)))
+    return c:IsAbleToHand() and ((not c:IsType(TYPE_MONSTER)) or not (c:IsFaceup() and c:IsAttribute(ATTRIBUTE_LIGHT)))
 end
 
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
