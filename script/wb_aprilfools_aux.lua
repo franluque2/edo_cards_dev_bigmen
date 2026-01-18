@@ -277,3 +277,46 @@ function WbAux.AddDregs(tp, num)
         Duel.SendtoHand(dregs, tp, REASON_RULE)
     end
 end
+
+WbAux.StartDeadServantFilter=(function()
+    if not WbAux.DestroyedServantIds then
+        WbAux.DestroyedServantIds={}
+    end
+    if not WbAux.DestroyedServantCounter then
+        WbAux.DestroyedServantCounter=0
+    end
+    local e1=Effect.GlobalEffect()
+    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e1:SetCode(EVENT_STARTUP)
+    e1:SetRange(LOCATION_ALL)
+    e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+        return Duel.GetFlagEffect(0,CARD_DREGS_ANGRA_MAINYU-1)==0
+    end)
+    e1:SetOperation(function()
+        Duel.RegisterFlagEffect(0,CARD_DREGS_ANGRA_MAINYU-1,RESET_PHASE+PHASE_END,0,1)
+
+        local e2=Effect.GlobalEffect()
+        e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e2:SetCode(EVENT_DESTROYED)
+        e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+            for card in eg:Iter() do
+                if card:IsSetCard(SET_FATED) and card:IsType(TYPE_SPIRIT) then
+                    WbAux.DestroyedServantIds[card:GetOriginalCode()]=true
+                    WbAux.DestroyedServantCounter=WbAux.DestroyedServantCounter+1
+                end
+            end
+        end)
+        Duel.RegisterEffect(e2, 0)
+    end)
+    Duel.RegisterEffect(e1, 0)
+
+
+end)
+
+function WbAux.GetDeadServantCount()
+    return WbAux.DestroyedServantCounter or 0
+end
+
+function WbAux.GetDifferentDeadServantCodes()
+    return table.length(WbAux.DestroyedServantIds or {})
+end
