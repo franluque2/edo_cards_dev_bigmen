@@ -208,6 +208,8 @@ CARD_FATED_CHANT=881564000
 
 SET_FATED=0xd06
 
+CARD_DREGS_ANGRA_MAINYU=881564100
+
 WbAux.IncreaseFatedChantUses=(function()
     return function(c)
         local e1=Effect.CreateEffect(c)
@@ -267,3 +269,11 @@ WbAux.RegisterStartedInDeckCards=(function()
     end)
     Duel.RegisterEffect(e1, 0)
 end)
+
+function WbAux.AddDregs(tp, num)
+    if not num then num=1 end
+    for i=1,num do
+        local dregs=Duel.CreateToken(tp, CARD_DREGS_ANGRA_MAINYU)
+        Duel.SendtoHand(dregs, tp, REASON_RULE)
+    end
+end
