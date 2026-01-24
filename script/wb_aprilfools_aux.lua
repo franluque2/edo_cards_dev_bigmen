@@ -318,5 +318,5 @@ function WbAux.GetDeadServantCount()
 end
 
 function WbAux.GetDifferentDeadServantCodes()
-    return table.length(WbAux.DestroyedServantIds or {})
+    return #WbAux.DestroyedServantIds or 0
 end

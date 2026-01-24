@@ -1,4 +1,4 @@
---The Fated Reptillianne Rider
+--The Fated War Rock Berseker
 Duel.LoadScript ("wb_aux.lua")
 Duel.LoadScript ("wb_aprilfools_aux.lua")
 local s,id=GetID()
@@ -9,8 +9,7 @@ function s.initial_effect(c)
     e1:SetCode(EFFECT_SPSUMMON_CONDITION)
     e1:SetValue(s.splimit)
     c:RegisterEffect(e1)
-    	Spirit.AddProcedure(c,EVENT_SUMMON_SUCCESS,EVENT_FLIP)
-
+	Spirit.AddProcedure(c,EVENT_SUMMON_SUCCESS,EVENT_FLIP)
 
 end
 s.listed_series={SET_FATED}
