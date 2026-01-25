@@ -320,3 +320,7 @@ end
 function WbAux.GetDifferentDeadServantCodes()
     return #WbAux.DestroyedServantIds or 0
 end
+
+function WbAux.IsStartedInDeck(card)
+    return card:GetFlagEffect(CARD_FATED_CHANT-1)>0
+end
