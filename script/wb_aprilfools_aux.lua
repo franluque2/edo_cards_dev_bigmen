@@ -252,7 +252,10 @@ function WbAux.GetFatedChantUses(tp)
     return Duel.GetFlagEffect(tp,CARD_FATED_CHANT)
 end
 
+local hasRegisteredStartedInDeckCards=false
 WbAux.RegisterStartedInDeckCards=(function()
+    if hasRegisteredStartedInDeckCards then return end
+    hasRegisteredStartedInDeckCards=true
     local e1=Effect.GlobalEffect()
     e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_STARTUP)
@@ -278,7 +281,10 @@ function WbAux.AddDregs(tp, num)
     end
 end
 
+local hasStartedDeadServantFilter=false
 WbAux.StartDeadServantFilter=(function()
+    if hasStartedDeadServantFilter then return end
+    hasStartedDeadServantFilter=true
     if not WbAux.DestroyedServantIds then
         WbAux.DestroyedServantIds={}
     end

@@ -32,8 +32,10 @@ function s.initial_effect(c)
     local e4=Effect.CreateEffect(c)
     e4:SetDescription(aux.Stringid(id,0))
     e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONJURE)
-    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e4:SetCode(EVENT_DESTROYED)
+    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e4:SetProperty(EFFECT_FLAG_DELAY)
+    e4:SetCode(EVENT_TO_GRAVE)
+    e4:SetCountLimit(1,id)
     e4:SetCondition(s.spcon)
     e4:SetTarget(s.sptg)
     e4:SetOperation(s.spop)
@@ -46,7 +48,7 @@ function s.initial_effect(c)
     e5:SetRange(LOCATION_MZONE)
     e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
     e5:SetValue(aux.tgoval)
-    e5:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)>=2 end)
+    e5:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)>=2 end)
     c:RegisterEffect(e5)
     local e6=e5:Clone()
     e6:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -69,7 +71,7 @@ function s.initial_effect(c)
     e8:SetRange(LOCATION_MZONE)
     e8:SetTargetRange(0,1)
     e8:SetValue(99)
-    e8:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)>=10 end)
+    e8:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)>=10 end)
     c:RegisterEffect(e8)
 
     local e9=Effect.CreateEffect(c)
@@ -78,11 +80,11 @@ function s.initial_effect(c)
     e9:SetRange(LOCATION_MZONE)
     e9:SetTargetRange(0,LOCATION_MZONE)
     e9:SetValue(s.splimit2)
-    e9:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)>=10 end)
+    e9:SetCondition(function(e) return Duel.GetMatchingGroupCount(Card.IsCode,1-e:GetHandler():GetControler(),LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)>=10 end)
     c:RegisterEffect(e9)
 end
 s.listed_series={SET_FATED}
-s.listed_names={CARD_DREGS_OF_ANGRA_MAINJU}
+s.listed_names={CARD_DREGS_ANGRA_MAINYU}
 
 function s.splimit(e,se,sp,st)
     local tc=se:GetHandler()
@@ -91,20 +93,20 @@ end
 
 function s.atkval(e,c)
     local tp=c:GetControler()
-    local g=Duel.GetMatchingGroup(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)
+    local g=Duel.GetMatchingGroup(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)
     return g:GetCount()*1000
 end
 
 function s.mretcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)==0 and Spirit.CommonCondition(e) and not e:GetHandler():IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN)
+	return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)==0 and Spirit.CommonCondition(e) and not e:GetHandler():IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN)
 end
 
 function s.oretcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)==0 and Spirit.CommonCondition(e) and e:GetHandler():IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN)
+	return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)==0 and Spirit.CommonCondition(e) and e:GetHandler():IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN)
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)>=1 and re and re:GetHandler():IsAttribute(ATTRIBUTE_DARK)
+    return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)>=1 and re and re:GetHandler():IsAttribute(ATTRIBUTE_DARK)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -123,7 +125,7 @@ end
 function s.dropcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local bc=c:GetBattleTarget()
-    return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_OF_ANGRA_MAINJU)>=3
+    return Duel.GetMatchingGroupCount(Card.IsCode,1-tp,LOCATION_HAND,0,nil,CARD_DREGS_ANGRA_MAINYU)>=3
         and bc and bc:IsFaceup() and bc:IsRelateToBattle()
 end
 

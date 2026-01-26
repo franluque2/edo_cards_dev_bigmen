@@ -79,8 +79,9 @@ end
 function s.adop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
     local g=Duel.SelectMatchingCard(tp,s.adfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
-    if #g>0 and Duel.Destroy(g,REASON_EFFECT)>0 then
+    if #g>0 then
         WbAux.AddDregs(1-tp,2)
+        Duel.Destroy(g,REASON_EFFECT)
     end
 end
 

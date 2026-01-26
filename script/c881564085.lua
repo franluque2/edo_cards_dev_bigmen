@@ -81,6 +81,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+    if tc and tc:IsRelateToEffect(e) then
+        WbAux.AddDregs(1-tp,1)
+    end
 	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -111,7 +114,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonComplete()
 
             Duel.BreakEffect()
-            WbAux.AddDregs(1-tp,1)
 		end
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
