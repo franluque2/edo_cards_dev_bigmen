@@ -25,7 +25,7 @@ s.listed_names={CARD_FATED_CHANT,id+1}
 s.listed_series={SET_FATED}
 
 function s.confunc(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetCustomActivityCount(id-1,tp,ACTIVITY_CHAIN)<(1+WbAux.GetFatedChantUses(tp))
+    return Duel.GetCustomActivityCount(id-1,tp,ACTIVITY_CHAIN)<(1+WbAux.GetFatedChantUses(tp)) and e:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)

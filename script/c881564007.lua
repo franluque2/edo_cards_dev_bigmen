@@ -107,7 +107,7 @@ function s.copyoper(e,tp,eg,ep,ev,re,r,rp)
     local code=e:GetLabel()
     if not code then return end
     local card=Duel.CreateToken(tp, code)
-    if card and card:CheckActivateEffect(false,false,false)~=nil then
+    if card and card:CheckActivateEffect(true,true,false)~=nil then
         local tpe=card:GetType()
         local te=card:GetActivateEffect()
         local tg=te:GetTarget()

@@ -40,7 +40,7 @@ s.listed_series={SET_FATED}
 s.listed_names={CARD_FATED_CHANT}
 
 function s.spfilter(c,e,tp)
-    return c:IsSetCard(SET_FATED) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_SPIRIT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsSetCard(SET_FATED) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_SPIRIT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
