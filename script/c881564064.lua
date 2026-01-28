@@ -46,7 +46,7 @@ s.listed_series={SET_FATED}
 s.listed_names={881564003, 881564061} -- Shirou the Fated Master, The Fated Reptillianne Rider
 
 function s.adfilter(c)
-    return c:IsSetCard(SET_FATED) and not c:IsType(TYPE_SPIRIT) and c:IsAbleToHand()
+    return c:IsSetCard(SET_FATED) and c:IsMonster() and not c:IsType(TYPE_SPIRIT) and c:IsAbleToHand()
 end
 
 function s.thtarget(e,tp,eg,ep,ev,re,r,rp,chk)
