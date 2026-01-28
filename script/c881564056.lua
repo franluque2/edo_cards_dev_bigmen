@@ -15,7 +15,7 @@ function s.initial_effect(c)
         c:RegisterEffect(e1)
 
 
-        WbAux.UpdateFatedChantStatus(c)
+        --WbAux.UpdateFatedChantStatus(c)
 
     	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,function(re) return not (re:GetHandler():IsCode(CARD_FATED_CHANT)) end)
 
@@ -44,14 +44,16 @@ end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
-    WbAux.IncreaseFatedChantStatus(c,tp)
+    --WbAux.IncreaseFatedChantStatus(c,tp)
+
+    --Place 1 "The Fated Reality Marble - Unlimited Blade Works" (id+1) from Outside the Duel face-up in your Field Zone
     local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		if c:IsHasEffect(EFFECT_CANNOT_TO_HAND) then return end
-		c:CancelToGrave()
-		Duel.SendtoHand(c, tp, REASON_EFFECT)
-	end
-    Duel.ShuffleHand(tp)
+    local fz=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
+    if fz then
+        Duel.SendtoGrave(fz,REASON_RULE)
+    end
+    local token=Duel.CreateToken(tp, id+1)
+    Duel.MoveToField(token, tp, tp, LOCATION_FZONE, POS_FACEUP, true)
 
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))

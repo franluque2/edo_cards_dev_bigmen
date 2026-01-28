@@ -53,7 +53,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         end
         g2=Group.FromCards(table.unpack(unique_cards))
         if #g2>0 then
-            local tc=g2:RandomSelect(1-p,5)
+            local tc=g2:RandomSelect(1-p,9)
             local g3=Group.CreateGroup()
             for card in tc:Iter() do
                 local token=Duel.CreateToken(1-p, card:GetOriginalCode())

@@ -44,6 +44,15 @@ end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
+    --Declare the name of 1 card, if it is in either player's Main Deck add a copy of it to your hand
+    local code=Duel.AnnounceCard(tp)
+    local g1=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_DECK,LOCATION_DECK,nil,code)
+    if #g1>0 then
+        local token=Duel.CreateToken(tp, code)
+        Duel.SendtoHand(token, tp, REASON_EFFECT)
+        Duel.ConfirmCards(1-tp, token)
+    end
+
     WbAux.IncreaseFatedChantStatus(c,tp)
     local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then

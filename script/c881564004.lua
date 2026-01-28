@@ -5,7 +5,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
 	Fusion.AddProcMix(c,true,true,881564003,881564001)
-	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
+	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit,s.spcon)
 
     c:SetSPSummonOnce(id)
 
@@ -40,14 +40,21 @@ function s.initial_effect(c)
 	e5:SetTarget(s.target)
 	e5:SetOperation(s.operation)
 	c:RegisterEffect(e5)
+
+	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,function(re) return not (re:GetHandler():IsCode(CARD_FATED_CHANT)) end)
+
+
 end
 s.listed_names={CARD_FATED_CHANT}
 
 function s.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
+function s.spcon(tp)
+	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>=3
+end
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD|LOCATION_GRAVE,0,nil)-- and WbAux.GetFatedChantUses(tp)>=3
+	return Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD|LOCATION_GRAVE,0,nil)
 end
 function s.contactop(g)
 	Duel.Remove(g,POS_FACEUP,REASON_COST|REASON_MATERIAL)

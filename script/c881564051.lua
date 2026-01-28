@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(Card.IsFacedown, p, LOCATION_EXTRA, 0, nil)
     if #g>0 then
         Duel.ConfirmCards(1-p, g)
-        local num=5
+        local num=9
         if #g<num then num=#g end
         Duel.Hint(HINT_SELECTMSG, 1-p, HINTMSG_TODECK)
         local g2=g:Select(1-p, num, num, nil)

@@ -42,10 +42,44 @@ function s.sumfilter(c)
 	return c:IsSummonable(true,nil)
 end
 
+function s.filterfunc2(c)
+    return c:IsTrap()
+end
+
+
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 
+    
     WbAux.IncreaseFatedChantStatus(c,tp)
     local c=e:GetHandler()
+
+    --Add a copy of every unique Trap card in your opponent's possession to your deck, then choose one to add to your hand
+    local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+    local g=Duel.GetMatchingGroup(s.filterfunc2,p,LOCATION_ALL,0,nil)
+    local seen = {}
+    local cardstoconjure={}
+	for card in g:Iter() do
+		local code = card:GetOriginalCode()
+		if not seen[code] then
+			table.insert(cardstoconjure, code)
+			seen[code] = true
+		end
+	end
+    local addedcards=Group.CreateGroup()
+    for _, code in ipairs(cardstoconjure) do
+        local token=Duel.CreateToken(tp,code)
+        Duel.SendtoDeck(token,nil,SEQ_DECKTOP,REASON_EFFECT)
+        addedcards:AddCard(token)
+    end
+
+    if #addedcards~=0 then
+        Duel.ShuffleDeck(tp)
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+        local sg=addedcards:Select(tp,1,1,nil)
+        Duel.BreakEffect()
+        Duel.SendtoHand(sg,nil,REASON_EFFECT)        
+    end
+
 	if c:IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		if c:IsHasEffect(EFFECT_CANNOT_TO_HAND) then return end
 		c:CancelToGrave()
