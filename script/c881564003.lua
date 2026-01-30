@@ -39,7 +39,7 @@ function s.initial_effect(c)
     e4:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsType,TYPE_SPIRIT)))
     e4:SetCondition(s.immcon)
     e4:SetValue(s.indct)
-    c:RegisterEffect(e4)
+    --c:RegisterEffect(e4) Removed for balance concerns
     
     WbAux.RegisterStartedInDeckCards()
     WbAux.IncreaseFatedChantUses(c)

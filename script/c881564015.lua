@@ -52,7 +52,7 @@ function s.initial_effect(c)
     e5:SetOperation(s.checkop)
     c:RegisterEffect(e5)
 
-    -- If this card is destroyed or banished by a card effect: You can add 1 "Shiranui Style Swallow's Slash" from your Deck or GY to your hand, and if you do, Special Summon this card, but its effects are negated, also banish it when it leaves the field.
+    -- If this card is destroyed by a card effect or banished : You can add 1 "Shiranui Style Swallow's Slash" from your Deck or GY to your hand, and if you do, Special Summon this card, but its effects are negated, also banish it when it leaves the field.
 
     local e6=Effect.CreateEffect(c)
     e6:SetDescription(aux.Stringid(id,0))
@@ -68,6 +68,7 @@ function s.initial_effect(c)
 
     local e7=e6:Clone()
     e7:SetCode(EVENT_REMOVE)
+    e7:SetCondition(s.spcon2)
     c:RegisterEffect(e7)
 end
 s.listed_series={SET_FATED}
@@ -101,6 +102,10 @@ end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     return c:IsReason(REASON_EFFECT)
+end
+
+function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
+    return true
 end
 
 function s.thfilter(c)

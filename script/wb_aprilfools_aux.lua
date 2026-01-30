@@ -213,14 +213,22 @@ CARD_DREGS_ANGRA_MAINYU=881564100
 WbAux.IncreaseFatedChantUses=(function()
     return function(c)
         local e1=Effect.CreateEffect(c)
-        e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        e1:SetCode(EVENT_ADJUST)
+        e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+        e1:SetCode(EVENT_SPSUMMON_SUCCESS)
         e1:SetRange(LOCATION_MZONE)
         e1:SetCountLimit(1)
         e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) 
             Duel.RegisterFlagEffect(tp,CARD_FATED_CHANT,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
         end)
         c:RegisterEffect(e1)
+
+        local e2=e1:Clone()
+        e2:SetCode(EVENT_SUMMON_SUCCESS)
+        c:RegisterEffect(e2)
+
+        local e3=e1:Clone()
+        e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+        c:RegisterEffect(e3)
     end
 end
 )()
