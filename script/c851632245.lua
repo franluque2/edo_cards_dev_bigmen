@@ -59,14 +59,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         end
     end
     Duel.SpecialSummonComplete()
-    local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_RELEASE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-	e2:SetTargetRange(1,0)
-	e2:SetDescription(aux.Stringid(id,1))
-    e2:SetReset(RESET_PHASE+PHASE_END,2)
-    Duel.RegisterEffect(e2,tp)
 end
 
 function s.spconfilter(c)
@@ -115,7 +107,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
         e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
         e1:SetTargetRange(1,0)
         e1:SetCondition(function(e) return e:GetHandler():IsControler(e:GetOwnerPlayer()) end)
-        e1:SetTarget(function(e,c) return not c:IsRace(RACE_REPTILE) end)
+        e1:SetTarget(function(e,c) return not c:IsAttribute(ATTRIBUTE_DARK) end)
         e1:SetReset(RESET_PHASE+PHASE_END,2)
         Duel.RegisterEffect(e1,tp)
     end

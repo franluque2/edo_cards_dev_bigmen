@@ -53,6 +53,17 @@ function s.initial_effect(c)
         Duel.RegisterEffect(ge2,0)
 
 	end)
+
+	-- Your opponent cannot target face-up Reptile monsters you control for attacks, except "Abyssal Dredge" (this)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e6:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetTargetRange(0,LOCATION_MZONE)
+	e6:SetValue(s.atktg)
+	c:RegisterEffect(e6)
+
 end
 
 function s.atklimit(e,tp,eg,ep,ev,re,r,rp)
@@ -84,4 +95,8 @@ end
 function s.xyzlimit(e,c)
 	if not c then return false end
 	return not c:IsAttribute(ATTRIBUTE_DARK)
+end
+
+function s.atktg(e,c)
+	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and not c:IsCode(id)
 end

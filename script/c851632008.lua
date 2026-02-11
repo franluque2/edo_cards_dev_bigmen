@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_CONJURE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1, {id,0})
+	e1:SetCountLimit(1)
 	e1:SetTarget(s.sptg)
     e1:SetCost(Cost.DetachFromSelf(1,1,nil))
 	e1:SetOperation(s.spop)
@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,{id,1})
-	e2:SetCondition(aux.exccon)
 	e2:SetTarget(s.sptg2)
 	e2:SetOperation(s.spop2)
 	c:RegisterEffect(e2)
@@ -60,4 +59,21 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		    Duel.Overlay(c,tc,true)
     end
 	end
+
+	-- you cannot special summon for the rest of this turn except DARK monsters
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetDescription(aux.Stringid(id,1))
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.xyzlimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+
+
+function s.xyzlimit(e,c)
+	if not c then return false end
+	return not c:IsAttribute(ATTRIBUTE_DARK)
 end

@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
+	e3:SetCondition(s.nspcon)
 	e3:SetTarget(s.nstg)
 	e3:SetOperation(s.nsop)
 	c:RegisterEffect(e3)
@@ -34,10 +35,6 @@ function s.initial_effect(c)
 	e4:SetTarget(function(e,c) return c:IsSpellTrap() and c:IsFaceup() and c:ListsCode(CARD_RA) end)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
-    local e5=e4:Clone()
-    e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-    e5:SetValue(aux.tgoval)
-    c:RegisterEffect(e5)
 
 end
 s.listed_names={CARD_RA}
@@ -52,20 +49,17 @@ function s.hspfilter(c,tp,sc)
 end
 
 function s.sendfilter(c)
-    return c:IsRace(RACE_DIVINE) and c:IsAbleToGraveAsCost() and not c:IsForbidden()
+    return c:IsCode(10000090) and c:IsAbleToGrave()
 end
 
 function s.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.CheckReleaseGroup(tp,s.hspfilter,1,false,1,true,c,tp,nil,nil,nil,tp,c) and Duel.IsExistingMatchingCard(s.sendfilter, tp, LOCATION_DECK, 0, 1, nil)
+	return Duel.CheckReleaseGroup(tp,s.hspfilter,1,false,1,true,c,tp,nil,nil,nil,tp,c)
 end
 function s.hsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.SelectReleaseGroup(tp,s.hspfilter,1,1,false,true,true,c,tp,nil,false,nil,tp,c)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-    local sg=Duel.SelectMatchingCard(tp,s.sendfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g then
-        g:Merge(sg)
 		g:KeepAlive()
 		e:SetLabelObject(g)
 	return true
@@ -76,9 +70,7 @@ function s.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
     local onfield=g:Filter(Card.IsLocation,nil,LOCATION_MZONE)
-    local indeck=g:Filter(Card.IsLocation,nil,LOCATION_DECK)
 	Duel.Release(onfield,REASON_COST|REASON_MATERIAL)
-    Duel.SendtoGrave(indeck,REASON_COST|REASON_MATERIAL)
 	g:DeleteGroup()
 end
 
@@ -91,9 +83,26 @@ function s.nstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,tp,LOCATION_HAND|LOCATION_MZONE)
 end
 function s.nsop(e,tp,eg,ep,ev,re,r,rp)
+	--send 1 "The Winged Dragon of Ra - Immortal Phoenix" from the Deck to the GY or pay 1000 LP, then Normal Summon 1 "The Winged Dragon of Ra"
+
+	local g=Duel.GetMatchingGroup(s.sendfilter, tp, LOCATION_DECK, 0, nil)
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.SendtoGrave(sg,REASON_EFFECT)
+	elseif Duel.CheckLPCost(tp, 1000) then
+		Duel.PayLPCost(tp,1000)
+	else
+		return
+	end
+	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 	local tc=Duel.SelectMatchingCard(tp,s.nsfilter,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil):GetFirst()
 	if tc then
 		Duel.Summon(tp,tc,true,nil)
 	end
+end
+
+function s.nspcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.sendfilter, tp, LOCATION_DECK, 0, 1, nil) or Duel.CheckLPCost(tp, 1000)
 end
