@@ -60,6 +60,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                     neweff:SetType(EFFECT_TYPE_QUICK_O)
                     neweff:SetCode(EVENT_FREE_CHAIN)
                     neweff:SetHintTiming(0,TIMING_STANDBY_PHASE|TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
+
+					if eff:IsHasProperty(EFFECT_FLAG_NO_TURN_RESET) then
+						neweff:SetProperty(eff:GetProperty() & (~EFFECT_FLAG_NO_TURN_RESET))
+					end
                     tc:RegisterEffect(neweff)
                 end
             end
