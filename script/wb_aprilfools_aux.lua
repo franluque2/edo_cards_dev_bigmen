@@ -12,20 +12,22 @@ CARD_TOPAZ=881563201
 CARD_DOCTOR_RATIO=881563208
 CARD_AVENTURINE=881563206
 CARD_JADE=881563207
+CARD_FEIXIAO=881563230
 
 COUNTER_DEBTOR=0x1700
 COUNTER_BLIND_BET=0x1701
+COUNTER_FLYING_AUREUS=0x1703
 
 function WbAux.CanPlayerSpecialSummonFollowupToken(tp)
     return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
     and Duel.IsPlayerCanSpecialSummonMonster(tp,TOKEN_FOLLOWUP,nil,TYPE_MONSTER+TYPE_TOKEN,500,0,1,RACE_MACHINE,ATTRIBUTE_EARTH,POS_FACEUP,tp,0)
 end
 
-FOLLOWUP_TOKEN_IDS={881563202,881563203,881563204}
+FOLLOWUP_TOKEN_IDS={881563202,881563203,881563204,881563232}
 
 function WbAux.GetFollowupToken(tp, c)
     if not WbAux.CanPlayerSpecialSummonFollowupToken(tp) then return end
-    local tokenid=FOLLOWUP_TOKEN_IDS[Duel.GetRandomNumber(1,3)]
+    local tokenid=FOLLOWUP_TOKEN_IDS[Duel.GetRandomNumber(1,#FOLLOWUP_TOKEN_IDS)]
     if c then
         local id=c:GetOriginalCode()
         if id==CARD_TOPAZ then
@@ -34,6 +36,8 @@ function WbAux.GetFollowupToken(tp, c)
             tokenid=881563204
         elseif id==CARD_DOCTOR_RATIO then
             tokenid=881563203
+        elseif id==CARD_FEIXIAO then
+            tokenid=881563232
         end
     end
     local token=Duel.CreateToken(tp,tokenid)
@@ -338,3 +342,40 @@ end
 function WbAux.IsStartedInDeck(card)
     return card:GetFlagEffect(CARD_FATED_CHANT-1)>0
 end
+
+
+-- Metal Gear Rising
+
+CARD_UNENLIGHTENED_MASSES=881565006
+
+--Nightfallen
+
+SET_NIGHTFALLEN=0xd08
+
+WbAux.CreateNightfallenSpecialSummonEffect=(function()
+
+    return function(c,id)
+    --If a Field Spell is on the Field, You can Special Summon this card from your Hand or GY.  You can only Special Summon "THIS CARD" once per turn this way. 
+
+    local function spcon(e,c)
+        	if c==nil then return true end
+	local tp=e:GetHandlerPlayer()
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_FZONE,LOCATION_FZONE,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>=1
+
+    end
+
+
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(spcon)
+	c:RegisterEffect(e1)
+
+	return e1
+    end
+end
+)()
