@@ -379,3 +379,6 @@ WbAux.CreateNightfallenSpecialSummonEffect=(function()
     end
 end
 )()
+
+--misc
+COUNTER_COREFLAME=0x1704
