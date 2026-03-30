@@ -382,3 +382,31 @@ end
 
 --misc
 COUNTER_COREFLAME=0x1704
+
+--Protoss
+SET_PROTOSS=0xd09
+
+function WbAux.PlaceProtossGuardCounter(c,e,max)
+    local function cardgreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+        if chk==0 then return not e:GetHandler():IsReason(REASON_REPLACE+REASON_RULE) and e:GetHandler():GetCounter(0x1021)>0 end
+        return true
+    end
+    local function cardgrepop(e,tp,eg,ep,ev,re,r,rp,chk)
+        e:GetHandler():RemoveCounter(tp,0x1021,1,REASON_EFFECT)
+    end
+    if not max then max=99 end
+    if not c:IsFaceup() then return end
+    local counternum=c:GetCounter(0x1021)
+    if counternum>max then return end
+    c:AddCounter(0x1021,1)
+    if c:GetFlagEffect(881567000)~=0 then return end
+    local e1=Effect.CreateEffect(e:GetHandler())
+    e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+    e1:SetCode(EFFECT_DESTROY_REPLACE)
+    e1:SetTarget(cardgreptg)
+    e1:SetOperation(cardgrepop)
+    e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+    c:RegisterEffect(e1)
+    c:RegisterFlagEffect(881567000,RESET_EVENT|RESETS_STANDARD,0,0)
+end
+
