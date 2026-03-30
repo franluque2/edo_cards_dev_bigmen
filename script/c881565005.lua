@@ -43,17 +43,31 @@ function s.initial_effect(c)
     e4:SetOperation(s.repop)
     c:RegisterEffect(e4)
 
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,2))
+	e5:SetCategory(CATEGORY_DISABLE)
+	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetCode(EVENT_FREE_CHAIN)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCountLimit(1,{id,1})
+	e5:SetCondition(function() return Duel.IsMainPhase() end)
+	e5:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e5:SetCost(s.discost)
+	e5:SetTarget(s.distg)
+	e5:SetOperation(s.disop)
+	c:RegisterEffect(e5)
+
 end
 s.listed_names={CARD_REVENGEANCE} --Revengeance of the Desperados
 
 
 function s.cfilter(c,tp)
-	return c:IsMonster() and c:IsAbleToGraveAsCost()
+	return c:IsMonster() and c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_MZONE) or (c:IsType(TYPE_TUNER) and c:IsLevel(5) and c:IsLocation(LOCATION_HAND) and c:IsControler(tp)))
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE|LOCATION_HAND,LOCATION_MZONE,c)
+	local g=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE|LOCATION_HAND,LOCATION_MZONE,c,e:GetHandlerPlayer())
 	return #g>=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and aux.SelectUnselectGroup(g,e,tp,3,3,s.rescon,0)
 end
 
@@ -62,11 +76,11 @@ function s.tdfilter(c,tp)
 end
 
 function s.rescon(sg,e,tp,mg)
-	return aux.ChkfMMZ(1) and sg:FilterCount(s.tdfilter, nil,tp)>1
+	return aux.ChkfMMZ(1) and sg:FilterCount(s.tdfilter, nil,tp)>1 and sg:FilterCount(Card.IsLocation, nil,LOCATION_MZONE)>0
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local sg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE|LOCATION_HAND,LOCATION_MZONE,c)
+	local sg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE|LOCATION_HAND,LOCATION_MZONE,c,tp)
 	local g=aux.SelectUnselectGroup(sg,e,tp,3,3,s.rescon,1,tp,HINTMSG_TOGRAVE,s.rescon)
 	if #g>0 then
 		g:KeepAlive()
@@ -103,4 +117,29 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
     end
+end
+
+
+function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,1,nil) end
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
+	local c=e:GetHandler()
+	--Negate the effects of all face-up monsters your opponent currently controls, until the end of this turn
+	for tc in g:Iter() do
+		tc:NegateEffects(c,RESET_PHASE|PHASE_END)
+	end
+end
+
+--Send 1 level 5 Tuner from your hand or face-up field to the GY; negate the effects of all face-up monsters your opponent currently controls, until the end of this turn.
+function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,LOCATION_HAND|LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
+end
+
+function s.disfilter(c)
+	return c:IsLevel(5) and c:IsType(TYPE_TUNER) and c:IsAbleToGraveAsCost() and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
 end
