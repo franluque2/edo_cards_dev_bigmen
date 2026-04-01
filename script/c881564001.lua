@@ -28,7 +28,7 @@ function s.initial_effect(c)
     local e4=Effect.CreateEffect(c)
     e4:SetDescription(aux.Stringid(id,0))
     e4:SetCategory(CATEGORY_TOHAND)
-    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e4:SetProperty(EFFECT_FLAG_DELAY)
     e4:SetCode(EVENT_SUMMON_SUCCESS)
     e4:SetTarget(s.target)
@@ -40,6 +40,8 @@ function s.initial_effect(c)
     c:RegisterEffect(e5)
 
     WbAux.IncreaseFatedChantUses(c)
+    WbAux.RegisterStartedInDeckCards()
+
 end
 s.listed_names={CARD_FATED_CHANT}
 s.listed_series={SET_FATED}
@@ -72,7 +74,7 @@ function s.adfilter(c)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.adfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil) end
+    if chk==0 then return true end
     Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK|LOCATION_GRAVE)
 end
 
@@ -84,4 +86,18 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         Duel.SendtoHand(sg,tp,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,sg)
     end
+
+    --You cannot Special Summon monsters that started the Duel in your Main Deck for the rest of this turn, except "Fated" monsters.
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_FIELD)
+        e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+        e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+        e1:SetDescription(aux.Stringid(id,1))
+        e1:SetTargetRange(1,0)
+        e1:SetReset(RESET_PHASE+PHASE_END)
+        e1:SetLabel(id)
+        e1:SetTarget(function(e,c,sump,sumtype,sumpos,targetp,se)
+            return WbAux.IsStartedInDeck(c) and not c:IsSetCard(SET_FATED)
+        end)
+        Duel.RegisterEffect(e1,tp)
 end

@@ -11,7 +11,7 @@ function s.initial_effect(c)
     e1:SetCondition(s.spcon)
     c:RegisterEffect(e1)
 
-    --During the Main Phase, if this card is Linked (Quick Effect): You can choose 1 of your opponent's Main Monster zones, destroy all monsters on it and adjacent Main Monster Zones
+    --During your opponent's Main Phase, if this card is Linked (Quick Effect): You can choose 1 of your opponent's Main Monster zones, destroy all monsters on it and adjacent Main Monster Zones
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,0))
     e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -19,7 +19,7 @@ function s.initial_effect(c)
     e2:SetRange(LOCATION_MZONE)
     e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
     e2:SetCountLimit(1,{id,1})
-    e2:SetCondition(function(_e) return Duel.IsMainPhase() and Duel.IsExistingMatchingCard(s.desconfilter,_e:GetHandler():GetControler(),LOCATION_ONFIELD,LOCATION_MZONE,1,nil,c,c:GetLinkedGroup()) end)
+    e2:SetCondition(function(_e) return Duel.IsMainPhase() and (Duel.GetTurnPlayer()~=e:GetHandler():GetControler()) and Duel.IsExistingMatchingCard(s.desconfilter,_e:GetHandler():GetControler(),LOCATION_ONFIELD,LOCATION_MZONE,1,nil,c,c:GetLinkedGroup()) end)
     e2:SetTarget(s.destg)
     e2:SetOperation(s.desop)
     c:RegisterEffect(e2)

@@ -11,6 +11,7 @@ function s.initial_effect(c)
     e1:SetProperty(EFFECT_FLAG_DELAY)
     e1:SetCode(EVENT_SUMMON_SUCCESS)
     e1:SetCountLimit(1,{id,0})
+    e1:SetCost(s.opccost)
     e1:SetTarget(s.thtarget)
     e1:SetOperation(s.thoperation)
     c:RegisterEffect(e1)
@@ -23,6 +24,7 @@ function s.initial_effect(c)
     e2:SetCode(EVENT_BECOME_TARGET)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCountLimit(1,{id,1})
+    e2:SetCost(s.opccost)
     e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
         return eg:IsContains(e:GetHandler())
     end)
@@ -107,4 +109,10 @@ function s.transformthisop(e,tp,eg,ep,ev,re,r,rp)
         Duel.Remove(c, POS_FACEUP, REASON_RULE)
         Duel.SendtoGrave(c, REASON_RULE)
     end
+end
+
+
+function s.opccost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1)
 end
