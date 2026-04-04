@@ -1,4 +1,4 @@
---Command: Snipe
+--Command: Attacking Summon
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate Skill
@@ -26,14 +26,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e1,tp)
 
 
-        local e5=Effect.CreateEffect(e:GetHandler())
-        e5:SetType(EFFECT_TYPE_FIELD)
-        e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-        e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-        e5:SetTargetRange(0,LOCATION_MZONE)
-        e5:SetTarget(s.tglimit)
-        e5:SetValue(s.valfunc)
-        Duel.RegisterEffect(e5,tp)
+	local e2a=Effect.CreateEffect(e:GetHandler())
+	e2a:SetType(EFFECT_TYPE_FIELD)
+	e2a:SetCode(EFFECT_FORCE_SPSUMMON_POSITION)
+	e2a:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2a:SetTargetRange(1,0)
+	e2a:SetValue(POS_FACEUP_ATTACK)
+		Duel.RegisterEffect(e2a,tp)
 
 
 
@@ -41,17 +40,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(1)
 end
 
-function s.valfunc(e,re,rp)
-    return re and re:GetHandlerPlayer()==e:GetHandlerPlayer()
-end
-
-function s.filter(c,lv)
-	return c:IsFaceup() and c:GetAttack()>lv
-end
-
-function s.tglimit(e,c)
-	return Duel.IsExistingMatchingCard(s.filter,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetAttack())
-end
 
 function s.flipcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and Duel.GetTurnCount()==1
