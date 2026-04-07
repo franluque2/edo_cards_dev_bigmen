@@ -42,7 +42,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 
         local e4=e2:Clone()
         e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-        e4:SetTarget(function(_,_,c,sumtype) return (sumtype&SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL and c:IsAttack(0) end)
+        e4:SetTarget(function(_,_,c,sumtype) return c and ((sumtype&SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL and c:IsAttack(0)) end)
         Duel.RegisterEffect(e4,tp)
 
 
