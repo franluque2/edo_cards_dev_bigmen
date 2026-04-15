@@ -29,7 +29,7 @@ s.listed_series={SET_PROTOSS}
 
 function s.spcon(e,c)
     if c==nil then return true end
-    return Duel.IsTurnPlayer(c:GetControler()) and Duel.GetTurnCount()%2==0
+    return Duel.IsTurnPlayer(c:GetControler()) and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.GetTurnCount()%2==0
 end
 
 function s.posfilter(c)
@@ -42,10 +42,7 @@ function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
     local g=Duel.SelectTarget(tp,s.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
     Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
-    if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		Duel.SetChainLimit(s.limit(g:GetFirst()))
-	end
-
+	Duel.SetChainLimit(s.limit(g:GetFirst()))
 end
 
 function s.posop(e,tp,eg,ep,ev,re,r,rp)
