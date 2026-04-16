@@ -20,7 +20,7 @@ function s.initial_effect(c)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_STARTUP)
-		ge1:SetOperation(s.regop)
+		ge1:SetOperation(s.regop2)
 		ge1:SetCountLimit(1)
 		Duel.RegisterEffect(ge1,0)
 		s.cardstoconjure={}
@@ -41,8 +41,15 @@ function s.initial_effect(c)
 	e5:SetOperation(s.operation)
 	c:RegisterEffect(e5)
 
-	Duel.AddCustomActivityCounter(id,ACTIVITY_CHAIN,function(re) return not (re:GetHandler():IsCode(CARD_FATED_CHANT)) end)
 
+
+	aux.GlobalCheck(s,function()
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_CHAIN_SOLVED)
+		ge1:SetOperation(s.regop)
+		Duel.RegisterEffect(ge1,0)
+	end)
 
 end
 s.listed_names={CARD_FATED_CHANT}
@@ -51,7 +58,7 @@ function s.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function s.spcon(tp)
-	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)>=3
+	return Duel.GetFlagEffect(tp, id+20)>=3
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD|LOCATION_GRAVE,0,nil)
@@ -111,4 +118,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local conjuredCard=Duel.CreateToken(tp, ac)
 	Duel.SendtoHand(conjuredCard, tp, REASON_EFFECT)
 	Duel.ConfirmCards(1-tp, conjuredCard)
+end
+
+
+function s.regop2(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.HasFlagEffect(rp,id+20) and re:GetHandler():IsCode(CARD_FATED_CHANT) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		Duel.RegisterFlagEffect(rp,id+20,0,0,0)
+	end
 end
