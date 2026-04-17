@@ -122,7 +122,7 @@ end
 
 
 function s.regop2(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.HasFlagEffect(rp,id+20) and re:GetHandler():IsCode(CARD_FATED_CHANT) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		Duel.RegisterFlagEffect(rp,id+20,0,0,0)
+	if re:GetHandler():IsCode(CARD_FATED_CHANT) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		Duel.RegisterFlagEffect(re:GetHandler():GetControler(),id+20,0,0,0)
 	end
 end
