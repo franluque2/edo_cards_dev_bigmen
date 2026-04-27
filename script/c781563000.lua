@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 
-local roids_to_send = { 73333463, 24311595, 7602840, 44729197, 71218746, 43697559, 25034083, 71930383, 98049038, 61538782, 36378213, 46848859, 99861526, 45945685 }
+local roids_to_send = { 73333463, 24311595, 7602840, 44729197, 71218746, 43697559, 25034083, 71930383, 511002894, 61538782, 36378213, 46848859, 99861526, 45945685, 511002234 }
 local g_roids = {}
 g_roids[0] = Group.CreateGroup()
 g_roids[1] = Group.CreateGroup()
@@ -106,7 +106,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
 	local g = Group.Select(g_roids[tp], tp, 2, 2, nil)
 	local g2 = Group.CreateGroup()
 	for tc in g:Iter() do
-		local token = Duel.CreateToken(tp, tc:GetCode())
+		local token = Duel.CreateToken(tp, tc:GetOriginalCode())
 		g2:AddCard(token)
 	end
 	Duel.SendtoGrave(g2, REASON_EFFECT)
