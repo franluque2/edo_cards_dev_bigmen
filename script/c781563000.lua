@@ -14,7 +14,7 @@ function s.initial_effect(c)
 
 
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,
-		function(e) return not s.used_this_skill[e:GetHandlerPlayer()] end, s.flipopactive, true, nil)
+		function(e) return (not s.used_this_skill[e:GetHandlerPlayer()]) and aux.CanActivateSkill(e:GetHandlerPlayer()) end, s.flipopactive, true, nil)
 	c:RegisterEffect(e1)
 	c:RegisterEffect(e2)
 end
