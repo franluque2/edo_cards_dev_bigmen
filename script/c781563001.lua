@@ -50,7 +50,7 @@ function s.rewritecards(e, tp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE + EFFECT_FLAG_UNCOPYABLE)
 		e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-		e1:SetValue(function(e,sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) end)
+		e1:SetValue(function(e,sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) and sumeff:GetHandler():IsMonster() end)
 		tc:RegisterEffect(e1)
 		--special summon
 		local e2 = Effect.CreateEffect(tc)
