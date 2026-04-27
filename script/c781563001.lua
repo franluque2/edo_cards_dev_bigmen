@@ -25,10 +25,10 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
 
 	local e1 = Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EFFECT_ADD_CODE)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CHANGE_CODE)
 	e1:SetTargetRange(LOCATION_ALL, 0)
-	e1:SetTarget(function(_, c) return c:IsOriginalCode(CARD_DARK_ARMED_DRAGON) end)
+	e1:SetTarget(function(_, _c) return _c:IsOriginalCode(CARD_DARK_ARMED_DRAGON) end)
 	e1:SetValue(73879377)
 	Duel.RegisterEffect(e1, tp)
 end
@@ -39,6 +39,7 @@ function s.rewritecards(e, tp)
 	for tc in g:Iter() do
 		local effs = { tc:GetOwnEffects() }
 		for _, eff in ipairs(effs) do
+
 			if (eff:GetCode() == EFFECT_SPSUMMON_CONDITION) or (eff:GetCode() == EFFECT_SPSUMMON_PROC) or (eff:GetCode() == EFFECT_TYPE_IGNITION) then
 				eff:Reset()
 			end
@@ -49,7 +50,7 @@ function s.rewritecards(e, tp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE + EFFECT_FLAG_UNCOPYABLE)
 		e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-		e1:SetValue(function(e, sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) end)
+		e1:SetValue(function(e,sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) end)
 		tc:RegisterEffect(e1)
 		--special summon
 		local e2 = Effect.CreateEffect(tc)
