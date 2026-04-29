@@ -1,4 +1,4 @@
---Shackles of an Undercover Hunter
+--Shackles of an Unfortunate Actor
 Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
@@ -14,17 +14,19 @@ end
 
 function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
-    s.rewritecards(e, tp)
     Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
 
     local c = e:GetHandler()
 
+    local CARD_RISE_ABYSS_KING = 13662809
 
+    --after resolving rise of the abyss king, add 2 random action cards to the opp hand
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_PREDRAW)
-    e1:SetCountLimit(1)
-    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
+    e1:SetCode(EVENT_CHAIN_SOLVED)
+    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp)
+        return re and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsCode(CARD_RISE_ABYSS_KING)
+    end)
     e1:SetOperation(s.addactioncards)
     Duel.RegisterEffect(e1, tp)
 
@@ -32,7 +34,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local e6 = Effect.GlobalEffect()
     e6:SetType(EFFECT_TYPE_FIELD)
     e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE + EFFECT_FLAG_UNCOPYABLE + EFFECT_FLAG_IGNORE_RANGE +
-    EFFECT_FLAG_IGNORE_IMMUNE + EFFECT_FLAG_SET_AVAILABLE)
+        EFFECT_FLAG_IGNORE_IMMUNE + EFFECT_FLAG_SET_AVAILABLE)
     e6:SetCode(EFFECT_BECOME_QUICK)
     e6:SetTargetRange(0, 0xff)
     e6:SetTarget(aux.TargetBoolFunction(Card.IsType, TYPE_ACTION))
@@ -53,40 +55,10 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterEffect(e9, tp)
 end
 
-function s.rewritecards(e, tp)
-    local c = e:GetHandler()
-    local g = Duel.GetMatchingGroup(Card.IsOriginalCode, tp, LOCATION_ALL, 0, nil, 80889750)
-
-    if #g > 0 then
-        for tc in g:Iter() do
-            if tc:GetFlagEffect(id) == 0 then
-                local eff = { tc:GetCardEffect() }
-                for _, teh in ipairs(eff) do
-                    if teh:GetCode() & EFFECT_FUSION_MATERIAL == EFFECT_FUSION_MATERIAL then
-                        teh:Reset()
-                    end
-                end
-                tc:RegisterFlagEffect(id, 0, 0, 0)
-
-                Fusion.AddProcMixRep(tc, true, true, s.mfilter2, 1, 1, s.mfilter1)
-            end
-        end
-    end
-end
-
-function s.mfilter1(c, fc, sumtype, tp)
-    return c:IsSetCard(SET_FRIGHTFUR, fc, sumtype, tp) and c:IsType(TYPE_FUSION, fc, sumtype, tp)
-end
-
-function s.mfilter2(c, fc, sumtype, tp)
-    return c:IsSetCard(SET_FLUFFAL, fc, sumtype, tp) or c:IsSetCard(SET_EDGE_IMP, fc, sumtype, tp)
-end
-
 local actioncards = { 150000020, 150000024, 150000042 }
 
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_CARD, tp, id)
-
     local g = Group.CreateGroup()
     for i = 1, 2, 1 do
         local ac = actioncards[math.random(#actioncards)]
