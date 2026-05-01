@@ -58,7 +58,7 @@ end
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
     return (not s.used_this_skill[e:GetHandlerPlayer()]) and aux.CanActivateSkill(e:GetHandlerPlayer()) and Duel.IsExistingMatchingCard(s.fubarianhopefilter, tp, LOCATION_MZONE, 0, 1, nil)
-        and Duel.IsExistingMatchingCard(s.atchfilter, tp, LOCATION_EXTRA, 0, 1, nil) and Duel.CheckLPCost(tp, 2000)
+        and Duel.IsExistingMatchingCard(s.atchfilter, tp, LOCATION_EXTRA, 0, 1, nil)
 end
 
 function s.atchfilter(c)
@@ -70,7 +70,7 @@ end
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     s.used_this_skill[e:GetHandlerPlayer()] = true
     Duel.Hint(HINT_CARD, tp, id)
-    Duel.PayLPCost(tp, 2000)
+    Duel.PayLPCost(tp, Duel.GetLP(tp)/2)
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_FACEUP)
     local g=Duel.SelectMatchingCard(tp, s.fubarianhopefilter, tp, LOCATION_MZONE, 0, 1, 1, nil)
     local sc=g:GetFirst()
