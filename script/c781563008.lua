@@ -93,7 +93,8 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
         local totallp=#sg*1500
         Duel.ConfirmCards(1-tp, sg)
 		Duel.Recover(tp,totallp,REASON_RULE)
-        Duel.SendtoDeck(sg, nil, SEQ_DECKSHUFFLE, REASON_EFFECT)
+        Duel.SendtoDeck(sg, nil, SEQ_DECKBOTTOM, REASON_EFFECT)
+        Duel.ShuffleDeck(tp)
         Duel.Draw(tp, #sg, REASON_EFFECT)
     end
 
