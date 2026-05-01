@@ -15,8 +15,7 @@ function s.initial_effect(c)
         s.used_this_skill[1] = false
     end)
 
-    local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,
-        s.flipconactive, s.flipopactive, true, nil)
+    local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,s.flipconactive, s.flipopactive, true, nil)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
 end
