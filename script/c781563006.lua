@@ -25,7 +25,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_CHAIN_SOLVED)
     e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp)
-        return re and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsCode(CARD_RISE_ABYSS_KING)
+        return re and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsCode(CARD_RISE_ABYSS_KING) and rp==tp
     end)
     e1:SetOperation(s.addactioncards)
     Duel.RegisterEffect(e1, tp)
@@ -55,7 +55,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterEffect(e9, tp)
 end
 
-local actioncards = { 150000020, 150000024, 150000042 }
+local actioncards = { 150000020, 150000024 }
 
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_CARD, tp, id)
