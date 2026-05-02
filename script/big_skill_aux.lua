@@ -8,6 +8,7 @@ BSkillaux.CreateBasicSkill = (function()
     return function(c, id, flipconpassive, flipoppassive, flippassiveevent, flipconactive, flipopactive, major, minorskillstring)
         local function op(e, tp, eg, ep, ev, re, r, rp)
             if e:GetLabel() == 0 then
+                Duel.DisableShuffleCheck()
                 Duel.Hint(HINT_CARD, tp, id)
                 Duel.SendtoDeck(e:GetHandler(), tp, -2, REASON_EFFECT)
                 if e:GetHandler():GetPreviousLocation() == LOCATION_HAND then
