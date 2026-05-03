@@ -41,6 +41,14 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetOperation(s.vczop)
 	Duel.RegisterEffect(e1, tp)
 
+			--Workaround for Edopro Issue: Kiteroid not treated as a roid
+	local e3 = Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_ADD_SETCODE)
+	e3:SetTargetRange(LOCATION_ALL, 0)
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsCode, 511000011))
+	e3:SetValue(SET_ROID)
+	Duel.RegisterEffect(e3, tp)
 
 	--Roids in Deck become Earth
 	local e2 = Effect.CreateEffect(c)
@@ -50,6 +58,8 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e2:SetTarget(s.targfunc)
 	e2:SetValue(ATTRIBUTE_EARTH)
 	Duel.RegisterEffect(e2, tp)
+
+
 end
 
 function s.targfunc(e, c)
