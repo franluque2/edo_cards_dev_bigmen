@@ -38,7 +38,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
 	Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
 	local c = e:GetHandler()
-	--s.rewritecards(e) TODO: Re enable after ct test tournament is finished
+	s.rewritecards(e)
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_PREDRAW)
@@ -61,7 +61,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e3:SetTarget(s.targetfunc)
     Duel.RegisterEffect(e3, tp)
 
-
+--CARD_SLIFER
+-- The triggered effect of "Slifer the Sky Dragon" can only destroy monster(s) once per turn.
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_DESTROYED)
+	e4:SetCountLimit(1)
+	e4:SetCondition(s.slifercon)
+	e4:SetOperation(s.sliferop)
+	Duel.RegisterEffect(e4, tp)
 end
 
 local oldfunc=Duel.Draw
@@ -80,7 +88,7 @@ end
 function s.shuffledownopextra(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil,81945678)
     if #g > 0 then
-		--Duel.MoveToDeckTop(g:GetFirst()) TODO: Re enable after ct test tournament is finished
+		Duel.MoveToDeckTop(g:GetFirst())
     end
 	s.shuffledownop(e, tp)
 end
@@ -104,7 +112,6 @@ function s.rewritecards(e)
 				--(4) OPT If you would pay a cost, to activate the effect of a LIGHT Warrior monster, you can send 1 Fusion Monster from your Extra Deck to the GY, instead.
 
 				neweff:SetCost(s.repcostfunc(eff:GetCost()))
-				--neweff:SetCost(Cost.PayLP(500))
 				eff:Reset()
 				tc:RegisterEffect(neweff)
 
@@ -116,7 +123,9 @@ end
 function s.repcostfunc(cost)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and s.used_this_skill[tp]==false and Duel.GetFlagEffect(tp, id)>0) end
-			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0) or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
+			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and e:GetHandler():IsOriginalRace(RACE_WARRIOR)
+			 and e:GetHandler():IsOriginalAttribute(ATTRIBUTE_LIGHT)  and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0)
+			 or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
 			Duel.Hint(HINT_CARD,tp,id)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil)
@@ -212,4 +221,22 @@ function s.repop(base,extracon,e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
+end
+
+function s.desfilter(c, re)
+	return re and re:IsHasType(EFFECT_TYPE_TRIGGER_F) and re:GetHandler():IsCode(CARD_SLIFER)
+end
+
+function s.slifercon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.desfilter, 1, nil, re)
+end
+
+function s.sliferop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetTargetRange(LOCATION_MZONE, LOCATION_MZONE)
+	e1:SetValue(function(e,re,rp) return re:IsMonsterEffect() and re:GetHandler():IsCode(CARD_SLIFER) end)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1, tp)
 end
