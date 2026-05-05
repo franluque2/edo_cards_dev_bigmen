@@ -7,13 +7,23 @@ function s.initial_effect(c)
     e3:SetCode(EVENT_STARTUP)
     e3:SetRange(0x5f)
     e3:SetCountLimit(1)
-    e3:SetOperation(s.shuffledownop)
+    e3:SetOperation(s.shuffledownopextra)
     c:RegisterEffect(e3)
 
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,
 		nil, nil, true, nil)
 	c:RegisterEffect(e1)
 	c:RegisterEffect(e2)
+
+	aux.GlobalCheck(s, function()
+		s.used_this_skill = {}
+		s.used_this_skill[0] = false
+		s.used_this_skill[1] = false
+		aux.AddValuesReset(function()
+			s.used_this_skill[0] = false
+			s.used_this_skill[1] = false
+		end)
+	end)
 
 
 end
@@ -28,7 +38,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
 	Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
 	local c = e:GetHandler()
-
+	--s.rewritecards(e) TODO: Re enable after ct test tournament is finished
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_PREDRAW)
@@ -50,6 +60,8 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e3:SetTargetRange(LOCATION_MZONE,0)
     e3:SetTarget(s.targetfunc)
     Duel.RegisterEffect(e3, tp)
+
+
 end
 
 local oldfunc=Duel.Draw
@@ -65,6 +77,15 @@ function s.cardfilter(c,tp)
     return c:IsCode(CARD_JACK_KNIGHT, CARD_QUEEN_KNIGHT, CARD_KING_KNIGHT) and c:GetSequence()>=(Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)-(10))
 end
 
+function s.shuffledownopextra(e, tp, eg, ep, ev, re, r, rp)
+    local g = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil,81945678)
+    if #g > 0 then
+		--Duel.MoveToDeckTop(g:GetFirst()) TODO: Re enable after ct test tournament is finished
+    end
+	s.shuffledownop(e, tp)
+end
+
+
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil,tp)
     if #g==Duel.GetFieldGroupCount(tp,LOCATION_DECK,0) then return end
@@ -73,6 +94,51 @@ function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     end
 end
 
+function s.rewritecards(e)
+	local g=Duel.GetMatchingGroup(s.repfilter2, e:GetHandlerPlayer(), LOCATION_ALL, 0, nil)
+	for tc in g:Iter() do
+		local effs = { tc:GetOwnEffects() }
+		for _, eff in ipairs(effs) do
+			if eff:IsHasType(EFFECT_TYPE_IGNITION|EFFECT_TYPE_QUICK_O|EFFECT_TYPE_TRIGGER_O|EFFECT_TYPE_QUICK_F|EFFECT_TYPE_TRIGGER_F) and (eff:GetCost()~=nil) then
+				local neweff=eff:Clone()
+				--(4) OPT If you would pay a cost, to activate the effect of a LIGHT Warrior monster, you can send 1 Fusion Monster from your Extra Deck to the GY, instead.
+
+				neweff:SetCost(s.repcostfunc(eff:GetCost()))
+				--neweff:SetCost(Cost.PayLP(500))
+				eff:Reset()
+				tc:RegisterEffect(neweff)
+
+			end
+		end
+	end
+end
+
+function s.repcostfunc(cost)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and s.used_this_skill[tp]==false) end
+			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0) or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
+			Duel.Hint(HINT_CARD,tp,id)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+			local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+			Duel.SendtoGrave(g,REASON_COST)
+			s.used_this_skill[tp]=true
+			if e:GetHandler():IsOriginalCode(93880808) then
+				e:SetLabel(g:GetFirst():GetMainCardType())
+			elseif e:GetHandler():IsOriginalCode(29284413) then
+				e:SetLabel(g:GetFirst():GetCode())
+			end
+
+		else
+			cost(e,tp,eg,ep,ev,re,r,rp,1)
+		end
+
+
+	end
+end
+
+function s.repfilter2(c)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_EFFECT)
+end
 
 
 function s.targetfunc(e,c)
@@ -128,3 +194,22 @@ function s.resetop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+
+function s.repcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil)
+end
+
+function s.fusfilter(c)
+	return c:IsMonster() and c:IsAbleToGraveAsCost() and c:IsType(TYPE_FUSION)
+end
+
+function s.repval(base,extracon,e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	return c:IsRace(RACE_WARRIOR) and c:IsControler(tp) and c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+
+function s.repop(base,extracon,e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
+end
