@@ -115,7 +115,7 @@ end
 
 function s.repcostfunc(cost)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and s.used_this_skill[tp]==false) end
+		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and s.used_this_skill[tp]==false and Duel.GetFlagEffect(tp, id)>0) end
 			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0) or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
 			Duel.Hint(HINT_CARD,tp,id)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
