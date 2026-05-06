@@ -63,7 +63,9 @@ function s.flipconsb(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.flipopsb(e, tp, eg, ep, ev, re, r, rp)
-    Duel.Hint(HINT_CARD, tp, id)
+    if s.turncounter[tp]>0 then
+        Duel.Hint(HINT_CARD, tp, id)
+    end
     if s.turncounter[tp] > 1 then
         if s.turncounter[tp] > 2 then
             if s.turncounter[tp] > 3 then
@@ -89,7 +91,7 @@ function s.flipopsb(e, tp, eg, ep, ev, re, r, rp)
             Duel.ConfirmCards(1 - tp, gencard)
         end
     else
-        if Duel.GetFlagEffect(tp, id) == 1 then
+        if s.turncounter[tp] == 1 then
             local gencard = Duel.CreateToken(tp, 74825788)
             Duel.SendtoHand(gencard, tp, REASON_RULE)
             Duel.ConfirmCards(1 - tp, gencard)
