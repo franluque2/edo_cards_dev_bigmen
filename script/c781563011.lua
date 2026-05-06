@@ -110,13 +110,13 @@ end
 
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
-    local oneallowed=g:Filter(Card.IsCode, nil, table.unpack(polyaccess)):GetFirst()
-    if oneallowed then
-        g:RemoveCard(oneallowed)
-    end
+    local oneallowed=Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_DECK, 0, nil, table.unpack(polyaccess))
     if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
     if #g > 0 then
         Duel.MoveToDeckBottom(g)
+    end
+    if oneallowed then
+        Duel.MoveToDeckTop(oneallowed)
     end
 end
 
