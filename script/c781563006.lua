@@ -18,15 +18,12 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
     local c = e:GetHandler()
 
-    local CARD_RISE_ABYSS_KING = 13662809
 
-    --after resolving rise of the abyss king, add 2 random action cards to the opp hand
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_CHAIN_SOLVED)
-    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp)
-        return re and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsCode(CARD_RISE_ABYSS_KING) and rp==tp
-    end)
+    e1:SetCode(EVENT_PREDRAW)
+    e1:SetCountLimit(1)
+    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
     e1:SetOperation(s.addactioncards)
     Duel.RegisterEffect(e1, tp)
 

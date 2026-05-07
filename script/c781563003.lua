@@ -51,6 +51,23 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e9:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
     e9:SetOperation(s.removeactioncards)
     Duel.RegisterEffect(e9, tp)
+
+    local e10=Effect.CreateEffect(e:GetHandler())
+    e10:SetType(EFFECT_TYPE_FIELD)
+    e10:SetCode(EFFECT_CANNOT_TRIGGER)
+    e10:SetTargetRange(LOCATION_MZONE,0)
+    e10:SetCondition(s.discon)
+    e10:SetTarget(s.actfilter)
+    Duel.RegisterEffect(e10, tp)
+
+end
+
+function s.discon(e)
+	return (Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()) and (Duel.GetTurnCount()==1)
+end
+
+function s.actfilter(e,c)
+	return c:IsCode(78778375)
 end
 
 function s.rewritecards(e, tp)
