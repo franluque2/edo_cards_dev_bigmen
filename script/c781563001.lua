@@ -6,6 +6,17 @@ function s.initial_effect(c)
 		nil, nil, true, nil)
 	c:RegisterEffect(e1)
 	c:RegisterEffect(e2)
+
+		aux.GlobalCheck(s, function()
+		s.used_this_skill = {}
+		s.used_this_skill[0] = false
+		s.used_this_skill[1] = false
+		aux.AddValuesReset(function()
+			s.used_this_skill[0] = false
+			s.used_this_skill[1] = false
+		end)
+	end)
+
 end
 
 local CARD_DARK_ARMED_DRAGON = 65192027
@@ -31,6 +42,10 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetTarget(function(_, _c) return _c:IsOriginalCode(CARD_DARK_ARMED_DRAGON) end)
 	e1:SetValue(73879377)
 	Duel.RegisterEffect(e1, tp)
+end
+
+function s.armeddragonfilder(c)
+	return c:IsMonster() and c:IsSetCard(SET_ARMED_DRAGON)
 end
 
 function s.rewritecards(e, tp)
@@ -91,6 +106,42 @@ function s.rewritecards(e, tp)
 		tc:RegisterFlagEffect(id, 0, 0, 1)
 
 			Xyz.AddProcedure(tc,nil,7,2,s.ovfilter,aux.Stringid(CARD_DARK_ARMED_ANNHILATION_DRAGON,0),Xyz.InfiniteMats,s.xyzop)
+
+
+	end
+
+	local g3 = Duel.GetMatchingGroup(s.armeddragonfilder, tp, LOCATION_ALL, 0, nil)
+	for tc in g3:Iter() do
+		local effs = { tc:GetOwnEffects() }
+		for _, eff in ipairs(effs) do
+			if eff:IsHasCategory(CATEGORY_TOGRAVE) or eff:IsHasCategory(CATEGORY_ATKCHANGE) then
+				local neweff = eff:Clone()
+				neweff:SetCost(s.repcostfunc(eff:GetCost()))
+				tc:RegisterEffect(neweff)
+				eff:Reset()
+			end
+		end
+	end
+end
+
+function s.sendtogravefilter(c)
+	return c:IsAbleToGraveAsCost() and ((c:IsRace(RACE_DRAGON) and c:IsMonster()) or c:IsSetCard(SET_ARMED_DRAGON))
+end
+
+function s.repcostfunc(cost)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.sendtogravefilter, e:GetHandlerPlayer(), LOCATION_DECK, 0, 1, nil) and s.used_this_skill[tp]==false and Duel.GetFlagEffect(tp, id)>0) end
+			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.sendtogravefilter, e:GetHandlerPlayer(), LOCATION_DECK, 0, 1, nil) and e:GetHandler():IsOriginalSetCard(SET_ARMED_DRAGON)
+			  and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0)
+			 or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
+			Duel.Hint(HINT_CARD,tp,id)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+			local g=Duel.SelectMatchingCard(tp,s.sendtogravefilter,tp,LOCATION_DECK,0,1,1,nil)
+			Duel.SendtoGrave(g,REASON_COST)
+			s.used_this_skill[tp]=true
+		else
+			cost(e,tp,eg,ep,ev,re,r,rp,1)
+		end
 
 
 	end
