@@ -114,7 +114,7 @@ function s.rewritecards(e, tp)
 	for tc in g3:Iter() do
 		local effs = { tc:GetOwnEffects() }
 		for _, eff in ipairs(effs) do
-			if eff:IsHasCategory(CATEGORY_TOGRAVE) or eff:IsHasCategory(CATEGORY_ATKCHANGE) then
+			if eff:IsHasCategory(CATEGORY_TOGRAVE) or eff:IsHasCategory(CATEGORY_ATKCHANGE) or eff:IsHasCategory(CATEGORY_SPECIAL_SUMMON) then
 				local neweff = eff:Clone()
 				neweff:SetCost(s.repcostfunc(eff:GetCost()))
 				tc:RegisterEffect(neweff)
