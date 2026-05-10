@@ -113,7 +113,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
 	s.used_this_skill[tp] = true
 
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
-	local g = Group.Select(g_roids[tp], tp, 2, 2, nil)
+	local g = Group.Select(g_roids[tp], tp, 4, 4, nil)
 	local g2 = Group.CreateGroup()
 	for tc in g:Iter() do
 		local token = Duel.CreateToken(tp, tc:GetOriginalCode())
