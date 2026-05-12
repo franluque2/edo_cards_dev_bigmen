@@ -205,8 +205,7 @@ end
 
 function s.resetop(e, tp, eg, ep, ev, re, r, rp)
 	local c = e:GetHandler()
-	local mats = e:GetHandler():GetOverlayGroup()
-	local g = Group.Filter(mats, s.filter, nil)
+	local g = Duel.GetMatchingGroup(s.filter, tp, LOCATION_GRAVE, 0, nil)
 	if not g:IsExists(s.codefilter, 1, nil, e:GetLabelObject():GetLabel()) or c:IsDisabled() then
 		c:ResetEffect(e:GetLabel(), RESET_COPY)
 		c:ResetFlagEffect(e:GetLabelObject():GetLabel())
