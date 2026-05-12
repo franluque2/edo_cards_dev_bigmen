@@ -6,6 +6,10 @@ function s.initial_effect(c)
         nil, nil, true, nil)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
+
+    aux.GlobalCheck(s, function()
+        s.used_this_skill = {false, false}
+    end)
 end
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
@@ -22,8 +26,13 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_PREDRAW)
     e1:SetCountLimit(1)
+    e1:SetCondition(s.opdcon)
     e1:SetOperation(s.setcard)
     Duel.RegisterEffect(e1, tp)
+end
+
+function s.opdcon(e, tp, eg, ep, ev, re, r, rp)
+    return s.used_this_skill[tp + 1] == false
 end
 
 function s.setcard(e, tp, eg, ep, ev, re, r, rp)
@@ -38,5 +47,5 @@ function s.setcard(e, tp, eg, ep, ev, re, r, rp)
 		e2:SetValue(LOCATION_DECKSHF)
 		dtactics:RegisterEffect(e2)
 
-
+    s.used_this_skill[tp + 1] = true
 end
