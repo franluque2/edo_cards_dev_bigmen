@@ -57,7 +57,7 @@ local actioncards = { 150000020, 150000024 }
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_CARD, tp, id)
     local g = Group.CreateGroup()
-    for i = 1, 2, 1 do
+    for i = 1, 1, 1 do
         local ac = actioncards[math.random(#actioncards)]
         local tc = Duel.CreateToken(1 - tp, ac)
         tc:RegisterFlagEffect(id, 0, 0, 0, tp)
