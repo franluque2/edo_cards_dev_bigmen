@@ -18,7 +18,22 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
 
     local c = e:GetHandler()
+
+    local e10=Effect.CreateEffect(e:GetHandler())
+    e10:SetType(EFFECT_TYPE_FIELD)
+    e10:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
+    e10:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+    e10:SetTarget(s.rmtarget)
+    e10:SetTargetRange(LOCATION_ONFIELD,0)
+    e10:SetValue(LOCATION_REMOVED)
+    Duel.RegisterEffect(e10,tp)
+
 end
+
+function s.rmtarget(e,c)
+    return c:IsCode(24431911) and c:IsFaceup()
+end
+
 
 function s.rewritecards(e, tp)
     local c = e:GetHandler()
