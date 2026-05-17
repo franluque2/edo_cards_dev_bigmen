@@ -156,6 +156,7 @@ end
 
 function s.repfilter2(c)
 	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_EFFECT)
+		and not c:IsCode(93880808)
 end
 
 function s.targetfunc(e, c)
