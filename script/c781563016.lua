@@ -24,6 +24,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
     Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
     local c = e:GetHandler()
+
+            local e7=Effect.CreateEffect(e:GetHandler())
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetCode(EFFECT_DISABLE)
+        e7:SetTargetRange(LOCATION_ONFIELD,0)
+        e7:SetCondition(function () return Duel.IsBattlePhase() end)
+        e7:SetTarget(aux.TargetBoolFunction(Card.IsCode,34771947))
+        Duel.RegisterEffect(e7, tp)
+
 end
 
 
