@@ -50,7 +50,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
-	e1:SetValue(3)
+	e1:SetValue(2)
 	Duel.RegisterEffect(e1,tp)
 
     
