@@ -123,11 +123,7 @@ function s.cardfilter(c, tp)
 end
 
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
-    local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
-    if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
-    if #g > 0 then
-        Duel.MoveToDeckBottom(g)
-    end
+
 
     local g1 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 38331564)
 	if #g1 > 0 then
@@ -138,4 +134,10 @@ function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
 	if #g2 > 0 then
 		Duel.MoveToDeckTop(g2:GetFirst())
 	end
+
+    local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
+    if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
+    if #g > 0 then
+        Duel.MoveToDeckBottom(g)
+    end
 end
