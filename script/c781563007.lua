@@ -24,7 +24,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_PREDRAW)
+    e1:SetCode(EVENT_PHASE+PHASE_DRAW)
     e1:SetCountLimit(1)
     e1:SetCondition(s.opdcon)
     e1:SetOperation(s.setcard)
@@ -32,10 +32,11 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.opdcon(e, tp, eg, ep, ev, re, r, rp)
-    return s.used_this_skill[tp + 1] == false
+    return (s.used_this_skill[tp + 1] == false) and Duel.GetTurnCount() == 2
 end
 
 function s.setcard(e, tp, eg, ep, ev, re, r, rp)
+    Duel.Hint(HINT_CARD,tp,id)
     local dtactics=Duel.CreateToken(tp, 48032131)
     Duel.MoveToField(dtactics,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
     	local e2=Effect.CreateEffect(dtactics)
