@@ -132,6 +132,7 @@ end
 function s.discon4(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:IsActiveType(TYPE_MONSTER)
 		and re:GetHandler():IsCode(86066372)
+		and re:IsHasCategory(CATEGORY_DESTROY)
 end
 
 function s.disop2(e,tp,eg,ep,ev,re,r,rp)
