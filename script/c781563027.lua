@@ -82,7 +82,7 @@ function s.discardhandop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spsummonopfilter(c,e,tp)
-    return c:IsMonster() and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, false, POS_FACEUP) and c:GetTextAttack()>=0
+    return c:IsMonster() and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, true, false, POS_FACEUP) and (c:GetTextAttack()>=0) and Duel.GetLocationCount(tp, LOCATION_MZONE)>0
 end
 
 function s.spsummonplayerfilter(c,e,tp)
@@ -106,11 +106,25 @@ end
 
 function s.drawfaceop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+
+        local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_DRAW_COUNT)
+		e1:SetTargetRange(1,0)
+		e1:SetReset(RESET_PHASE|PHASE_DRAW)
+		e1:SetValue(0)
+		Duel.RegisterEffect(e1,tp)
+
+
         Duel.Hint(HINT_CARD, tp, id)
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
         local g1=Duel.SelectMatchingCard(tp, s.spsummonopfilter, tp, LOCATION_DECK, 0, 1, 1, nil, e, tp)
-        Duel.Hint(HINT_SELECTMSG, 1-tp, HINTMSG_SPSUMMON)
-        local g2=Duel.SelectMatchingCard(1-tp, s.spsummonopfilter, 1-tp, LOCATION_DECK, 0, 1, 1, nil, e, 1-tp)
+        local g2=nil
+        if Duel.IsExistingMatchingCard(s.spsummonopfilter, 1-tp, LOCATION_DECK, 0, 1, nil, e, 1-tp) then
+            Duel.Hint(HINT_SELECTMSG, 1-tp, HINTMSG_SPSUMMON)
+            g2=Duel.SelectMatchingCard(1-tp, s.spsummonopfilter, 1-tp, LOCATION_DECK, 0, 1, 1, nil, e, 1-tp)
+        end
 
         local canchoose=(not g2) or (g1:GetFirst():GetTextAttack()==g2:GetFirst():GetTextAttack())
         or Duel.IsExistingMatchingCard(s.fuinfernitysynchromonster, tp, LOCATION_MZONE, 0, 1, nil)
@@ -144,10 +158,13 @@ function s.drawfaceop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(tp, g2)
 
             local higheratk=g1:GetFirst():GetTextAttack()>g2:GetFirst():GetTextAttack() and g1 or g2
-            Duel.SpecialSummon(higheratk, SUMMON_TYPE_SPECIAL, higheratk:GetFirst():GetControler(), higheratk:GetFirst():GetControler(), true, false, POS_FACEUP)
-            combinedg:RemoveCard(higheratk:GetFirst())
-            if #combinedg>0 then
-                Duel.SendtoGrave(combinedg, REASON_RULE)
+            if higheratk~=nil then
+                Duel.SpecialSummon(higheratk, SUMMON_TYPE_SPECIAL, higheratk:GetFirst():GetControler(), higheratk:GetFirst():GetControler(), true, false, POS_FACEUP)
+                combinedg:RemoveCard(higheratk:GetFirst())
+                if #combinedg>0 then
+                    Duel.SendtoGrave(combinedg, REASON_RULE)
+                end
+
             end
 
         end
