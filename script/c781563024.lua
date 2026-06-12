@@ -50,7 +50,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.placemezukis(e,tp,eg,ep,ev,re,r,rp)
-    for i=1,1 do
+    for i=1,2 do
         local token=Duel.CreateToken(tp,92826944)
         Duel.SendtoGrave(token, REASON_RULE)
     end
