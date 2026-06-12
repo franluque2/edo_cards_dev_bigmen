@@ -164,6 +164,7 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
         --place this face-up as a continuous spell, but banish it when it leaves the field
 
         if c:IsRelateToEffect(e) and Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+
             local e1=Effect.CreateEffect(c)
             e1:SetDescription(3300)
             e1:SetType(EFFECT_TYPE_SINGLE)
@@ -172,6 +173,15 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
             e1:SetReset(RESET_EVENT|RESETS_STANDARD)
             e1:SetValue(LOCATION_REMOVED)
             c:RegisterEffect(e1,true)
+
+            local e2=Effect.CreateEffect(c)
+            e2:SetType(EFFECT_TYPE_SINGLE)
+            e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+            e2:SetCode(EFFECT_CHANGE_TYPE)
+            e2:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+            e2:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+            c:RegisterEffect(e2)
+
         end
 
     end
