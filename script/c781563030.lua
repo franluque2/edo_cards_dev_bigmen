@@ -78,7 +78,6 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
         end
     else
         local g=Group.CreateGroup()
-        local g2=Group.CreateGroup()
         for tc in eg:Iter() do
             local token=Duel.CreateToken(tp, tc:GetOriginalCode())
             g:AddCard(token)
