@@ -36,7 +36,7 @@ end
 
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) --and Duel.GetFlagEffect(tp, id)>5
+    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) and Duel.GetFlagEffect(tp, id)>5
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
