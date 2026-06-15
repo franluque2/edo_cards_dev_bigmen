@@ -56,8 +56,8 @@ function s.fliptg(e,tp,eg,ep,ev,re,r,rp,chk)
     end
 end
 
-function s.setpenguinfilter(c,e,tp)
-    return c:IsSetCard(SET_PENGUIN) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEDOWN_DEFENSE)
+function s.setmonsterfilter(c,e,tp)
+    return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false, POS_FACEDOWN_DEFENSE)
 end
 
 function s.flipop(e,tp,eg,ep,ev,re,r,rp)
@@ -67,9 +67,9 @@ function s.flipop(e,tp,eg,ep,ev,re,r,rp)
         local g=Duel.SelectMatchingCard(tp,s.tohandfilter,tp,LOCATION_DECK,0,1,1,nil)
         if #g>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
             Duel.ConfirmCards(1-tp,g)
-            if Duel.IsExistingMatchingCard(s.setpenguinfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.SelectYesNo(tp, aux.Stringid(id,9)) then
+            if Duel.IsExistingMatchingCard(s.setmonsterfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.SelectYesNo(tp, aux.Stringid(id,9)) then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-                local sg=Duel.SelectMatchingCard(tp,s.setpenguinfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+                local sg=Duel.SelectMatchingCard(tp,s.setmonsterfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
                 if #sg>0 then
                     Duel.SpecialSummon(sg, SUMMON_TYPE_SPECIAL, tp, tp, false, false, POS_FACEDOWN_DEFENSE)
                     Duel.ConfirmCards(1-tp,sg)
