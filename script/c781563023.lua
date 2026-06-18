@@ -3,12 +3,53 @@ Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
 
+        aux.GlobalCheck(s, function()
+        s.used_this_skill_opt = {}
+        s.used_this_skill_opt[0] = false
+        s.used_this_skill_opt[1] = false
 
-    local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, nil, nil, true, nil)
+
+        s.left_field_this_turn = 0
+        aux.AddValuesReset(function()
+			s.used_this_skill_opt[0] = false
+			s.used_this_skill_opt[1] = false
+		end)
+    end)
+
+    local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive, s.flipopactive, true, nil)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
 end
 
+local DRAGON_QUEEN_OF_TRAGIC_ENDINGS = 80513550
+
+function s.tributefilter(c)
+    return c:IsAttack(0) and c:IsReleasable()
+end
+
+function s.addfilter(c)
+    return c:IsCode(79798060) and c:IsAbleToHand()
+end
+function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
+    return (not s.used_this_skill_opt[e:GetHandlerPlayer()]) and aux.CanActivateSkill(tp)
+        and Duel.IsExistingMatchingCard(s.tributefilter, tp, LOCATION_MZONE, 0, 1, nil)
+        and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
+end
+
+function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
+    s.used_this_skill_opt[e:GetHandlerPlayer()] = true
+    Duel.Hint(HINT_CARD, tp, id)
+    local c = e:GetHandler()
+    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RELEASE)
+    local rg = Duel.SelectMatchingCard(tp, s.tributefilter, tp, LOCATION_MZONE, 0, 1, 1, nil)
+    Duel.Release(rg, REASON_COST)
+    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+    local g = Duel.SelectMatchingCard(tp, s.addfilter, tp, LOCATION_DECK, 0, 1, 1, nil)
+    if #g > 0 then
+        Duel.SendtoHand(g, nil, REASON_EFFECT)
+        Duel.ConfirmCards(1 - tp, g)
+    end
+end
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
@@ -30,6 +71,19 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetCondition(function() return Duel.IsExistingMatchingCard(s.ccarayhuafilter, tp, LOCATION_ALL, 0, 1, nil) end)
     e1:SetOperation(s.rewriteccarayhua)
     Duel.RegisterEffect(e1,tp)
+
+    local token=Duel.CreateToken(tp, DRAGON_QUEEN_OF_TRAGIC_ENDINGS)
+    Duel.SendtoHand(token, tp, REASON_RULE)
+    Duel.ConfirmCards(1-tp, token)
+
+    --While you do not control "Dragon Queen of Tragic Endings", monsters on the field are unaffected by the first effect of "Ragnaraika Bloom".
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_IMMUNE_EFFECT)
+    e2:SetTargetRange(LOCATION_MZONE, LOCATION_MZONE)
+    e2:SetCondition(function() return not Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_ONFIELD, 0, 1, nil, DRAGON_QUEEN_OF_TRAGIC_ENDINGS) end)
+    e2:SetValue(function(_,te) return te:GetOwner():IsCode(04841383) end)
+    Duel.RegisterEffect(e2, tp)
 end
 
 function s.rewriteccarayhua(e,tp)
@@ -130,13 +184,15 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 
             local e1=Effect.CreateEffect(c)
             e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
             e1:SetCode(EFFECT_DISABLE)
-            e1:SetReset(RESET_EVENT|RESETS_STANDARD-RESET_TOFIELD)
+            e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TOFIELD))
             c:RegisterEffect(e1,true)
             local e2=Effect.CreateEffect(c)
             e2:SetType(EFFECT_TYPE_SINGLE)
+            e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
             e2:SetCode(EFFECT_DISABLE_EFFECT)
-            e2:SetReset(RESET_EVENT|RESETS_STANDARD-RESET_TOFIELD)
+            e2:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TOFIELD))
             c:RegisterEffect(e2,true)
 
             local e3=Effect.CreateEffect(c)
@@ -144,17 +200,18 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
             e3:SetType(EFFECT_TYPE_SINGLE)
             e3:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
             e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-            e3:SetReset(RESET_EVENT|RESETS_STANDARD-RESET_TOFIELD)
+            e3:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TOFIELD))
             e3:SetValue(LOCATION_REMOVED)
             c:RegisterEffect(e3,true)
 
             local e4=Effect.CreateEffect(c)
             e4:SetType(EFFECT_TYPE_SINGLE)
+            e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
             e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
             e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
             e4:SetRange(LOCATION_MZONE)
             e4:SetValue(function (_,_te,_,_c) return _te:GetOwner()==_c end)
-            e4:SetReset(RESET_EVENT|RESETS_STANDARD-RESET_TOFIELD)
+            e4:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TOFIELD))
             c:RegisterEffect(e4,true)
 
             Duel.SpecialSummon(c, 0, tp, tp, false, false, POS_FACEUP)

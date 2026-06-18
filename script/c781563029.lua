@@ -143,6 +143,12 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e2:SetCode(EVENT_MSET)
     e2:SetOperation(s.setstatuschange)
     Duel.RegisterEffect(e2,tp)
+    local e7=e2:Clone()
+    e7:SetCode(EVENT_SPSUMMON_SUCCESS)
+    Duel.RegisterEffect(e7,tp)
+    local e8=e2:Clone()
+    e8:SetCode(EVENT_CHANGE_POS)
+    --Duel.RegisterEffect(e8,tp)
 
     --Count when cards leave the field
     local e6=Effect.CreateEffect(c)
@@ -152,6 +158,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterEffect(e6, tp)
 
 end
+
 
 function s.repcon(e,tp,eg,ep,ev,re,r,rp)
     return re and re:GetHandler():IsControler(tp) and (eg:IsExists(Card.IsLocation, 1, nil, LOCATION_REMOVED) or eg:IsExists(Card.IsLocation, 1, nil, LOCATION_HAND)) and eg:IsExists(Card.IsPreviousLocation, 1, nil, LOCATION_ONFIELD)
@@ -171,7 +178,7 @@ function s.retop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.penguincontroledfilter(c,tp)
-    return c:IsControler(tp) and c:IsSetCard(SET_PENGUIN)
+    return c:IsControler(tp) and c:IsSetCard(SET_PENGUIN) and c:IsMonster() and c:IsPosition(POS_FACEDOWN)
 end
 
 function s.setstatuschange(e,tp,eg,ev,ep,re,r,rp)
