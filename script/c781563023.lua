@@ -4,16 +4,10 @@ local s, id = GetID()
 function s.initial_effect(c)
 
         aux.GlobalCheck(s, function()
-        s.used_this_skill_opt = {}
-        s.used_this_skill_opt[0] = false
-        s.used_this_skill_opt[1] = false
+        s.used_this_skill = {}
+        s.used_this_skill[0] = false
+        s.used_this_skill[1] = false
 
-
-        s.left_field_this_turn = 0
-        aux.AddValuesReset(function()
-			s.used_this_skill_opt[0] = false
-			s.used_this_skill_opt[1] = false
-		end)
     end)
 
     local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive, s.flipopactive, true, nil)
@@ -31,13 +25,13 @@ function s.addfilter(c)
     return c:IsCode(79798060) and c:IsAbleToHand()
 end
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    return (not s.used_this_skill_opt[e:GetHandlerPlayer()]) and aux.CanActivateSkill(tp)
+    return (not s.used_this_skill[e:GetHandlerPlayer()]) and aux.CanActivateSkill(tp)
         and Duel.IsExistingMatchingCard(s.tributefilter, tp, LOCATION_MZONE, 0, 1, nil)
         and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
-    s.used_this_skill_opt[e:GetHandlerPlayer()] = true
+    s.used_this_skill[e:GetHandlerPlayer()] = true
     Duel.Hint(HINT_CARD, tp, id)
     local c = e:GetHandler()
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RELEASE)
