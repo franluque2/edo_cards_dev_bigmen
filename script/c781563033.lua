@@ -130,7 +130,7 @@ function s.redirectcon(e,tp,eg,ep,ev,re,r,rp)
     for tc2 in hasmat:Iter() do
         spg:Merge(tc2:GetOverlayGroup():Filter(s.spninjafilter, nil, e, tp))
     end
-	return tc:IsFaceup() and tc:IsSetCard(SET_NINJA) and tc:IsControler(tp) and #spg>0 and Duel.GetMZoneCount(tp)>0 and not s.used_this_skill_passive[tp]
+	return tc:IsFaceup() and tc:IsLocation(LOCATION_ONFIELD) and tc:IsSetCard(SET_NINJA) and tc:IsControler(tp) and #spg>0 and Duel.GetMZoneCount(tp)>0 and not s.used_this_skill_passive[tp]
 end
 
 function s.redirectop(e,tp,eg,ep,ev,re,r,rp)
