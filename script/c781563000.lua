@@ -6,9 +6,18 @@ function s.initial_effect(c)
 		s.used_this_skill = {}
 		s.used_this_skill[0] = false
 		s.used_this_skill[1] = false
+
+		
+		s.used_this_skill_lpgain = {}
+		s.used_this_skill_lpgain[0] = false
+		s.used_this_skill_lpgain[1] = false
 		aux.AddValuesReset(function()
 			s.used_this_skill[0] = false
 			s.used_this_skill[1] = false
+
+			s.used_this_skill_lpgain[0] = false
+			s.used_this_skill_lpgain[1] = false
+
 		end)
 	end)
 
@@ -41,7 +50,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetOperation(s.vczop)
 	Duel.RegisterEffect(e1, tp)
 
-			--Workaround for Edopro Issue: Kiteroid not treated as a roid
+	--Workaround for Edopro Issue: Kiteroid not treated as a roid
 	local e3 = Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_ADD_SETCODE)
@@ -59,7 +68,96 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e2:SetValue(ATTRIBUTE_EARTH)
 	Duel.RegisterEffect(e2, tp)
 
+	--roid multiple mat fusions are unaffected by effects that would change their attack
+	local e4 = Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_IMMUNE_EFFECT)
+	e4:SetTargetRange(LOCATION_MZONE, 0)
+	e4:SetTarget(function(_, _c)
+		 return s.fumultiplematfusionfilter(_c) and Duel.IsBattlePhase() and Duel.IsTurnPlayer(_c:GetControler())
+		 end)
+	e4:SetValue(1)
+	Duel.RegisterEffect(e4, tp)
 
+	local e5 = Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_UNSTOPPABLE_ATTACK)
+	e5:SetTargetRange(LOCATION_MZONE, 0)
+	e5:SetTarget(function(_, _c) return s.multiplematfusionfilter(_c) end)
+	Duel.RegisterEffect(e5, tp)
+
+	--Once per turn, if a "roid" Fusion Monster you control leaves the field by an opponent's card: You can choose one of them, banish as many of the materials specifically listed on that card as possible from your GY, and if you do, gain LP equal to their combined original ATK, then you can add 1 card from your Deck or GY to your hand that contains an effect to Fusion Summon a monster.
+	local e6 = Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+	e6:SetCode(EVENT_LEAVE_FIELD)
+	e6:SetCondition(s.leavefieldcon)
+	e6:SetOperation(s.leavefieldop)
+	Duel.RegisterEffect(e6, tp)
+
+
+
+
+end
+
+function s.leavefieldcon(e, tp, eg, ep, ev, re, r, rp)
+	return rp~=tp and eg:IsExists(function(c, _tp) return c:IsPreviousPosition(POS_FACEUP) and s.multiplematfusionfilter(c) and c:GetOwner() == _tp end, 1, nil, tp)
+		and Duel.IsExistingMatchingCard(s.banishmatfilter, tp, LOCATION_GRAVE, 0, 1, nil, eg)
+		and not s.used_this_skill_lpgain[tp]
+end
+
+
+function s.addtohandfusionfilter(c)
+	if not (aux.nvfilter(c) or not c:IsLocation(LOCATION_GRAVE)) then return false end
+	if not c:IsAbleToHand() then return end
+	local effs={c:GetOwnEffects()}
+	for _,eff in ipairs(effs) do
+		if eff:IsHasCategory(CATEGORY_FUSION_SUMMON) then
+			return true
+		end
+	end
+	return false
+end
+
+function s.leavefieldop(e, tp, eg, ep, ev, re, r, rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+		Duel.Hint(HINT_CARD, tp, id)
+		s.used_this_skill_lpgain[tp] = true
+
+		local g = Duel.GetMatchingGroup(s.banishmatfilter, tp, LOCATION_GRAVE, 0, nil, eg)
+		local total_atk = g:GetSum(Card.GetBaseAttack)
+		Duel.Remove(g, POS_FACEUP, REASON_EFFECT)
+		Duel.Recover(tp, total_atk, REASON_EFFECT)
+
+		local addg=Duel.GetMatchingGroup(s.addtohandfusionfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, nil)
+		if #addg == 0 then return end
+			if Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
+				Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+				local tohandg=addg:Select(tp,1,1,nil)
+				Duel.SendtoHand(tohandg, nil, REASON_EFFECT)
+				Duel.ConfirmCards(1-tp, tohandg)
+			end
+	end
+end
+function s.banishmatfilter(c,eg)
+	if not eg or #eg == 0 then return false end
+	if not c:IsAbleToRemove() then return false end
+	for tc in eg:Iter() do
+		if s.multiplematfusionfilter(tc) then
+			local mat = tc.material
+			for _, code in ipairs(mat) do
+				if c:IsCode(code) then return true end
+			end
+		end
+	end
+	return false
+end
+
+function s.multiplematfusionfilter(c)
+	return c:IsMonster() and c:IsType(TYPE_FUSION) and c.material and c:IsSetCard(SET_ROID) and #c.material>1
+end
+
+function s.fumultiplematfusionfilter(c)
+	return s.multiplematfusionfilter(c) and c:IsFaceup()
 end
 
 function s.targfunc(e, c)
