@@ -68,7 +68,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e2:SetValue(ATTRIBUTE_EARTH)
 	Duel.RegisterEffect(e2, tp)
 
-	--roid multiple mat fusions are unaffected by effects that would change their attack
+	--roid multiple mat fusions are unaffected by effects during the bp
 	local e4 = Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
@@ -84,7 +84,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e5:SetCode(EFFECT_UNSTOPPABLE_ATTACK)
 	e5:SetTargetRange(LOCATION_MZONE, 0)
 	e5:SetTarget(function(_, _c) return s.multiplematfusionfilter(_c) end)
-	Duel.RegisterEffect(e5, tp)
+	--Duel.RegisterEffect(e5, tp)
 
 	--Once per turn, if a "roid" Fusion Monster you control leaves the field by an opponent's card: You can choose one of them, banish as many of the materials specifically listed on that card as possible from your GY, and if you do, gain LP equal to their combined original ATK, then you can add 1 card from your Deck or GY to your hand that contains an effect to Fusion Summon a monster.
 	local e6 = Effect.CreateEffect(c)
