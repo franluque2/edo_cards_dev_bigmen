@@ -127,7 +127,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.nottaggeddefenderfilter(c)
-    return c:IsCode(47172959) and c:GetFlagEffect(id)==0
+    return c:IsOriginalCode(47172959) and c:GetFlagEffect(id)==0
 end
 
 function s.rewritedefendersop(e,tp,eg,ep,ev,re,r,rp)

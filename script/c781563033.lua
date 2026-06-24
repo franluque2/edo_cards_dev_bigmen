@@ -61,7 +61,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e3:SetOperation(s.redirectop)
     Duel.RegisterEffect(e3,tp)
 
-    --If you activate a Continuous, Equip or Field "Ninjitsu Art" Spell/Trap Card during your turn, you can attach 1 "Ninja" monster from your GY to it as Xyz material. If it would be destroyed, detach 1 material from it, instead. 
+    --If you activate a Continuous, Equip or Field "Ninjitsu Art" Spell/Trap Card during your turn, you can attach 1 "Ninja" monster from your GY to it as Xyz material.
     local e4=Effect.CreateEffect(c)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e4:SetCode(EVENT_CHAIN_SOLVED)
@@ -88,29 +88,8 @@ function s.attachop(e,tp,eg,ep,ev,re,r,rp)
     local tc=sg:GetFirst()
     if tc then
         Duel.Overlay(re:GetHandler(), Group.FromCards(tc))
-
-        	local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-            e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-            e1:SetCode(EFFECT_DESTROY_REPLACE)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            e1:SetRange(LOCATION_SZONE)
-            e1:SetTarget(s.reptg)
-            e1:SetOperation(s.repop)
-            re:GetHandler():RegisterEffect(e1)
-
     end
     end
-end
-
-
-function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
-	return true
-end
-function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 end
 
 function s.spninjafilter(c,e,tp)

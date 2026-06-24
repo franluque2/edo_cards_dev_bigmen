@@ -58,8 +58,69 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e3:SetTargetRange(LOCATION_ALL,0)
     Duel.RegisterEffect(e3,tp)
 
+    local e5=Effect.CreateEffect(e:GetHandler())
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e5:SetCode(EVENT_ADJUST)
+    e5:SetCondition(function (_,_tp)
+        return Duel.IsExistingMatchingCard(s.nottaggedevilneosfilter, _tp, LOCATION_ALL, 0, 1, nil)     
+    end)
+    e5:SetOperation(s.rewriteevilneossop)
+    Duel.RegisterEffect(e5, tp)
 
+    local e6=e5:Clone()
+    e6:SetCondition(function (_,_tp)
+        return Duel.IsExistingMatchingCard(s.nottaggeddarkestknightfilter, _tp, LOCATION_ALL, 0, 1, nil)     
+    end)
+    e6:SetOperation(s.rewritedarkestknightsop)
+    Duel.RegisterEffect(e6, tp)
 end
+
+
+function s.nottaggeddarkestknightfilter(c)
+    if c:IsOriginalCode(86282581) then
+    end
+    return c:IsOriginalCode(86282581) and c:GetFlagEffect(id+1)==0
+end
+
+function s.rewritedarkestknightsop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.nottaggeddarkestknightfilter, tp, LOCATION_ALL, 0, nil)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id+1, 0,0,0)
+
+        local effs={tc:GetOwnEffects()}
+        for _,eff in ipairs(effs) do
+            if ((eff:GetCode()&EFFECT_UPDATE_ATTACK)==EFFECT_UPDATE_ATTACK) and ((eff:GetType()&EFFECT_TYPE_FIELD)==EFFECT_TYPE_FIELD) then
+                eff:SetValue(-1200)
+            end
+        end
+    end
+end
+
+
+function s.nottaggedevilneosfilter(c)
+    return c:IsOriginalCode(13708888) and c:GetFlagEffect(id+1)==0
+end
+
+function s.rewriteevilneossop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.nottaggedevilneosfilter, tp, LOCATION_ALL, 0, nil)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id+1, 0,0,0)
+        	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(s.splimit)
+	tc:RegisterEffect(e1)
+
+    end
+end
+
+function s.splimit(e,se,sp,st)
+	local code=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_CODE)
+	return se:GetHandler():IsCode(CARD_SUPER_POLYMERIZATION) or code==CARD_SUPER_POLYMERIZATION
+end
+
+
 
 function s.rewriteevilheroes(e,tp)
     local c=e:GetHandler()
