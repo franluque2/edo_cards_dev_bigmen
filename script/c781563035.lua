@@ -82,7 +82,7 @@ function s.placecards(c,e,tp)
 end
 
 function s.torewritefilter(c)
-    return c:IsSetCard(SET_DREAM_MIRROR) and c:IsOriginalType(TYPE_MONSTER) and c:GetFlagEffect(id) == 0
+    return c:IsSetCard(SET_DREAM_MIRROR) and c:IsOriginalType(TYPE_MONSTER) and (c:GetFlagEffect(id) == 0)
 end
 
 function s.rewritecardscon(e,tp,eg,ep,ev,re,r,rp)
@@ -98,10 +98,11 @@ function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
         for _, eff in ipairs(effs) do
             if (eff:GetCode()&EVENT_SPSUMMON_SUCCESS)==EVENT_SPSUMMON_SUCCESS then
                 if eff:GetCondition() then
-                    local eff1=eff:Clone()
-                    eff1:SetCondition(function(_e,_tp,_eg,_ep,_ev,_re,_r,_rp) return (eff:GetCondition()(_e,_tp,_eg,_ep,_ev,_re,_r,_rp)) or (_re and _re:GetHandler():IsCode(FULL_MOON_MIRROR)) end)
-                    eff:Reset()
-                    tc:RegisterEffect(eff1)
+                    --local eff1=eff:Clone()
+                    local oldcondition=eff:GetCondition()
+                    eff:SetCondition(function(_e,_tp,_eg,_ep,_ev,_re,_r,_rp) return (oldcondition(_e,_tp,_eg,_ep,_ev,_re,_r,_rp)) or (_re and _re:GetHandler():IsCode(FULL_MOON_MIRROR)) end)
+                    --eff:Reset()
+                    --tc:RegisterEffect(eff1)
                 end
             end
 
