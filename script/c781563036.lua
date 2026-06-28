@@ -74,7 +74,7 @@ function s.changeplacesop(e,tp,eg,ep,ev,re,r,rp)
 	if not g then return false end
     local tc=g:Filter(Card.IsControler,nil,1-tp):GetFirst()
 
-    if tc and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+    if tc and Duel.SelectYesNo(1-tp, aux.Stringid(id, 2)) then
         Duel.Hint(HINT_CARD, tp, id)
         local dis=tc:GetSequence()
 		local zone=Duel.SelectDisableField(1-tp,1,tc:GetLocation(),0,0)
