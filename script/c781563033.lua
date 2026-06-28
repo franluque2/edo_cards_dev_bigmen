@@ -189,7 +189,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
         Duel.SendtoGrave(tg, REASON_RULE)
     end
 
-    local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.setcheck,1,tp,HINTMSG_SET)
+    local sg=aux.SelectUnselectGroup(g,e,tp,1,2,s.setcheck,1,tp,HINTMSG_SET)
 
     Duel.SSet(tp, sg)
 
