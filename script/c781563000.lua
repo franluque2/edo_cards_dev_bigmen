@@ -2,6 +2,16 @@
 Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
+
+		local e3 = Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_STARTUP)
+	e3:SetRange(0x5f)
+	e3:SetCountLimit(1)
+	e3:SetOperation(s.shuffledownopextra)
+	c:RegisterEffect(e3)
+
+	
 	aux.GlobalCheck(s, function()
 		s.used_this_skill = {}
 		s.used_this_skill[0] = false
@@ -97,6 +107,13 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
 
 
+end
+
+function s.shuffledownopextra(e, tp, eg, ep, ev, re, r, rp)
+	local g = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 23299957)
+	if #g > 0 then
+		Duel.MoveToDeckTop(g:GetFirst())
+	end
 end
 
 function s.leavefieldcon(e, tp, eg, ep, ev, re, r, rp)
