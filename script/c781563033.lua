@@ -68,6 +68,16 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e4:SetCondition(s.attachcon)
     e4:SetOperation(s.attachop)
     Duel.RegisterEffect(e4,tp)
+
+
+    local e7=Effect.CreateEffect(e:GetHandler())
+    e7:SetType(EFFECT_TYPE_FIELD)
+    e7:SetCode(EFFECT_DISABLE)
+    e7:SetTargetRange(LOCATION_ONFIELD,0)
+    e7:SetCondition(function () return Duel.IsBattlePhase() end)
+    e7:SetTarget(aux.TargetBoolFunction(Card.IsCode,37354507))
+    Duel.RegisterEffect(e7, tp)
+
 end
 
 function s.attachninjafilter(c)
