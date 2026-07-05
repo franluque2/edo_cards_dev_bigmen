@@ -124,7 +124,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e3:SetTargetRange(1,0)
     Duel.RegisterEffect(e3,tp)
 
-    --Each time a card(s) is returned to the hand, or banished, by your card effect, gain 1 Virtual World Counter (max. 5).
+    --Each time a card(s) is returned to the hand, or banished, by your card effect, gain 1 Virtual World Counter for each (max. 5).
     local e4=Effect.CreateEffect(c)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e4:SetCode(EVENT_TO_HAND)
@@ -165,16 +165,20 @@ function s.repcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetFlagEffect(tp, id)<=5 then
-		Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
-			local ce=Duel.IsPlayerAffectedByEffect(tp,id)
-			if ce then
-				local nce=ce:Clone()
-				ce:Reset()
-				nce:SetDescription(aux.Stringid(id+1,Duel.GetFlagEffect(tp, id)+2))
-				Duel.RegisterEffect(nce,tp)
-			end
+    local g=eg:Filter(function(c) return c:IsPreviousLocation(LOCATION_ONFIELD) and (c:IsLocation(LOCATION_REMOVED) or c:IsLocation(LOCATION_HAND)) end, nil)
+    for i=1,#g do
+        if Duel.GetFlagEffect(tp, id)<=5 then
+            Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
+                local ce=Duel.IsPlayerAffectedByEffect(tp,id)
+                if ce then
+                    local nce=ce:Clone()
+                    ce:Reset()
+                    nce:SetDescription(aux.Stringid(id+1,Duel.GetFlagEffect(tp, id)+2))
+                    Duel.RegisterEffect(nce,tp)
+                end
+        end
     end
+
 end
 
 function s.penguincontroledfilter(c,tp)
