@@ -36,7 +36,7 @@ end
 
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) and Duel.GetFlagEffect(tp, id)>5
+    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) and Duel.GetFlagEffect(tp, id)>3
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
@@ -167,7 +167,7 @@ end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
     local g=eg:Filter(function(c) return c:IsPreviousLocation(LOCATION_ONFIELD) and (c:IsLocation(LOCATION_REMOVED) or c:IsLocation(LOCATION_HAND)) end, nil)
     for i=1,#g do
-        if Duel.GetFlagEffect(tp, id)<=5 then
+        if Duel.GetFlagEffect(tp, id)<=3 then
             Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
                 local ce=Duel.IsPlayerAffectedByEffect(tp,id)
                 if ce then
