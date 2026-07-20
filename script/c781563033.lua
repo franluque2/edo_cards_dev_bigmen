@@ -45,13 +45,11 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e2:SetTarget(aux.TargetBoolFunction(s.nstar))
 	Duel.RegisterEffect(e2,tp)
 
-    local e10=Effect.CreateEffect(e:GetHandler())
-    e10:SetType(EFFECT_TYPE_FIELD)
-    e10:SetCode(EFFECT_XYZ_LEVEL)
-    e10:SetTargetRange(LOCATION_MZONE, 0)
-    e10:SetTarget(function (_,c) return c:IsSetCard(SET_NINJA) and c:HasLevel() end)
-    e10:SetValue(s.xyzlv)
-    Duel.RegisterEffect(e10,tp)
+    local e5=Effect.CreateEffect(e:GetHandler())
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e5:SetCode(EVENT_PREDRAW)
+    e5:SetOperation(s.loselpop)
+    Duel.RegisterEffect(e5,tp)
 
     --Once per turn, before resolving an activated effect that targets a face-up "Ninja" card you control (and no other cards), you can Special Summon 1 of the monsters that is attached to your cards as material, and if you do, change the target to it.
     local e3=Effect.CreateEffect(c)
@@ -78,6 +76,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e7:SetTarget(aux.TargetBoolFunction(Card.IsCode,37354507))
     Duel.RegisterEffect(e7, tp)
 
+end
+
+function s.loselpop(e,tp,eg,ep,ev,re,r,rp)
+    local num=Duel.GetOverlayCount(tp,LOCATION_MZONE,0)
+    if num>0 then
+        Duel.Hint(HINT_CARD,tp,id)
+        Duel.SetLP(tp,Duel.GetLP(tp)-num*1000)
+
+    end
 end
 
 function s.attachninjafilter(c)
