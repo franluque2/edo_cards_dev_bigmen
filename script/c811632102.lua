@@ -18,8 +18,11 @@ function s.initial_effect(c)
 
 end
 
+local MODULAR_FIELDS={56787189,2106266,2144946,62265044,66750703,90764871,93031067}
+
 function s.addfieldspellfilter(c)
     if not (c:IsType(TYPE_FIELD) and c:IsAbleToHand()) then return false end
+    if c:IsOriginalCode(table.unpack(MODULAR_FIELDS)) then return true end
     local effs={c:GetOwnEffects()}
 	for _,eff in ipairs(effs) do
 		if eff:IsHasCategory(CATEGORY_SEARCH) then
