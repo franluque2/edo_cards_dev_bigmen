@@ -15,6 +15,8 @@ function s.initial_effect(c)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
 end
+local COUNTER_BES=0x1f
+
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
 end
@@ -52,13 +54,41 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	Duel.RegisterEffect(e2,tp)
 
 
-        local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e3:SetCode(EVENT_CHAIN_SOLVING)
-    e3:SetCondition(s.changeplacescon)
-    e3:SetOperation(s.changeplacesop)
-    Duel.RegisterEffect(e3,tp)
+        local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e4:SetCode(EVENT_CHAIN_SOLVING)
+    e4:SetCondition(s.changeplacescon)
+    e4:SetOperation(s.changeplacesop)
+    Duel.RegisterEffect(e4,tp)
 
+    --If a B.E.S. monster(s) with Counters you control leaves the field during your opponent's turn, gain 500 LP for each Counter it had.
+    local e5=Effect.CreateEffect(c)
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e5:SetCode(EVENT_LEAVE_FIELD_P)
+    e5:SetCondition(s.gainlpcon)
+    e5:SetOperation(s.gainlpop)
+    Duel.RegisterEffect(e5,tp)
+
+end
+
+
+
+function s.besfilter(c,tp)
+    return c:IsSetCard(SET_BES) and c:IsMonster() and c:IsControler(tp) and c:GetCounter(COUNTER_BES)>0
+end
+
+function s.gainlpcon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetTurnPlayer()~=tp and eg:IsExists(s.besfilter,1,nil,tp)
+end
+
+function s.gainlpop(e,tp,eg,ep,ev,re,r,rp)
+    local g=eg:Filter(s.besfilter,nil,tp)
+    local lp=0
+    for tc in g:Iter() do
+        lp=lp+tc:GetCounter(COUNTER_BES)*500
+    end
+    Duel.Hint(HINT_CARD,tp,id)
+    Duel.Recover(tp,lp,REASON_EFFECT)
 end
 
 function s.changeplacescon(e,tp,eg,ep,ev,re,r,rp)
