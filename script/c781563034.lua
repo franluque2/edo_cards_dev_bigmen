@@ -57,6 +57,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e2:SetCondition(s.rewritecardscon)
     e2:SetOperation(s.rewritecardsop)
     Duel.RegisterEffect(e2, tp)
+
+    --You cannot Special Summon Level 8 or Higher "Destiny HERO" monsters from your GY.
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetTargetRange(1,0)
+    e3:SetTarget(function(_,c) return c:IsControler(tp) and c:IsLevelAbove(8) and c:IsSetCard(SET_DESTINY_HERO) and c:IsLocation(LOCATION_GRAVE) end)
+    Duel.RegisterEffect(e3, tp)
 end
 
 
