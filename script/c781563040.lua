@@ -133,7 +133,7 @@ function s.placecards(e,tp,eg,ep,ev,re,r,rp)
     e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
     e3:SetValue(aux.indoval)
     nnetwork:RegisterEffect(e3)
-    nnetwork:RegisterFlagEffect(id, 0,1,0,aux.Stringid(id,0))
+    nnetwork:RegisterFlagEffect(id, 0,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,0))
 
     if Duel.IsTurnPlayer(tp) and Duel.GetTurnCount()==1 then
         local eskip=Effect.CreateEffect(e:GetHandler())
