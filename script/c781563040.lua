@@ -24,7 +24,7 @@ function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
     if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
     if #g > 0 then
-        local startinghandnum=Duel.GetStartingHand(tp)
+        local startinghandnum=Duel.GetStartingHand(tp)+1
         local g2=g:RandomSelect(tp, startinghandnum)
 
         Duel.MoveToDeckTop(g2)
