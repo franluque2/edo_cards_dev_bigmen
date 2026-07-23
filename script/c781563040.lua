@@ -162,8 +162,8 @@ function s.numeronchaosritualrewritefilter(c)
 end
 
 function s.rewritecardscon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetMatchingGroupCount(s.countertraprewritefilter,tp,LOCATION_ALL,0,nil)>0
-    or Duel.GetMatchingGroupCount(s.numeronchaosritualrewritefilter,tp,LOCATION_ALL,0,nil)>0
+    return (Duel.GetMatchingGroupCount(s.countertraprewritefilter,tp,LOCATION_ALL,0,nil)>0)
+    or (Duel.GetMatchingGroupCount(s.numeronchaosritualrewritefilter,tp,LOCATION_ALL,0,nil)>0)
 end
 
 function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
