@@ -48,12 +48,20 @@ function s.rewritecardscon(e,tp,eg,ep,ev,re,r,rp)
     return (Duel.GetMatchingGroupCount(s.toadfilter,tp,LOCATION_EXTRA,0,nil)>0) or (Duel.GetMatchingGroupCount(s.dtsfrogfilter,tp,LOCATION_EXTRA,0,nil)>0)
 end
 
+local oldfunc=Card.IsRank
+
+function Card.IsRank(c, r)
+    if c:IsOriginalCode(TOADALLY_AWESOME) and r==5 and c:GetFlagEffect(id) then return true end
+    if c:IsOriginalCode(TOADALLY_AWESOME) and r~=5 and c:GetFlagEffect(id) then return false end
+    return oldfunc(c, r)
+end
 function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
     local g1=Duel.GetMatchingGroup(s.toadfilter,tp,LOCATION_EXTRA,0,nil)
     for tc in g1:Iter() do
         local e1=Effect.CreateEffect(e:GetHandler())
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_CHANGE_RANK)
+        e1:SetRange(LOCATION_ALL)
         e1:SetValue(5)
         tc:RegisterEffect(e1)
 

@@ -112,6 +112,8 @@ function s.rewriteevilneossop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(s.splimit)
 	tc:RegisterEffect(e1)
 
+    tc:GetMetatable().dark_calling = false
+
     end
 end
 
