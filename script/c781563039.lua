@@ -34,6 +34,91 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e2:SetCondition(s.tadpolecon)
     e2:SetOperation(s.tadpoleop)
     Duel.RegisterEffect(e2, tp)
+
+    --TADPOLE in your GY gain the following effect
+
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+    e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCost(s.spcost)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
+
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+    e4:SetTargetRange(LOCATION_GRAVE,0)
+    e4:SetTarget(function(_,c) return c:IsCode(TADPOLE) end)
+    e4:SetLabelObject(e3)
+    Duel.RegisterEffect(e4,tp)
+end
+
+function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(100)
+	return true
+end
+function s.cfilter(c)
+	return c:IsCode(TADPOLE) and c:IsAbleToRemoveAsCost()
+end
+function s.spfilter(c,e,tp,lv)
+	return c:IsSetCard(SET_FROG) and c:IsLevelBelow(lv) and c:IsAbleToHand()
+end
+
+function s.sfilter(c,e,tp,lv)
+	return c:IsSetCard(SET_FROG) and c:GetLevel()==lv and c:IsAbleToHand()
+end
+
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk, chkc)
+	local c=e:GetHandler()
+    if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) end
+	if chk==0 then
+		if e:GetLabel()~=100 then return false end
+		e:SetLabel(0)
+		local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
+		return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
+			and Duel.IsExistingTarget(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,#cg)
+	end
+
+	local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil)
+	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp,#cg)
+	local lvt={}
+	local tc=tg:GetFirst()
+	for tc in aux.Next(tg) do
+		local tlv=0
+		tlv=tlv+tc:GetLevel()
+		lvt[tlv]=tlv
+	end
+	local pc=1
+	for i=1,12 do
+		if lvt[i] then lvt[i]=nil lvt[pc]=i pc=pc+1 end
+	end
+	lvt[pc]=nil
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
+	local rg1=Group.CreateGroup()
+	if lv>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local rg2=cg:Select(tp,lv-1,lv-1,c)
+		rg1:Merge(rg2)
+	end
+	rg1:AddCard(c)
+	Duel.Remove(rg1,POS_FACEUP,REASON_COST)
+	e:SetLabel(lv)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,s.sfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,#rg1)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_GRAVE)
+end
+
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local lv=e:GetLabel()
+	local tc=Duel.GetFirstTarget()
+	if tc and Duel.SendtoHand(tc, tp, REASON_EFFECT) then
+        if tc:IsLevel(5) and Card.IsSummonable(tc, true, e) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.Summon(tp,tc,true,nil)
+		end 
+	end
 end
 
 function s.toadfilter(c)
