@@ -22,17 +22,18 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsOnField() and chkc:IsSpellTrap() end
     local ct=Duel.GetMatchingGroupCount(s.xyzfilter,tp,LOCATION_MZONE|LOCATION_GRAVE,0,nil)
-	if chk==0 then return ct>0 and Duel.IsExistingTarget(nil,tp,0,LOCATION_SZONE,1,nil)  end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)  end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_SZONE,1,ct,nil)
+	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,#g*4000)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetTargetCards(e)
 	if #tg>0 then
-		if Duel.Destroy(tg,REASON_EFFECT)>0 then
-			Duel.Damage(1-tp,#tg*4000,REASON_EFFECT)
+        local ct=Duel.Destroy(tg,REASON_EFFECT)
+		if ct>0 then
+			Duel.Damage(1-tp,ct*4000,REASON_EFFECT)
 		end
 	end
 end
