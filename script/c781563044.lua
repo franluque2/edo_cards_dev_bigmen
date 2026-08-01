@@ -62,7 +62,7 @@ function s.hookinstantkillop(e,tp,eg,ep,ev,re,r,rp)
             e4:SetDescription(aux.Stringid(id, 1))
             e4:SetType(EFFECT_TYPE_SINGLE)
             e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CLIENT_HINT)
-            e4:SetReset(RESET_EVENT+RESETS_STANDARD)
+            e4:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CONTROL)
             e4:SetCode(EFFECT_MATCH_KILL)
             tc:RegisterEffect(e4)
     end
