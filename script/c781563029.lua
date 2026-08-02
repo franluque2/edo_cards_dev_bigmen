@@ -157,6 +157,12 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e6:SetOperation(function(_,_,_eg,_,_,_,_,_) s.left_field_this_turn = s.left_field_this_turn + #_eg end)
     Duel.RegisterEffect(e6, tp)
 
+    local e9=Effect.CreateEffect(c)
+    e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e9:SetCode(EVENT_ADJUST)
+    e9:SetCondition(s.resetconadj)
+    e9:SetOperation(s.resetopadj)
+    Duel.RegisterEffect(e9, tp)
 end
 
 
@@ -186,12 +192,26 @@ function s.penguincontroledfilter(c,tp)
 end
 
 function s.setstatuschange(e,tp,eg,ev,ep,re,r,rp)
-    local g=eg:Filter(s.penguincontroledfilter, nil, tp)
-	if #g>0 and Duel.GetTurnPlayer()==tp then
+    local g=eg:Filter(s.penguincontroledfilter, nil, e:GetHandlerPlayer())
+	if #g>0 and Duel.GetTurnPlayer()==e:GetHandlerPlayer() then
         for tc in g:Iter() do
-			tc:SetStatus(STATUS_SUMMON_TURN, false)
-            tc:SetStatus(STATUS_SPSUMMON_TURN,false)
-            tc:SetStatus(STATUS_FORM_CHANGED,false)
+            tc:RegisterFlagEffect(id, RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END, 0, 1)
 		end
 	end
+end
+
+
+function s.summonedthisturnfilter(c)
+    return c:GetFlagEffect(id)>0 and (c:IsStatus(STATUS_SUMMON_TURN) or c:IsStatus(STATUS_SPSUMMON_TURN) or c:IsStatus(STATUS_FLIP_SUMMON_TURN) or c:IsStatus(STATUS_FORM_CHANGED))
+end
+
+function s.resetconadj(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetCurrentChain()==0 and Duel.IsExistingMatchingCard(s.summonedthisturnfilter, tp, LOCATION_MZONE, LOCATION_MZONE, 1, nil)
+end
+
+function s.resetopadj(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.summonedthisturnfilter, tp, LOCATION_MZONE, LOCATION_MZONE, nil)
+    for tc in g:Iter() do
+        tc:SetStatus(STATUS_SPSUMMON_TURN+STATUS_SUMMON_TURN+STATUS_FORM_CHANGED,false)
+    end
 end
