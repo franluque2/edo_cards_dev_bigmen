@@ -36,7 +36,7 @@ end
 
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) and Duel.GetFlagEffect(tp, id)>3
+    return (not s.turned_deckmaster_on[e:GetHandlerPlayer()])  and aux.CanActivateSkill(tp) --and Duel.GetFlagEffect(tp, id)>3
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
@@ -103,7 +103,7 @@ end
 function s.rmval(e)
     Duel.ResetFlagEffect(e:GetHandler():GetOwner(), id)
     Duel.RegisterFlagEffect(e:GetHandler():GetOwner(), id, 0, 0, 0)
-    Duel.Hint(HINT_SKILL, e:GetHandler():GetOwner(), id+1)
+    Duel.Hint(HINT_SKILL_FLIP, e:GetHandler():GetOwner(), id+1|(1<<32))
     Duel.SendtoDeck(e:GetHandler(),nil,-2,REASON_RULE)
 end
 
