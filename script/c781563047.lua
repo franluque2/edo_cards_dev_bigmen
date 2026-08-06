@@ -83,6 +83,55 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local e5=e4:Clone()
     e5:SetLabelObject(e3)
     Duel.RegisterEffect(e5, tp)
+
+    local e6=Effect.CreateEffect(c)
+    e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e6:SetCode(EVENT_ADJUST)
+    e6:SetCondition(s.rewritevisionherocon)
+    e6:SetOperation(s.rewritevisionheroop)
+    Duel.RegisterEffect(e6, tp)
+end
+
+function s.rewritevisionherofilter(c)
+    return c:IsSetCard(SET_VISION_HERO) and c:IsMonster() and c:GetFlagEffect(id)==0
+end
+
+function s.rewritevisionherocon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(s.rewritevisionherofilter,tp,LOCATION_ALL,0,1,nil)
+end
+
+function s.rewritevisionheroop(e,tp,eg,ep,ev,re,r,rp)
+    	local g = Duel.GetMatchingGroup(s.rewritevisionherofilter, e:GetHandlerPlayer(), LOCATION_ALL, 0, nil)
+	for tc in g:Iter() do
+		local effs = { tc:GetOwnEffects() }
+		for _, eff in ipairs(effs) do
+			if eff:IsHasType(EFFECT_TYPE_IGNITION|EFFECT_TYPE_QUICK_O|EFFECT_TYPE_TRIGGER_O|EFFECT_TYPE_QUICK_F|EFFECT_TYPE_TRIGGER_F) and (eff:GetCost() ~= nil)
+                and (eff:GetRange()&LOCATION_SZONE>0) then
+				local neweff = eff:Clone()
+				neweff:SetCost(s.repcostfunc(eff:GetCost()))
+				eff:Reset()
+				tc:RegisterEffect(neweff)
+			end
+		end
+	end
+
+end
+
+function s.fugrandjupiterfilter(c)
+    return c:IsCode(CARD_GRAND_JUPITER) and c:IsFaceup()
+end
+
+
+function s.repcostfunc(cost)
+	return function(e, tp, eg, ep, ev, re, r, rp, chk)
+		if chk == 0 then return cost(e, tp, eg, ep, ev, re, r, rp, 0) or (Duel.IsExistingMatchingCard(s.fugrandjupiterfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil) and Duel.GetFlagEffect(tp, id) > 0) end
+		if Duel.IsExistingMatchingCard(s.fugrandjupiterfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil) and (not cost or not cost(e, tp, eg, ep, ev, re, r, rp, 0)
+				or Duel.SelectYesNo(tp, aux.Stringid(id, 3))) then
+			Duel.Hint(HINT_CARD, tp, id)
+		else
+			cost(e, tp, eg, ep, ev, re, r, rp, 1)
+		end
+	end
 end
 
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
