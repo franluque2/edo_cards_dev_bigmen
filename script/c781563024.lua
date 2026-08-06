@@ -67,6 +67,7 @@ function s.rewritebackrow(e,tp)
             if not eff:IsHasType(EFFECT_TYPE_ACTIVATE) then
                 local neweff=eff:Clone()
                 neweff:SetRange(LOCATION_GRAVE)
+                neweff:SetCountLimit(1,id)
                 tc:RegisterEffect(neweff)
             end
         end

@@ -19,14 +19,16 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
     local c = e:GetHandler()
 
+    s.addactioncards(e,tp)
 
-    local e1 = Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_PREDRAW)
-    e1:SetCountLimit(1)
-    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
-    e1:SetOperation(s.addactioncards)
-    Duel.RegisterEffect(e1, tp)
+    s.placetoyvendor(e,tp)
+    --local e1 = Effect.CreateEffect(c)
+    --e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+    --e1:SetCode(EVENT_PREDRAW)
+    --e1:SetCountLimit(1)
+    --e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
+    --e1:SetOperation(s.addactioncards)
+    --Duel.RegisterEffect(e1, tp)
 
 
     local e6 = Effect.GlobalEffect()
@@ -102,10 +104,10 @@ end
 local actioncards = { 150000020, 150000024, 150000042 }
 
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
-    Duel.Hint(HINT_CARD, tp, id)
+    --Duel.Hint(HINT_CARD, tp, id)
 
     local g = Group.CreateGroup()
-    for i = 1, 2, 1 do
+    for i = 1, 3, 1 do
         local ac = actioncards[math.random(#actioncards)]
         local tc = Duel.CreateToken(1 - tp, ac)
         tc:RegisterFlagEffect(id, 0, 0, 0, tp)
@@ -120,6 +122,41 @@ function s.remfilter(c)
 end
 
 function s.removeactioncards(e, tp, eg, ep, ev, re, r, rp)
-    local g = Duel.GetMatchingGroup(s.remfilter, tp, 0, LOCATION_ALL, nil)
+    local g = Duel.GetMatchingGroup(s.remfilter, tp, 0, LOCATION_GRAVE|LOCATION_REMOVED|LOCATION_DECK, nil)
     Duel.RemoveCards(g)
+end
+
+
+function s.placetoyvendor(e,tp)
+    local toyvendor = Duel.CreateToken(tp, 70245411)
+    Duel.MoveToField(toyvendor,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+    toyvendor:RegisterFlagEffect(0,RESET_EVENT|RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id, 0))
+
+    --before resolving the on field effect of "Toy Vendor" look if there's a fluffal card in deck we can move to the top
+    local e1=Effect.CreateEffect(toyvendor)
+    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+    e1:SetCode(EVENT_CHAIN_SOLVING)
+    e1:SetRange(LOCATION_SZONE)
+    e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+    e1:SetCondition(s.movetodecktopcon)
+    e1:SetOperation(s.movetodecktopop)
+    toyvendor:RegisterEffect(e1)
+
+end
+
+function s.tomovecardfilter(c)
+    return c:IsSetCard(SET_FLUFFAL) and c:IsMonster()
+end
+
+function s.movetodecktopcon(e,tp,eg,ep,ev,re,r,rp)
+    local rc=re:GetHandler()
+    return rc and rc==e:GetHandler()
+end
+
+function s.movetodecktopop(e,tp,eg,ep,ev,re,r,rp)
+    local g1 = Duel.GetMatchingGroup(s.tomovecardfilter, tp, LOCATION_DECK, 0, nil)
+	if #g1 > 0 then
+		Duel.MoveToDeckTop(g1:GetFirst())
+	end
 end

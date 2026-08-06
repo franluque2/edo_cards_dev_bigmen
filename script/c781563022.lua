@@ -46,6 +46,23 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e6:SetTarget(s.efilter)
     e6:SetValue(1)
     Duel.RegisterEffect(e6, tp)
+
+    --Halve all Effect Damage your opponent takes from "Sunavalon Glorious Growth"
+    local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_FIELD)
+    e7:SetCode(EFFECT_CHANGE_DAMAGE)
+    e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e7:SetTargetRange(0,1)
+    e7:SetValue(s.damval)
+    Duel.RegisterEffect(e7, tp)
+end
+
+function s.damval(e,re,val,r,rp,rc)
+    if re and re:GetHandler():IsCode(511009675) then
+        return val/2
+    else
+        return val
+    end
 end
 
 function s.treefilter(c)
