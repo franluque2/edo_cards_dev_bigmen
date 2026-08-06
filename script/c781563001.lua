@@ -21,7 +21,7 @@ end
 
 local CARD_DARK_ARMED_DRAGON = 65192027
 local CARD_DARK_ARMED_ANNHILATION_DRAGON = 78144171
-
+local CARD_DARK_ARMED_DRAGON_PUNISHER = 100457104
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
 end
@@ -39,7 +39,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CHANGE_CODE)
 	e1:SetTargetRange(LOCATION_ALL, 0)
-	e1:SetTarget(function(_, _c) return _c:IsOriginalCode(CARD_DARK_ARMED_DRAGON) end)
+	e1:SetTarget(function(_, _c) return _c:IsOriginalCode(CARD_DARK_ARMED_DRAGON,CARD_DARK_ARMED_DRAGON_PUNISHER) end)
 	e1:SetValue(73879377)
 	Duel.RegisterEffect(e1, tp)
 end
@@ -69,7 +69,7 @@ function s.rewritecards(e, tp)
 		tc:RegisterEffect(e1)
 		--special summon
 		local e2 = Effect.CreateEffect(tc)
-		e2:SetDescription(aux.Stringid(id, 1))
+		e2:SetDescription(aux.Stringid(CARD_DARK_ARMED_DRAGON, 1))
 		e2:SetType(EFFECT_TYPE_FIELD)
 		e2:SetCode(EFFECT_SPSUMMON_PROC)
 		e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -78,7 +78,7 @@ function s.rewritecards(e, tp)
 		tc:RegisterEffect(e2)
 		--destroy
 		local e3 = Effect.CreateEffect(tc)
-		e3:SetDescription(aux.Stringid(id, 2))
+		e3:SetDescription(aux.Stringid(CARD_DARK_ARMED_DRAGON, 2))
 		e3:SetCategory(CATEGORY_DESTROY)
 		e3:SetType(EFFECT_TYPE_IGNITION)
 		e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -121,6 +121,71 @@ function s.rewritecards(e, tp)
 				eff:Reset()
 			end
 		end
+	end
+
+	local g4 = Duel.GetMatchingGroup(s.affectedcardfilter, tp, LOCATION_ALL, 0, nil, CARD_DARK_ARMED_DRAGON_PUNISHER)
+		for tc in g4:Iter() do
+			local effs = { tc:GetOwnEffects() }
+			for _, eff in ipairs(effs) do
+				if (eff:GetCode() == EFFECT_SPSUMMON_CONDITION) or (eff:GetCode() == EFFECT_SPSUMMON_PROC) or (eff:GetCode() == EFFECT_TYPE_IGNITION) or (eff:GetCode() == EFFECT_TYPE_QUICK_O) then
+					eff:Reset()
+				end
+			end
+			tc:RegisterFlagEffect(id, 0, 0, 1)
+
+
+			local e1 = Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE + EFFECT_FLAG_UNCOPYABLE)
+		e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+		e1:SetValue(function(e,sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) and sumeff:GetHandler():IsMonster() end)
+		tc:RegisterEffect(e1)
+		--special summon
+		local e2 = Effect.CreateEffect(tc)
+		e2:SetDescription(aux.Stringid(CARD_DARK_ARMED_DRAGON_PUNISHER, 1))
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_SPSUMMON_PROC)
+		e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e2:SetRange(LOCATION_HAND)
+		e2:SetCondition(s.spcon)
+		tc:RegisterEffect(e2)
+
+		--You can reveal this card in your hand; Special Summon 1 Level 6 or lower DARK monster from your hand, also you cannot Special Summon for the rest of this turn, except DARK monsters
+		local e1=Effect.CreateEffect(c)
+		e1:SetDescription(aux.Stringid(CARD_DARK_ARMED_DRAGON_PUNISHER,1))
+		e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		e1:SetType(EFFECT_TYPE_IGNITION)
+		e1:SetRange(LOCATION_HAND)
+		e1:SetCountLimit(1,{CARD_DARK_ARMED_DRAGON_PUNISHER,0})
+		e1:SetCost(Cost.SelfReveal)
+		e1:SetTarget(s.sptg)
+		e1:SetOperation(s.spop)
+		tc:RegisterEffect(e1)
+		--During the Main Phase (Quick Effect): You can banish up to 3 DARK monsters from your GY, then target that many cards on the field; destroy them
+		local e2=Effect.CreateEffect(c)
+		e2:SetDescription(aux.Stringid(CARD_DARK_ARMED_DRAGON_PUNISHER,2))
+		e2:SetCategory(CATEGORY_DESTROY)
+		e2:SetType(EFFECT_TYPE_QUICK_O)
+		e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e2:SetCode(EVENT_FREE_CHAIN)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetCountLimit(1,{CARD_DARK_ARMED_DRAGON_PUNISHER,1})
+		e2:SetCondition(function()
+			return Duel.IsMainPhase()
+		end)
+		e2:SetCost(s.descost)
+		e2:SetTarget(s.destg)
+		e2:SetOperation(s.desop)
+		e2:SetHintTiming(0,TIMING_MAIN_END|TIMINGS_CHECK_MONSTER_E)
+		tc:RegisterEffect(e2)
+
+		local metatable = tc:GetMetatable()
+		if metatable.listed_series and #metatable.listed_series > 0 then
+			table.insert(metatable.listed_series, SET_ARMED_DRAGON)
+		else
+			metatable.listed_series = { SET_ARMED_DRAGON }
+		end
+
 	end
 end
 
@@ -198,4 +263,61 @@ function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,CARD_DARK_ARMED_ANNHILATION_DRAGON)==0 end
 	Duel.RegisterFlagEffect(tp,CARD_DARK_ARMED_ANNHILATION_DRAGON,RESET_PHASE|PHASE_END,0,1)
 	return true
+end
+
+
+
+--Dark Armed Dragon Punisher
+
+function s.spfilter(c,e,tp)
+	return c:IsLevelBelow(6) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+		if #g>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		end
+	end
+	--You cannot Special Summon for the rest of this turn, except DARK monsters
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,3))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(function(e,c) return c:IsAttributeExcept(ATTRIBUTE_DARK) end)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.descostfilter(c)
+	return (c:IsAttribute(ATTRIBUTE_DARK) or (c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_DRAGON))) and c:IsAbleToRemoveAsCost()
+end
+function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.descostfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local max_target_count=math.min(3,Duel.GetTargetCount(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil))
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,s.descostfilter,tp,LOCATION_GRAVE,0,1,max_target_count,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:GetChainData().target_count=#g
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	local target_count=e:GetChainData().target_count
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,target_count,target_count,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,tp,0)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetTargetCards(e)
+	if #tg>0 then
+		Duel.Destroy(tg,REASON_EFFECT)
+	end
 end
