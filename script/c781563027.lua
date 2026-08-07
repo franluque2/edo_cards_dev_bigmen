@@ -55,9 +55,13 @@ end
 
 function s.discardhandop(e,tp,eg,ep,ev,re,r,rp)
     s.used_this_skill[tp] = true
-    local g=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_HAND, 0, nil, REASON_RULE)
-    if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-        Duel.SendtoGrave(g, REASON_RULE)
+    local g=Duel.GetMatchingGroup(Card.IsMonster, tp, LOCATION_HAND, 0, nil)
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        if #g>0 then
+            Duel.SendtoGrave(g, REASON_RULE)
+            Duel.BreakEffect()
+        end
+
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
         local tc=Duel.SelectMatchingCard(tp, s.togravemonfilter, tp, LOCATION_DECK, 0, 1, 1, nil)
         if #tc>0 then

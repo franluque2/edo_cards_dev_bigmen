@@ -82,7 +82,7 @@ function s.loselpop(e,tp,eg,ep,ev,re,r,rp)
     local num=Duel.GetOverlayCount(tp,LOCATION_MZONE,0)
     if num>0 then
         Duel.Hint(HINT_CARD,tp,id)
-        Duel.SetLP(tp,Duel.GetLP(tp)-num*1000)
+        Duel.SetLP(tp,Duel.GetLP(tp)-num*300)
 
     end
 end

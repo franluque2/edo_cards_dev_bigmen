@@ -122,7 +122,9 @@ function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
                 neweff:SetType(EFFECT_TYPE_QUICK_O)
                 neweff:SetCode(EVENT_FREE_CHAIN)
                 neweff:SetHintTiming(0|TIMINGS_CHECK_MONSTER|TIMING_MAIN_END)
-                neweff:SetCost(s.costfunc)
+                if eff:GetCost() then
+                    neweff:SetCost(s.repcostfunc(eff:GetCost()))
+                end
                 tc:RegisterEffect(neweff)
 
             end
@@ -141,7 +143,7 @@ end
 
 function s.repcostfunc(cost)
 	return function(e, tp, eg, ep, ev, re, r, rp, chk)
-		if chk == 0 then return cost(e, tp, eg, ep, ev, re, r, rp, 0) or ( Duel.GetFlagEffect(tp, id) > 0) end
+		if chk == 0 then return (cost and cost(e, tp, eg, ep, ev, re, r, rp, 0)) or ( Duel.GetFlagEffect(tp, id) > 0) end
 		if (not cost or not cost(e, tp, eg, ep, ev, re, r, rp, 0)
 				or Duel.SelectYesNo(tp, aux.Stringid(id, 1))) then
 			Duel.Hint(HINT_CARD, tp, id)
