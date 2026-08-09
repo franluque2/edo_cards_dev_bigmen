@@ -86,7 +86,7 @@ function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
             if eff:IsHasType(EFFECT_TYPE_TRIGGER_O) then
                 
                 local neweff=eff:Clone()
-                neweff:SetCondition(aux.TRUE)
+	            neweff:SetCondition(function(e) return e:GetHandler():IsSummonLocation(LOCATION_EXTRA) end)
                 neweff:SetCountLimit(1)
 
                 eff:Reset()
@@ -122,9 +122,7 @@ function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
                 neweff:SetType(EFFECT_TYPE_QUICK_O)
                 neweff:SetCode(EVENT_FREE_CHAIN)
                 neweff:SetHintTiming(0|TIMINGS_CHECK_MONSTER|TIMING_MAIN_END)
-                if eff:GetCost() then
-                    neweff:SetCost(s.repcostfunc(eff:GetCost()))
-                end
+                neweff:SetCost(s.costfunc)
                 tc:RegisterEffect(neweff)
 
             end
