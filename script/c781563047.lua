@@ -180,7 +180,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.visionheromonstercardtogravefilter(c)
-    return c:IsSetCard(SET_VISION_HERO) and c:IsMonster() and c:IsAbleToGrave() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
+    return c:IsSetCard(SET_VISION_HERO) and c:IsMonsterCard() and c:IsAbleToGrave() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
 end
 
 function s.spfilter(c,e,tp)
