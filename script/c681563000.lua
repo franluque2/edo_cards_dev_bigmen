@@ -23,8 +23,8 @@ function s.sendfilter(c)
 end
 function s.effcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	if Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		local g=Duel.SelectMatchingCard(tp,s.sendfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+	if Duel.IsExistingMatchingCard(s.sendfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		local g=Duel.SelectMatchingCard(tp,s.sendfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil)
 		Duel.SendtoGrave(g,REASON_COST)
 		e:SetLabel(1)
 	else
