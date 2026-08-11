@@ -113,6 +113,7 @@ function s.rewritevisionheroop(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(neweff)
 			end
 		end
+        tc:RegisterFlagEffect(id, 0, 0, 1)
 	end
 
 end
@@ -124,9 +125,12 @@ end
 
 function s.repcostfunc(cost)
 	return function(e, tp, eg, ep, ev, re, r, rp, chk)
-		if chk == 0 then return cost(e, tp, eg, ep, ev, re, r, rp, 0) or (Duel.IsExistingMatchingCard(s.fugrandjupiterfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil) and Duel.GetFlagEffect(tp, id) > 0) end
-		if Duel.IsExistingMatchingCard(s.fugrandjupiterfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil) and (not cost or not cost(e, tp, eg, ep, ev, re, r, rp, 0)
-				or Duel.SelectYesNo(tp, aux.Stringid(id, 3))) then
+        local has_grand_jupiter = Duel.IsExistingMatchingCard(s.fugrandjupiterfilter, e:GetHandlerPlayer(), LOCATION_ONFIELD, 0, 1, nil)
+        local can_pay_original = cost and cost(e, tp, eg, ep, ev, re, r, rp, 0)
+        if chk == 0 then
+            return can_pay_original or (has_grand_jupiter and (Duel.GetFlagEffect(tp, id) > 0) and (Duel.GetLocationCount(tp, LOCATION_MZONE)>0))
+        end
+        if has_grand_jupiter and (not can_pay_original or( (Duel.GetLocationCount(tp, LOCATION_MZONE)>0) and Duel.SelectYesNo(tp, aux.Stringid(id, 3)))) then
 			Duel.Hint(HINT_CARD, tp, id)
 		else
 			cost(e, tp, eg, ep, ev, re, r, rp, 1)
