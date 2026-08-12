@@ -34,7 +34,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_ADD_TYPE)
     e1:SetTargetRange(LOCATION_ALL,0)
-    e1:SetTarget(aux.TargetBoolFunction(Card.IsOriginalSetCard,SET_RUNICK))
+    e1:SetTarget(s.lowlevelrunickfilter)
     e1:SetValue(TYPE_TUNER)
     Duel.RegisterEffect(e1, tp)
 
@@ -89,6 +89,10 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterEffect(e10, tp)
 
 
+end
+
+function s.lowlevelrunickfilter(e,c)
+    return c:IsOriginalSetCard(SET_RUNICK) and c:IsMonster() and c:IsLevelBelow(3)
 end
 
 function s.discon(e)
