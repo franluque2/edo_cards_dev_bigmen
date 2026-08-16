@@ -1,5 +1,7 @@
 --Dark Deal of Catastrophe
 Duel.LoadScript("big_skill_aux.lua")
+Duel.LoadScript("c420.lua")
+
 local s, id = GetID()
 function s.initial_effect(c)
 
@@ -26,6 +28,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetCondition(s.hookinstantkillcon)
     e1:SetOperation(s.hookinstantkillop)
     Duel.RegisterEffect(e1, tp)
+
+    local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
+	e2:SetTargetRange(LOCATION_HAND|LOCATION_MZONE,0)
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsKnight))
+    Duel.RegisterEffect(e2, tp)
+
 end
 local HIDDEN_KNIGHT_HOOK=511000008
 local HIDDEN_KNIGHTS={HIDDEN_KNIGHT_HOOK,511000957}

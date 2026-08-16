@@ -40,7 +40,7 @@ function s.thfilter(c)
 	return c:IsSetCard(SET_VISION_HERO) and c:IsMonster() and not c:IsForbidden()
 end
 function s.spfilter(c,e,tp)
-	return (c:IsSetCard(SET_VISION_HERO) or c:IsCode(CARD_GRAND_JUPITER)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(CARD_GRAND_JUPITER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.GetLocationCount(tp, LOCATION_SZONE)>0
