@@ -150,7 +150,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) and Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
-            local code=Duel.SelectCardsFromCodes(1-tp,1,1,false,false,cards_to_add)
+            local code=Duel.SelectCardsFromCodes(tp,1,1,false,false,cards_to_add)
             local token=Duel.CreateToken(tp, code)
             Duel.SendtoHand(token, tp, REASON_RULE)
             Duel.ConfirmCards(1-tp, token)
