@@ -74,8 +74,8 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	local e5 = Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e5:SetCondition(s.repcon)
-	e5:SetOperation(s.repop)
+	e5:SetCondition(s.repconprot)
+	e5:SetOperation(s.repopprot)
 	Duel.RegisterEffect(e5, tp)
 
 	local e6 = e5:Clone()
@@ -251,7 +251,7 @@ function s.sliferop(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.protectfilter(c, tp)
-	return c:IsFaceup() and (c:GetTextAttack() == -2) and c:IsControler(tp)
+	return c:IsFaceup() and (c:GetTextAttack() == -2) and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
 end
 
 function s.massleavecheck(tp)
@@ -308,7 +308,7 @@ function s.repcon2(e, tp, eg, ep, ev, re, r, rp)
 	return includesCard
 end
 
-function s.repcon(e, tp, eg, ep, ev, re, r, rp)
+function s.repconprot(e, tp, eg, ep, ev, re, r, rp)
 	local tc = Duel.GetAttacker()
 	local bc = tc:GetBattleTarget()
 	if tc:IsControler(1 - tp) then
@@ -357,7 +357,7 @@ function s.repcon(e, tp, eg, ep, ev, re, r, rp)
 	end
 end
 
-function s.repop(e, tp, eg, ep, ev, re, r, rp)
+function s.repopprot(e, tp, eg, ep, ev, re, r, rp)
 	local c = e:GetHandler()
 	local g2 = e:GetLabelObject()
 	if #g2 == 0 then return end
@@ -370,13 +370,14 @@ function s.repop(e, tp, eg, ep, ev, re, r, rp)
 				Duel.DiscardHand(tp, Card.IsDiscardable, 2, 2, REASON_COST|REASON_DISCARD)
 				local e1 = Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 				e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 				e1:SetValue(1)
 				e1:SetReset(RESET_CHAIN)
 				tc:RegisterEffect(e1)
 				local e2 = Effect.CreateEffect(c)
 				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+				e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 				e2:SetRange(LOCATION_MZONE)
 				e2:SetCode(EFFECT_IMMUNE_EFFECT)
 				e2:SetReset(RESET_CHAIN)
