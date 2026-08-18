@@ -1,7 +1,16 @@
---Shackles of a Poisonous Idol
+--An Angelic Poisonous Idol
 Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
+
+                local e3 = Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EVENT_STARTUP)
+    e3:SetRange(0x5f)
+    e3:SetCountLimit(1)
+    e3:SetOperation(s.shuffledownop)
+    c:RegisterEffect(e3)
+
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,
 		nil, nil, true, nil)
 	c:RegisterEffect(e1)
@@ -11,6 +20,16 @@ end
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
+end
+
+
+function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
+
+
+    local g1 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 35371948)
+	if #g1 > 0 then
+		Duel.MoveToDeckTop(g1:GetFirst())
+	end
 end
 
 function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
@@ -31,6 +50,36 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e1:SetCondition(s.shufflebackcon)
     e1:SetOperation(s.shufflebackop)
     Duel.RegisterEffect(e1, tp)
+
+        local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
+	e2:SetTargetRange(LOCATION_HAND|LOCATION_MZONE,0)
+	e2:SetTarget(s.lowleveltrickstarfilter)
+    Duel.RegisterEffect(e2, tp)
+
+        local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_FIELD)
+    e7:SetCode(EFFECT_CHANGE_DAMAGE)
+    e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e7:SetTargetRange(0,1)
+    e7:SetCondition(function(_e) return Duel.IsTurnPlayer(_e:GetHandlerPlayer()) and Duel.GetTurnCount()==1 end)
+    e7:SetValue(s.damval)
+    Duel.RegisterEffect(e7, tp)
+
+end
+
+function s.damval(e,re,val,r,rp,rc)
+    if r&REASON_EFFECT~=0 then
+        return 1
+    else
+        return val
+    end
+end
+
+function s.lowleveltrickstarfilter(e,c)
+    return c:IsLevelBelow(3) and c:IsSetCard(SET_TRICKSTAR)
 end
 
 function s.shufflebackcon(e, tp, eg, ep, ev, re, r, rp)

@@ -227,14 +227,19 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
 
 	s.used_this_skill[tp] = true
 
-	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
-	local g = Group.Select(g_roids[tp], tp, 4, 4, nil)
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SELECT)
+	local g = Group.Select(g_roids[tp], tp, 5, 5, nil)
 	local g2 = Group.CreateGroup()
 	for tc in g:Iter() do
 		local token = Duel.CreateToken(tp, tc:GetOriginalCode())
 		g2:AddCard(token)
 	end
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+	local g3 = g2:Select(tp, 1, 1, nil)
+	Duel.SendtoHand(g3, nil, REASON_EFFECT)
+	g2:RemoveCard(g3:GetFirst())
 	Duel.SendtoGrave(g2, REASON_EFFECT)
+	Duel.ConfirmCards(1 - tp, g3)
 end
 
 function s.fillgroups()
