@@ -103,6 +103,17 @@ function s.shuffledownopextra(e, tp, eg, ep, ev, re, r, rp)
 	if #g > 0 then
 		Duel.MoveToDeckTop(g:GetFirst())
 	end
+
+	local g2 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 55144522)
+	if #g2 > 0 then
+		Duel.MoveToDeckTop(g2:GetFirst())
+	end
+
+	if Duel.IsTurnPlayer(1-tp) then
+		local token=Duel.CreateToken(tp, 98476659)
+		Duel.SendtoHand(token, tp, REASON_RULE)
+		Duel.ConfirmCards(1-tp, token)
+	end
 	s.shuffledownop(e, tp)
 end
 
