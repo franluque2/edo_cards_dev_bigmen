@@ -111,8 +111,63 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e4:SetCondition(s.rewritesynchroscon)
     e4:SetOperation(s.rewritesynchrosop)
     Duel.RegisterEffect(e4,tp)
+
+
+    
+        --grant effects to zeman
+        local e5=Effect.CreateEffect(c)
+        e5:SetDescription(aux.Stringid(id,4))
+        e5:SetType(EFFECT_TYPE_FIELD)
+        e5:SetRange(LOCATION_MZONE)
+        e5:SetTargetRange(0,LOCATION_MZONE)
+        e5:SetCode(EFFECT_DISABLE)
+        e5:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+        e5:SetTarget(s.zemanvictg)
+
+        local e6=Effect.CreateEffect(c)
+        e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
+        e6:SetRange(LOCATION_MZONE)
+        e6:SetTargetRange(LOCATION_MZONE,0)
+        e6:SetTarget(function(e,c) return c:IsCode(22858242) end)
+        e6:SetLabelObject(e5)
+        Duel.RegisterEffect(e6,tp)
+
+        local e7=Effect.CreateEffect(c)
+        e7:SetType(EFFECT_TYPE_FIELD)
+        e7:SetRange(LOCATION_MZONE)
+        e7:SetTargetRange(0,LOCATION_MZONE)
+        e7:SetCode(EFFECT_CHANGE_LEVEL_FINAL)
+        e7:SetTarget(function (e,c) return c:HasLevel() and s.zemanvictg(e,c) end)
+        e7:SetValue(1)
+
+        local e8=e6:Clone()
+        e8:SetLabelObject(e7)
+        Duel.RegisterEffect(e8,tp)
+
+
+
+        local e9=e7:Clone()
+        e9:SetCode(EFFECT_CHANGE_LINK_FINAL)
+        e9:SetTarget(function (e,c) return c:IsLinkMonster() and s.zemanvictg(e,c) end)
+
+        local e10=e6:Clone()
+        e10:SetLabelObject(e9)
+        Duel.RegisterEffect(e10,tp)
+
+        local e11=e7:Clone()
+        e11:SetCode(EFFECT_CHANGE_RANK_FINAL)
+        e11:SetTarget(function (e,c) return c:HasRank() and s.zemanvictg(e,c) end)
+
+        local e12=e6:Clone()
+        e12:SetLabelObject(e11)
+        Duel.RegisterEffect(e12,tp)
+
+    
 end
 
+function s.zemanvictg(e,c)
+	return c:IsFaceup() and c:IsMonster() and e:GetHandler():GetColumnGroup():IsContains(c)
+end
 
 
 
@@ -209,7 +264,7 @@ function s.rewritecusilluop(e,tp,eg,ep,ev,re,r,rp)
         e3:SetValue(s.repval)
         tc:RegisterEffect(e3)
 
-
+        
     end
 end
 
