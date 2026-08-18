@@ -8,6 +8,10 @@ function s.initial_effect(c)
         s.used_this_skill[0] = false
         s.used_this_skill[1] = false
 
+        aux.AddValuesReset(function()
+			s.used_this_skill[0] = false
+			s.used_this_skill[1] = false
+		end)
     end)
 
     local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive, s.flipopactive, true, nil)
