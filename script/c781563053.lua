@@ -286,10 +286,10 @@ end
 function s.newdesreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsReason(REASON_BATTLE) and c:GetBattlePosition()~=POS_FACEUP_DEFENSE
-		and (Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) or Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,0,1,nil)) end
+		and (Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) or Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil)) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
         local canrelease=Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c)
-        local canreturn=Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,0,1,nil)
+        local canreturn=Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil)
         local option=-1
         if canrelease and canreturn then
             option=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
@@ -304,7 +304,7 @@ function s.newdesreptg(e,tp,eg,ep,ev,re,r,rp,chk)
             Duel.Release(g,REASON_EFFECT)
         elseif option==1 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.returnfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+            local g=Duel.SelectMatchingCard(tp,s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
             Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN+REASON_REPLACE)
         end
 		Duel.SetLP(1-tp,Duel.GetLP(1-tp)/2)
@@ -329,11 +329,11 @@ function s.sumcon(e,c,minc,zone,relzone,exeff)
 	if c==nil then return true end
 	if c:IsLevelBelow(6) then return false end
     local tp=c:GetControler()
-    local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,0,nil,tp)
+    local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,tp)
 	return aux.SelectUnselectGroup(mg,e,tp,c:GetTributeRequirement(),c:GetTributeRequirement(),s.rescon(zone),0)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk,c,minc,zone,relzone,exeff)
-	local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,0,nil,tp)
+	local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil,tp)
 	local g=aux.SelectUnselectGroup(mg,e,tp,c:GetTributeRequirement(),c:GetTributeRequirement(),s.rescon(zone),1,tp,HINTMSG_TOGRAVE,nil,nil,true)
 	if g and #g>0 then
 		g:KeepAlive()
@@ -362,10 +362,10 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
         return eg:IsExists(s.repfilter,1,nil,tp,c)
         and (tp~=rp)
-		and (Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) or Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,0,1,nil)) end
+		and (Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) or Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil)) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
 		 local canrelease=Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c)
-        local canreturn=Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,0,1,nil)
+        local canreturn=Duel.IsExistingMatchingCard(s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil)
         local option=-1
         if canrelease and canreturn then
             option=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
@@ -380,7 +380,7 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
             Duel.Release(g,REASON_EFFECT)
         elseif option==1 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.returnfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+            local g=Duel.SelectMatchingCard(tp,s.returnfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
             Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN+REASON_REPLACE)
         end
 		return true
