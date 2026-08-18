@@ -62,7 +62,43 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e10:SetTarget(s.actfilter)
     Duel.RegisterEffect(e10, tp)
 
+
+    local e11=Effect.CreateEffect(c)
+    e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e11:SetCode(EVENT_ADJUST)
+    e11:SetCondition(s.rewritekrakencon)
+    e11:SetOperation(s.rewritekrakenop)
+    Duel.RegisterEffect(e11, tp)
 end
+
+function s.nottaggedkrakenfilter(c)
+    return c:IsCode(40636712) and c:GetFlagEffect(id)==0
+end
+
+function s.rewritekrakencon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(s.nottaggedkrakenfilter,tp,LOCATION_ALL,0,1,nil)
+end
+
+function s.rewritekrakenop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.nottaggedkrakenfilter,tp,LOCATION_ALL,0,nil)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id,0,0,0)
+        local effs={tc:GetOwnEffects()}
+        for _,teh in ipairs(effs) do
+            if teh:IsHasType(EFFECT_TYPE_IGNITION) then
+                teh:SetCountLimit(1,id)
+            end
+        end
+        	local e1=Effect.CreateEffect(e:GetHandler())
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+            e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+            e1:SetRange(LOCATION_MZONE)
+            tc:RegisterEffect(e1)
+
+    end
+end
+
 
 function s.discon(e)
 	return (Duel.GetTurnPlayer() ~=e:GetHandlerPlayer()) and (Duel.GetTurnCount()==1)
@@ -101,7 +137,7 @@ function s.mfilter2(c, fc, sumtype, tp)
     return c:IsSetCard(SET_FLUFFAL, fc, sumtype, tp) or c:IsSetCard(SET_EDGE_IMP, fc, sumtype, tp)
 end
 
-local actioncards = { 150000020, 150000024, 150000042 }
+local actioncards = { 150000020, 150000024 } --150000042
 
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
     --Duel.Hint(HINT_CARD, tp, id)
