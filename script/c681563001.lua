@@ -58,8 +58,12 @@ function s.atktarg(e,c)
     return c:IsFaceup() and (c:IsSetCard(SET_EARTHBOUND_IMMORTAL) or (c:IsType(TYPE_SYNCHRO) and c:IsRace(RACE_BEAST)))
 end
 
+function s.notbeastfilter(c)
+    return c:IsMonster() and not c:IsRace(RACE_BEAST+RACE_BEASTWARRIOR+RACE_WINGEDBEAST)
+end
+
 function s.atkval(e,c)
-    local g=Duel.GetMatchingGroup(aux.NOT(Card.IsRace),c:GetControler(),LOCATION_GRAVE,0,nil,RACE_BEAST+RACE_BEASTWARRIOR+RACE_WINGEDBEAST)
+    local g=Duel.GetMatchingGroup(s.notbeastfilter,c:GetControler(),LOCATION_GRAVE,0,nil)
     return g:GetCount()*100
 end
 
