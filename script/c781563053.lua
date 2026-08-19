@@ -244,6 +244,10 @@ function s.rewritecusilluop(e,tp,eg,ep,ev,re,r,rp)
             if eff:GetCode()==EFFECT_DESTROY_REPLACE then
                 eff:SetTarget(s.newdesreptg)
             end
+            if eff:GetCode()&EFFECT_CANNOT_BE_BATTLE_TARGET==EFFECT_CANNOT_BE_BATTLE_TARGET then
+				eff:Reset()
+			end
+				
         end
 
         local e1=Effect.CreateEffect(tc)
@@ -268,6 +272,14 @@ function s.rewritecusilluop(e,tp,eg,ep,ev,re,r,rp)
         e3:SetTarget(s.reptg)
         e3:SetValue(s.repval)
         tc:RegisterEffect(e3)
+
+        local e4=Effect.CreateEffect(tc)
+        e4:SetType(EFFECT_TYPE_SINGLE)
+        e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+        e4:SetCode(EFFECT_IGNORE_BATTLE_TARGET)
+        e4:SetRange(LOCATION_MZONE)
+        e4:SetValue(1)
+        tc:RegisterEffect(e4)
 
         
     end
