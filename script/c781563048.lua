@@ -11,7 +11,7 @@ function s.initial_effect(c)
     e3:SetOperation(s.shuffledownop)
     c:RegisterEffect(e3)
 
-        local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,s.flipconactive, s.flipopactive, true, nil)
+        local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,nil, nil, true, nil)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
 end
