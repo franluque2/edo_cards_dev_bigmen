@@ -30,13 +30,17 @@ function s.initial_effect(c)
     end)
 end
 
+function s.shouldberewritingluckresults(tp)
+    return s.forcingluckresults[tp] and Duel.IsExistingMatchingCard(aux.FilterFaceup, tp, LOCATION_ONFIELD, 0, 1, nil, Card.IsCode, 82308875)
+end
+
 
 --Duel.TossDice
 --Rolls (int count1) dice on behalf of (int player) and (int count2) dice on behalf of the opponent of (int player). Returns all the results of the rolls.
 local oldfunc=Duel.TossDice
 function Duel.TossDice(tp,dp,dop)
-    local forcetp = s.forcingluckresults[tp] and dp and dp>0
-    local forceop = s.forcingluckresults[1-tp] and dop and dop>0
+    local forcetp = s.shouldberewritingluckresults(tp) and dp and dp>0
+    local forceop = s.shouldberewritingluckresults(1-tp) and dop and dop>0
     if not forcetp and not forceop then
         s.altered_dice_results = false
         return oldfunc(tp,dp,dop)
@@ -100,7 +104,7 @@ end
 
 local oldfuncdraw = Duel.Draw
 Duel.Draw = function(tp, num, reason)
-	if s.forcingluckresults[tp] then
+	if s.shouldberewritingluckresults(tp) then
 		s.shuffletotopop(nil, tp)
 	end
 	return oldfuncdraw(tp, num, reason)
@@ -111,6 +115,7 @@ function s.cardfilter(c, tp)
 end
 
 function s.shuffletotopop(e, tp, eg, ep, ev, re, r, rp)
+    if not s.shouldberewritingluckresults(tp) then return end
     local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
 	if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
     local topcard=Duel.GetDecktopGroup(tp, 1)
@@ -259,7 +264,7 @@ function s.limtg(e,c)
 end
 
 function s.negskillcon(e, tp, eg, ep, ev, re, r, rp)
-    return s.shouldforceluckresults[tp] and s.forcingluckresults[tp] and eg:IsExists(Card.IsType, 1, nil, TYPE_CONTINUOUS)
+    return s.shouldforceluckresults[tp] and s.shouldberewritingluckresults(tp) and eg:IsExists(Card.IsType, 1, nil, TYPE_CONTINUOUS)
 end
 
 function s.negskillop(e, tp, eg, ep, ev, re, r, rp)
