@@ -130,7 +130,7 @@ function s.rewriteevilheroes(e,tp)
     for tc in g:Iter() do
         tc:RegisterFlagEffect(id, 0,0,0)
 
-        Fusion.AddProcMix(tc,true,true,s.oppmonster,s.ctfusmat)
-
+        local f1=Fusion.AddProcMix(tc,true,true,s.oppmonster,s.ctfusmat)[1]
+        f1:SetDescription(aux.Stringid(id, 0))
     end
 end
