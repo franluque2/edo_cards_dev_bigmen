@@ -3,6 +3,14 @@ Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
 
+            local e3 = Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EVENT_STARTUP)
+    e3:SetRange(0x5f)
+    e3:SetCountLimit(1)
+    e3:SetOperation(s.shuffledownop)
+    c:RegisterEffect(e3)
+
         local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,nil,nil, true, nil)
     c:RegisterEffect(e1)
     c:RegisterEffect(e2)
@@ -11,6 +19,16 @@ end
 local TADPOLE=10456559
 local TOADALLY_AWESOME=90809975
 local DESFROG=84451804
+
+function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
+
+
+    local g1 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 09126351)
+	if #g1 > 0 then
+		Duel.MoveToDeckTop(g1:GetFirst())
+	end
+end
+
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
