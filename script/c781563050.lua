@@ -136,7 +136,6 @@ function s.immop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_IMMUNE_EFFECT)
 			e1:SetTargetRange(LOCATION_ONFIELD,0)
 			e1:SetValue(s.efilter)
-			e1:SetLabelObject(re)
 			e1:SetReset(RESET_CHAIN)
 			Duel.RegisterEffect(e1,tp)
 
@@ -146,9 +145,8 @@ function s.immop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.efilter(e,re)
-	return re==e:GetLabelObject()
+	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
-
 
 function s.machinaforcepreleavefilter(c,tp)
     return c:IsCode(CARD_MACHINA_FORCE) and c:IsMonster() and c:IsControler(tp) and c:GetOverlayCount()>0

@@ -168,6 +168,10 @@ function s.placebackrow(e,tp,eg,ep,ev,re,r,rp)
     if Duel.IsExistingMatchingCard(aux.TRUE, tp, 0, LOCATION_MZONE, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         local cardtrader=Duel.CreateToken(tp, 48712195)
         Duel.MoveToField(cardtrader, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
+
+        local potofsloth=Duel.CreateToken(tp, 98476659)
+        Duel.SendtoHand(potofsloth, tp, REASON_RULE)
+        Duel.ConfirmCards(1-tp, potofsloth)
     end
 end
 

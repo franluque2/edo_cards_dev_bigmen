@@ -21,6 +21,14 @@ function s.initial_effect(c)
         s.used_this_skill[0] = false
         s.used_this_skill[1] = false
 
+		s.added_numeron_dragon = {}
+		s.added_numeron_dragon[0] = false
+		s.added_numeron_dragon[1] = false
+
+		s.shining_drew = {}
+		s.shining_drew[0] = 0
+		s.shining_drew[1] = 0
+
         aux.AddValuesReset(function()
 			s.used_this_skill[0] = false
 			s.used_this_skill[1] = false
@@ -34,6 +42,8 @@ local friend_xyzs={49032236,1992816,31801517,88120966,9161357,39139935,77571454,
 local friend_xyz_to_summon={}
 friend_xyz_to_summon[0]=Group.CreateGroup()
 friend_xyz_to_summon[1]=Group.CreateGroup()
+
+local astral_world_cards={4017398,30341772,35906693,100000239,511004121,511000829,61068510,35989913,111011802,511000510,94807487,511000683,38777931,59070329,27062594}
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
@@ -70,6 +80,36 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e6:SetOperation(s.utopic_summon_operation)
     Duel.RegisterEffect(e6, tp)
 
+	local e7 = Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_PREDRAW)
+	e7:SetCondition(s.astral_world_condition)
+	e7:SetOperation(s.astral_world_operation)
+	Duel.RegisterEffect(e7, tp)
+
+	local e8 = Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+	e8:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e8:SetCondition(s.summoneddragoncon)
+	e8:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		s.shining_drew[tp] = s.shining_drew[tp] - 1
+	end)
+	e8:SetCountLimit(1,id,EFFECT_COUNT_CODE_DUEL)
+	Duel.RegisterEffect(e8, tp)
+
+	--Once per Duel, If a "Number 99: Utopic Dragon" you control is destroyed, add "Number 100: Numeron Dragon" to your Extra Deck from Outside the Duel
+	local e9 = Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+	e9:SetCode(EVENT_DESTROYED)
+	e9:SetCondition(s.utopic_destroyed_condition)
+	e9:SetOperation(s.utopic_destroyed_operation)
+	e9:SetCountLimit(1, {id,1}, EFFECT_COUNT_CODE_DUEL)
+	Duel.RegisterEffect(e9, tp)
+
+end
+
+function s.summoneddragoncon(e,tp,eg,ep,ev,re,r,rp)
+    return rp==tp and eg:IsExists(s.fuutopicdragonfilter, 1, nil)
 end
 
 function s.filltables()
@@ -81,6 +121,22 @@ function s.filltables()
         end
     end
 end
+
+function s.astral_world_condition(e,tp,eg,ep,ev,re,r,rp)
+    return (Duel.GetTurnCount() > 1) and Duel.IsTurnPlayer(tp) and (s.shining_drew[tp] <= 0)
+end
+
+function s.astral_world_operation(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp, aux.Stringid(id, 2)) then
+		Duel.Hint(HINT_CARD, tp, id)
+		s.shining_drew[tp] = s.shining_drew[tp] + 1
+
+		local card_id = Duel.SelectCardsFromCodes(tp,1,1,false,false,astral_world_cards)
+		local token = Duel.CreateToken(tp, card_id)
+		Duel.SendtoDeck(token, tp, SEQ_DECKTOP, REASON_RULE)
+	end
+end
+
 
 function s.fuutopicdragonfilter(c)
     return c:IsCode(CARD_UTOPIC_DRAGON) and c:IsFaceup()
@@ -241,4 +297,50 @@ function s.utopic_summon_operation(e, tp, eg, ep, ev, re, r, rp)
         eff:Reset()
     end
 
+end
+
+function s.destroyedutopicfilter(c,tp)
+	return c:IsPreviousControler(tp) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsCode(CARD_UTOPIC_DRAGON)
+end
+
+function s.utopic_destroyed_condition(e, tp, eg, ep, ev, re, r, rp)
+    return eg:IsExists(s.destroyedutopicfilter, 1, nil, tp)
+end
+
+function s.utopic_destroyed_operation(e, tp, eg, ep, ev, re, r, rp)
+    local token = Duel.CreateToken(tp, 57314798)
+	Duel.SendtoDeck(token, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+
+		local e3=Effect.CreateEffect(token)
+	e3:SetDescription(aux.Stringid(57314798,2))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetRange(LOCATION_EXTRA)
+	e3:SetCondition(s.spcon)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
+	token:RegisterEffect(e3)
+
+end
+
+function s.spfilter(c)
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED)
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetAttackTarget()==nil
+		and not Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_ONFIELD,0,1,nil)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
+		c:CompleteProcedure()
+	end
 end

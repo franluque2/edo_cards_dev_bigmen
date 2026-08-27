@@ -62,7 +62,40 @@ function s.sendcard(e, tp, eg, ep, ev, re, r, rp)
     local vampretainer=Duel.CreateToken(tp,70645913)
     local g=Group.FromCards(vampfamiliar,vampretainer)
     Duel.SendtoGrave(g, REASON_RULE)
+
+    local genesiscrisis=Duel.CreateToken(tp,511001903)
+
+    local e1=Effect.CreateEffect(genesiscrisis)
+    e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DELAY)
+    e1:SetCode(EVENT_TO_GRAVE)
+    e1:SetOperation(s.addbacktohandop)
+    genesiscrisis:RegisterEffect(e1)
+
+    local e2=Effect.CreateEffect(genesiscrisis)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_NECRO_VALLEY_IM)
+	genesiscrisis:RegisterEffect(e2)
+
+    local e3=e1:Clone()
+    e3:SetCode(EVENT_REMOVE)
+    genesiscrisis:RegisterEffect(e3)
+
+    Duel.SendtoHand(genesiscrisis, tp, REASON_RULE)
+    Duel.ConfirmCards(1-tp, genesiscrisis)
+
+    genesiscrisis:RegisterFlagEffect(0,0,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,2))
+
 end
+
+function s.addbacktohandop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:IsAbleToHand() then
+        Duel.SendtoHand(c,nil,REASON_EFFECT)
+    end
+end
+
+
 
 function s.banishfilter(c)
     return c:IsAbleToRemoveAsCost() and (c:GetControler()~=c:GetOwner())
