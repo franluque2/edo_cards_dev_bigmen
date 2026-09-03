@@ -171,6 +171,7 @@ function s.repcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
+    if s.turned_deckmaster_on[tp] then return end
     local g=eg:Filter(function(c) return c:IsPreviousLocation(LOCATION_ONFIELD) and (c:IsLocation(LOCATION_REMOVED) or c:IsLocation(LOCATION_HAND)) end, nil)
     for i=1,#g do
         if Duel.GetFlagEffect(tp, id)<=3 then
