@@ -31,7 +31,7 @@ function s.initial_effect(c)
 end
 
 function s.shouldberewritingluckresults(tp)
-    return s.forcingluckresults[tp] and Duel.IsExistingMatchingCard(aux.FilterFaceup, tp, LOCATION_ONFIELD, 0, 1, nil, Card.IsCode, 82308875)
+    return (s.forcingluckresults[tp]) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode, 82308875), tp, LOCATION_ONFIELD, 0, 1, nil)
 end
 
 
