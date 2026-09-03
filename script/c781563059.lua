@@ -1,4 +1,4 @@
---Tag Team Amazonian Warfare
+--The Academy's Amazonian Tag Tactics
 Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 local CARD_PET_LIGER_KING = 59353647
