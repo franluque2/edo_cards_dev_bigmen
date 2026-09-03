@@ -166,6 +166,16 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
         e12:SetLabelObject(e11)
         Duel.RegisterEffect(e12,tp)
 
+        --reminder text to Cusillu
+        local e13=Effect.CreateEffect(c)
+        e13:SetDescription(aux.Stringid(id,5))
+        e13:SetType(EFFECT_TYPE_SINGLE)
+        e13:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+
+        local e14=e6:Clone()
+        e14:SetTarget(aux.TargetBoolFunction(aux.FaceupFilter(Card.IsCode,33537328)))
+        e14:SetLabelObject(e13)
+        Duel.RegisterEffect(e14,tp)
     
 end
 
@@ -193,6 +203,10 @@ local SPIRIT_SACRIFICES_NAMES={
     87774234,
     25862691
 }
+
+function s.shuffleablecardfilter(c)
+    return not (c:IsCode(681563001) or c:IsCode(33537328))
+end
 
 function s.placecards(e,tp)
 
@@ -222,13 +236,39 @@ function s.placecards(e,tp)
         Duel.Remove(token, POS_FACEUP, REASON_RULE)
     end
 
-    local token1=Duel.CreateToken(tp, 681563001)
-    Duel.SendtoHand(token1, tp, REASON_RULE)
-    Duel.ConfirmCards(1-tp, token1)
+    local hasmonkey=Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_HAND, 0, 1, nil, 33537328 )
+    local hasfield=Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_HAND, 0, 1, nil, 681563001)
 
-    local token2=Duel.CreateToken(tp, 33537328)
-    Duel.SendtoHand(token2, tp, REASON_RULE)
-    Duel.ConfirmCards(1-tp, token2)
+    local gadd=Group.CreateGroup()
+    if not hasmonkey then
+        local tc=Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_DECK, 0, nil, 33537328)
+        if tc then
+            gadd:AddCard(tc)
+        end
+    end
+    if not hasfield then
+        local tc=Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_DECK, 0, nil, 681563001)
+        if tc then
+            gadd:AddCard(tc)
+        end
+    end
+
+    if #gadd>0 then
+        local cardstoshuffleback=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_HAND, 0, nil)
+        if hasmonkey then
+            cardstoshuffleback:RemoveCard(Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_HAND, 0, nil, 33537328))
+        end
+        if hasfield then
+            cardstoshuffleback:RemoveCard(Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_HAND, 0, nil, 681563001))
+        end
+
+        local toshuffleback=cardstoshuffleback:RandomSelect(tp, #gadd)
+        Duel.SendtoDeck(toshuffleback, tp, SEQ_DECKSHUFFLE, REASON_RULE)
+
+        Duel.SendtoHand(gadd, tp, REASON_RULE)
+        Duel.ConfirmCards(1-tp, gadd)
+
+    end
 end
 
 function s.rewritecusillucon(e,tp,eg,ep,ev,re,r,rp)

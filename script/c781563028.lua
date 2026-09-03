@@ -54,6 +54,13 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	Duel.RegisterEffect(e2b,tp)
 
 
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EVENT_ADJUST)
+    e3:SetCondition(s.rewriteagduelcon)
+    e3:SetOperation(s.rewriteagduelop)
+    Duel.RegisterEffect(e3,tp)
+
 
 end
 
@@ -125,4 +132,25 @@ end
 
 function s.aclimit(e,re,tp)
 	return re:IsMonsterEffect()
+end
+
+function s.agduelfilter(c)
+    return c:IsCode(53541822) and c:GetFlagEffect(id)==0
+end
+
+function s.rewriteagduelcon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(s.agduelfilter,tp,LOCATION_ALL,0,1,nil)
+end
+
+function s.rewriteagduelop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.agduelfilter,tp,LOCATION_ALL,0,nil)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id,0,0,0)
+        local effs={tc:GetOwnEffects()}
+        for _, eff in ipairs(effs) do
+            if eff:GetCode()==EFFECT_IMMUNE_EFFECT then
+	            eff:SetTarget(function(e,c) return c:IsCode(CARD_ANCIENT_GEAR_GOLEM) end)
+            end
+        end
+    end
 end

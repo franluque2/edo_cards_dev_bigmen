@@ -19,11 +19,10 @@ function s.initial_effect(c)
     e2:SetValue(s.atkval)
     c:RegisterEffect(e2)
 
-    --If this card you control is destroyed: You can Special Summon 1 Monster from your GY or Banishment, ignoring its summoning Conditions, also until the end of the next turn, "Earthbound Immortal" monsters you control cannot be destroyed by card effects. 
+    --If this card you control is destroyed: until the end of the next turn, "Earthbound Immortal" monsters you control have their effects negated. 
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE+EFFECT_FLAG_CANNOT_INACTIVATE)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetCountLimit(1)
@@ -36,7 +35,7 @@ function s.initial_effect(c)
     e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
     e4:SetCode(EVENT_LEAVE_FIELD_P)
     e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return e:GetHandler():IsReason(REASON_DESTROY) end)
-    e4:SetOperation(s.protectearthboundsop)
+    e4:SetOperation(s.negateearthboundsop)
     c:RegisterEffect(e4)
 end
 s.listed_series={SET_EARTHBOUND_IMMORTAL}
@@ -72,27 +71,19 @@ function s.summonfilter(c,e,tp)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and Duel.IsExistingMatchingCard(s.summonfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+    if chk==0 then return true end
 end
 
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-    local g=Duel.SelectMatchingCard(tp,s.summonfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
-    if #g>0 then
-        Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
-    end
 end
 
-function s.protectearthboundsop(e,tp,eg,ep,ev,re,r,rp)
+function s.negateearthboundsop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetDescription(aux.Stringid(id,2))
     e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-    e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+    e1:SetCode(EFFECT_DISABLE)
     e1:SetTargetRange(LOCATION_MZONE,0)
     e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,SET_EARTHBOUND_IMMORTAL))
     e1:SetValue(1)

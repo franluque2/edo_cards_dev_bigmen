@@ -218,7 +218,7 @@ function s.rmvisionherofilter(c)
 end
 
 function s.pltarg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.rmvisionherofilter,tp,LOCATION_SZONE,0,2,nil) and Duel.IsExistingMatchingCard(s.placefilter,tp,LOCATION_EXTRA|LOCATION_EXTRA,0,1,nil) and Duel.GetLocationCount(tp, LOCATION_SZONE)>0 end
+    if chk==0 then return Duel.IsExistingMatchingCard(s.rmvisionherofilter,tp,LOCATION_SZONE,0,2,nil) and Duel.IsExistingMatchingCard(s.placefilter,tp,LOCATION_EXTRA|LOCATION_GRAVE,0,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,2,tp,LOCATION_SZONE)
 end
 
