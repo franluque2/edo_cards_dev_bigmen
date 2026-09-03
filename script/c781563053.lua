@@ -170,7 +170,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 end
 
 function s.zemanvictg(e,c)
-	return c:IsFaceup() and c:IsMonster() and e:GetHandler():GetColumnGroup():IsContains(c)
+	return c:IsFaceup() and c:IsMonster() and e:GetHandler():GetColumnGroup():IsContains(c) and not c:IsLocation(LOCATION_EMZONE)
 end
 
 
