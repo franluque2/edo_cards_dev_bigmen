@@ -227,7 +227,7 @@ end
 function s.rewritefieldsonfieldop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.orichalcosfieldupgradefilter, tp, LOCATION_ONFIELD, 0, nil)
     for tc in g:Iter() do
-        tc:RegisterFlagEffect(id + 1, RESET_EVENT + RESETS_STANDARD, 0, 0)
+        tc:RegisterFlagEffect(id + 1, RESET_EVENT + RESETS_STANDARD + RESET_PHASE + PHASE_END, 0, 0)
         local effs = { tc:GetOwnEffects() }
         for _, eff in ipairs(effs) do
             if Effect.IsHasType(eff, EFFECT_TYPE_TRIGGER_O) then
