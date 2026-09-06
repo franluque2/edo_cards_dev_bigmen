@@ -30,6 +30,8 @@ end
 
 local ORICHALCOS_FIELDS = { 48179391, 110000100, 110000101 }
 
+local CARDS_DONE_MANUALLY= {681563003} -- orichalcos kyutora
+
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     local g1 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 170000173)
     if #g1 > 0 then
@@ -278,15 +280,19 @@ function s.placeop(e, tp, eg, ep, ev, re, r, rp)
             tc:RegisterEffect(e1)
 
             
-            local effs = { tc:GetOwnEffects() }
-            for _, eff in ipairs(effs) do
-                if Effect.GetRange(eff) & LOCATION_MZONE == LOCATION_MZONE then
-                    local neweff = eff:Clone()
-                    neweff:SetRange(LOCATION_SZONE)
-                    neweff:SetReset(RESET_EVENT + RESETS_STANDARD)
-                    tc:RegisterEffect(neweff)
+            if not (tc:IsOriginalCode(table.unpack(CARDS_DONE_MANUALLY))) then --doing some effect rewrites on the cards themselves to fix a bug
+                
+                local effs = { tc:GetOwnEffects() }
+                for _, eff in ipairs(effs) do
+                    if Effect.GetRange(eff) & LOCATION_MZONE == LOCATION_MZONE then
+                        local neweff = eff:Clone()
+                        neweff:SetRange(LOCATION_SZONE)
+                        neweff:SetReset(RESET_EVENT + RESETS_STANDARD)
+                        tc:RegisterEffect(neweff)
+                    end
                 end
-            end
+            
+             end
 
 
 

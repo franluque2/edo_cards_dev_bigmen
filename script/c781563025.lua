@@ -36,6 +36,21 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e2:SetCondition(s.setcon)
     e2:SetOperation(s.setop)
     Duel.RegisterEffect(e2,tp)
+
+    --Halve all battle damage your opponent takes from "Masked Hero" monsters that were Special Summoned this turn.
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetTargetRange(0,1)
+    e3:SetValue(function(e,rc)
+        if rc:IsSetCard(SET_MASKED_HERO) and rc:IsStatus(STATUS_SPSUMMON_TURN) then
+            return HALF_DAMAGE
+        else
+            return -1
+        end
+    end)
+    Duel.RegisterEffect(e3,tp)
 end
 
 function s.rewriteterrafirma(e,tp)

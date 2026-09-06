@@ -18,6 +18,22 @@ function s.initial_effect(c)
 		s.turncounter = {}
 		s.turncounter[0] = 0
 		s.turncounter[1] = 0
+
+        s.add_activations={}
+        s.add_activations[0] = false
+        s.add_activations[1] = false
+
+        s.cards_added_this_turn={}
+        s.cards_added_this_turn[0] = {}
+        s.cards_added_this_turn[1] = {}
+
+        aux.AddValuesReset(function()
+            s.add_activations[0] = false
+            s.add_activations[1] = false
+
+            s.cards_added_this_turn[0] = {}
+            s.cards_added_this_turn[1] = {}
+		end)
         end)
 
 end
@@ -54,8 +70,32 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e9:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
     e9:SetOperation(s.removeheroicpouch)
     Duel.RegisterEffect(e9, tp)
+
+
+    --Your opponent takes no Battle Damage from Fusion Monsters you control that do not specifically name a monster as material.
+    local e6=Effect.CreateEffect(c)
+    e6:SetType(EFFECT_TYPE_FIELD)
+    e6:SetCode(EFFECT_NO_BATTLE_DAMAGE)
+    e6:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+    e6:SetTargetRange(LOCATION_MZONE,0)
+    e6:SetTarget(s.efilter)
+    e6:SetValue(1)
+    Duel.RegisterEffect(e6, tp)
+
+    --Each time you Fusion Summon a monster, you can add 1 "HERO" Normal monster from your Deck or GY to your hand with a different name than the cards added this way to your hand this turn
+    local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+    e7:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e7:SetCondition(s.addheronormalcon)
+    e7:SetOperation(s.addheronormalop)
+    Duel.RegisterEffect(e7, tp)
+
+
 end
 
+function s.efilter(e,c)
+	return c:IsType(TYPE_FUSION) and not (c.material)
+end
 
 function s.flipconsb(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetCurrentChain() == 0 and Duel.GetTurnPlayer() == tp
@@ -110,7 +150,7 @@ end
 
 function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.cardfilter, tp, LOCATION_DECK, 0, nil, tp)
-    local oneallowed=Duel.GetFirstMatchingCard(Card.IsCode, tp, LOCATION_DECK, 0, nil, table.unpack(polyaccess))
+    local oneallowed=Duel.GetFirstMatchingCard(Card.IsOriginalCode, tp, LOCATION_DECK, 0, nil, table.unpack(polyaccess))
     if #g == Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) then return end
     if #g > 0 then
         Duel.MoveToDeckBottom(g)
@@ -141,4 +181,48 @@ end
 function s.removeheroicpouch(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.GetMatchingGroup(s.remfilter, tp, LOCATION_ALL, 0, nil)
     Duel.RemoveCards(g)
+end
+
+
+function s.addherofilter(c, tp)
+    return c:IsSetCard(SET_HERO) and c:IsMonster() and c:IsType(TYPE_NORMAL) and (not s.cards_added_this_turn[tp][c:GetCode()]) and c:IsAbleToHand()
+end
+
+
+
+function s.cfilter(c,tp)
+	return c:IsSummonPlayer(tp) and c:IsFusionSummoned() and c:IsType(TYPE_FUSION)
+end
+function s.addheronormalcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp) and Duel.IsExistingMatchingCard(s.addherofilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil, tp)
+end
+
+function s.addfusionfilter(c)
+    return c:IsSetCard(SET_FUSION) and c:IsAbleToHand()
+end
+
+function s.addheronormalop(e, tp, eg, ep, ev, re, r, rp)
+    if Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        Duel.Hint(HINT_CARD,tp,id)
+        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+        local g = Duel.SelectMatchingCard(tp, s.addherofilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, 1, nil, tp)
+        if #g > 0 then
+            local tc = g:GetFirst()
+            s.cards_added_this_turn[tp][tc:GetCode()] = true
+            Duel.SendtoHand(tc, tp, REASON_EFFECT)
+            Duel.ConfirmCards(1-tp, tc)
+
+            if not s.add_activations[tp] then
+                s.add_activations[tp] = true
+                if Duel.IsExistingMatchingCard(s.addfusionfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+                    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+                    local fg = Duel.SelectMatchingCard(tp, s.addfusionfilter, tp, LOCATION_DECK|LOCATION_GRAVE, 0, 1, 1, nil)
+                    if #fg > 0 then
+                        Duel.SendtoHand(fg, tp, REASON_EFFECT)
+                        Duel.ConfirmCards(1-tp, fg)
+                    end
+                end
+            end
+        end
+    end
 end

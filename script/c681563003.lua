@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	--No Battle Damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetRange(LOCATION_MZONE)
+	e2:SetRange(LOCATION_MZONE|LOCATION_SZONE)
 	e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e2:SetCondition(s.rdcon)
 	e2:SetOperation(s.rdop)
@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	--Special Summon Orichalcos Shunoros
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetTarget(s.target)
@@ -65,7 +65,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.rdcon(e,tp,eg,ep,ev,re,r,rp)
-	return tp==ep
+	return (tp==ep) and (e:GetHandler():IsLocation(LOCATION_MZONE) or (e:GetHandler():GetFlagEffect(781563054)>0))
 end
 function s.rdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,0)

@@ -68,6 +68,16 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e7:SetValue(s.damval)
     Duel.RegisterEffect(e7, tp)
 
+    -- You cannot activate trickstar reincarnation during the Draw Phase or Standby Phase.
+    local e3 = Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetCode(EFFECT_CANNOT_ACTIVATE)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetTargetRange(1, 0)
+    e3:SetValue(function(_, re, tp)
+        return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and re:GetHandler():IsCode(21076084) and (Duel.GetCurrentPhase() == PHASE_DRAW or Duel.GetCurrentPhase() == PHASE_STANDBY)
+    end)
+    Duel.RegisterEffect(e3, tp)
 end
 
 function s.damval(e,re,val,r,rp,rc)
