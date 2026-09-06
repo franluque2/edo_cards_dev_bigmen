@@ -19,13 +19,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local c = e:GetHandler()
 
 
-    local e1 = Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_PREDRAW)
-    e1:SetCountLimit(1)
-    e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
-    e1:SetOperation(s.addactioncards)
-    Duel.RegisterEffect(e1, tp)
+    --local e1 = Effect.CreateEffect(c)
+    --e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
+    --e1:SetCode(EVENT_PREDRAW)
+    --e1:SetCountLimit(1)
+    --e1:SetCondition(function(e, tp, eg, ep, ev, re, r, rp) return Duel.IsTurnPlayer(tp) end)
+    --e1:SetOperation(s.addactioncards)
+    --Duel.RegisterEffect(e1, tp)
+
+    s.addactioncards(e,tp)
 
 
     local e6 = Effect.GlobalEffect()
@@ -52,12 +54,13 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterEffect(e9, tp)
 end
 
-local actioncards = { 150000020, 150000024 }
+local actioncards = { 150000020, 150000024 } --150000042
 
 function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
-    Duel.Hint(HINT_CARD, tp, id)
+    --Duel.Hint(HINT_CARD, tp, id)
+
     local g = Group.CreateGroup()
-    for i = 1, 1, 1 do
+    for i = 1, 3, 1 do
         local ac = actioncards[math.random(#actioncards)]
         local tc = Duel.CreateToken(1 - tp, ac)
         tc:RegisterFlagEffect(id, 0, 0, 0, tp)
@@ -67,11 +70,12 @@ function s.addactioncards(e, tp, eg, ep, ev, re, r, rp)
     Duel.ConfirmCards(tp, g)
 end
 
+
 function s.remfilter(c)
     return c:IsType(TYPE_ACTION) and c:IsSpell() and c:GetFlagEffect(id) > 0
 end
 
 function s.removeactioncards(e, tp, eg, ep, ev, re, r, rp)
-    local g = Duel.GetMatchingGroup(s.remfilter, tp, 0, LOCATION_ALL, nil)
+    local g = Duel.GetMatchingGroup(s.remfilter, tp, 0, LOCATION_GRAVE|LOCATION_REMOVED, nil)
     Duel.RemoveCards(g)
 end
