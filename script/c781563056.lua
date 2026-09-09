@@ -201,7 +201,7 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
             tc:CopyEffect(selection:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_LEAVE,1)
             tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_LEAVE,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
             
-            local e2=Effect.CreateEffect(e:GetHandler())
+            local e2=Effect.CreateEffect(tc)
             e2:SetType(EFFECT_TYPE_SINGLE)
             e2:SetCode(EFFECT_SET_BASE_ATTACK)
             e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
