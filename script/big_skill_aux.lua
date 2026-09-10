@@ -71,3 +71,99 @@ BSkillaux.CreateBasicSkill = (function()
     end
 end
 )()
+
+if not BSkillaux.RushProcedure then
+	BSkillaux.RushProcedure = {}
+	BRush = BSkillaux.RushProcedure
+end
+if not BRush then
+	BRush = BSkillaux.RushProcedure
+end
+
+function BRush.addrules()
+  return function(e,tp,eg,ep,ev,re,r,rp)
+    --Disable left and right-most zones
+    local e2=Effect.CreateEffect(e:GetHandler())
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_DISABLE_FIELD)
+    e2:SetOperation(BRush.disabledzones)
+    Duel.RegisterEffect(e2,tp)
+
+    --Draw till you have 5 cards in hand
+    local e3=Effect.CreateEffect(e:GetHandler())
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetCode(EFFECT_DRAW_COUNT)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetTargetRange(1,0)
+    e3:SetValue(BRush.getcarddraw)
+    Duel.RegisterEffect(e3,tp)
+
+    --Give almost infinite normal summons
+    local e4=Effect.CreateEffect(e:GetHandler())
+    e4:SetType(EFFECT_TYPE_FIELD)
+    e4:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+    e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e4:SetTargetRange(1,0)
+    e4:SetValue(999999999)
+    Duel.RegisterEffect(e4,tp)
+
+    --skip MP2
+
+    local e5=Effect.CreateEffect(e:GetHandler())
+    e5:SetType(EFFECT_TYPE_FIELD)
+    e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e5:SetCode(EFFECT_SKIP_M2)
+    e5:SetTargetRange(1,0)
+    Duel.RegisterEffect(e5,tp)
+
+    --skip SP
+
+    --local e7=Effect.CreateEffect(e:GetHandler())
+    --e7:SetType(EFFECT_TYPE_FIELD)
+    --e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    --e7:SetCode(EFFECT_SKIP_SP)
+    --e7:SetTargetRange(1,0)
+    --Duel.RegisterEffect(e7,tp)
+
+    --disable EMZs
+    local e6=Effect.CreateEffect(e:GetHandler())
+    e6:SetType(EFFECT_TYPE_FIELD)
+    e6:SetCode(EFFECT_FORCE_MZONE)
+    e6:SetRange(LOCATION_MZONE)
+    e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+    e6:SetTargetRange(1,0)
+    e6:SetValue(BRush.znval)
+    Duel.RegisterEffect(e6,tp)
+
+    --give infinite hand size
+    local e7=Effect.CreateEffect(e:GetHandler())
+    e7:SetType(EFFECT_TYPE_FIELD)
+    e7:SetCode(EFFECT_HAND_LIMIT)
+    e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e7:SetTargetRange(1,0)
+    e7:SetValue(100)
+    Duel.RegisterEffect(e7,tp)
+  end
+end
+
+
+function BRush.getcarddraw(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_HAND,0) < 5 then
+		return 5-Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_HAND,0)
+	else
+		return 1
+end
+end
+
+function BRush.znval(e)
+	return ~(0x60)
+end
+
+
+function BRush.disabledzones(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandlerPlayer()==tp then
+			return 0x00001111
+	else
+			return 0x11110000
+	end
+end
