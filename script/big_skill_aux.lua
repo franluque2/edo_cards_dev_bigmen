@@ -82,12 +82,17 @@ end
 
 function BRush.addrules()
   return function(e,tp,eg,ep,ev,re,r,rp)
-    --Disable left and right-most zones
-    local e2=Effect.CreateEffect(e:GetHandler())
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetCode(EFFECT_DISABLE_FIELD)
-    e2:SetOperation(BRush.disabledzones)
-    Duel.RegisterEffect(e2,tp)
+
+    if Duel.IsDuelType(DUEL_MODE_RUSH) then return end
+
+    if not Duel.IsDuelType(DUEL_3_COLUMNS_FIELD) then
+        --Disable left and right-most zones
+        local e2=Effect.CreateEffect(e:GetHandler())
+        e2:SetType(EFFECT_TYPE_FIELD)
+        e2:SetCode(EFFECT_DISABLE_FIELD)
+        e2:SetOperation(BRush.disabledzones)
+        Duel.RegisterEffect(e2,tp)
+    end
 
     --Draw till you have 5 cards in hand
     local e3=Effect.CreateEffect(e:GetHandler())
