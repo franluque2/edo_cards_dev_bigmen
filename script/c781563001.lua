@@ -21,7 +21,7 @@ end
 
 local CARD_DARK_ARMED_DRAGON = 65192027
 local CARD_DARK_ARMED_ANNHILATION_DRAGON = 78144171
-local CARD_DARK_ARMED_DRAGON_PUNISHER = 100457104
+local CARD_DARK_ARMED_DRAGON_PUNISHER = 39030883
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
 end
@@ -65,7 +65,7 @@ function s.rewritecards(e, tp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE + EFFECT_FLAG_UNCOPYABLE)
 		e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-		e1:SetValue(function(e,sum_eff) return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) and sumeff:GetHandler():IsMonster() end)
+		e1:SetValue(function(e,sum_eff)	return sum_eff:GetHandler():IsSetCard(SET_ARMED_DRAGON) and sumeff:GetHandler():IsMonster() end)
 		tc:RegisterEffect(e1)
 		--special summon
 		local e2 = Effect.CreateEffect(tc)
@@ -115,10 +115,14 @@ function s.rewritecards(e, tp)
 		local effs = { tc:GetOwnEffects() }
 		for _, eff in ipairs(effs) do
 			if eff:IsHasCategory(CATEGORY_TOGRAVE) or eff:IsHasCategory(CATEGORY_ATKCHANGE) or eff:IsHasCategory(CATEGORY_SPECIAL_SUMMON) then
-				local neweff = eff:Clone()
-				neweff:SetCost(s.repcostfunc(eff:GetCost()))
-				tc:RegisterEffect(neweff)
-				eff:Reset()
+				if eff:GetCost()~=nil then
+						
+					local neweff = eff:Clone()
+					neweff:SetCost(s.repcostfunc(eff:GetCost()))
+					tc:RegisterEffect(neweff)
+					eff:Reset()
+				end
+
 			end
 		end
 	end
@@ -187,6 +191,18 @@ function s.rewritecards(e, tp)
 		end
 
 	end
+
+	local g5 = Duel.GetMatchingGroup(s.affectedcardfilter, tp, LOCATION_ALL, 0, nil, 49181828)
+	for tc in g5:Iter() do
+		local effs = { tc:GetOwnEffects() }
+		for _, eff in ipairs(effs) do
+			if (eff:GetDescription() == aux.Stringid(49181828,1)) then
+				eff:SetOperation(s.newdesop)
+
+			end
+		end
+		tc:RegisterFlagEffect(id, 0, 0, 1)
+	end
 end
 
 function s.sendtogravefilter(c)
@@ -195,7 +211,7 @@ end
 
 function s.repcostfunc(cost)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return cost(e,tp,eg,ep,ev,re,r,rp,0) or (Duel.IsExistingMatchingCard(s.sendtogravefilter, e:GetHandlerPlayer(), LOCATION_DECK, 0, 1, nil) and s.used_this_skill[tp]==false and Duel.GetFlagEffect(tp, id)>0) end
+		if chk==0 then return (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0)) or (Duel.IsExistingMatchingCard(s.sendtogravefilter, e:GetHandlerPlayer(), LOCATION_DECK, 0, 1, nil) and s.used_this_skill[tp]==false and Duel.GetFlagEffect(tp, id)>0) end
 			if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.sendtogravefilter, e:GetHandlerPlayer(), LOCATION_DECK, 0, 1, nil) and e:GetHandler():IsOriginalSetCard(SET_ARMED_DRAGON)
 			  and (not cost or not cost(e,tp,eg,ep,ev,re,r,rp,0)
 			 or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
@@ -205,7 +221,9 @@ function s.repcostfunc(cost)
 			Duel.SendtoGrave(g,REASON_COST)
 			s.used_this_skill[tp]=true
 		else
-			cost(e,tp,eg,ep,ev,re,r,rp,1)
+			if cost then
+				cost(e,tp,eg,ep,ev,re,r,rp,1)
+			end
 		end
 
 
@@ -319,5 +337,29 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetTargetCards(e)
 	if #tg>0 then
 		Duel.Destroy(tg,REASON_EFFECT)
+	end
+end
+
+
+--hacky workaround for pile armed
+
+function s.newspfilter(c,e,tp,lv)
+	return c:IsRace(RACE_DRAGON) and c:IsOriginalLevel(lv) and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or (c:IsOriginalCode(CARD_DARK_ARMED_DRAGON,CARD_DARK_ARMED_DRAGON_PUNISHER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)))
+end
+
+function s.newdesop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsMonster() and Duel.Destroy(tc,REASON_EFFECT)>0 and tc:IsPreviousControler(tp) and tc:HasLevel()
+		and Duel.GetMZoneCount(tp)>0 then
+		local lv=tc:GetOriginalLevel()+2
+		if Duel.IsExistingMatchingCard(s.newspfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp,lv)
+			and Duel.SelectYesNo(tp,aux.Stringid(49181828,2)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectMatchingCard(tp,s.newspfilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,e,tp,lv)
+			if #g>0 then
+				Duel.BreakEffect()
+				Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+			end
+		end
 	end
 end
