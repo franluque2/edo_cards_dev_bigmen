@@ -78,10 +78,26 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
         return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and re:GetHandler():IsCode(21076084) and (Duel.GetCurrentPhase() == PHASE_DRAW or Duel.GetCurrentPhase() == PHASE_STANDBY)
     end)
     Duel.RegisterEffect(e3, tp)
+
+            local e8=Effect.CreateEffect(c)
+    e8:SetType(EFFECT_TYPE_FIELD)
+    e8:SetCode(EFFECT_CHANGE_DAMAGE)
+    e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e8:SetTargetRange(0,1)
+    e8:SetValue(s.damval2)
+    Duel.RegisterEffect(e8, tp)
 end
 
 function s.damval(e,re,val,r,rp,rc)
     if r&REASON_EFFECT~=0 then
+        return 1
+    else
+        return val
+    end
+end
+
+function s.damval2(e,re,val,r,rp,rc)
+    if (r&REASON_EFFECT~=0) and (re:GetHandler():IsCode(14365823)) then
         return 1
     else
         return val

@@ -81,7 +81,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e5:SetOperation(s.detachop)
     Duel.RegisterEffect(e5,tp)
 
-    --Once per Turn, if you Normal or Special Summon a "Harpie" monster, you can return 1 "Harpie" monster you control to the hand, then, immediately after this effect resolves, you can Normal Summon 1 WIND monster from your Hand or top of your Deck without tributing. Monsters summoned this way cannot attack this turn.
+    --Once per Turn, if you Normal or Special Summon a "Harpie" monster, you can return 1 "Harpie" monster you control to the hand
     local e6=Effect.CreateEffect(c)
     e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e6:SetProperty(EFFECT_FLAG_DELAY)
@@ -92,6 +92,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local e7=e6:Clone()
     e7:SetCode(EVENT_SPSUMMON_SUCCESS)
     Duel.RegisterEffect(e7,tp)
+
+
+    local e8=Effect.CreateEffect(c)
+    e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e8:SetCode(EVENT_ADJUST)
+    e8:SetCondition(s.rewritecon)
+    e8:SetOperation(s.rewriteop)
+    Duel.RegisterEffect(e8,tp)
+
 end
 
 function s.placecards(e,tp)
@@ -100,6 +109,13 @@ function s.placecards(e,tp)
 
     local aeronail=Duel.CreateToken(tp, 100000297)
     Duel.MoveToField(aeronail, tp, tp, LOCATION_SZONE, POS_FACEDOWN, true)
+
+    local aromastrategy=Duel.CreateToken(tp, 100459017) --TODO: Change ID When Aroma Strategy is released
+    local metatable=aromastrategy:GetMetatable()
+    metatable.listed_names={CARD_HARPIE_LADY_SISTERS}
+    Duel.MoveToField(aromastrategy,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+    aromastrategy:RegisterFlagEffect(id,0,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id, 2))
+
 end
 
 
@@ -189,29 +205,50 @@ function s.harpiereturnop(e,tp,eg,ep,ev,re,r,rp)
         s.used_this_skill_passive[tp] = true
         local g=Duel.SelectMatchingCard(tp,Card.IsSetCard,tp,LOCATION_MZONE,0,1,1,nil,SET_HARPIE)
         if #g>0 then
-            if Duel.SendtoHand(g,nil,REASON_EFFECT) then
-                local g2=Duel.GetMatchingGroup(s.normalsummonablwindfilter,tp,LOCATION_HAND,0,nil,g:GetFirst():GetCode())
-                local topdeck=Duel.GetDecktopGroup(tp, 1)
-                if s.normalsummonablwindfilter(topdeck:GetFirst(), g:GetFirst():GetCode()) then
-                    g2:AddCard(topdeck:GetFirst())
-                end
-                if #g2>0 then
-                    if Duel.SelectYesNo(tp, aux.Stringid(id, 3)) then
-                        Duel.BreakEffect()
-                        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-                        local sg=g2:Select(tp,1,1,nil)
-                        Duel.Summon(tp,sg:GetFirst(),true,nil)
+            Duel.SendtoHand(g,nil,REASON_EFFECT)
+        end
+    end
+end
 
-                        local e1=Effect.CreateEffect(e:GetHandler())
-                        e1:SetDescription(3206)
-                        e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-                        e1:SetType(EFFECT_TYPE_SINGLE)
-                        e1:SetCode(EFFECT_CANNOT_ATTACK)
-                        e1:SetReset(RESETS_STANDARD_PHASE_END)
-                        sg:GetFirst():RegisterEffect(e1)
-                    end
-                end
+function s.rewritefilter(c)
+    return c:IsSetCard(SET_HARPIE) and c:IsOriginalRace(RACE_DRAGON) and c:GetFlagEffect(id)==0
+end
+
+function s.rewritecon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(s.rewritefilter, tp, LOCATION_ALL, 0, 1, nil)
+end
+
+function s.rewriteop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.rewritefilter, tp, LOCATION_ALL, 0, nil)
+    for tc in g:Iter() do
+        tc:RegisterFlagEffect(id, 0, 0, 0)
+
+        local effs={tc:GetOwnEffects()}
+        for _, eff in ipairs(effs) do
+            if Effect.GetCode(eff)==EFFECT_CANNOT_SELECT_BATTLE_TARGET then
+                eff:Reset()
+
+                 local e1=Effect.CreateEffect(tc)
+                e1:SetType(EFFECT_TYPE_FIELD)
+                e1:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+                e1:SetRange(LOCATION_MZONE)
+                e1:SetTargetRange(0, LOCATION_MZONE)
+                e1:SetValue(s.atklimit)
+                tc:RegisterEffect(e1)
+
+                tc:RegisterFlagEffect(id,0,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id, 3))
             end
         end
     end
+end
+
+
+function s.fubeastamazonessfilter(c)
+    return c:IsMonster() and c:IsRace(RACE_DRAGON) and c:IsSetCard(SET_HARPIE)
+end
+
+function s.atklimit(e,c)
+	local g=Duel.GetMatchingGroup(s.fubeastamazonessfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)
+	local tg=g:GetMaxGroup(Card.GetLevel)
+	return not tg:IsContains(c) or c:IsFacedown()
 end

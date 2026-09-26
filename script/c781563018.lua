@@ -311,6 +311,13 @@ function s.utopic_destroyed_operation(e, tp, eg, ep, ev, re, r, rp)
     local token = Duel.CreateToken(tp, 57314798)
 	Duel.SendtoDeck(token, tp, SEQ_DECKSHUFFLE, REASON_RULE)
 
+	local effs={token:GetOwnEffects()}
+	for _, eff in ipairs(effs) do
+		if eff:GetCode()==EVENT_ATTACK_ANNOUNCE then
+			eff:SetCountLimit(1,id)
+		end
+	end
+
 		local e3=Effect.CreateEffect(token)
 	e3:SetDescription(aux.Stringid(57314798,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -321,6 +328,8 @@ function s.utopic_destroyed_operation(e, tp, eg, ep, ev, re, r, rp)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	token:RegisterEffect(e3)
+
+
 
 end
 

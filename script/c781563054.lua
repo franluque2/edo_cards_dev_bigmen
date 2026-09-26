@@ -11,16 +11,16 @@ function s.initial_effect(c)
     c:RegisterEffect(e3)
 
 
-    --aux.GlobalCheck(s, function()
-    --    s.used_this_skill = {}
-    --    s.used_this_skill[0] = false
-    --    s.used_this_skill[1] = false
-    --
-    --    aux.AddValuesReset(function()
-    --		s.used_this_skill[0] = false
-    --		s.used_this_skill[1] = false
-    --	end)
-    --end)
+    aux.GlobalCheck(s, function()
+        s.used_this_skill = {}
+        s.used_this_skill[0] = false
+        s.used_this_skill[1] = false
+    
+        aux.AddValuesReset(function()
+    		s.used_this_skill[0] = false
+    		s.used_this_skill[1] = false
+    	end)
+    end)
 
     local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive,
         s.flipopactive, true, nil)
@@ -149,10 +149,12 @@ end
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
     return aux.CanActivateSkill(tp)
         and Duel.IsExistingMatchingCard(s.banishfilter, tp, LOCATION_HAND, 0, 1, nil, tp)
+        and not s.used_this_skill[tp]
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_CARD, tp, id)
+    s.used_this_skill[tp] = true
     local c = e:GetHandler()
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_REMOVE)
     local g = Duel.SelectMatchingCard(tp, s.banishfilter, tp, LOCATION_HAND, 0, 1, 1, nil, tp)

@@ -92,10 +92,31 @@ end
 local machines_to_place= {60999392,23782705,96384007}
 
 function s.placemonsters(e,tp)
+	local g=Group.CreateGroup()
 	for i,code in ipairs(machines_to_place) do
 		local token=Duel.CreateToken(tp,code)
-		Duel.SendtoGrave(token, REASON_RULE)
+		Duel.SendtoHand(token, tp, REASON_RULE)
+		g:AddCard(token)
+
+		token:RegisterFlagEffect(0,0,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id, 2))
+
+		local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetCategory(CATEGORY_SUMMON)
+        e1:SetType(EFFECT_TYPE_IGNITION)
+        e1:SetRange(LOCATION_HAND)
+		e1:SetDescription(aux.Stringid(id, 1))
+		e1:SetCountLimit(1,id)
+        e1:SetCost(s.cost)
+        e1:SetTarget(s.target)
+        e1:SetOperation(s.operation)
+        token:RegisterEffect(e1)
+
+
 	end
+
+	Duel.ConfirmCards(1-tp, g)
+	Duel.ShuffleHand(tp)
+
 end
 
 
@@ -179,4 +200,23 @@ function s.gainlpop(e,tp,eg,ep,ev,re,r,rp)
 	local lp=e:GetLabelObject():GetLabel()
 	Duel.Hint(HINT_CARD,tp,id)
 	Duel.Recover(tp,lp,REASON_EFFECT)
+end
+
+
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(id)==0 end
+	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
+    Duel.ConfirmCards(1-tp, c)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsSummonable(true, e)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_SUMMON,c,1,0,0)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.Summon(tp,c,true,e:GetLabelObject())
 end

@@ -49,7 +49,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     	local e2b=Effect.CreateEffect(c)
 	e2b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
 	e2b:SetTargetRange(LOCATION_MZONE,0)
-	e2b:SetTarget(function(e,c) return c:IsFaceup() and c:IsCode(CARD_ANCIENT_GEAR_GOLEM) end)
+	e2b:SetTarget(function(e,c) return c:IsFaceup() and c:IsOriginalCode(CARD_ANCIENT_GEAR_GOLEM) end)
 	e2b:SetLabelObject(e2a)
 	Duel.RegisterEffect(e2b,tp)
 
@@ -149,8 +149,47 @@ function s.rewriteagduelop(e,tp,eg,ep,ev,re,r,rp)
         local effs={tc:GetOwnEffects()}
         for _, eff in ipairs(effs) do
             if eff:GetCode()==EFFECT_IMMUNE_EFFECT then
-	            eff:SetTarget(function(e,c) return c:IsCode(CARD_ANCIENT_GEAR_GOLEM) end)
+	            eff:SetTarget(function(e,c) return c:IsOriginalCode(CARD_ANCIENT_GEAR_GOLEM) end)
+            end
+
+            if eff:IsHasCategory(CATEGORY_FUSION_SUMMON) then
+                local params={fusfilter=function(c) return c:ListsCode(CARD_ANCIENT_GEAR_GOLEM) end,
+					matfilter=Fusion.OnFieldMat(Card.IsAbleToRemove),
+					extrafil=s.fmatextra,
+					extratg=s.extratarget,
+					extraop=Fusion.BanishMaterial,
+					stage2=s.stage2}
+                    eff:SetOperation(Fusion.SummonEffOP(params))
             end
         end
     end
+end
+function s.aggfilter(c,tp)
+	return c:IsCode(CARD_ANCIENT_GEAR_GOLEM) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
+end
+function s.fcheck(tp,sg,fc)
+	return sg:IsExists(s.aggfilter,1,nil,tp)
+end
+function s.fmatextra(e,tp,mg)
+	if not Duel.IsPlayerAffectedByEffect(tp,CARD_SPIRIT_ELIMINATION) then
+		return Duel.GetMatchingGroup(Fusion.IsMonsterFilter(Card.IsAbleToRemove),tp,LOCATION_GRAVE,0,nil),s.fcheck
+	end
+	return nil,s.fcheck
+end
+function s.extratarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,tp,LOCATION_MZONE|LOCATION_GRAVE)
+end
+function s.stage2(e,tc,tp,sg,chk)
+	if chk==0 then
+		--Can make up to 3 attacks on monsters during each Battle Phase
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(aux.Stringid(id,6))
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+		e1:SetValue(2)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+	end
 end
