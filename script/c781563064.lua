@@ -5,25 +5,22 @@ function s.initial_effect(c)
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive, s.flipopactive, true, nil)
 	c:RegisterEffect(e1)
 	c:RegisterEffect(e2)
-
-        aux.GlobalCheck(s, function()
-        s.is_human_player = {}
-        s.is_human_player[0] = false
-        s.is_human_player[1] = false
-
-    end)
 end
 
 local CARD_TAMER_EDITOR = 30864377
 
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    return (aux.CanActivateSkill(tp)) or (Duel.GetCurrentChain()==0 and Duel.IsBattlePhase() and Duel.IsTurnPlayer(tp)) --and Duel.GetPlayersCount(tp)>0
+    return (aux.CanActivateSkill(tp)) or (Duel.GetCurrentChain()==0 and Duel.IsBattlePhase() and Duel.IsTurnPlayer(tp)) and Duel.GetPlayersCount(tp)>0
+end
+
+function s.is_human_player(tp)
+    return not Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_EXTRA, 0, 1, nil, 94905343) -- Used as a Extra Deck Tag to identify the bot
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
-    if (not s.is_human_player[tp]) or Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-        s.is_human_player[tp] = not s.is_human_player[tp]
+    if (not s.is_human_player(tp)) or Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+        s.is_human_player[tp] = not s.is_human_player(tp)
 
         Duel.TagSwap(tp)
     end
@@ -38,10 +35,6 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.RegisterFlagEffect(tp, id, 0, 0, 0)
     Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
     local c = e:GetHandler()
-
-    if Duel.IsExistingMatchingCard(Card.IsCode, tp, LOCATION_EXTRA, 0, 1, nil, CARD_TAMER_EDITOR) then
-        s.is_human_player[tp] = true
-    end
 
     Duel.Recover(1-tp, 8000, REASON_RULE)
 
@@ -85,7 +78,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local e5 = Effect.CreateEffect(c)
     e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e5:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
-    e5:SetCondition(function (_e,_tp) return Duel.IsTurnPlayer(1-_tp) and s.is_human_player[_tp] end)
+    e5:SetCondition(function (_e,_tp) return Duel.IsTurnPlayer(1-_tp) and s.is_human_player(_tp) end)
     e5:SetCountLimit(1)
     e5:SetOperation(s.battleswapop)
     Duel.RegisterEffect(e5, tp)
@@ -93,10 +86,17 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     local e6 = Effect.CreateEffect(c)
     e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     e6:SetCode(EVENT_PHASE+PHASE_MAIN2)
-    e6:SetCondition(function (_e,_tp) return Duel.IsTurnPlayer(1-_tp) and not s.is_human_player[_tp] end)
+    e6:SetCondition(function (_e,_tp) return Duel.IsTurnPlayer(1-_tp) and not s.is_human_player(_tp) end)
     e6:SetCountLimit(1)
     e6:SetOperation(s.m2swapop)
     Duel.RegisterEffect(e6, tp)
+
+    local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e7:SetCode(EVENT_MOVE)
+    e7:SetCondition(function(_,_,_eg) return _eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_EXTRA) end)
+    e7:SetOperation(s.completetagfusion)
+    Duel.RegisterEffect(e7,tp)
 end
 
 function s.nongladbeastfilter(c)
@@ -233,7 +233,8 @@ end
 
 
 function s.drawtwicecon(e,tp,eg,ep,ev,re,r,rp)
-    return tp==Duel.GetTurnPlayer() and Duel.GetDrawCount(tp)>0 -- and Duel.GetPlayersCount(tp)>1
+    return tp==Duel.GetTurnPlayer() and Duel.GetDrawCount(tp)>0 and Duel.GetPlayersCount(tp)>1
+        and Duel.GetTurnCount()>0
 end
 
 function s.drawtwiceop(e,tp,eg,ep,ev,re,r,rp)
@@ -247,14 +248,22 @@ end
 
 function s.battleswapop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.IsTurnPlayer(tp) then return end
-    if not s.is_human_player[tp] then return end
-    s.is_human_player[tp] = false
+    if not s.is_human_player(tp) then return end
     Duel.TagSwap(tp)
 end
 
 function s.m2swapop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.IsTurnPlayer(tp) then return end
-    if s.is_human_player[tp] then return end
-    s.is_human_player[tp] = true
+    if s.is_human_player(tp) then return end
     Duel.TagSwap(tp)
+end
+
+function s.completestarseraphs(e,tp,eg,ep,ev,re,r,rp)
+        local num=Duel.GetMatchingGroupCount(Card.IsCode, tp, LOCATION_EXTRA, 0, nil, 94905343)
+        if 1>num then
+            for i=1, 1-num do
+                local token=Duel.CreateToken(tp, 94905343)
+                Duel.SendtoDeck(token, nil, SEQ_DECKBOTTOM, REASON_RULE)
+            end
+        end
 end
