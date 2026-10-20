@@ -23,8 +23,8 @@ function s.initial_effect(c)
 		s.used_this_skill1[0] = false
 		s.used_this_skill1[1] = false
 		aux.AddValuesReset(function()
-			s.used_this_skill[0] = false
-			s.used_this_skill[1] = false
+			--s.used_this_skill[0] = false
+			--s.used_this_skill[1] = false
 			s.used_this_skill1[0] = false
 			s.used_this_skill1[1] = false
 		end)
