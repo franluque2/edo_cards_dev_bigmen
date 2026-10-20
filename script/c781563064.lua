@@ -20,8 +20,6 @@ end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     if (not s.is_human_player(tp)) or Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
-        s.is_human_player[tp] = not s.is_human_player(tp)
-
         Duel.TagSwap(tp)
     end
    
