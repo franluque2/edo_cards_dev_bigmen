@@ -111,7 +111,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
         local g = Duel.SelectMatchingCard(tp, s.shufflefilter, tp, LOCATION_HAND, 0, 1, 1, nil)
         if #g > 0 then
-            Duel.SendtoDeck(g, nil, SEQ_DECKBOTTOM, REASON_COST)
+            Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_COST)
         end
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
         local sg = Duel.SelectMatchingCard(tp, s.addfilter, tp, LOCATION_DECK, 0, 1, 1, nil)
