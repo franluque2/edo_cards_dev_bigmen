@@ -1,4 +1,4 @@
---Grand Spiritual Art - Second Cycle
+--Spiritual Bonds
 Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
