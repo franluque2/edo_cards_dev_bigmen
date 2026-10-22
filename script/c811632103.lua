@@ -2,8 +2,6 @@
 Duel.LoadScript("wb_aux.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-    aux.AddSkillProcedure(c,2,false,nil,nil)
-
 
 	aux.AddSkillProcedure(c,2,false,nil,nil)
 	local e1=Effect.CreateEffect(c)
