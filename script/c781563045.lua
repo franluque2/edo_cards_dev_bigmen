@@ -41,6 +41,9 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
 end
 
+local CARD_SEVENTH_BARIANS=39513225
+
+
 function s.cardfilter(c, tp)
     return c:IsCode(97769122) and c:GetSequence() >= (Duel.GetFieldGroupCount(tp, LOCATION_DECK, 0) - (10))
 end
@@ -52,7 +55,6 @@ function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
         Duel.MoveToDeckBottom(g)
     end
 end
-local CARD_SEVENTH_BARIANS=101402055
 
 function s.rewritecardfilter(c)
     return c:IsCode(CARD_SEVENTH_BARIANS) and c:GetFlagEffect(id)==0
@@ -77,7 +79,7 @@ function s.rewritecardsop(e,tp,eg,ep,ev,re,r,rp)
         end
     end
 end
-local MASQUERADE_VAIN=101402042
+local MASQUERADE_VAIN=16908882
 
 local CARDS_TO_ADD={92365601,33725002,13647631,91110378,613013}
 function s.addcardscon(e,tp,eg,ep,ev,re,r,rp)
