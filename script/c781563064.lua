@@ -5,6 +5,8 @@ function s.initial_effect(c)
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil, s.flipconactive, s.flipopactive, true, nil)
 	c:RegisterEffect(e1)
 	c:RegisterEffect(e2)
+
+
 end
 
 local CARD_TAMER_EDITOR = 30864377
@@ -95,6 +97,15 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e7:SetCondition(function(_,_,_eg) return _eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_EXTRA) end)
     e7:SetOperation(s.completetagfusion)
     Duel.RegisterEffect(e7,tp)
+
+    -- flip again on ep to fix visul bug
+    local e8 = Effect.CreateEffect(c)
+    e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e8:SetCode(EVENT_PHASE+PHASE_END)
+    e8:SetCondition(function() return Duel.GetTurnCount() ==1 end)
+    e8:SetOperation(function (e,tp) Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32)) end)
+    e8:SetCountLimit(1)
+    Duel.RegisterEffect(e8, tp)
 end
 
 function s.nongladbeastfilter(c)
