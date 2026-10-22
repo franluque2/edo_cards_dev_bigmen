@@ -38,7 +38,7 @@ local group_cards_to_summon={}
 group_cards_to_summon[0]=Group.CreateGroup()
 group_cards_to_summon[1]=Group.CreateGroup()
 
-local FUSION_BATTLE_TECHNIQUES={76647978,44886582,1845204,10218411,55421040,61070601,24094653}
+local FUSION_BATTLE_TECHNIQUES={76647978,44886582,1845204,10218411,55421040,24094653}
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
 	return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
@@ -50,13 +50,13 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 
     s.filltables()
 
-    --The first time each turn a Warrior monster(s) you control would be destroyed by the effect of a monster without a level, it is not destroyed.
+    --The first time each turn a Warrior Fusion monster(s) you control would be destroyed by the effect of a monster without a level, it is not destroyed.
 
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(function(_,c) return c:IsRace(RACE_WARRIOR) and c:IsFaceup() end)
+	e1:SetTarget(function(_,c) return c:IsRace(RACE_WARRIOR) and c:IsFaceup() and c:IsType(TYPE_FUSION) end)
 	e1:SetValue(s.indval)
     Duel.RegisterEffect(e1, tp)
 
@@ -168,7 +168,7 @@ end
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
     local b1=(not s.used_this_skill[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.revealwarriorfilter, tp, LOCATION_HAND, 0, 1, nil)
-    local b2=(not s.used_this_skill_1[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.fubigfusionfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and (Duel.GetLocationCount(tp, LOCATION_MZONE) > 0) and Duel.CheckLPCost(tp, 1000)
+    local b2=(not s.used_this_skill_1[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.fubigfusionfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and (Duel.GetLocationCount(tp, LOCATION_MZONE) > 0) and Duel.CheckLPCost(tp, 2000)
     return aux.CanActivateSkill(e:GetHandlerPlayer()) and (b1 or b2)
 end
 
@@ -176,9 +176,13 @@ function s.addwarriorfilter(c)
     return c:IsRace(RACE_WARRIOR) and c:IsLevelAbove(5) and c:IsAbleToHand()
 end
 
+function s.nothaslevelfilter(c)
+    return c:IsFaceup() and not c:HasLevel()
+end
+
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     local b1=(not s.used_this_skill[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.revealwarriorfilter, tp, LOCATION_HAND, 0, 1, nil)
-    local b2=(not s.used_this_skill_1[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.fubigfusionfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and (Duel.GetLocationCount(tp, LOCATION_MZONE) > 0) and Duel.CheckLPCost(tp, 1000)
+    local b2=(not s.used_this_skill_1[e:GetHandlerPlayer()]) and Duel.IsExistingMatchingCard(s.fubigfusionfilter, tp, LOCATION_ONFIELD, 0, 1, nil) and (Duel.GetLocationCount(tp, LOCATION_MZONE) > 0) and Duel.CheckLPCost(tp, 2000)
     if not (b1 or b2) then return end
     local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,2)},
 									{b2,aux.Stringid(id,3)})
@@ -209,15 +213,15 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
                 end
             end
 
-            if g:GetFirst():IsDiscardable() and Duel.SelectYesNo(tp, aux.Stringid(id,4)) then
+            if g:GetFirst():IsDiscardable() and Duel.IsExistingMatchingCard(s.nothaslevelfilter, tp, LOCATION_MZONE, LOCATION_MZONE, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id,4)) then
                 Duel.SendtoGrave(g, REASON_DISCARD)
                 s.used_this_skill[e:GetHandlerPlayer()] = false
             end
         end
     elseif op==2 then
         s.used_this_skill_1[e:GetHandlerPlayer()] = true
-        -- Once per turn, if you control "Idaten the Conqueror Star" or "Shura the Combat Star", you can pay 1000LP and send up to 2 Warrior monsters from your Deck to the GY; Special Summon 1 "Raijin the Breakbolt Star" or "Fujin the Breakstorm Star" from Outside the Duel (This is treated as a Fusion Summon) but they cannot be used as Fusion Material, also, any battle damage they deal is halved. 
-        Duel.PayLPCost(tp, 1000)
+        -- Once per turn, if you control "Idaten the Conqueror Star" or "Shura the Combat Star", you can pay 2000LP and send up to 2 Warrior monsters from your Deck to the GY; Special Summon 1 "Raijin the Breakbolt Star" or "Fujin the Breakstorm Star" from Outside the Duel (This is treated as a Fusion Summon) but they cannot be used as Fusion Material, also, any battle damage they deal is halved. 
+        Duel.PayLPCost(tp, 2000)
         if Duel.IsExistingMatchingCard(s.sendwarriorfilter, tp, LOCATION_DECK, 0, 1, nil) and Duel.SelectYesNo(tp, aux.Stringid(id,0)) then
             Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
             local g=Duel.SelectMatchingCard(tp, s.sendwarriorfilter, tp, LOCATION_DECK, 0, 1, 2, nil)

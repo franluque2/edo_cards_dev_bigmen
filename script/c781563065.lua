@@ -90,16 +90,18 @@ function s.flipfilter(c)
 end
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
-    local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and
+    local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil) == 0) and
                  Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 1, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
-    local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
+    local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(Card.IsSummonLocation, tp, 0, LOCATION_MZONE, 1, nil, LOCATION_EXTRA)
+	 and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
     return (b1 or b2) and aux.CanActivateSkill(tp)
 end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
-    local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and
+    local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil) == 0) and
                  Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 1, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
-    local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
+    local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(Card.IsSummonLocation, tp, 0, LOCATION_MZONE, 1, nil, LOCATION_EXTRA)
+	 and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
 
     local op=Duel.SelectEffect(tp, {b1,aux.Stringid(id,0)},
 									{b2,aux.Stringid(id,1)})
