@@ -91,7 +91,7 @@ end
 
 function s.flipconactive(e, tp, eg, ep, ev, re, r, rp)
     local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil) == 0) and
-                 Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 1, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
+                 Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 3, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
     local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(Card.IsSummonLocation, tp, 0, LOCATION_MZONE, 1, nil, LOCATION_EXTRA)
 	 and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
     return (b1 or b2) and aux.CanActivateSkill(tp)
@@ -99,7 +99,7 @@ end
 
 function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     local b1= not s.used_this_skill[e:GetHandlerPlayer()] and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil)>0) and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil) == 0) and
-                 Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 1, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
+                 Duel.IsExistingMatchingCard(s.shufflefilter, tp, LOCATION_HAND, 0, 3, nil) and Duel.IsExistingMatchingCard(s.addfilter, tp, LOCATION_DECK, 0, 1, nil)
     local b2= not s.used_this_skill1[e:GetHandlerPlayer()] and Duel.CheckLPCost(tp, 1600) and Duel.IsExistingMatchingCard(Card.IsSummonLocation, tp, 0, LOCATION_MZONE, 1, nil, LOCATION_EXTRA)
 	 and Duel.IsExistingMatchingCard(s.flipfilter, tp, LOCATION_MZONE, 0, 1, nil)
 
@@ -111,7 +111,7 @@ function s.flipopactive(e, tp, eg, ep, ev, re, r, rp)
     if op==1 then
         s.used_this_skill[e:GetHandlerPlayer()] = true
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TODECK)
-        local g = Duel.SelectMatchingCard(tp, s.shufflefilter, tp, LOCATION_HAND, 0, 1, 1, nil)
+        local g = Duel.SelectMatchingCard(tp, s.shufflefilter, tp, LOCATION_HAND, 0, 3, 3, nil)
         if #g > 0 then
             Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_COST)
         end
