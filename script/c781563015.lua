@@ -3,13 +3,6 @@ Duel.LoadScript("big_skill_aux.lua")
 local s, id = GetID()
 function s.initial_effect(c)
 
-                local e3 = Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
-    e3:SetCode(EVENT_STARTUP)
-    e3:SetRange(0x5f)
-    e3:SetCountLimit(1)
-    e3:SetOperation(s.shuffledownop)
-    c:RegisterEffect(e3)
 
 	local e1, e2 = BSkillaux.CreateBasicSkill(c, id, s.flipconpassive, s.flipoppassive, nil,
 		nil, nil, true, nil)
@@ -20,16 +13,6 @@ end
 
 function s.flipconpassive(e, tp, eg, ep, ev, re, r, rp)
     return Duel.GetFlagEffect(tp, id) == 0 and Duel.GetCurrentChain() == 0
-end
-
-
-function s.shuffledownop(e, tp, eg, ep, ev, re, r, rp)
-
-
-    local g1 = Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK, 0, nil, 35371948)
-	if #g1 > 0 then
-		Duel.MoveToDeckTop(g1:GetFirst())
-	end
 end
 
 function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
@@ -56,6 +39,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
 	e2:SetTargetRange(LOCATION_HAND|LOCATION_MZONE,0)
+    e2:SetCondition(s.lowleveltrickstersumcon)
 	e2:SetTarget(s.lowleveltrickstarfilter)
     Duel.RegisterEffect(e2, tp)
 
@@ -102,6 +86,11 @@ function s.damval2(e,re,val,r,rp,rc)
     else
         return val
     end
+end
+
+function s.lowleveltrickstersumcon(e)
+    local tp = e:GetHandlerPlayer()
+    return (Duel.GetMatchingGroupCount(aux.TRUE, tp, LOCATION_MZONE, 0, nil) == 0) and (Duel.GetMatchingGroupCount(aux.TRUE, tp, 0, LOCATION_MZONE, nil) > 0)
 end
 
 function s.lowleveltrickstarfilter(e,c)
