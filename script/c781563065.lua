@@ -51,6 +51,16 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
 	e1:SetOperation(s.shuffledownop)
 	e1:SetCountLimit(1)
 	Duel.RegisterEffect(e1, tp)
+
+	--Cards your opponent controls are unaffected by the effects of your "Charmers of the Grand Circle".
+	local e2 = Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_IMMUNE_EFFECT)
+	e2:SetTargetRange(0, LOCATION_ONFIELD)
+	e2:SetValue(function(e, re)
+		return re:GetHandler():IsCode(48016074) and re:GetHandler():IsControler(e:GetHandlerPlayer())
+	end)
+	Duel.RegisterEffect(e2, tp)
 end
 
 function s.cardfilter(c, tp)
