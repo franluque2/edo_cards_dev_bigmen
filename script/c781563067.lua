@@ -154,7 +154,7 @@ function s.otcon(e,c,minc)
         end
 function s.ottg(e,c)
 	local mi,ma=c:GetTributeRequirement()
-	return mi>1 and c:IsLevelAbove(5)
+	return mi>=1 and c:IsLevelAbove(5)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,_,c)
     local mg=Duel.GetMatchingGroup(s.releasefilter,tp,LOCATION_HAND,0,c)
