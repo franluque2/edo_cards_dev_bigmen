@@ -74,68 +74,31 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     e5:SetLabelObject(e4)
     Duel.RegisterEffect(e5,tp)
 
-
-        local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e6:SetCode(EVENT_ADJUST)
-    e6:SetCondition(s.rewriteectoplasmersscon)
-    e6:SetOperation(s.rewriteectoplasmerssop)
+    local e6=Effect.CreateEffect(c)
+    e6:SetType(EFFECT_TYPE_FIELD)
+    e6:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+    e6:SetTargetRange(LOCATION_DECK,0)
+    e6:SetValue(ATTRIBUTE_DARK)
     Duel.RegisterEffect(e6,tp)
+
+
+    	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e7:SetCode(EFFECT_LPCOST_CHANGE)
+	e7:SetTargetRange(1,0)
+	e7:SetValue(s.nolpcost)
+	Duel.RegisterEffect(e7,tp)
+
 end
 
 local cards_to_add={63391643, 511002532}
 
 
-function s.notrewrittenectoplasmerfilter(c)
-    return c:IsCode(CARD_ECTOPLASMER) and c:GetFlagEffect(id) == 0
+
+function s.nolpcost(e,re,rp,val)
+	return (re) and 0 or val
 end
-
-
-function s.rewriteectoplasmersscon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(s.notrewrittenectoplasmerfilter, tp, LOCATION_ALL, 0, 1, nil)
-end
-
-
-function s.rewriteectoplasmerssop(e,tp)
-
-    local g=Duel.GetMatchingGroup(s.notrewrittenectoplasmerfilter, tp, LOCATION_ALL, 0, nil)
-    if #g>0 then
-        for tc in g:Iter() do
-            tc:RegisterFlagEffect(id, 0, 0, 0)
-
-            local effs={tc:GetOwnEffects()}
-            for _, eff in ipairs(effs) do
-                if eff:GetCategory()==(CATEGORY_RELEASE+CATEGORY_DAMAGE)then
-
-                    local neweff=eff:Clone()
-                    neweff:SetOperation(s.newop)
-
-                    eff:Reset()
-                    tc:RegisterEffect(neweff)
-                end
-            end
-        end
-    end
-end
-
-function s.tributefilter(c)
-    return c:IsReleasableByEffect() and c:IsFaceup() and (c:IsMonster() and c:IsType(TYPE_NORMAL))
-end
-
-function s.newop(e,tp,eg,ep,ev,re,r,rp)
-	local turn_player=Duel.GetTurnPlayer()
-	local sc=Duel.SelectReleaseGroup(turn_player,s.tributefilter,1,1,nil):GetFirst()
-	if not sc then return end
-	Duel.HintSelection(sc)
-	if Duel.Release(sc,REASON_EFFECT)>0 then
-		local atk=sc:GetTextAttack()/2
-		if atk>0 then
-			Duel.Damage(1-turn_player,atk,REASON_EFFECT)
-		end
-	end
-end
-
-
 
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,COUNTER_SPELL,6,REASON_COST) end

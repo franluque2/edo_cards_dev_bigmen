@@ -36,7 +36,7 @@ function s.flipoppassive(e, tp, eg, ep, ev, re, r, rp)
     Duel.Hint(HINT_SKILL_FLIP, tp, id|(1 << 32))
     local c = e:GetHandler()
 
-    Duel.Recover(1-tp, 8000, REASON_RULE)
+    Duel.Recover(1-tp, 4000, REASON_RULE)
 
     -- You can Normal Summon 1 Beast non-"Gladiator Beast" monster, in addition to your Normal Summon or Set. (You can only gain this effect once per turn)
     local e1 = Effect.CreateEffect(c)
