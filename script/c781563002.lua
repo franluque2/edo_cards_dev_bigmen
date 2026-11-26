@@ -137,6 +137,10 @@ function s.rewritecards(e)
 				neweff:SetCost(s.repcostfunc(eff:GetCost()))
 				eff:Reset()
 				tc:RegisterEffect(neweff)
+
+				if tc:IsOriginalCode(59934749) then
+					neweff:SetTarget(s.sptg)
+				end
 			end
 		end
 	end
@@ -148,6 +152,7 @@ function s.repcostfunc(cost)
 			(Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and s.used_this_skill[tp] == false and Duel.GetFlagEffect(tp, id) > 0) end
 		if not s.used_this_skill[tp] and Duel.IsExistingMatchingCard(s.fusfilter, e:GetHandlerPlayer(), LOCATION_EXTRA, 0, 1, nil) and e:GetHandler():IsOriginalRace(RACE_WARRIOR)
 			and e:GetHandler():IsOriginalAttribute(ATTRIBUTE_LIGHT) and (not cost or not cost(e, tp, eg, ep, ev, re, r, rp, 0)
+				or e:GetHandler():IsOriginalCode(59934749)
 				or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
 			Duel.Hint(HINT_CARD, tp, id)
 			Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_TOGRAVE)
@@ -158,6 +163,8 @@ function s.repcostfunc(cost)
 				e:SetLabel(g:GetFirst():GetMainCardType())
 			elseif e:GetHandler():IsOriginalCode(29284413) then
 				e:SetLabel(g:GetFirst():GetCode())
+			elseif e:GetHandler():IsOriginalCode(59934749) then
+				e:SetLabel(100)
 			end
 		else
 			cost(e, tp, eg, ep, ev, re, r, rp, 1)
@@ -401,4 +408,56 @@ end
 
 function s.efilter(e, te)
 	return te:GetOwner() ~= e:GetOwner()
+end
+
+
+
+--isolde handling
+
+function s.cfilter(c)
+	return c:IsSpell() and c:IsType(TYPE_EQUIP) and c:IsAbleToGraveAsCost()
+end
+function s.spfilter(c,e,tp,lv)
+	return c:IsRace(RACE_WARRIOR) and (c:IsLevelBelow(lv) or (Duel.GetFlagEffect(tp, id) > 0)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then
+		if (e:GetLabel()~=100) or (s.used_this_skill[tp] == true) then return false end
+		e:SetLabel(0)
+		local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_DECK,0,nil)
+		return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,cg:GetClassCount(Card.GetCode)))
+	end
+	local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_DECK,0,nil)
+	local tg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,cg:GetClassCount(Card.GetCode))
+	local lvt={}
+	local tc=tg:GetFirst()
+	for tc in aux.Next(tg) do
+		local tlv=0
+		tlv=tlv+tc:GetLevel()
+		lvt[tlv]=tlv
+	end
+	local pc=1
+	for i=1,12 do
+		if lvt[i] then lvt[i]=nil lvt[pc]=i pc=pc+1 end
+	end
+	lvt[pc]=nil
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(59934749,2))
+	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
+	if not (Duel.GetFlagEffect(tp, id) > 0) then
+		local rg1=Group.CreateGroup()
+		for i=1,lv do
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+			local rg2=cg:Select(tp,1,1,nil)
+			cg:Remove(Card.IsCode,nil,rg2:GetFirst():GetCode())
+			rg1:Merge(rg2)
+		end
+		Duel.SendtoGrave(rg1,REASON_COST)
+		e:SetLabel(lv)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+
+	end
+	e:SetLabel(lv)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
